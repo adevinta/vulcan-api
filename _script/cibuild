@@ -1,8 +1,18 @@
-#!/bin/bash
+#!/bin/sh
 
 # Copyright 2021 Adevinta
 
 set -e
+
+echo "Updating license cache…"
+date "+%H:%M:%S"
+
+licensed cache
+
+echo "Checking licenses…"
+date "+%H:%M:%S"
+
+licensed status
 
 echo "Building…"
 date "+%H:%M:%S"

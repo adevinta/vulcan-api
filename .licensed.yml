@@ -1,0 +1,34 @@
+name: 'Vulcan API'
+sources:
+  go: true
+
+source_path: "{.*,**/*}"
+shared_cache: true
+
+allowed:
+  - 0bsd
+  - apache-2.0
+  - bsd-2-clause
+  - bsd-3-clause
+  - isc
+  - mit
+  - wtfpl
+  - zlib
+
+reviewed:
+  go:
+    - golang.org/x/**/*
+    - github.com/jmespath/go-jmespath
+    - github.com/miekg/dns
+    - github.com/opencontainers/go-digest
+    - github.com/hashicorp/go-immutable-radix
+    - github.com/hashicorp/golang-lru/simplelru
+    - github.com/hashicorp/hcl
+    - github.com/hashicorp/hcl/**/*
+    - github.com/google/go-cmp/**/*
+    - github.com/dimfeld/httppath
+    - gopkg.in/ini.v1
+    - gopkg.in/yaml.v2
+    - github.com/gorilla/mux
+    - github.com/magiconair/properties
+

@@ -8,6 +8,7 @@ services:
 addons:
   postgresql: "9.6"
 go_import_path: github.com/adevinta/vulcan-api
+install: _script/bootstrap
 script:
   - _script/cibuild
   - source _script/setup-e2e-tests
