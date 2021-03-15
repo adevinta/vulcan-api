@@ -1,0 +1,46 @@
+# Copyright 2021 Adevinta
+
+# groups.yml
+
+# dummy group
+- id: 721d1c6b-f559-4c56-8ea5-ca1820173a3c
+  name: mygroup
+  team_id: 3C7C2963-6A03-4A25-A822-EBEB237DB065
+
+- id: 621d1c6b-f559-4c56-8ea5-ca1820173a3c
+  name: Default
+  team_id: 3C7C2963-6A03-4A25-A822-EBEB237DB065
+
+# default group
+- id: ab310d43-8cdf-4f65-9ee8-d1813a22bab4
+  name: Default
+  team_id: a14c7c65-66ab-4676-bcf6-0dea9719f5c6
+
+- id: 516099e5-7cb4-4624-8e6e-27af2de80872
+  name: Sensitive
+  team_id: a14c7c65-66ab-4676-bcf6-0dea9719f5c6
+
+- id: 784d3130-5fe2-461f-9a62-61322c79f8b8
+  name: Default
+  team_id: 93449fc4-6a84-4058-bac2-200e584ec435
+
+- id: 56613782-70a5-43d4-bfca-c6c290ee42e6
+  name: Sensitive
+  team_id: 5125225e-4912-4464-b22e-e2542410c352
+
+- id: a5efeb6f-46fa-49a9-be41-d962d9772fa3
+  name: Default
+  team_id: 5125225e-4912-4464-b22e-e2542410c352
+
+# disjoin tests
+- id: 4123163c-6a78-43eb-8120-d129bcd0898a
+  name: DisjoinBase
+  team_id: d335c30c-944f-4ab0-9b43-cffccdfbd848
+
+- id: a4b93a4b-653e-4f01-92d2-bd360c50ae27
+  name: DisjoinA
+  team_id: d335c30c-944f-4ab0-9b43-cffccdfbd848
+
+- id: 78ba0bb9-cce7-451d-8e17-ae6b3efbb788
+  name: DisjoinB
+  team_id: d335c30c-944f-4ab0-9b43-cffccdfbd848

@@ -1,0 +1,4477 @@
+basePath: /api/v1
+consumes:
+- application/json
+definitions:
+  Asset:
+    description: Asset (default view)
+    example:
+      alias: AnAlias
+      classified_at: "2020-09-03T15:00:42.112975Z"
+      environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+      id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      identifier: vulcan.com
+      options: '{"timeout":60}'
+      rolfp: R:1/O:1/L:0/F:0/P:0+S:1
+      scannable: true
+      type:
+        id: 29f83d16-09c4-4be5-8cae-e232d41f388a
+        name: Hostname
+    properties:
+      alias:
+        description: Alias
+        example: AnAlias
+        type: string
+      classified_at:
+        description: Classified At
+        example: "2020-09-03T15:00:42.112975Z"
+        type: string
+      environmental_cvss:
+        description: Environmental CVSS
+        example: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+        type: string
+      id:
+        description: Asset ID
+        example: a8720503-0284-45fd-9cf4-5bb6c500966f
+        type: string
+      identifier:
+        description: Identifier
+        example: vulcan.com
+        type: string
+      options:
+        description: Options
+        example: '{"timeout":60}'
+        type: string
+      rolfp:
+        description: Rolfp plus scope vector
+        example: R:1/O:1/L:0/F:0/P:0+S:1
+        type: string
+      scannable:
+        description: Scannable
+        example: true
+        type: boolean
+      type:
+        $ref: '#/definitions/Assettype'
+    title: 'Mediatype identifier: asset; view=default'
+    type: object
+  AssetCollection:
+    description: AssetCollection is the media type for an array of Asset (default
+      view)
+    example:
+    - alias: AnAlias
+      classified_at: "2020-09-03T15:00:42.112975Z"
+      environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+      id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      identifier: vulcan.com
+      options: '{"timeout":60}'
+      rolfp: R:1/O:1/L:0/F:0/P:0+S:1
+      scannable: true
+      type:
+        id: 29f83d16-09c4-4be5-8cae-e232d41f388a
+        name: Hostname
+    items:
+      $ref: '#/definitions/Asset'
+    title: 'Mediatype identifier: asset; type=collection; view=default'
+    type: array
+  AssetGroupPayload:
+    example:
+      asset_id: 0fc67150-5cd9-486a-aca5-9c9167478e4d
+    properties:
+      asset_id:
+        description: Asset ID
+        example: 0fc67150-5cd9-486a-aca5-9c9167478e4d
+        type: string
+    required:
+    - asset_id
+    title: AssetGroupPayload
+    type: object
+  AssetPayload:
+    example:
+      alias: AnAlias
+      environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+      identifier: vulcan.com
+      options: '{"timeout":60}'
+      rolfp: R:1/O:1/L:0/F:0/P:0+S:1
+      scannable: true
+      type: Hostname
+    properties:
+      alias:
+        description: The alias of the asset in Vulcan
+        example: AnAlias
+        type: string
+      environmental_cvss:
+        description: Environmental CVSS
+        example: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+        type: string
+      identifier:
+        description: Identifier
+        example: vulcan.com
+        type: string
+      options:
+        description: Options
+        example: '{"timeout":60}'
+        type: string
+      rolfp:
+        description: Rolfp plus scope vector
+        example: R:1/O:1/L:0/F:0/P:0+S:1
+        type: string
+      scannable:
+        description: Scannable
+        example: true
+        type: boolean
+      type:
+        description: Type
+        example: Hostname
+        type: string
+    required:
+    - identifier
+    title: AssetPayload
+    type: object
+  AssetUpdatePayload:
+    example:
+      alias: AnAlias
+      environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+      identifier: vulcan.com
+      options: '{"timeout":60}'
+      rolfp: R:1/O:1/L:0/F:0/P:0+S:1
+      scannable: true
+      type: Hostname
+    properties:
+      alias:
+        description: Alias
+        example: AnAlias
+        type: string
+      environmental_cvss:
+        description: Environmental CVSS
+        example: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+        type: string
+      identifier:
+        description: Identifier
+        example: vulcan.com
+        type: string
+      options:
+        description: Options
+        example: '{"timeout":60}'
+        type: string
+      rolfp:
+        description: Rolfp plus scope vector
+        example: R:1/O:1/L:0/F:0/P:0+S:1
+        type: string
+      scannable:
+        description: Scannable
+        example: true
+        type: boolean
+      type:
+        description: Type
+        example: Hostname
+        type: string
+    title: AssetUpdatePayload
+    type: object
+  Assetresponse:
+    description: Asset (default view)
+    example:
+      alias: AnAlias
+      classified_at: "2020-09-03T15:00:42.112975Z"
+      environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+      id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      identifier: vulcan.com
+      options: '{"timeout":60}'
+      rolfp: R:1/O:1/L:0/F:0/P:0+S:1
+      scannable: true
+      status:
+        code: 3944598920153519998
+        error: Quo placeat magni harum ea.
+        type: Voluptatum mollitia consequuntur dignissimos.
+      type:
+        id: 29f83d16-09c4-4be5-8cae-e232d41f388a
+        name: Hostname
+    properties:
+      alias:
+        description: Alias
+        example: AnAlias
+        type: string
+      classified_at:
+        description: Classified At
+        example: "2020-09-03T15:00:42.112975Z"
+        type: string
+      environmental_cvss:
+        description: Environmental CVSS
+        example: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+        type: string
+      id:
+        description: Asset ID
+        example: a8720503-0284-45fd-9cf4-5bb6c500966f
+        type: string
+      identifier:
+        description: Identifier
+        example: vulcan.com
+        type: string
+      options:
+        description: Options
+        example: '{"timeout":60}'
+        type: string
+      rolfp:
+        description: Rolfp plus scope vector
+        example: R:1/O:1/L:0/F:0/P:0+S:1
+        type: string
+      scannable:
+        description: Scannable
+        example: true
+        type: boolean
+      status:
+        $ref: '#/definitions/Error'
+      type:
+        $ref: '#/definitions/Assettype'
+    title: 'Mediatype identifier: assetresponse; view=default'
+    type: object
+  AssetresponseCollection:
+    description: AssetresponseCollection is the media type for an array of Assetresponse
+      (default view)
+    example:
+    - alias: AnAlias
+      classified_at: "2020-09-03T15:00:42.112975Z"
+      environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+      id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      identifier: vulcan.com
+      options: '{"timeout":60}'
+      rolfp: R:1/O:1/L:0/F:0/P:0+S:1
+      scannable: true
+      status:
+        code: 3944598920153519998
+        error: Quo placeat magni harum ea.
+        type: Voluptatum mollitia consequuntur dignissimos.
+      type:
+        id: 29f83d16-09c4-4be5-8cae-e232d41f388a
+        name: Hostname
+    items:
+      $ref: '#/definitions/Assetresponse'
+    title: 'Mediatype identifier: assetresponse; type=collection; view=default'
+    type: array
+  Assettype:
+    description: Asset Type (default view)
+    example:
+      id: 29f83d16-09c4-4be5-8cae-e232d41f388a
+      name: Hostname
+    properties:
+      id:
+        description: Asset Type ID
+        example: 29f83d16-09c4-4be5-8cae-e232d41f388a
+        type: string
+      name:
+        description: Name
+        example: Hostname
+        type: string
+    title: 'Mediatype identifier: assettype; view=default'
+    type: object
+  Attachment:
+    description: attachment (default view)
+    example:
+      content_type: application/json
+      data: e30=
+      name: JSON string
+    properties:
+      content_type:
+        description: Content Type of the attachment
+        example: application/json
+        type: string
+      data:
+        description: attachment data
+        example: e30=
+      name:
+        description: Attachment name
+        example: JSON string
+        type: string
+    title: 'Mediatype identifier: attachment; view=default'
+    type: object
+  CreateAssetPayload:
+    example:
+      assets:
+      - alias: AnAlias
+        environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+        identifier: vulcan.com
+        options: '{"timeout":60}'
+        rolfp: R:1/O:1/L:0/F:0/P:0+S:1
+        scannable: true
+        type: Hostname
+      groups:
+      - a14c7c65-66ab-4676-bcf6-0dea9719f5c6
+      - 9f7a0c78-b752-4126-aa6d-0f286ada7b8f
+    properties:
+      assets:
+        example:
+        - alias: AnAlias
+          environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+          identifier: vulcan.com
+          options: '{"timeout":60}'
+          rolfp: R:1/O:1/L:0/F:0/P:0+S:1
+          scannable: true
+          type: Hostname
+        items:
+          $ref: '#/definitions/AssetPayload'
+        type: array
+      groups:
+        example:
+        - a14c7c65-66ab-4676-bcf6-0dea9719f5c6
+        - 9f7a0c78-b752-4126-aa6d-0f286ada7b8f
+        items:
+          example: Iure provident.
+          type: string
+        type: array
+    required:
+    - assets
+    title: CreateAssetPayload
+    type: object
+  DigestPayload:
+    example:
+      end_date: "2020-09-10"
+      start_date: "2020-08-11"
+    properties:
+      end_date:
+        description: End Date
+        example: "2020-09-10"
+        type: string
+      start_date:
+        description: Start Date
+        example: "2020-08-11"
+        type: string
+    title: DigestPayload
+    type: object
+  Error:
+    description: Error (default view)
+    example:
+      code: 3944598920153519998
+      error: Quo placeat magni harum ea.
+      type: Voluptatum mollitia consequuntur dignissimos.
+    properties:
+      code:
+        description: Code
+        example: 3944598920153519998
+        format: int64
+        type: integer
+      error:
+        description: Error
+        example: Quo placeat magni harum ea.
+        type: string
+      type:
+        description: Type
+        example: Voluptatum mollitia consequuntur dignissimos.
+        type: string
+    required:
+    - code
+    - error
+    - type
+    title: 'Mediatype identifier: error; view=default'
+    type: object
+  Finding:
+    description: Finding (default view)
+    example:
+      attachments:
+      - content_type: application/json
+        data: e30=
+        name: JSON string
+      current_exposure: 4631
+      details: ""
+      id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      impact_details: ""
+      issue:
+        cwe_id: 358
+        description: This domain has at least one MX record
+        id: b0720503-0a84-43fd-9cf4-5bb6c500226f
+        recommendations:
+        - It is recommended to run DMARC
+        reference_links: []
+        summary: MX presence
+      resources:
+      - attributes:
+        - Hostname
+        - Port
+        name: Network Resources
+        resources:
+        - Hostname: test.example.com
+          Port: "443"
+      - attributes:
+        - Hostname
+        - Port
+        name: Network Resources
+        resources:
+        - Hostname: test.example.com
+          Port: "443"
+      - attributes:
+        - Hostname
+        - Port
+        name: Network Resources
+        resources:
+        - Hostname: test.example.com
+          Port: "443"
+      score: 6.9
+      source:
+        component: vulcan-tls
+        id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
+        instance: b3320f03-1284-42fd-9cf4-5bb6c500966f
+        name: vulcan
+        options: '{"timeout":60}'
+        time: "2019-06-08 11:16:40"
+      status: OPEN
+      target:
+        id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
+        identifier: www.test.com
+        tags:
+        - team:vulcan
+      total_exposure: 4631
+    properties:
+      attachments:
+        description: Attachments
+        example:
+        - content_type: application/json
+          data: e30=
+          name: JSON string
+        items:
+          $ref: '#/definitions/Attachment'
+        type: array
+      current_exposure:
+        description: Current exposure (hours). Only for OPEN findings
+        example: 4631
+        format: double
+        type: number
+      details:
+        description: Details
+        example: ""
+        type: string
+      id:
+        description: Finding ID
+        example: a8720503-0284-45fd-9cf4-5bb6c500966f
+        type: string
+      impact_details:
+        description: Impact details
+        example: ""
+        type: string
+      issue:
+        $ref: '#/definitions/Issue'
+      resources:
+        description: Resources
+        example:
+        - attributes:
+          - Hostname
+          - Port
+          name: Network Resources
+          resources:
+          - Hostname: test.example.com
+            Port: "443"
+        - attributes:
+          - Hostname
+          - Port
+          name: Network Resources
+          resources:
+          - Hostname: test.example.com
+            Port: "443"
+        - attributes:
+          - Hostname
+          - Port
+          name: Network Resources
+          resources:
+          - Hostname: test.example.com
+            Port: "443"
+        items:
+          $ref: '#/definitions/Resource'
+        type: array
+      score:
+        description: Score
+        example: 6.9
+        format: double
+        type: number
+      source:
+        $ref: '#/definitions/Source'
+      status:
+        description: Status
+        example: OPEN
+        type: string
+      target:
+        $ref: '#/definitions/Target'
+      total_exposure:
+        description: Total exposure (hours)
+        example: 4631
+        format: double
+        type: number
+    title: 'Mediatype identifier: finding; view=default'
+    type: object
+  FindingCollection:
+    description: FindingCollection is the media type for an array of Finding (default
+      view)
+    example:
+    - attachments:
+      - content_type: application/json
+        data: e30=
+        name: JSON string
+      current_exposure: 4631
+      details: ""
+      id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      impact_details: ""
+      issue:
+        cwe_id: 358
+        description: This domain has at least one MX record
+        id: b0720503-0a84-43fd-9cf4-5bb6c500226f
+        recommendations:
+        - It is recommended to run DMARC
+        reference_links: []
+        summary: MX presence
+      resources:
+      - attributes:
+        - Hostname
+        - Port
+        name: Network Resources
+        resources:
+        - Hostname: test.example.com
+          Port: "443"
+      - attributes:
+        - Hostname
+        - Port
+        name: Network Resources
+        resources:
+        - Hostname: test.example.com
+          Port: "443"
+      - attributes:
+        - Hostname
+        - Port
+        name: Network Resources
+        resources:
+        - Hostname: test.example.com
+          Port: "443"
+      score: 6.9
+      source:
+        component: vulcan-tls
+        id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
+        instance: b3320f03-1284-42fd-9cf4-5bb6c500966f
+        name: vulcan
+        options: '{"timeout":60}'
+        time: "2019-06-08 11:16:40"
+      status: OPEN
+      target:
+        id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
+        identifier: www.test.com
+        tags:
+        - team:vulcan
+      total_exposure: 4631
+    - attachments:
+      - content_type: application/json
+        data: e30=
+        name: JSON string
+      current_exposure: 4631
+      details: ""
+      id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      impact_details: ""
+      issue:
+        cwe_id: 358
+        description: This domain has at least one MX record
+        id: b0720503-0a84-43fd-9cf4-5bb6c500226f
+        recommendations:
+        - It is recommended to run DMARC
+        reference_links: []
+        summary: MX presence
+      resources:
+      - attributes:
+        - Hostname
+        - Port
+        name: Network Resources
+        resources:
+        - Hostname: test.example.com
+          Port: "443"
+      - attributes:
+        - Hostname
+        - Port
+        name: Network Resources
+        resources:
+        - Hostname: test.example.com
+          Port: "443"
+      - attributes:
+        - Hostname
+        - Port
+        name: Network Resources
+        resources:
+        - Hostname: test.example.com
+          Port: "443"
+      score: 6.9
+      source:
+        component: vulcan-tls
+        id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
+        instance: b3320f03-1284-42fd-9cf4-5bb6c500966f
+        name: vulcan
+        options: '{"timeout":60}'
+        time: "2019-06-08 11:16:40"
+      status: OPEN
+      target:
+        id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
+        identifier: www.test.com
+        tags:
+        - team:vulcan
+      total_exposure: 4631
+    - attachments:
+      - content_type: application/json
+        data: e30=
+        name: JSON string
+      current_exposure: 4631
+      details: ""
+      id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      impact_details: ""
+      issue:
+        cwe_id: 358
+        description: This domain has at least one MX record
+        id: b0720503-0a84-43fd-9cf4-5bb6c500226f
+        recommendations:
+        - It is recommended to run DMARC
+        reference_links: []
+        summary: MX presence
+      resources:
+      - attributes:
+        - Hostname
+        - Port
+        name: Network Resources
+        resources:
+        - Hostname: test.example.com
+          Port: "443"
+      - attributes:
+        - Hostname
+        - Port
+        name: Network Resources
+        resources:
+        - Hostname: test.example.com
+          Port: "443"
+      - attributes:
+        - Hostname
+        - Port
+        name: Network Resources
+        resources:
+        - Hostname: test.example.com
+          Port: "443"
+      score: 6.9
+      source:
+        component: vulcan-tls
+        id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
+        instance: b3320f03-1284-42fd-9cf4-5bb6c500966f
+        name: vulcan
+        options: '{"timeout":60}'
+        time: "2019-06-08 11:16:40"
+      status: OPEN
+      target:
+        id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
+        identifier: www.test.com
+        tags:
+        - team:vulcan
+      total_exposure: 4631
+    items:
+      $ref: '#/definitions/Finding'
+    title: 'Mediatype identifier: finding; type=collection; view=default'
+    type: array
+  Findings_issue:
+    description: Findings by Issue (default view)
+    example:
+      issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      max_score: 6.9
+      summary: Site Without HTTPS
+      targets_count: 14
+    properties:
+      issue_id:
+        description: Issue ID
+        example: a8720503-0284-45fd-9cf4-5bb6c500966f
+        type: string
+      max_score:
+        description: Max score for the issue among the affected assets
+        example: 6.9
+        format: double
+        type: number
+      summary:
+        description: Issue summary
+        example: Site Without HTTPS
+        type: string
+      targets_count:
+        description: Number of targets affected by the issue
+        example: 14
+        format: double
+        type: number
+    title: 'Mediatype identifier: findings_issue; view=default'
+    type: object
+  Findings_issueCollection:
+    description: Findings_issueCollection is the media type for an array of Findings_issue
+      (default view)
+    example:
+    - issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      max_score: 6.9
+      summary: Site Without HTTPS
+      targets_count: 14
+    - issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      max_score: 6.9
+      summary: Site Without HTTPS
+      targets_count: 14
+    - issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      max_score: 6.9
+      summary: Site Without HTTPS
+      targets_count: 14
+    items:
+      $ref: '#/definitions/Findings_issue'
+    title: 'Mediatype identifier: findings_issue; type=collection; view=default'
+    type: array
+  Findings_issues_list:
+    description: Findings by Issue list (default view)
+    example:
+      issues:
+      - issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
+        max_score: 6.9
+        summary: Site Without HTTPS
+        targets_count: 14
+      pagination:
+        limit: 0.11867421993190391
+        more: true
+        offset: 0.06622922554559177
+        total: 0.11075891542163877
+    properties:
+      issues:
+        $ref: '#/definitions/Findings_issueCollection'
+      pagination:
+        $ref: '#/definitions/Pagination'
+    title: 'Mediatype identifier: findings_issues_list; view=default'
+    type: object
+  Findings_list:
+    description: Findings list (default view)
+    example:
+      findings:
+      - attachments:
+        - content_type: application/json
+          data: e30=
+          name: JSON string
+        current_exposure: 4631
+        details: ""
+        id: a8720503-0284-45fd-9cf4-5bb6c500966f
+        impact_details: ""
+        issue:
+          cwe_id: 358
+          description: This domain has at least one MX record
+          id: b0720503-0a84-43fd-9cf4-5bb6c500226f
+          recommendations:
+          - It is recommended to run DMARC
+          reference_links: []
+          summary: MX presence
+        resources:
+        - attributes:
+          - Hostname
+          - Port
+          name: Network Resources
+          resources:
+          - Hostname: test.example.com
+            Port: "443"
+        - attributes:
+          - Hostname
+          - Port
+          name: Network Resources
+          resources:
+          - Hostname: test.example.com
+            Port: "443"
+        - attributes:
+          - Hostname
+          - Port
+          name: Network Resources
+          resources:
+          - Hostname: test.example.com
+            Port: "443"
+        score: 6.9
+        source:
+          component: vulcan-tls
+          id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
+          instance: b3320f03-1284-42fd-9cf4-5bb6c500966f
+          name: vulcan
+          options: '{"timeout":60}'
+          time: "2019-06-08 11:16:40"
+        status: OPEN
+        target:
+          id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
+          identifier: www.test.com
+          tags:
+          - team:vulcan
+        total_exposure: 4631
+      pagination:
+        limit: 0.11867421993190391
+        more: true
+        offset: 0.06622922554559177
+        total: 0.11075891542163877
+    properties:
+      findings:
+        $ref: '#/definitions/FindingCollection'
+      pagination:
+        $ref: '#/definitions/Pagination'
+    title: 'Mediatype identifier: findings_list; view=default'
+    type: object
+  Findings_target:
+    description: Findings by Target (default view)
+    example:
+      findings_count: 5
+      identifier: vulcan.com
+      max_score: 6.9
+      target_id: a8720503-0284-45fd-9cf4-5bb6c500966f
+    properties:
+      findings_count:
+        description: Number of findings for the target
+        example: 5
+        format: double
+        type: number
+      identifier:
+        description: Target Identifier
+        example: vulcan.com
+        type: string
+      max_score:
+        description: Max score for the issue among the affected assets
+        example: 6.9
+        format: double
+        type: number
+      target_id:
+        description: Target ID
+        example: a8720503-0284-45fd-9cf4-5bb6c500966f
+        type: string
+    title: 'Mediatype identifier: findings_target; view=default'
+    type: object
+  Findings_targetCollection:
+    description: Findings_targetCollection is the media type for an array of Findings_target
+      (default view)
+    example:
+    - findings_count: 5
+      identifier: vulcan.com
+      max_score: 6.9
+      target_id: a8720503-0284-45fd-9cf4-5bb6c500966f
+    items:
+      $ref: '#/definitions/Findings_target'
+    title: 'Mediatype identifier: findings_target; type=collection; view=default'
+    type: array
+  Findings_targets_list:
+    description: Findings by Target list (default view)
+    example:
+      pagination:
+        limit: 0.11867421993190391
+        more: true
+        offset: 0.06622922554559177
+        total: 0.11075891542163877
+      targets:
+      - findings_count: 5
+        identifier: vulcan.com
+        max_score: 6.9
+        target_id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      - findings_count: 5
+        identifier: vulcan.com
+        max_score: 6.9
+        target_id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      - findings_count: 5
+        identifier: vulcan.com
+        max_score: 6.9
+        target_id: a8720503-0284-45fd-9cf4-5bb6c500966f
+    properties:
+      pagination:
+        $ref: '#/definitions/Pagination'
+      targets:
+        $ref: '#/definitions/Findings_targetCollection'
+    title: 'Mediatype identifier: findings_targets_list; view=default'
+    type: object
+  Group:
+    description: Group (default view)
+    example:
+      assets_count: 1
+      description: All newly created assets are added to the Default group
+      id: f6360346-77a5-4f97-b919-331363b3af26
+      name: Default group
+      options: '{"timeout":60}'
+    properties:
+      assets_count:
+        description: Assets Count
+        example: 1
+        format: int64
+        type: integer
+      description:
+        description: Description
+        example: All newly created assets are added to the Default group
+        type: string
+      id:
+        description: Group ID
+        example: f6360346-77a5-4f97-b919-331363b3af26
+        type: string
+      name:
+        description: Name
+        example: Default group
+        type: string
+      options:
+        description: Options
+        example: '{"timeout":60}'
+        type: string
+    title: 'Mediatype identifier: group; view=default'
+    type: object
+  GroupCollection:
+    description: GroupCollection is the media type for an array of Group (default
+      view)
+    example:
+    - assets_count: 1
+      description: All newly created assets are added to the Default group
+      id: f6360346-77a5-4f97-b919-331363b3af26
+      name: Default group
+      options: '{"timeout":60}'
+    items:
+      $ref: '#/definitions/Group'
+    title: 'Mediatype identifier: group; type=collection; view=default'
+    type: array
+  GroupPayload:
+    example:
+      name: Default group
+      options: '{"timeout":60}'
+    properties:
+      name:
+        description: name
+        example: Default group
+        type: string
+      options:
+        description: Options
+        example: '{"timeout":60}'
+        type: string
+    required:
+    - name
+    title: GroupPayload
+    type: object
+  GroupWithoutAssetsCount:
+    description: Group (WithoutAssetsCount view)
+    example:
+      description: All newly created assets are added to the Default group
+      id: f6360346-77a5-4f97-b919-331363b3af26
+      name: Default group
+      options: '{"timeout":60}'
+    properties:
+      description:
+        description: Description
+        example: All newly created assets are added to the Default group
+        type: string
+      id:
+        description: Group ID
+        example: f6360346-77a5-4f97-b919-331363b3af26
+        type: string
+      name:
+        description: Name
+        example: Default group
+        type: string
+      options:
+        description: Options
+        example: '{"timeout":60}'
+        type: string
+    title: 'Mediatype identifier: group; view=WithoutAssetsCount'
+    type: object
+  GroupWithoutAssetsCountCollection:
+    description: GroupWithoutAssetsCountCollection is the media type for an array
+      of GroupWithoutAssetsCount (default view)
+    example:
+    - description: All newly created assets are added to the Default group
+      id: f6360346-77a5-4f97-b919-331363b3af26
+      name: Default group
+      options: '{"timeout":60}'
+    items:
+      $ref: '#/definitions/GroupWithoutAssetsCount'
+    title: 'Mediatype identifier: group; type=collection; view=default'
+    type: array
+  Healthcheck:
+    description: Healthcheck (default view)
+    example:
+      status: OK
+    properties:
+      status:
+        description: Status
+        example: OK
+        type: string
+    title: 'Mediatype identifier: healthcheck; view=default'
+    type: object
+  Issue:
+    description: Issue (default view)
+    example:
+      cwe_id: 358
+      description: This domain has at least one MX record
+      id: b0720503-0a84-43fd-9cf4-5bb6c500226f
+      recommendations:
+      - It is recommended to run DMARC
+      reference_links: []
+      summary: MX presence
+    properties:
+      cwe_id:
+        description: Common Weakness Enumeration ID
+        example: 358
+        format: double
+        type: number
+      description:
+        description: Issue description
+        example: This domain has at least one MX record
+        type: string
+      id:
+        description: Issue ID
+        example: b0720503-0a84-43fd-9cf4-5bb6c500226f
+        type: string
+      recommendations:
+        description: Recommendations to fix the issue
+        example:
+        - It is recommended to run DMARC
+        items:
+          example: Ducimus sit odio tenetur consequatur.
+          type: string
+        type: array
+      reference_links:
+        description: Documentation reference for the issue
+        example: []
+        items:
+          example: Et voluptate est est illo.
+          type: string
+        type: array
+      summary:
+        description: Issue summary
+        example: MX presence
+        type: string
+    title: 'Mediatype identifier: issue; view=default'
+    type: object
+  Listassetentry:
+    description: List Asset Entry (default view)
+    example:
+      alias: AnAlias
+      classified_at: "2020-09-03T15:00:42.112975Z"
+      environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+      groups:
+      - description: All newly created assets are added to the Default group
+        id: f6360346-77a5-4f97-b919-331363b3af26
+        name: Default group
+        options: '{"timeout":60}'
+      id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      identifier: vulcan.com
+      options: '{"timeout":60}'
+      rolfp: R:1/O:1/L:0/F:0/P:0+S:1
+      scannable: true
+      type:
+        id: 29f83d16-09c4-4be5-8cae-e232d41f388a
+        name: Hostname
+    properties:
+      alias:
+        description: Alias
+        example: AnAlias
+        type: string
+      classified_at:
+        description: Classified At
+        example: "2020-09-03T15:00:42.112975Z"
+        type: string
+      environmental_cvss:
+        description: Environmental CVSS
+        example: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+        type: string
+      groups:
+        $ref: '#/definitions/GroupWithoutAssetsCountCollection'
+      id:
+        description: Asset ID
+        example: a8720503-0284-45fd-9cf4-5bb6c500966f
+        type: string
+      identifier:
+        description: Identifier
+        example: vulcan.com
+        type: string
+      options:
+        description: Options
+        example: '{"timeout":60}'
+        type: string
+      rolfp:
+        description: Rolfp plus scope vector
+        example: R:1/O:1/L:0/F:0/P:0+S:1
+        type: string
+      scannable:
+        description: Scannable
+        example: true
+        type: boolean
+      type:
+        $ref: '#/definitions/Assettype'
+    title: 'Mediatype identifier: listassetentry; view=default'
+    type: object
+  ListassetentryCollection:
+    description: ListassetentryCollection is the media type for an array of Listassetentry
+      (default view)
+    example:
+    - alias: AnAlias
+      classified_at: "2020-09-03T15:00:42.112975Z"
+      environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+      groups:
+      - description: All newly created assets are added to the Default group
+        id: f6360346-77a5-4f97-b919-331363b3af26
+        name: Default group
+        options: '{"timeout":60}'
+      id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      identifier: vulcan.com
+      options: '{"timeout":60}'
+      rolfp: R:1/O:1/L:0/F:0/P:0+S:1
+      scannable: true
+      type:
+        id: 29f83d16-09c4-4be5-8cae-e232d41f388a
+        name: Hostname
+    items:
+      $ref: '#/definitions/Listassetentry'
+    title: 'Mediatype identifier: listassetentry; type=collection; view=default'
+    type: array
+  Mttr:
+    description: MTTR stats (default view)
+    example:
+      mttr:
+        critical: 0.19220168857228337
+        high: 0.4834744722342159
+        informational: 0.5205844348643661
+        low: 0.8413557035664904
+        medium: 0.21762696584450403
+        total: 0.8619749137392434
+    properties:
+      mttr:
+        $ref: '#/definitions/Statstotal'
+    title: 'Mediatype identifier: mttr; view=default'
+    type: object
+  Pagination:
+    description: Pagination info (default view)
+    example:
+      limit: 0.11867421993190391
+      more: true
+      offset: 0.06622922554559177
+      total: 0.11075891542163877
+    properties:
+      limit:
+        description: Limit of results for the list
+        example: 0.11867421993190391
+        format: double
+        type: number
+      more:
+        description: Indicates if there are more results to query for the list
+        example: true
+        type: boolean
+      offset:
+        description: Results list offset
+        example: 0.06622922554559177
+        format: double
+        type: number
+      total:
+        description: Total number of results for the list
+        example: 0.11075891542163877
+        format: double
+        type: number
+    title: 'Mediatype identifier: pagination; view=default'
+    type: object
+  Policy:
+    description: Policy (default view)
+    example:
+      id: af36818a-0f30-412c-9692-d37716075861
+      name: Sample Policy
+      settings_count: 12
+    properties:
+      id:
+        description: Policy ID
+        example: af36818a-0f30-412c-9692-d37716075861
+        type: string
+      name:
+        description: Name
+        example: Sample Policy
+        type: string
+      settings_count:
+        description: Policy settings count
+        example: 12
+        format: int64
+        type: integer
+    title: 'Mediatype identifier: policy; view=default'
+    type: object
+  PolicyCollection:
+    description: PolicyCollection is the media type for an array of Policy (default
+      view)
+    example:
+    - id: af36818a-0f30-412c-9692-d37716075861
+      name: Sample Policy
+      settings_count: 12
+    - id: af36818a-0f30-412c-9692-d37716075861
+      name: Sample Policy
+      settings_count: 12
+    items:
+      $ref: '#/definitions/Policy'
+    title: 'Mediatype identifier: policy; type=collection; view=default'
+    type: array
+  PolicyPayload:
+    example:
+      name: Sample Policy
+    properties:
+      name:
+        description: name
+        example: Sample Policy
+        type: string
+    required:
+    - name
+    title: PolicyPayload
+    type: object
+  PolicySettingPayload:
+    example:
+      checktype_name: vulcan-tls
+      options: '{"timeout":60}'
+    properties:
+      checktype_name:
+        description: Check Type Name
+        example: vulcan-tls
+        type: string
+      options:
+        description: Options
+        example: '{"timeout":60}'
+        type: string
+    required:
+    - checktype_name
+    title: PolicySettingPayload
+    type: object
+  PolicySettingUploadPayload:
+    example:
+      checktype_name: vulcan-tls
+      options: '{"timeout":60}'
+    properties:
+      checktype_name:
+        description: Check Type Name
+        example: vulcan-tls
+        type: string
+      options:
+        description: Options
+        example: '{"timeout":60}'
+        type: string
+    title: PolicySettingUploadPayload
+    type: object
+  PolicyUpdatePayload:
+    example:
+      name: Sample Policy
+    properties:
+      name:
+        description: name
+        example: Sample Policy
+        type: string
+    title: PolicyUpdatePayload
+    type: object
+  Policysetting:
+    description: Policy Setting (default view)
+    example:
+      checktype_name: vulcan-tls
+      id: 5e51174d-3755-48b2-98bf-37e37cb07f6e
+      options: '{"timeout":60}'
+    properties:
+      checktype_name:
+        description: Check Type Name
+        example: vulcan-tls
+        type: string
+      id:
+        description: Policy ID
+        example: 5e51174d-3755-48b2-98bf-37e37cb07f6e
+        type: string
+      options:
+        description: options
+        example: '{"timeout":60}'
+        type: string
+    title: 'Mediatype identifier: policysetting; view=default'
+    type: object
+  PolicysettingCollection:
+    description: PolicysettingCollection is the media type for an array of Policysetting
+      (default view)
+    example:
+    - checktype_name: vulcan-tls
+      id: 5e51174d-3755-48b2-98bf-37e37cb07f6e
+      options: '{"timeout":60}'
+    items:
+      $ref: '#/definitions/Policysetting'
+    title: 'Mediatype identifier: policysetting; type=collection; view=default'
+    type: array
+  Program:
+    description: Program (default view)
+    example:
+      autosend: false
+      disabled: false
+      global: true
+      id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
+      name: Every midnight
+      policy_groups:
+      - group:
+          assets_count: 1
+          description: All newly created assets are added to the Default group
+          id: f6360346-77a5-4f97-b919-331363b3af26
+          name: Default group
+          options: '{"timeout":60}'
+        policy:
+          id: af36818a-0f30-412c-9692-d37716075861
+          name: Sample Policy
+          settings_count: 12
+      schedule:
+        cron: 0 7 1 * *
+    properties:
+      autosend:
+        description: Autosend
+        example: false
+        type: boolean
+      disabled:
+        description: Disabled
+        example: false
+        type: boolean
+      global:
+        description: Global
+        example: true
+        type: boolean
+      id:
+        description: Program ID
+        example: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
+        type: string
+      name:
+        description: Name
+        example: Every midnight
+        type: string
+      policy_groups:
+        description: PolicyGroup
+        example:
+        - group:
+            assets_count: 1
+            description: All newly created assets are added to the Default group
+            id: f6360346-77a5-4f97-b919-331363b3af26
+            name: Default group
+            options: '{"timeout":60}'
+          policy:
+            id: af36818a-0f30-412c-9692-d37716075861
+            name: Sample Policy
+            settings_count: 12
+        items:
+          $ref: '#/definitions/Program_policy_group'
+        type: array
+      schedule:
+        $ref: '#/definitions/Schedule'
+    title: 'Mediatype identifier: program; view=default'
+    type: object
+  Program_policy_group:
+    description: Program_policy_group media type (default view)
+    example:
+      group:
+        assets_count: 1
+        description: All newly created assets are added to the Default group
+        id: f6360346-77a5-4f97-b919-331363b3af26
+        name: Default group
+        options: '{"timeout":60}'
+      policy:
+        id: af36818a-0f30-412c-9692-d37716075861
+        name: Sample Policy
+        settings_count: 12
+    properties:
+      group:
+        $ref: '#/definitions/Group'
+      policy:
+        $ref: '#/definitions/Policy'
+    title: 'Mediatype identifier: program_policy_group; view=default'
+    type: object
+  ProgramCollection:
+    description: ProgramCollection is the media type for an array of Program (default
+      view)
+    example:
+    - autosend: false
+      disabled: false
+      global: true
+      id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
+      name: Every midnight
+      policy_groups:
+      - group:
+          assets_count: 1
+          description: All newly created assets are added to the Default group
+          id: f6360346-77a5-4f97-b919-331363b3af26
+          name: Default group
+          options: '{"timeout":60}'
+        policy:
+          id: af36818a-0f30-412c-9692-d37716075861
+          name: Sample Policy
+          settings_count: 12
+      schedule:
+        cron: 0 7 1 * *
+    items:
+      $ref: '#/definitions/Program'
+    title: 'Mediatype identifier: program; type=collection; view=default'
+    type: array
+  ProgramPayload:
+    example:
+      autosend: true
+      disabled: true
+      name: Every midnight
+      policy_groups:
+      - group_id: Perferendis sit.
+        policy_id: Quia aut et voluptatum suscipit ea.
+      - group_id: Perferendis sit.
+        policy_id: Quia aut et voluptatum suscipit ea.
+    properties:
+      autosend:
+        description: Autosend
+        example: true
+        type: boolean
+      disabled:
+        description: Disabled
+        example: true
+        type: boolean
+      name:
+        description: name
+        example: Every midnight
+        type: string
+      policy_groups:
+        description: PolicyGroups
+        example:
+        - group_id: Perferendis sit.
+          policy_id: Quia aut et voluptatum suscipit ea.
+        - group_id: Perferendis sit.
+          policy_id: Quia aut et voluptatum suscipit ea.
+        items:
+          $ref: '#/definitions/ProgramPolicyGroupPayload'
+        type: array
+    title: ProgramPayload
+    type: object
+  ProgramPolicyGroupPayload:
+    example:
+      group_id: Perferendis sit.
+      policy_id: Quia aut et voluptatum suscipit ea.
+    properties:
+      group_id:
+        description: group
+        example: Perferendis sit.
+        type: string
+      policy_id:
+        description: policy
+        example: Quia aut et voluptatum suscipit ea.
+        type: string
+    title: ProgramPolicyGroupPayload
+    type: object
+  ProgramUpdatePayload:
+    example:
+      autosend: false
+      disabled: false
+      name: Every midnight
+      policy_groups:
+      - group_id: Perferendis sit.
+        policy_id: Quia aut et voluptatum suscipit ea.
+      - group_id: Perferendis sit.
+        policy_id: Quia aut et voluptatum suscipit ea.
+      - group_id: Perferendis sit.
+        policy_id: Quia aut et voluptatum suscipit ea.
+    properties:
+      autosend:
+        description: Autosend
+        example: false
+        type: boolean
+      disabled:
+        description: Disabled
+        example: false
+        type: boolean
+      name:
+        description: name
+        example: Every midnight
+        type: string
+      policy_groups:
+        description: PolicyGroups
+        example:
+        - group_id: Perferendis sit.
+          policy_id: Quia aut et voluptatum suscipit ea.
+        - group_id: Perferendis sit.
+          policy_id: Quia aut et voluptatum suscipit ea.
+        - group_id: Perferendis sit.
+          policy_id: Quia aut et voluptatum suscipit ea.
+        items:
+          $ref: '#/definitions/ProgramPolicyGroupPayload'
+        type: array
+    title: ProgramUpdatePayload
+    type: object
+  Recipient:
+    description: Recipient (default view)
+    example:
+      email: john.doe@vulcan.com
+    properties:
+      email:
+        description: email
+        example: john.doe@vulcan.com
+        type: string
+    title: 'Mediatype identifier: recipient; view=default'
+    type: object
+  RecipientCollection:
+    description: RecipientCollection is the media type for an array of Recipient (default
+      view)
+    example:
+    - email: john.doe@vulcan.com
+    items:
+      $ref: '#/definitions/Recipient'
+    title: 'Mediatype identifier: recipient; type=collection; view=default'
+    type: array
+  RecipientsPayload:
+    example:
+      emails:
+      - john.doe@vulcan.com
+      - jane.doe@vulcan.com
+    properties:
+      emails:
+        description: Emails
+        example:
+        - john.doe@vulcan.com
+        - jane.doe@vulcan.com
+        items:
+          example: Sed qui sint ratione perferendis cumque.
+          type: string
+        type: array
+    required:
+    - emails
+    title: RecipientsPayload
+    type: object
+  Report:
+    description: Report (default view)
+    example:
+      delivered_to: john.doe@vulcan.com, jane.doe@vulcan.com
+      id: a7f3a072-67bb-41ad-941e-25afcafc0ed5
+      report: https://insights.vulcan.com/2b3123c0b0083ab6d87b7bb743652b9a58125079258b8b4650511bd47bc1a552/2018-07-10/360f1c3a-f0e9-4c10-b557-ebf3015a61a9-full-report.html
+      report_json: https://insights.vulcan.com/2b3123c0b0083ab6d87b7bb743652b9a58125079258b8b4650511bd47bc1a552/2018-07-10/360f1c3a-f0e9-4c10-b557-ebf3015a61a9-full-report.json
+      scan_id: 360f1c3a-f0e9-4c10-b557-ebf3015a61a9
+      status: FINISHED
+    properties:
+      delivered_to:
+        description: Delivered To
+        example: john.doe@vulcan.com, jane.doe@vulcan.com
+        type: string
+      id:
+        description: Report ID
+        example: a7f3a072-67bb-41ad-941e-25afcafc0ed5
+        type: string
+      report:
+        description: Report URL
+        example: https://insights.vulcan.com/2b3123c0b0083ab6d87b7bb743652b9a58125079258b8b4650511bd47bc1a552/2018-07-10/360f1c3a-f0e9-4c10-b557-ebf3015a61a9-full-report.html
+        type: string
+      report_json:
+        description: Report JSON URL
+        example: https://insights.vulcan.com/2b3123c0b0083ab6d87b7bb743652b9a58125079258b8b4650511bd47bc1a552/2018-07-10/360f1c3a-f0e9-4c10-b557-ebf3015a61a9-full-report.json
+        type: string
+      scan_id:
+        description: Scan ID
+        example: 360f1c3a-f0e9-4c10-b557-ebf3015a61a9
+        type: string
+      status:
+        description: Status
+        example: FINISHED
+        type: string
+    title: 'Mediatype identifier: report; view=default'
+    type: object
+  Reportemail:
+    description: Report Email Body (default view)
+    example:
+      email_body: <html><body><title>...</title></body></html>
+    properties:
+      email_body:
+        description: Email Body
+        example: <html><body><title>...</title></body></html>
+        type: string
+    title: 'Mediatype identifier: reportemail; view=default'
+    type: object
+  Resource:
+    description: resource (default view)
+    example:
+      attributes:
+      - Hostname
+      - Port
+      name: Network Resources
+      resources:
+      - Hostname: test.example.com
+        Port: "443"
+    properties:
+      attributes:
+        description: attributes of a resource
+        example:
+        - Hostname
+        - Port
+        items:
+          example: Corrupti rerum deleniti aut sed illo.
+          type: string
+        type: array
+      name:
+        description: Resource name
+        example: Network Resources
+        type: string
+      resources:
+        description: values for attributes of a resource
+        example:
+        - Hostname: test.example.com
+          Port: "443"
+        items:
+          additionalProperties: true
+          example:
+            Omnis perferendis.: Natus esse neque aliquid.
+          type: object
+        type: array
+    title: 'Mediatype identifier: resource; view=default'
+    type: object
+  Scan:
+    description: Scan (default view)
+    example:
+      checks_count: 20
+      end_time: "2018-09-07T10:40:52Z"
+      id: 23e7034f-8180-4895-8e7f-73f2f7d90631
+      program:
+        autosend: false
+        disabled: false
+        global: true
+        id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
+        name: Every midnight
+        policy_groups:
+        - group:
+            assets_count: 1
+            description: All newly created assets are added to the Default group
+            id: f6360346-77a5-4f97-b919-331363b3af26
+            name: Default group
+            options: '{"timeout":60}'
+          policy:
+            id: af36818a-0f30-412c-9692-d37716075861
+            name: Sample Policy
+            settings_count: 12
+        schedule:
+          cron: 0 7 1 * *
+      progress: 1
+      requested_by: john.doe@vulcan.com
+      scheduled_time: "2018-09-07T10:40:52Z"
+      start_time: "2018-09-07T10:40:52Z"
+      status: FINISHED
+    properties:
+      checks_count:
+        description: Checks Count
+        example: 20
+        format: int64
+        type: integer
+      end_time:
+        description: End Time
+        example: "2018-09-07T10:40:52Z"
+        format: date-time
+        type: string
+      id:
+        description: Scan ID
+        example: 23e7034f-8180-4895-8e7f-73f2f7d90631
+        type: string
+      program:
+        $ref: '#/definitions/Program'
+      progress:
+        description: Progress
+        example: 1
+        format: double
+        type: number
+      requested_by:
+        description: Requested By
+        example: john.doe@vulcan.com
+        type: string
+      scheduled_time:
+        description: Scheduled Time
+        example: "2018-09-07T10:40:52Z"
+        format: date-time
+        type: string
+      start_time:
+        description: Start Time
+        example: "2018-09-07T10:40:52Z"
+        format: date-time
+        type: string
+      status:
+        description: Status
+        example: FINISHED
+        type: string
+    title: 'Mediatype identifier: scan; view=default'
+    type: object
+  ScanCollection:
+    description: ScanCollection is the media type for an array of Scan (default view)
+    example:
+    - checks_count: 20
+      end_time: "2018-09-07T10:40:52Z"
+      id: 23e7034f-8180-4895-8e7f-73f2f7d90631
+      program:
+        autosend: false
+        disabled: false
+        global: true
+        id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
+        name: Every midnight
+        policy_groups:
+        - group:
+            assets_count: 1
+            description: All newly created assets are added to the Default group
+            id: f6360346-77a5-4f97-b919-331363b3af26
+            name: Default group
+            options: '{"timeout":60}'
+          policy:
+            id: af36818a-0f30-412c-9692-d37716075861
+            name: Sample Policy
+            settings_count: 12
+        schedule:
+          cron: 0 7 1 * *
+      progress: 1
+      requested_by: john.doe@vulcan.com
+      scheduled_time: "2018-09-07T10:40:52Z"
+      start_time: "2018-09-07T10:40:52Z"
+      status: FINISHED
+    items:
+      $ref: '#/definitions/Scan'
+    title: 'Mediatype identifier: scan; type=collection; view=default'
+    type: array
+  ScanPayload:
+    example:
+      program_id: 1bb4c953-245e-477b-b005-400f319274f2
+      scheduled_time: "2018-09-07T10:40:52Z"
+    properties:
+      program_id:
+        description: Program ID
+        example: 1bb4c953-245e-477b-b005-400f319274f2
+        type: string
+      scheduled_time:
+        description: Group ID
+        example: "2018-09-07T10:40:52Z"
+        format: date-time
+        type: string
+    required:
+    - program_id
+    title: ScanPayload
+    type: object
+  Schedule:
+    description: Schedule (default view)
+    example:
+      cron: 0 7 1 * *
+    properties:
+      cron:
+        description: Cron Expression
+        example: 0 7 1 * *
+        type: string
+    required:
+    - cron
+    title: 'Mediatype identifier: schedule; view=default'
+    type: object
+  SchedulePayload:
+    example:
+      cron: 0 7 1 * *
+    properties:
+      cron:
+        description: Cron Expression
+        example: 0 7 1 * *
+        type: string
+    title: SchedulePayload
+    type: object
+  ScheduleUpdatePayload:
+    example:
+      cron: 0 7 1 * *
+    properties:
+      cron:
+        description: Cron Expression
+        example: 0 7 1 * *
+        type: string
+    title: ScheduleUpdatePayload
+    type: object
+  Source:
+    description: source (default view)
+    example:
+      component: vulcan-tls
+      id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
+      instance: b3320f03-1284-42fd-9cf4-5bb6c500966f
+      name: vulcan
+      options: '{"timeout":60}'
+      time: "2019-06-08 11:16:40"
+    properties:
+      component:
+        description: Source component
+        example: vulcan-tls
+        type: string
+      id:
+        description: Source ID
+        example: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
+        type: string
+      instance:
+        description: Source instance ID
+        example: b3320f03-1284-42fd-9cf4-5bb6c500966f
+        type: string
+      name:
+        description: Source name
+        example: vulcan
+        type: string
+      options:
+        description: Source options
+        example: '{"timeout":60}'
+        type: string
+      time:
+        description: Source execution end time
+        example: "2019-06-08 11:16:40"
+        type: string
+    title: 'Mediatype identifier: source; view=default'
+    type: object
+  Stats:
+    description: Stats by severity (default view)
+    example:
+      critical: 0.9878276236897935
+      high: 0.19639983058229388
+      informational: 0.06491961493419728
+      low: 0.14622255544569557
+      medium: 0.18441607619283212
+    properties:
+      critical:
+        description: Stats for critical vulnerabilities
+        example: 0.9878276236897935
+        format: double
+        type: number
+      high:
+        description: Stats for high vulnerabilities
+        example: 0.19639983058229388
+        format: double
+        type: number
+      informational:
+        description: Stats for informational vulnerabilities
+        example: 0.06491961493419728
+        format: double
+        type: number
+      low:
+        description: Stats for low vulnerabilities
+        example: 0.14622255544569557
+        format: double
+        type: number
+      medium:
+        description: Stats for medium vulnerabilities
+        example: 0.18441607619283212
+        format: double
+        type: number
+    title: 'Mediatype identifier: stats; view=default'
+    type: object
+  Statscoverage:
+    description: 'Asset Coverage: discovered vs. confirmed (default view)'
+    example:
+      coverage: 0.9474707029546127
+    properties:
+      coverage:
+        description: Percentage of assets confirmed respect to discovered
+        example: 0.9474707029546127
+        format: double
+        type: number
+    title: 'Mediatype identifier: statscoverage; view=default'
+    type: object
+  Statsfixed:
+    description: Fixed issues stats (default view)
+    example:
+      fixed_issues:
+        critical: 0.9878276236897935
+        high: 0.19639983058229388
+        informational: 0.06491961493419728
+        low: 0.14622255544569557
+        medium: 0.18441607619283212
+    properties:
+      fixed_issues:
+        $ref: '#/definitions/Stats'
+    title: 'Mediatype identifier: statsfixed; view=default'
+    type: object
+  Statsopen:
+    description: Open issues stats (default view)
+    example:
+      open_issues:
+        critical: 0.9878276236897935
+        high: 0.19639983058229388
+        informational: 0.06491961493419728
+        low: 0.14622255544569557
+        medium: 0.18441607619283212
+    properties:
+      open_issues:
+        $ref: '#/definitions/Stats'
+    title: 'Mediatype identifier: statsopen; view=default'
+    type: object
+  Statstotal:
+    description: Stats by severity (default view)
+    example:
+      critical: 0.19220168857228337
+      high: 0.4834744722342159
+      informational: 0.5205844348643661
+      low: 0.8413557035664904
+      medium: 0.21762696584450403
+      total: 0.8619749137392434
+    properties:
+      critical:
+        description: Stats for critical vulnerabilities
+        example: 0.19220168857228337
+        format: double
+        type: number
+      high:
+        description: Stats for high vulnerabilities
+        example: 0.4834744722342159
+        format: double
+        type: number
+      informational:
+        description: Stats for informational vulnerabilities
+        example: 0.5205844348643661
+        format: double
+        type: number
+      low:
+        description: Stats for low vulnerabilities
+        example: 0.8413557035664904
+        format: double
+        type: number
+      medium:
+        description: Stats for medium vulnerabilities
+        example: 0.21762696584450403
+        format: double
+        type: number
+      total:
+        description: Stats for all vulnerabilities
+        example: 0.8619749137392434
+        format: double
+        type: number
+    title: 'Mediatype identifier: statstotal; view=default'
+    type: object
+  Target:
+    description: target (default view)
+    example:
+      id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
+      identifier: www.test.com
+      tags:
+      - team:vulcan
+    properties:
+      id:
+        description: Target ID
+        example: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
+        type: string
+      identifier:
+        description: Target identifier
+        example: www.test.com
+        type: string
+      tags:
+        description: List of tags associated with target
+        example:
+        - team:vulcan
+        items:
+          example: Laboriosam dolorem distinctio quis.
+          type: string
+        type: array
+    title: 'Mediatype identifier: target; view=default'
+    type: object
+  Team:
+    description: Team (default view)
+    example:
+      description: Security Team
+      id: ff74a33c-e683-4612-a62f-a9cf385f6522
+      name: Security
+      tag: team:security
+    properties:
+      description:
+        description: Description
+        example: Security Team
+        type: string
+      id:
+        description: Team ID
+        example: ff74a33c-e683-4612-a62f-a9cf385f6522
+        type: string
+      name:
+        description: Name
+        example: Security
+        type: string
+      tag:
+        description: tag
+        example: team:security
+        type: string
+    title: 'Mediatype identifier: team; view=default'
+    type: object
+  TeamCollection:
+    description: TeamCollection is the media type for an array of Team (default view)
+    example:
+    - description: Security Team
+      id: ff74a33c-e683-4612-a62f-a9cf385f6522
+      name: Security
+      tag: team:security
+    - description: Security Team
+      id: ff74a33c-e683-4612-a62f-a9cf385f6522
+      name: Security
+      tag: team:security
+    - description: Security Team
+      id: ff74a33c-e683-4612-a62f-a9cf385f6522
+      name: Security
+      tag: team:security
+    items:
+      $ref: '#/definitions/Team'
+    title: 'Mediatype identifier: team; type=collection; view=default'
+    type: array
+  TeamMemberPayload:
+    example:
+      email: john.doe@vulcan.com
+      role: owner
+      user_id: 967d9966-b561-4233-bd6f-cac603fd8320
+    properties:
+      email:
+        description: Email
+        example: john.doe@vulcan.com
+        type: string
+      role:
+        description: 'Member role. Valid values are: owner, member'
+        example: owner
+        type: string
+      user_id:
+        description: User ID
+        example: 967d9966-b561-4233-bd6f-cac603fd8320
+        type: string
+    title: TeamMemberPayload
+    type: object
+  TeamMemberUpdatePayload:
+    example:
+      role: owner
+    properties:
+      role:
+        description: 'Member role. Valid values are: owner, member'
+        example: owner
+        type: string
+    title: TeamMemberUpdatePayload
+    type: object
+  TeamPayload:
+    example:
+      description: Security Team
+      name: Security
+      tag: team:security
+    properties:
+      description:
+        description: description
+        example: Security Team
+        type: string
+      name:
+        description: name
+        example: Security
+        type: string
+      tag:
+        description: tag
+        example: team:security
+        type: string
+    required:
+    - name
+    - tag
+    title: TeamPayload
+    type: object
+  TeamUpdatePayload:
+    example:
+      description: Security Team
+      name: Security
+      tag: team:security
+    properties:
+      description:
+        description: description
+        example: Security Team
+        type: string
+      name:
+        description: name
+        example: Security
+        type: string
+      tag:
+        description: tag
+        example: team:security
+        type: string
+    title: TeamUpdatePayload
+    type: object
+  Teammember:
+    description: Team Member (default view)
+    example:
+      role: owner
+      user:
+        active: true
+        admin: true
+        email: john.doe@vulcan.com
+        firstname: John
+        id: 967d9966-b561-4233-bd6f-cac603fd8320
+        last_login: "2018-09-07T10:40:52Z"
+        lastname: Doe
+        observer: true
+    properties:
+      role:
+        description: Role
+        example: owner
+        type: string
+      user:
+        $ref: '#/definitions/User'
+    title: 'Mediatype identifier: teammember; view=default'
+    type: object
+  TeammemberCollection:
+    description: TeammemberCollection is the media type for an array of Teammember
+      (default view)
+    example:
+    - role: owner
+      user:
+        active: true
+        admin: true
+        email: john.doe@vulcan.com
+        firstname: John
+        id: 967d9966-b561-4233-bd6f-cac603fd8320
+        last_login: "2018-09-07T10:40:52Z"
+        lastname: Doe
+        observer: true
+    - role: owner
+      user:
+        active: true
+        admin: true
+        email: john.doe@vulcan.com
+        firstname: John
+        id: 967d9966-b561-4233-bd6f-cac603fd8320
+        last_login: "2018-09-07T10:40:52Z"
+        lastname: Doe
+        observer: true
+    items:
+      $ref: '#/definitions/Teammember'
+    title: 'Mediatype identifier: teammember; type=collection; view=default'
+    type: array
+  Token:
+    description: Token (default view)
+    example:
+      creation_time: "2018-09-07T10:40:52Z"
+      email: john.doe@vulcan.com
+      hash: 903af1a77ea4eda46b60d85fac0f312ff9d3b6ea092434c8a6ef1868bf95da77
+      token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1MzcxODQ0NjksInN1YiI6Im1haWNvbkBjb3N0YS5jb20iLCJ0eXBlIjoiQVBJIn0.zu8mf5nSpvmFyZNZM7Im-omHa_J9Ck1KH49zuy1wvjY
+    properties:
+      creation_time:
+        description: Creation time
+        example: "2018-09-07T10:40:52Z"
+        type: string
+      email:
+        description: Email
+        example: john.doe@vulcan.com
+        type: string
+      hash:
+        description: Hash
+        example: 903af1a77ea4eda46b60d85fac0f312ff9d3b6ea092434c8a6ef1868bf95da77
+        type: string
+      token:
+        description: Token
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1MzcxODQ0NjksInN1YiI6Im1haWNvbkBjb3N0YS5jb20iLCJ0eXBlIjoiQVBJIn0.zu8mf5nSpvmFyZNZM7Im-omHa_J9Ck1KH49zuy1wvjY
+        type: string
+    title: 'Mediatype identifier: token; view=default'
+    type: object
+  User:
+    description: User (default view)
+    example:
+      active: true
+      admin: true
+      email: john.doe@vulcan.com
+      firstname: John
+      id: 967d9966-b561-4233-bd6f-cac603fd8320
+      last_login: "2018-09-07T10:40:52Z"
+      lastname: Doe
+      observer: true
+    properties:
+      active:
+        description: Active
+        example: true
+        type: boolean
+      admin:
+        description: Admin
+        example: true
+        type: boolean
+      email:
+        description: Email
+        example: john.doe@vulcan.com
+        type: string
+      firstname:
+        description: First name
+        example: John
+        type: string
+      id:
+        description: User ID
+        example: 967d9966-b561-4233-bd6f-cac603fd8320
+        type: string
+      last_login:
+        description: last_login
+        example: "2018-09-07T10:40:52Z"
+        format: date-time
+        type: string
+      lastname:
+        description: Last name
+        example: Doe
+        type: string
+      observer:
+        description: Observer
+        example: true
+        type: boolean
+    title: 'Mediatype identifier: user; view=default'
+    type: object
+  UserCollection:
+    description: UserCollection is the media type for an array of User (default view)
+    example:
+    - active: true
+      admin: true
+      email: john.doe@vulcan.com
+      firstname: John
+      id: 967d9966-b561-4233-bd6f-cac603fd8320
+      last_login: "2018-09-07T10:40:52Z"
+      lastname: Doe
+      observer: true
+    items:
+      $ref: '#/definitions/User'
+    title: 'Mediatype identifier: user; type=collection; view=default'
+    type: array
+  UserPayload:
+    example:
+      active: true
+      admin: false
+      email: john.doe@vulcan.com
+      firstname: John
+      lastname: Doe
+      observer: false
+    properties:
+      active:
+        description: 'Active (Default: true)'
+        example: true
+        type: boolean
+      admin:
+        default: false
+        description: Admin
+        example: false
+        type: boolean
+      email:
+        description: Email
+        example: john.doe@vulcan.com
+        type: string
+      firstname:
+        description: First Name
+        example: John
+        type: string
+      lastname:
+        description: Last Name
+        example: Doe
+        type: string
+      observer:
+        default: false
+        description: Observer
+        example: false
+        type: boolean
+    required:
+    - email
+    title: UserPayload
+    type: object
+  UserUpdatePayload:
+    example:
+      active: true
+      admin: false
+      firstname: John
+      lastname: Doe
+    properties:
+      active:
+        description: 'Active (Default: true)'
+        example: true
+        type: boolean
+      admin:
+        default: false
+        description: Admin
+        example: false
+        type: boolean
+      firstname:
+        description: First Name
+        example: John
+        type: string
+      lastname:
+        description: Last Name
+        example: Doe
+        type: string
+    title: UserUpdatePayload
+    type: object
+host: www.vulcan.com
+info:
+  description: Public API for Vulcan Vulnerability Scan Engine
+  title: Vulcan API
+  version: ""
+paths:
+  /healthcheck:
+    get:
+      description: A simple HTTP healthcheck.
+      operationId: healthcheck#show
+      produces:
+      - healthcheck
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Healthcheck'
+      schemes:
+      - https
+      summary: show healthcheck
+      tags:
+      - healthcheck
+  /profile:
+    get:
+      description: Show profile information for the current authenticated user based
+        on the key used to make the request.
+      operationId: user#profile
+      produces:
+      - user
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: profile user
+      tags:
+      - user
+  /stats/mttr:
+    get:
+      description: Get global MTR statistics.
+      operationId: global-stats#mttr
+      parameters:
+      - description: Maximum date to filter statistics by
+        in: query
+        name: maxDate
+        required: false
+        type: string
+      - description: Minimum date to filter statistics by
+        in: query
+        name: minDate
+        required: false
+        type: string
+      produces:
+      - mttr
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Mttr'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: mttr global-stats
+      tags:
+      - global-stats
+  /teams:
+    get:
+      description: List all teams in Vulcan.
+      operationId: teams#list
+      parameters:
+      - description: Team tag
+        in: query
+        name: tag
+        required: false
+        type: string
+      produces:
+      - team; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/TeamCollection'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: list teams
+      tags:
+      - teams
+    post:
+      description: Create a new team.
+      operationId: teams#create
+      parameters:
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/TeamPayload'
+      produces:
+      - team
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/Team'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: create teams
+      tags:
+      - teams
+  /teams/{team_id}:
+    delete:
+      description: Delete a team.
+      operationId: teams#delete
+      parameters:
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: delete teams
+      tags:
+      - teams
+    get:
+      description: Show information about a team.
+      operationId: teams#show
+      parameters:
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      produces:
+      - team
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Team'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: show teams
+      tags:
+      - teams
+    patch:
+      description: Update information about a team.
+      operationId: teams#update
+      parameters:
+      - description: team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/TeamUpdatePayload'
+      produces:
+      - team
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Team'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: update teams
+      tags:
+      - teams
+  /teams/{team_id}/assets:
+    get:
+      description: List all assets from a team.
+      operationId: assets#list
+      parameters:
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      produces:
+      - listassetentry; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ListassetentryCollection'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: list assets
+      tags:
+      - assets
+    post:
+      description: "Creates assets in bulk mode.\n\t\t\tThis operation accepts an
+        array of assets and an optional array of group identifiers, and returns an
+        array of successfully created assets.\n\t\t\tIf no groups are specified, assets
+        will be added to the team's Default group.\n\t\t\tIf one of the specified
+        assets already exists for the team but is currently not associated with the
+        requested groups, the association is created.\n\t\t\tIf for any reason, the
+        creation of an asset fails, an error message will be returned referencing
+        the failed asset and the entire operation will be rolled back.\n\t\t\t---\n\t\t\tValid
+        asset types:\n\t\t\t- AWSAccount\n\t\t\t- DomainName\n\t\t\t- Hostname\n\t\t\t-
+        IP\n\t\t\t- IPRange\n\t\t\t- DockerImage\n\t\t\t- WebAddress\n\t\t\t- GitRepository\n\t\t\t---\n\t\t\tIf
+        the asset type is informed, then Vulcan will use that value to create the
+        new asset.\n\t\t\tOtherwise, Vulcan will try to automatically discover the
+        asset type.\n\t\t\tNotice that this may result in Vulcan creating more than
+        one asset.\n\t\t\tFor instance, an user trying to create an asset for \"vulcan.com\",
+        without specifying the asset type, will end up with two assets created:\n\t\t\t-
+        vulcan.com (DomainName) and\n\t\t\t- vulcan.com (Hostname)."
+      operationId: assets#create
+      parameters:
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/CreateAssetPayload'
+      produces:
+      - asset; type=collection
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/AssetCollection'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: create assets
+      tags:
+      - assets
+  /teams/{team_id}/assets/{asset_id}:
+    delete:
+      description: Delete an asset.
+      operationId: assets#delete
+      parameters:
+      - description: Asset ID
+        in: path
+        name: asset_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: delete assets
+      tags:
+      - assets
+    get:
+      description: Describe an asset.
+      operationId: assets#show
+      parameters:
+      - description: Asset ID
+        in: path
+        name: asset_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      produces:
+      - asset
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Asset'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: show assets
+      tags:
+      - assets
+    patch:
+      description: Update an asset.
+      operationId: assets#update
+      parameters:
+      - description: Asset ID
+        in: path
+        name: asset_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/AssetUpdatePayload'
+      produces:
+      - asset
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Asset'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: update assets
+      tags:
+      - assets
+  /teams/{team_id}/assets/multistatus:
+    post:
+      description: "Creates assets in bulk mode (MultiStatus).\n\t\t\tThis operation
+        is similar to the \"Create Assets in Bulk Mode\", with 2 main differences:\n\t\t\t-
+        This endpoint is not atomic. Each asset creation request will succeed or fail
+        indenpendently of the other requests.\n\t\t\t- This endpoint will return an
+        array of AssetResponse in the following way:\n\t\t\t\t· For each asset with
+        specified type, returns an AssetResponse indicating the success or failure
+        for its creation.\n\t\t\t\t· For each asset with no type specified and successfully
+        created, returns one AssetResponse for each auto detected asset.\n\t\t\t\t·
+        For each asset with no type specified which its creation produced an error,
+        returns one AssetResponse indicating the failure for the creation of its detected
+        assets without specifying which exact type failed.\n\t\t\tIn the case of all
+        assets being successfully created, this endpoint will return status code 201-Created.
+        \n\t\t\tOtherwise, it will return a 207-MultiStatus code, indicating that
+        at least one of the requested operations failed.\t\n\t\t"
+      operationId: assets#createMultiStatus
+      parameters:
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/CreateAssetPayload'
+      produces:
+      - assetresponse; type=collection
+      responses:
+        "201":
+          description: 'Created: All assets were created with success.'
+          schema:
+            $ref: '#/definitions/AssetresponseCollection'
+        "207":
+          description: 'Multiple Status: At least one of the assets failed to be created.'
+          schema:
+            $ref: '#/definitions/AssetresponseCollection'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: createMultiStatus assets
+      tags:
+      - assets
+  /teams/{team_id}/findings:
+    get:
+      description: List all findings from a team.
+      operationId: findings#list findings
+      parameters:
+      - description: Allows to get findings list at a specific date (incompatible
+          and preferential to min and max date params)
+        in: query
+        name: atDate
+        required: false
+        type: string
+      - description: Allows to get findings list for a specific asset identifier
+        in: query
+        name: identifier
+        required: false
+        type: string
+      - description: Allows to get findings list until a specific date
+        in: query
+        name: maxDate
+        required: false
+        type: string
+      - description: Findings maximum score
+        in: query
+        name: maxScore
+        required: false
+        type: number
+      - description: Allows to get findings list from a specific date
+        in: query
+        name: minDate
+        required: false
+        type: string
+      - description: Findings minimum score
+        in: query
+        name: minScore
+        required: false
+        type: number
+      - description: Requested page
+        in: query
+        name: page
+        required: false
+        type: number
+      - description: Requested page size
+        in: query
+        name: size
+        required: false
+        type: number
+      - description: 'Sorting criteria. Supported fields: score, -score (for descending
+          order)'
+        in: query
+        name: sortBy
+        required: false
+        type: string
+      - description: Findings Status
+        in: query
+        name: status
+        required: false
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      produces:
+      - findings_list
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Findings_list'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: list findings findings
+      tags:
+      - findings
+  /teams/{team_id}/findings/{finding_id}:
+    get:
+      description: Find a finding.
+      operationId: findings#Find finding
+      parameters:
+      - description: Finding ID
+        in: path
+        name: finding_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      produces:
+      - finding
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Finding'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: Find finding findings
+      tags:
+      - findings
+  /teams/{team_id}/findings/issues:
+    get:
+      description: List number of findings and max score per issue.
+      operationId: findings#list findings issues
+      parameters:
+      - description: Allows to get issues list at a specific date
+        in: query
+        name: atDate
+        required: false
+        type: string
+      - description: Allows to get findings list until a specific date
+        in: query
+        name: maxDate
+        required: false
+        type: string
+      - description: Allows to get findings list from a specific date
+        in: query
+        name: minDate
+        required: false
+        type: string
+      - description: Requested page
+        in: query
+        name: page
+        required: false
+        type: number
+      - description: Requested page size
+        in: query
+        name: size
+        required: false
+        type: number
+      - description: 'Sorting criteria. Supported fields: score, findings_count (use
+          - for descending order. E.g.: -score)'
+        in: query
+        name: sortBy
+        required: false
+        type: string
+      - description: Findings Status
+        in: query
+        name: status
+        required: false
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      produces:
+      - findings_issues_list
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Findings_issues_list'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: list findings issues findings
+      tags:
+      - findings
+  /teams/{team_id}/findings/issues/{issue_id}:
+    get:
+      description: Find all findings from a team and issue.
+      operationId: findings#Find findings from a Issue
+      parameters:
+      - description: Allows to get findings list at a specific date (incompatible
+          and preferential to min and max date params)
+        in: query
+        name: atDate
+        required: false
+        type: string
+      - description: Issue ID
+        in: path
+        name: issue_id
+        required: true
+        type: string
+      - description: Allows to get findings list until a specific date
+        in: query
+        name: maxDate
+        required: false
+        type: string
+      - description: Findings maximum score
+        in: query
+        name: maxScore
+        required: false
+        type: number
+      - description: Allows to get findings list from a specific date
+        in: query
+        name: minDate
+        required: false
+        type: string
+      - description: Findings minimum score
+        in: query
+        name: minScore
+        required: false
+        type: number
+      - description: Requested page
+        in: query
+        name: page
+        required: false
+        type: number
+      - description: Requested page size
+        in: query
+        name: size
+        required: false
+        type: number
+      - description: 'Sorting criteria. Supported fields: score, -score (for descending
+          order)'
+        in: query
+        name: sortBy
+        required: false
+        type: string
+      - description: Findings Status
+        in: query
+        name: status
+        required: false
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      produces:
+      - findings_list
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Findings_list'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: Find findings from a Issue findings
+      tags:
+      - findings
+  /teams/{team_id}/findings/targets:
+    get:
+      description: List number of findings and max score per target.
+      operationId: findings#list findings targets
+      parameters:
+      - description: Allows to get targets list at a specific date
+        in: query
+        name: atDate
+        required: false
+        type: string
+      - description: Allows to get findings list until a specific date
+        in: query
+        name: maxDate
+        required: false
+        type: string
+      - description: Allows to get findings list from a specific date
+        in: query
+        name: minDate
+        required: false
+        type: string
+      - description: Requested page
+        in: query
+        name: page
+        required: false
+        type: number
+      - description: Requested page size
+        in: query
+        name: size
+        required: false
+        type: number
+      - description: 'Sorting criteria. Supported fields: score, findings_count (use
+          - for descending order. E.g.: -score)'
+        in: query
+        name: sortBy
+        required: false
+        type: string
+      - description: Findings Status
+        in: query
+        name: status
+        required: false
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      produces:
+      - findings_targets_list
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Findings_targets_list'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: list findings targets findings
+      tags:
+      - findings
+  /teams/{team_id}/findings/targets/{target_id}:
+    get:
+      description: Find all findings from a team and target.
+      operationId: findings#Find findings from a Target
+      parameters:
+      - description: Allows to get findings list at a specific date (incompatible
+          and preferential to min and max date params)
+        in: query
+        name: atDate
+        required: false
+        type: string
+      - description: Allows to get findings list until a specific date
+        in: query
+        name: maxDate
+        required: false
+        type: string
+      - description: Findings maximum score
+        in: query
+        name: maxScore
+        required: false
+        type: number
+      - description: Allows to get findings list from a specific date
+        in: query
+        name: minDate
+        required: false
+        type: string
+      - description: Findings minimum score
+        in: query
+        name: minScore
+        required: false
+        type: number
+      - description: Requested page
+        in: query
+        name: page
+        required: false
+        type: number
+      - description: Requested page size
+        in: query
+        name: size
+        required: false
+        type: number
+      - description: 'Sorting criteria. Supported fields: score, -score (for descending
+          order)'
+        in: query
+        name: sortBy
+        required: false
+        type: string
+      - description: Findings Status
+        in: query
+        name: status
+        required: false
+        type: string
+      - description: Target ID
+        in: path
+        name: target_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      produces:
+      - findings_list
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Findings_list'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: Find findings from a Target findings
+      tags:
+      - findings
+  /teams/{team_id}/groups:
+    get:
+      description: List all groups of assets from a team.
+      operationId: group#list
+      parameters:
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      produces:
+      - group; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/GroupCollection'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: list group
+      tags:
+      - group
+    post:
+      description: Create a new group of assets.
+      operationId: group#create
+      parameters:
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/GroupPayload'
+      produces:
+      - group
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/Group'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: create group
+      tags:
+      - group
+  /teams/{team_id}/groups/{group_id}:
+    delete:
+      description: Delete a group of assets.
+      operationId: group#delete
+      parameters:
+      - description: Group ID
+        in: path
+        name: group_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: delete group
+      tags:
+      - group
+    get:
+      description: Describe a group of assets.
+      operationId: group#show
+      parameters:
+      - description: Group ID
+        in: path
+        name: group_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      produces:
+      - group
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Group'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: show group
+      tags:
+      - group
+    patch:
+      description: Update a group of assets.
+      operationId: group#update
+      parameters:
+      - description: Group ID
+        in: path
+        name: group_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/GroupPayload'
+      produces:
+      - group
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Group'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: update group
+      tags:
+      - group
+  /teams/{team_id}/groups/{group_id}/assets:
+    get:
+      description: List all assets from a group.
+      operationId: asset-group#list
+      parameters:
+      - description: Group ID
+        in: path
+        name: group_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      produces:
+      - asset; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/AssetCollection'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: list asset-group
+      tags:
+      - asset-group
+    post:
+      description: Associate an asset to a group.
+      operationId: asset-group#create
+      parameters:
+      - description: Group ID
+        in: path
+        name: group_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/AssetGroupPayload'
+      produces:
+      - asset
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/Asset'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: create asset-group
+      tags:
+      - asset-group
+  /teams/{team_id}/groups/{group_id}/assets/{asset_id}:
+    delete:
+      description: Remove an asset from a group.
+      operationId: asset-group#delete
+      parameters:
+      - description: Asset ID
+        in: path
+        name: asset_id
+        required: true
+        type: string
+      - description: Group ID
+        in: path
+        name: group_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: delete asset-group
+      tags:
+      - asset-group
+  /teams/{team_id}/members:
+    get:
+      description: List all members from a team.
+      operationId: team-members#list
+      parameters:
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      produces:
+      - teammember; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/TeammemberCollection'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: list team-members
+      tags:
+      - team-members
+    post:
+      description: "Create a team-member association.\n\t\t\t---\n\t\t\tAt least one
+        of the following fields must be specified: \"email\", \"user_id\".\n\t\t\tOtherwise
+        the operation will fail.\n\t\t\tIf an email is specified, but the user does
+        not exists on the database yet, a new user will be created for that email.\n\t\t\t---\n\t\t\tValid
+        values for 'role' attribute:\n\t\t\t- member\n\t\t\t- owner"
+      operationId: team-members#create
+      parameters:
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/TeamMemberPayload'
+      produces:
+      - teammember
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/Teammember'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: create team-members
+      tags:
+      - team-members
+  /teams/{team_id}/members/{user_id}:
+    delete:
+      description: Delete a member from a team.
+      operationId: team-members#delete
+      parameters:
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: delete team-members
+      tags:
+      - team-members
+    get:
+      description: Describe a team-member association.
+      operationId: team-members#show
+      parameters:
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - teammember
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Teammember'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: show team-members
+      tags:
+      - team-members
+    patch:
+      description: "Update a team-member association. \nValid values for 'role' attribute:
+        'member', 'owner'."
+      operationId: team-members#update
+      parameters:
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/TeamMemberUpdatePayload'
+      produces:
+      - teammember
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Teammember'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: update team-members
+      tags:
+      - team-members
+  /teams/{team_id}/policies:
+    get:
+      description: List all policies from a team.
+      operationId: policies#list
+      parameters:
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      produces:
+      - policy; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/PolicyCollection'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: list policies
+      tags:
+      - policies
+    post:
+      description: Create a new policy.
+      operationId: policies#create
+      parameters:
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/PolicyPayload'
+      produces:
+      - policy
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/Policy'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: create policies
+      tags:
+      - policies
+  /teams/{team_id}/policies/{policy_id}:
+    delete:
+      description: Delete a policy.
+      operationId: policies#delete
+      parameters:
+      - description: Policy ID
+        in: path
+        name: policy_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: delete policies
+      tags:
+      - policies
+    get:
+      description: Show information about a policy.
+      operationId: policies#show
+      parameters:
+      - description: Policy ID
+        in: path
+        name: policy_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      produces:
+      - policy
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Policy'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: show policies
+      tags:
+      - policies
+    patch:
+      description: Update information about a policy.
+      operationId: policies#update
+      parameters:
+      - description: Policy ID
+        in: path
+        name: policy_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/PolicyUpdatePayload'
+      produces:
+      - policy
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Policy'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: update policies
+      tags:
+      - policies
+  /teams/{team_id}/policies/{policy_id}/settings:
+    get:
+      description: List settings for a policy.
+      operationId: policy-settings#list
+      parameters:
+      - description: Policy ID
+        in: path
+        name: policy_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      produces:
+      - policysetting; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/PolicysettingCollection'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: list policy-settings
+      tags:
+      - policy-settings
+    post:
+      description: Create a new policy setting.
+      operationId: policy-settings#create
+      parameters:
+      - description: Policy ID
+        in: path
+        name: policy_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/PolicySettingPayload'
+      produces:
+      - policysetting
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/Policysetting'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: create policy-settings
+      tags:
+      - policy-settings
+  /teams/{team_id}/policies/{policy_id}/settings/{settings_id}:
+    delete:
+      description: Delete a policy setting.
+      operationId: policy-settings#delete
+      parameters:
+      - description: Policy ID
+        in: path
+        name: policy_id
+        required: true
+        type: string
+      - description: Policy Settings ID
+        in: path
+        name: settings_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: delete policy-settings
+      tags:
+      - policy-settings
+    get:
+      description: Describe a policy setting.
+      operationId: policy-settings#show
+      parameters:
+      - description: Policy ID
+        in: path
+        name: policy_id
+        required: true
+        type: string
+      - description: CheckType Settings ID
+        in: path
+        name: settings_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      produces:
+      - policysetting
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Policysetting'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: show policy-settings
+      tags:
+      - policy-settings
+    patch:
+      description: Update a policy setting.
+      operationId: policy-settings#update
+      parameters:
+      - description: Policy ID
+        in: path
+        name: policy_id
+        required: true
+        type: string
+      - description: Policy Settings ID
+        in: path
+        name: settings_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/PolicySettingUploadPayload'
+      produces:
+      - policysetting
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Policysetting'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: update policy-settings
+      tags:
+      - policy-settings
+  /teams/{team_id}/programs:
+    get:
+      description: List all programs from a team.
+      operationId: programs#list
+      parameters:
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      produces:
+      - program; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ProgramCollection'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: list programs
+      tags:
+      - programs
+    post:
+      description: Create a new program.
+      operationId: programs#create
+      parameters:
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/ProgramPayload'
+      produces:
+      - program
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/Program'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: create programs
+      tags:
+      - programs
+  /teams/{team_id}/programs/{program_id}:
+    delete:
+      description: Delete a program.
+      operationId: programs#delete
+      parameters:
+      - description: Program ID
+        in: path
+        name: program_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: delete programs
+      tags:
+      - programs
+    get:
+      description: Show information about a program.
+      operationId: programs#show
+      parameters:
+      - description: Program ID
+        in: path
+        name: program_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      produces:
+      - program
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Program'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: show programs
+      tags:
+      - programs
+    patch:
+      description: Update information about a program.
+      operationId: programs#update
+      parameters:
+      - description: Program ID
+        in: path
+        name: program_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/ProgramUpdatePayload'
+      produces:
+      - program
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Program'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: update programs
+      tags:
+      - programs
+  /teams/{team_id}/programs/{program_id}/scans:
+    get:
+      description: List the scans of a program.
+      operationId: program-scans#list
+      parameters:
+      - description: Program ID
+        in: path
+        name: program_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      produces:
+      - scan; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ScanCollection'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: list program-scans
+      tags:
+      - program-scans
+  /teams/{team_id}/programs/{program_id}/schedule:
+    delete:
+      description: Delete a schedule.
+      operationId: schedule#delete
+      parameters:
+      - description: Program ID
+        in: path
+        name: program_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: delete schedule
+      tags:
+      - schedule
+    post:
+      description: Update information about a schedule.
+      operationId: schedule#update
+      parameters:
+      - description: Program ID
+        in: path
+        name: program_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/ScheduleUpdatePayload'
+      produces:
+      - schedule
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Schedule'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: update schedule
+      tags:
+      - schedule
+  /teams/{team_id}/recipients:
+    get:
+      description: List all recipients from a team.
+      operationId: recipients#list
+      parameters:
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      produces:
+      - recipient; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/RecipientCollection'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: list recipients
+      tags:
+      - recipients
+    put:
+      description: Update team recipients.
+      operationId: recipients#update
+      parameters:
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/RecipientsPayload'
+      produces:
+      - recipient; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/RecipientCollection'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: update recipients
+      tags:
+      - recipients
+  /teams/{team_id}/report/digest:
+    post:
+      description: |-
+        Send digest report.
+        If no dates are specified, the time range will be set for the last 30 days.
+      operationId: report#send digest
+      parameters:
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/DigestPayload'
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: send digest report
+      tags:
+      - report
+  /teams/{team_id}/scans:
+    post:
+      description: Create scan
+      operationId: scan#create
+      parameters:
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/ScanPayload'
+      produces:
+      - scan
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/Scan'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: create scan
+      tags:
+      - scan
+  /teams/{team_id}/scans/{scan_id}:
+    get:
+      description: Describe scan
+      operationId: scan#show
+      parameters:
+      - description: Scan ID
+        in: path
+        name: scan_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      produces:
+      - scan
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Scan'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: show scan
+      tags:
+      - scan
+  /teams/{team_id}/scans/{scan_id}/report:
+    get:
+      description: Show information about a scan report
+      operationId: scan report#show
+      parameters:
+      - description: Scan ID
+        in: path
+        name: scan_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      produces:
+      - report
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Report'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: show scan report
+      tags:
+      - scan report
+    post:
+      description: Triggers report generation. The report will be generated asynchronously
+        on Vulcan Backend.
+      operationId: scan report#generate
+      parameters:
+      - description: Scan ID
+        in: path
+        name: scan_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      responses:
+        "202":
+          description: Accepted
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: generate scan report
+      tags:
+      - scan report
+  /teams/{team_id}/scans/{scan_id}/report/email:
+    get:
+      description: Retrieve the report in html format to be sent by email.
+      operationId: scan report#email
+      parameters:
+      - description: Scan ID
+        in: path
+        name: scan_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      produces:
+      - reportemail
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Reportemail'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: email scan report
+      tags:
+      - scan report
+  /teams/{team_id}/scans/{scan_id}/report/send:
+    post:
+      description: Send the generated report by email to the team recipients.
+      operationId: scan report#send
+      parameters:
+      - description: Scan ID
+        in: path
+        name: scan_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      produces:
+      - NoContent
+      responses:
+        "200":
+          description: OK
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: send scan report
+      tags:
+      - scan report
+  /teams/{team_id}/stats/coverage:
+    get:
+      description: Get asset coverage for a team.
+      operationId: stats#coverage
+      parameters:
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      produces:
+      - statscoverage
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Statscoverage'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: coverage stats
+      tags:
+      - stats
+  /teams/{team_id}/stats/fixed:
+    get:
+      description: Get fixed issues statistics for a team.
+      operationId: stats#fixed
+      parameters:
+      - description: Specific date to get statistics at (incompatible and preferential
+          to min and max date params)
+        in: query
+        name: atDate
+        required: false
+        type: string
+      - description: Maximum date to filter statistics by
+        in: query
+        name: maxDate
+        required: false
+        type: string
+      - description: Minimum date to filter statistics by
+        in: query
+        name: minDate
+        required: false
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      produces:
+      - statsfixed
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Statsfixed'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: fixed stats
+      tags:
+      - stats
+  /teams/{team_id}/stats/mttr:
+    get:
+      description: Get MTR statistics for a team.
+      operationId: stats#mttr
+      parameters:
+      - description: Maximum date to filter statistics by
+        in: query
+        name: maxDate
+        required: false
+        type: string
+      - description: Minimum date to filter statistics by
+        in: query
+        name: minDate
+        required: false
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      produces:
+      - mttr
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Mttr'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: mttr stats
+      tags:
+      - stats
+  /teams/{team_id}/stats/open:
+    get:
+      description: Get open issues statistics for a team.
+      operationId: stats#open
+      parameters:
+      - description: Specific date to get statistics at (incompatible and preferential
+          to min and max date params)
+        in: query
+        name: atDate
+        required: false
+        type: string
+      - description: Maximum date to filter statistics by
+        in: query
+        name: maxDate
+        required: false
+        type: string
+      - description: Minimum date to filter statistics by
+        in: query
+        name: minDate
+        required: false
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      produces:
+      - statsopen
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Statsopen'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: open stats
+      tags:
+      - stats
+  /users:
+    get:
+      description: List all users
+      operationId: user#list
+      produces:
+      - user; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/UserCollection'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: list user
+      tags:
+      - user
+    post:
+      description: Create user
+      operationId: user#create
+      parameters:
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/UserPayload'
+      produces:
+      - user
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/User'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: create user
+      tags:
+      - user
+  /users/{user_id}:
+    delete:
+      description: Remove user
+      operationId: user#delete
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: delete user
+      tags:
+      - user
+    get:
+      description: Describe user
+      operationId: user#show
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - user
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: show user
+      tags:
+      - user
+    patch:
+      description: Update user
+      operationId: user#update
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/UserUpdatePayload'
+      produces:
+      - user
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: update user
+      tags:
+      - user
+  /users/{user_id}/teams:
+    get:
+      description: List all teams for an user.
+      operationId: user#list-teams
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - team; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/TeamCollection'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: list-teams user
+      tags:
+      - user
+  /users/{user_id}/token:
+    post:
+      description: Generate an API token for an user.
+      operationId: api-token#create
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - token
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/Token'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: create api-token
+      tags:
+      - api-token
+produces:
+- application/json
+- application/xml
+- application/gob
+- application/x-gob
+responses:
+  Accepted:
+    description: Accepted
+  OK:
+    description: OK
+schemes:
+- https
+securityDefinitions:
+  Bearer:
+    in: header
+    name: authorization
+    type: apiKey
+swagger: "2.0"

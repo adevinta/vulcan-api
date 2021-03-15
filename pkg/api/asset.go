@@ -1,0 +1,213 @@
+/*
+Copyright 2021 Adevinta
+*/
+
+package api
+
+import (
+	"database/sql/driver"
+	"fmt"
+	"strings"
+	"time"
+
+	"gopkg.in/go-playground/validator.v9"
+
+	"github.com/adevinta/errors"
+	types "github.com/adevinta/vulcan-types"
+	"github.com/adevinta/vulcan-api/pkg/common"
+)
+
+var ErrROLFPInvalidText = "invalid ROLFP representation"
+
+type Asset struct {
+	ID                string        `gorm:"primary_key;AUTO_INCREMENT" json:"id" sql:"DEFAULT:gen_random_uuid()"`
+	TeamID            string        `json:"team_id" validate:"required"`
+	Team              *Team         `json:"team,omitempty"` // This line is infered from column name "team_id".
+	AssetTypeID       string        `json:"asset_type_id" validate:"required"`
+	AssetType         *AssetType    `json:"asset_type"` // This line is infered from column name "asset_type_id".
+	Identifier        string        `json:"identifier" validate:"required"`
+	Alias             string        `json:"alias"`
+	Options           *string       `json:"options"`
+	EnvironmentalCVSS *string       `json:"environmental_cvss"`
+	ROLFP             *ROLFP        `json:"rolfp" sql:"DEFAULT:'R:1/O:1/L:1/F:1/P:1+S:2'"`
+	Scannable         *bool         `json:"scannable" gorm:"default:true"`
+	AssetGroups       []*AssetGroup `json:"groups"` // This line is infered from other tables.
+	CreatedAt         time.Time     `json:"-"`
+	UpdatedAt         time.Time     `json:"-"`
+	ClassifiedAt      *time.Time    `json:"classified_at"`
+}
+
+func (a Asset) Validate() error {
+	err := validator.New().Struct(a)
+	if err != nil {
+		return errors.Validation(err)
+	}
+	if !common.IsStringEmpty(a.Options) && !common.IsValidJSON(a.Options) {
+		return errors.Validation("asset.options field has invalid json")
+	}
+
+	switch a.AssetType.Name {
+	case "Hostname":
+		if !types.IsHostname(a.Identifier) {
+			return errors.Validation("Identifier is not a valid Hostname")
+		}
+	case "AWSAccount":
+		if !types.IsAWSARN(a.Identifier) {
+			return errors.Validation("Identifier is not a valid AWSAccount")
+		}
+	case "DockerImage":
+		if !types.IsDockerImage(a.Identifier) {
+			return errors.Validation("Identifier is not a valid DockerImage")
+		}
+	case "GitRepository":
+		if !types.IsGitRepository(a.Identifier) {
+			return errors.Validation("Identifier is not a valid GitRepository")
+		}
+	case "IP":
+		if strings.HasSuffix(a.Identifier, "/32") {
+			if !types.IsHost(a.Identifier) {
+				return errors.Validation("Identifier is not a valid Host")
+			}
+		} else {
+			if !types.IsIP(a.Identifier) {
+				return errors.Validation("Identifier is not a valid IP")
+			}
+		}
+	case "IPRange":
+		if !types.IsCIDR(a.Identifier) {
+			return errors.Validation("Identifier is not a valid CIDR block")
+		}
+	case "WebAddress":
+		if !types.IsWebAddress(a.Identifier) {
+			return errors.Validation("Identifier is not a valid WebAddress")
+		}
+	case "DomainName":
+		if ok, _ := types.IsDomainName(a.Identifier); !ok {
+			return errors.Validation("Identifier is not a valid DomainName")
+		}
+	default:
+		// If none of the previous case match, force a validation error
+		return errors.Validation("Asset type not supported")
+	}
+
+	return nil
+}
+
+func (a Asset) ToResponse() AssetResponse {
+	assetReponse := AssetResponse{}
+	if a.AssetType != nil {
+		assetReponse.AssetType = a.AssetType.ToResponse()
+	}
+	assetReponse.ID = a.ID
+	assetReponse.Identifier = a.Identifier
+	assetReponse.Options = a.Options
+	assetReponse.EnvironmentalCVSS = a.EnvironmentalCVSS
+	assetReponse.ROLFP = a.ROLFP
+	assetReponse.Scannable = a.Scannable
+	assetReponse.ClassifiedAt = a.ClassifiedAt
+	assetReponse.Alias = a.Alias
+
+	if a.AssetGroups != nil {
+		for _, ag := range a.AssetGroups {
+			if ag.Group != nil {
+				assetReponse.Groups = append(assetReponse.Groups, ag.Group.ToResponse())
+			}
+		}
+	}
+
+	return assetReponse
+}
+
+// Validate validates the values stored in the receiver are in the specified
+// range: 0 to 1 for Reputation, Operation, Legal, Financial and Personal 0.
+// range: 0 to 2 for Scope.
+func (r *ROLFP) Validate() error {
+	if r.IsEmpty {
+		return nil
+	}
+	if r.Reputation > 1 {
+		return fmt.Errorf("invalid ROLFP field reputation value %d", r.Reputation)
+	}
+
+	if r.Operation > 1 {
+		return fmt.Errorf("invalid ROLFP field operation value %d", r.Operation)
+	}
+
+	if r.Legal > 1 {
+		return fmt.Errorf("invalid ROLFP field legal value %d", r.Legal)
+	}
+
+	if r.Financial > 1 {
+		return fmt.Errorf("invalid ROLFP field financial value %d", r.Financial)
+	}
+
+	if r.Personal > 1 {
+		return fmt.Errorf("invalid ROLFP reputation value %d", r.Reputation)
+	}
+
+	if r.Scope > 2 {
+		return fmt.Errorf("invalid ROLFP scope %d", r.Scope)
+	}
+
+	return nil
+}
+
+// Value returns the value of the ROLFP encoded to be persisted as a string.
+func (r *ROLFP) Value() (driver.Value, error) {
+	if r == nil {
+		return nil, nil
+	}
+	val, err := r.MarshalText()
+	if err != nil {
+		return nil, err
+	}
+	return string(val), nil
+}
+
+func (r *ROLFP) Scan(value interface{}) error {
+	str, ok := value.(string)
+	if !ok {
+		return fmt.Errorf("Ivalid type decoding ROLFP from store %+v", value)
+	}
+	return r.UnmarshalText([]byte(str))
+}
+
+var DefaultROLFP = &ROLFP{
+	Reputation: 1,
+	Operation:  1,
+	Legal:      1,
+	Financial:  1,
+	Personal:   1,
+	Scope:      2,
+	IsEmpty:    false,
+}
+
+type AssetResponse struct {
+	ID                string            `json:"id"`
+	AssetType         AssetTypeResponse `json:"type"` // This line is infered from column name "asset_type_id".
+	Identifier        string            `json:"identifier"`
+	Alias             string            `json:"alias"`
+	Options           *string           `json:"options"`
+	EnvironmentalCVSS *string           `json:"environmental_cvss"`
+	ROLFP             *ROLFP            `json:"rolfp"`
+	Scannable         *bool             `json:"scannable"`
+	ClassifiedAt      *time.Time        `json:"classified_at"`
+	Groups            []*GroupResponse  `json:"groups"`
+}
+
+type AssetCreationResponse struct {
+	ID                string            `json:"id,omitempty"`
+	Identifier        string            `json:"identifier"`
+	AssetType         AssetTypeResponse `json:"type"` // This line is infered from column name "asset_type_id".
+	Alias             string            `json:"alias"`
+	Options           *string           `json:"options"`
+	EnvironmentalCVSS *string           `json:"environmental_cvss"`
+	ROLFP             *ROLFP            `json:"rolfp"`
+	Scannable         *bool             `json:"scannable"`
+	ClassifiedAt      *time.Time        `json:"classified_at"`
+	Status            interface{}       `json:"status,omitempty"`
+}
+
+type Status struct {
+	Code int `json:"code"`
+}

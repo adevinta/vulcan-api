@@ -1,0 +1,19 @@
+# Copyright 2021 Adevinta
+
+# programsz.yml
+
+# program
+- id: 0473F67E-E262-4086-BEC5-55CB5071481D
+  name: my policy
+  global: true
+  team_id: 3C7C2963-6A03-4A25-A822-EBEB237DB065
+
+- id: 48ead64c-fad1-4b18-8d7e-d02bc05dc5f5
+  name: my second policy
+  global: true
+  team_id: 3C7C2963-6A03-4A25-A822-EBEB237DB065
+
+- id: 8d76be63-dac5-4332-8738-c88151f53190
+  name: my policy
+  global: false
+  team_id: 0ef82297-e7c7-4c46-a852-ae3ffbecc4bc

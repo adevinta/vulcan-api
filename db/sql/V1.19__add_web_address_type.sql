@@ -1,0 +1,1 @@
+INSERT INTO asset_types (id, name) VALUES ('FE414249-72B3-4FAC-B41F-AB43BB5B9602','WebAddress');

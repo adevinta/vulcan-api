@@ -1,0 +1,1 @@
+INSERT INTO asset_types (id, name) VALUES ('1FF7E23D-57CA-4392-9E47-11BD212ACC10','DockerImage');

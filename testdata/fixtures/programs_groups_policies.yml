@@ -1,0 +1,11 @@
+# Copyright 2021 Adevinta
+
+# programs_groups_policies.yml
+
+- program_id: 8d30cb6d-0cf6-4c54-8ec1-1e7c4249e094
+  group_id: 721d1c6b-f559-4c56-8ea5-ca1820173a3c
+  policy_id: 0473F67E-E262-4086-BEC5-55CB5071481D
+
+- program_id: abd059d0-f81a-433b-be8a-ace3ebb6c926
+  group_id: 721d1c6b-f559-4c56-8ea5-ca1820173a3c
+  policy_id: 0473F67E-E262-4086-BEC5-55CB5071481D

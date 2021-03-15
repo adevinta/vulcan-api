@@ -1,0 +1,26 @@
+# Copyright 2021 Adevinta
+
+# user_team.yml
+- user_id: 4a4bec34-8c1b-42c4-a6fb-2a2dbafc572e
+  team_id: a14c7c65-66ab-4676-bcf6-0dea9719f5c6
+  role: member
+
+- user_id: 4a4bec34-8c1b-42c4-a6fb-2a2dbafc572e
+  team_id: d92e6a31-d889-425d-9a16-5d3e3f0bc169
+  role: member
+
+- user_id: 175b48c6-043b-48cf-a7c5-1934f6f50c7a
+  team_id: d92e6a31-d889-425d-9a16-5d3e3f0bc169
+  role: owner
+
+- user_id: 1f862079-bd72-43d3-b09f-d855e01e67c5
+  team_id: d92e6a31-d889-425d-9a16-5d3e3f0bc169
+  role: owner
+
+- user_id: c2cbf3ee-1b2e-11e9-ab14-d663bd873d93
+  team_id: d92e6a31-d889-425d-9a16-5d3e3f0bc169
+  role: owner
+
+- user_id: c2cbf3ee-1b2e-11e9-ab14-d663bd873d93
+  team_id: a14c7c65-66ab-4676-bcf6-0dea9719f5c6
+  role: owner

@@ -1,0 +1,46 @@
+# Copyright 2021 Adevinta
+
+# asset_group.yml
+
+- asset_id: 0f206826-14ec-4e85-a5a4-e2decdfbc193
+  group_id: ab310d43-8cdf-4f65-9ee8-d1813a22bab4
+
+- asset_id: 283e773d-54b5-460a-91fe-f3dfca5838a6
+  group_id: ab310d43-8cdf-4f65-9ee8-d1813a22bab4
+
+- asset_id: 53ef6c94-0b07-4ba2-bc8c-6cef68c20ddb
+  group_id: ab310d43-8cdf-4f65-9ee8-d1813a22bab4
+
+- asset_id: 7f3d7926-bea8-42be-b065-30a6cfa48889
+  group_id: 56613782-70a5-43d4-bfca-c6c290ee42e6
+
+- asset_id: b5ba2592-d08a-4ad1-afb7-5701e97c7858
+  group_id: a5efeb6f-46fa-49a9-be41-d962d9772fa3
+
+- asset_id: 49f90ed2-2f71-11e9-b210-d663bd873d93
+  group_id: a5efeb6f-46fa-49a9-be41-d962d9772fa3
+
+- asset_id: 254d888e-411b-45af-96ab-3f264c8b6786
+  group_id: 721d1c6b-f559-4c56-8ea5-ca1820173a3c
+
+# disjoin tests
+- asset_id: b7c2e6bd-d63b-4bcc-8883-566aa3837c2d # disjoin1.adevinta.com
+  group_id: 4123163c-6a78-43eb-8120-d129bcd0898a # DisjoinBase
+
+- asset_id: 4e369e6b-a6bd-44f5-b0fc-690c063a240e # disjoin2.adevinta.com
+  group_id: 4123163c-6a78-43eb-8120-d129bcd0898a # DisjoinBase
+
+- asset_id: 6c391632-89ea-4a99-9177-624f709351bb # disjoin3.adevinta.com
+  group_id: 4123163c-6a78-43eb-8120-d129bcd0898a # DisjoinBase
+
+- asset_id: 6a521ca7-490e-4789-a716-c2baca750884 # disjoin4.adevinta.com
+  group_id: 4123163c-6a78-43eb-8120-d129bcd0898a # DisjoinBase
+
+- asset_id: 4e369e6b-a6bd-44f5-b0fc-690c063a240e # disjoin2.adevinta.com
+  group_id: a4b93a4b-653e-4f01-92d2-bd360c50ae27 # DisjoinA
+
+- asset_id: 6c391632-89ea-4a99-9177-624f709351bb # disjoin3.adevinta.com
+  group_id: a4b93a4b-653e-4f01-92d2-bd360c50ae27 # DisjoinA
+
+- asset_id: 6a521ca7-490e-4789-a716-c2baca750884 # disjoin4.adevinta.com
+  group_id: 78ba0bb9-cce7-451d-8e17-ae6b3efbb788 # DisjoinB

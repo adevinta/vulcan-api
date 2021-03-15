@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Copyright 2021 Adevinta
+
+set -e
+
+# run unit and integration tests
+go test -v $(go list ./... | grep -v /vendor/)

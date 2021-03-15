@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# Copyright 2021 Adevinta
+
+set -e 
+
+# run test SAML IdP container
+docker run --name=testsamlidp_idp \
+-p 8083:8080 \
+-e SIMPLESAMLPHP_SP_ENTITY_ID=http://app.example.com \
+-e SIMPLESAMLPHP_SP_ASSERTION_CONSUMER_SERVICE=http://localhost/simplesaml/module.php/saml/sp/saml2-acs.php/test-sp \
+-e SIMPLESAMLPHP_SP_SINGLE_LOGOUT_SERVICE=http://localhost/simplesaml/module.php/saml/sp/saml2-logout.php/test-sp \
+-d kristophjunge/test-saml-idp
+
+# clean database and apply migrations
+db/flyway/flyway -user=vulcanito_test -password=vulcanito_test -url=jdbc:postgresql://localhost:5432/vulcanito_test -baselineOnMigrate=true -locations=filesystem:db/sql,filesystem:db/test-sql clean
+db/flyway/flyway -user=vulcanito_test -password=vulcanito_test -url=jdbc:postgresql://localhost:5432/vulcanito_test -baselineOnMigrate=true -locations=filesystem:db/sql,filesystem:db/test-sql migrate
+
+# install postman CLI for e2e tests
+nvm install 8 || nvm use --delete-prefix v8.12.0
+npm install newman@4.1.0
+node_modules/.bin/newman --version

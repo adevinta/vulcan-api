@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# Copyright 2021 Adevinta
+
+set -e
+
+echo "Building…"
+date "+%H:%M:%S"
+
+_script/setup
+
+echo "Running tests…"
+date "+%H:%M:%S"
+
+_script/test

@@ -1,0 +1,64 @@
+# Copyright 2021 Adevinta
+
+# teams.yml
+- id: a14c7c65-66ab-4676-bcf6-0dea9719f5c6
+  name: Foo Team
+  description: Foo foo...
+  tag: team:foo-team
+  created_at: 2017-01-01 12:30:12
+  updated_at: 2017-01-01 12:30:12
+
+- id: d92e6a31-d889-425d-9a16-5d3e3f0bc169
+  name: Bar Team
+  description: Bar bar...
+  tag: a.b.c.5d3e3f0bc169
+  created_at: 2018-01-01 12:30:12
+  updated_at: 2018-01-01 12:30:12
+
+- id: 0ef82297-e7c7-4c46-a852-ae3ffbecc4bc
+  name: Delete Team
+  description: Team to be deleted
+  created_at: 2018-01-01 12:30:12
+  updated_at: 2018-01-01 12:30:12
+
+- id: 2c99a8f7-1c87-4455-a9c9-82d1c0aee565
+  name: WithoutMembers
+  description: Team without members
+  created_at: 2018-01-01 12:30:12
+  updated_at: 2018-01-01 12:30:12
+
+- id: 42e5f970-d104-437f-b356-32a74e2cfd5a
+  name: WillReceiveMembers
+  description: WillReceiveMembers
+  created_at: 2018-01-01 12:30:12
+  updated_at: 2018-01-01 12:30:12
+
+- id: 2a5db64a-b4ad-4e1d-af01-152616d92e2d
+  name: WithoutAssets
+  description: WithoutAssets
+  created_at: 2018-01-01 12:30:12
+  updated_at: 2018-01-01 12:30:12
+
+- id: 93449fc4-6a84-4058-bac2-200e584ec435
+  name: WithoutProgram
+  description: WithoutProgram
+  created_at: 2018-01-01 12:30:12
+  updated_at: 2018-01-01 12:30:12
+
+- id: 5125225e-4912-4464-b22e-e2542410c352
+  name: TeamWithAssetsDefaultSensitive
+  description: TeamWithAssetsDefaultSensitive
+  created_at: 2018-01-01 12:30:12
+  updated_at: 2018-01-01 12:30:12
+
+- id: 3C7C2963-6A03-4A25-A822-EBEB237DB065
+- name: TeamWithDefaultGroup
+- description: TeamWithDefaultGroup
+- created_at: 2019-01-01 12:30:12
+- updated_at: 2019-01-01 12:30:12
+
+- id: d335c30c-944f-4ab0-9b43-cffccdfbd848
+  name: DisjoinTeam
+  description: Team used for Disjoin tests
+  created_at: 2018-01-01 12:30:12
+  updated_at: 2018-01-01 12:30:12

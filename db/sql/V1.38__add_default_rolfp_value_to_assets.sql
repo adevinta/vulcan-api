@@ -1,0 +1,1 @@
+ALTER TABLE assets ALTER rolfp SET DEFAULT('R:1/O:1/L:1/F:1/P:1+S:2')

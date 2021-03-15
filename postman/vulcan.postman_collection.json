@@ -1,0 +1,3176 @@
+{
+	"info": {
+		"_postman_id": "f57ec90b-868a-4791-94ac-67f926055b18",
+		"name": "vulcan",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get user by email",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e664efd6-b1e7-472a-89a7-f38fc7ce64d9",
+						"exec": [
+							"pm.test(\"Email is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.email).to.eql(pm.environment.get(\"email\"));",
+							"    pm.environment.set(\"user_id_uuid\", jsonData.id);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/v1/users/{{email}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"{{email}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Healthcheck",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3bda85f7-17d4-423e-97e3-22734be6a558",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/v1/healthcheck",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"healthcheck"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user by id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "259a8f20-ef1c-4ad8-994c-7cf6e974f5b4",
+						"exec": [
+							"pm.test(\"Email is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.email).to.eql(pm.environment.get(\"email\"));",
+							"});",
+							"",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/v1/users/{{user_id_uuid}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"{{user_id_uuid}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Should return 422 retrieving user, invalid user UUID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e5f20a49-3c0b-4c9c-a891-1408b91879e3",
+						"exec": [
+							"pm.test(\"Status code is 422\", function () {",
+							"    pm.response.to.have.status(422);",
+							"});",
+							"pm.test(\"Error message indicates malformed ID\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.error).to.eql(\"ID is malformed\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/v1/users/{{invalid_uuid}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"{{invalid_uuid}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create team",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "756bfcb5-2dc5-4473-8d41-a83d6114563f",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Team data is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.name).to.eql(\"vulcan-test-team\");",
+							"    pm.expect(jsonData.description).to.eql(\"the one and only team\")",
+							"    pm.environment.set(\"team_id\", jsonData.id);",
+							"    pm.environment.set(\"team_name\", jsonData.name);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"vulcan-test-team\",\n\t\"description\": \"the one and only team\",\n\t\"tag\": \"a.b.c.d\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create other team",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Team data is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"",
+							"    pm.expect(jsonData.name).to.eql(\"security-team\");",
+							"    pm.expect(jsonData.description).to.eql(\"a second team\");",
+							"    pm.expect(jsonData.tag).to.eql(\"a.b.c.security\");",
+							"",
+							"    pm.environment.set(\"security_tag\", jsonData.tag);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"security-team\",\n\t\"description\": \"a second team\",\n\t\"tag\": \"a.b.c.security\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List teams",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Team data is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.length).to.eql(5);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/api/v1/teams",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "66e65521-d91f-4d32-ac75-434fc09ae661",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"user data is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.firstname).to.eql(\"first-name\");",
+							"     pm.expect(jsonData.lastname).to.eql(\"last-name\");",
+							"    pm.expect(jsonData.email).to.eql(\"firstname.lastname@vulcan.com\")",
+							"    pm.environment.set(\"newUserId\", jsonData.id);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"firstname\": \"first-name\",\n\t\"lastname\": \"last-name\",\n\t\"email\": \"firstname.lastname@vulcan.com\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/users",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create User With upper case email",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b39dbdf3-9e92-4983-ac87-bf2e3ddf6014",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"user data is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.firstname).to.eql(\"first-name2\");",
+							"     pm.expect(jsonData.lastname).to.eql(\"last-name\");",
+							"    pm.expect(jsonData.email).to.eql(\"firstname2.lastname@vulcan.com\")",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"firstname\": \"first-name2\",\n\t\"lastname\": \"last-name\",\n\t\"email\": \"FIRSTname2.LASTname@vulcan.com\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/users",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get team by id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a8e5185e-f07f-4ebd-a174-95f1652a5c5a",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Team data is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.name).to.eql(\"vulcan-test-team\");",
+							"    pm.expect(jsonData.description).to.eql(\"the one and only team\")",
+							"    pm.environment.set(\"team_id\", jsonData.id);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get team by name",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e174d8b3-3ba8-4146-b5ba-aa5d5ac7a2e2",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Team data is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.name).to.eql(\"vulcan-test-team\");",
+							"    pm.expect(jsonData.description).to.eql(\"the one and only team\")",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_name}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_name}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get team by tag",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Team data is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.length).to.eql(1);",
+							"    pm.expect(jsonData[0].name).to.eql(\"security-team\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/api/v1/teams?tag={{security_tag}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams"
+					],
+					"query": [
+						{
+							"key": "tag",
+							"value": "{{security_tag}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update team",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0a678e8e-1f1c-4b83-9113-b48c0c7f6aed",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Team data is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.name).to.eql(\"updated name\");",
+							"    //TODO fix pm.expect(jsonData.description).to.eql(\"the one and only team\")",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"updated name\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add user to team by uuid (already member)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "83848b53-441d-4901-92b8-34b8e39d1c35",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 409\", function () {",
+							"    pm.response.to.have.status(409);",
+							"});",
+							"",
+							"pm.test(\"User already exists\", function () {",
+							"    var jsonData = pm.response.json();",
+							"     pm.expect(jsonData.type).to.eql(\"Duplicated record\");",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"user_id\": \"{{user_id_uuid}}\",\n\t\"role\": \"owner\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/members",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"members"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add newUser to team as owner",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "eb8fb939-0c7a-4d99-b4a6-13580036c365",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"User is added to team with correct response data\", function () {",
+							"    var jsonData = pm.response.json();",
+							"     pm.expect(jsonData.user.id).to.eql(pm.environment.get(\"newUserId\"));",
+							"     pm.expect(jsonData.user.email).to.eql(\"firstname.lastname@vulcan.com\");",
+							"     pm.expect(jsonData.role).to.eql(\"owner\")",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"user_id\": \"{{newUserId}}\",\n\t\"role\": \"owner\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/members",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"members"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Change newUser from owner to member",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "83c0efcf-5ec2-4c60-94e3-c8a8748552c4",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"User role is changed from owner to member\", function () {",
+							"    var jsonData = pm.response.json();",
+							"     pm.expect(jsonData.role).to.eql(\"member\");",
+							"     pm.expect(jsonData.user.id).to.eql(pm.environment.get(\"newUserId\"))",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"role\": \"member\"}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/members/{{newUserId}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"members",
+						"{{newUserId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add unregistered user by email to a team",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d188ca76-786a-4d71-b355-2ea03824c7bd",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"User added\", function () {",
+							"    var jsonData = pm.response.json();",
+							"     pm.expect(jsonData.role).to.eql(\"member\");",
+							"     pm.environment.set(\"user_id2\", jsonData.user.id);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"test@vulcan.com\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/members",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"members"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Change user from member to owner",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a94d89d9-891c-4d93-b151-d6608e42e3c7",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"User role changedadded\", function () {",
+							"    var jsonData = pm.response.json();",
+							"     pm.expect(jsonData.role).to.eql(\"owner\");",
+							"     // todo: fix return data",
+							"    //pm.expect(jsonData.user.id).to.eql(pm.environment.get(\"user2_id\"))",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"role\": \"owner\"}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/members/{{user_id2}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"members",
+						"{{user_id2}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get team members",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7d4aa920-6c19-4237-9c76-2ac85f67dfbb",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"User is owner\", function () {",
+							"    var jsonData = pm.response.json();",
+							"     pm.expect(jsonData[0].role).to.eql(\"owner\");",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/members",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"members"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user teams",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "58976952-836c-4a7b-8757-0d70fd18649f",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"User team is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"     pm.expect(jsonData.length).to.eql(2);",
+							"     pm.expect(jsonData[0].name).to.eql(\"security-team\");",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/api/v1/users/{{user_id_uuid}}/teams",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"{{user_id_uuid}}",
+						"teams"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create default asset-group",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "84ec3bba-4953-4d21-98a0-f428282cd051",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Group data is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.name).to.eql(\"default\");",
+							"    pm.environment.set(\"default_group_id\", jsonData.id);",
+							"",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\": \"default\",\n\"options\": \"{\\\"some\\\": \\\"options\\\"}\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/groups",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"groups"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add ip asset to team",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5132b14b-32df-4589-a58d-bed5d7872029",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Asset data is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData[0].type.name).to.eql(\"IP\");",
+							"    pm.expect(jsonData[0].identifier).to.eql(\"127.0.0.1\");",
+							"    pm.expect(jsonData[0].scannable).to.eql(true);",
+							"    pm.environment.set(\"asset1\", jsonData[0].id);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"assets\": [\n\t\t{\n\t\t\t\"type\": \"IP\",\n\t\t\t\"identifier\": \"127.0.0.1\",\n\t\t\t\"scannable\": true\n\t\t}\n\t]\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/assets",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"assets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add ip asset to team BC request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "48746b7d-a3e2-4a73-8189-2f02640bcc71",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Asset data is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData[0].type.name).to.eql(\"IP\");",
+							"    pm.expect(jsonData[0].identifier).to.eql(\"127.0.0.66\");",
+							"    pm.expect(jsonData[0].scannable).to.eql(true);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"assets\": [\n\t\t{\n\t\t\t\"type\": \"IP\",\n\t\t\t\"identifier\": \"127.0.0.66\",\n\t\t\t\"scannable\": true\n\t\t}\n\t]\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/assets",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"assets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add ip asset to team BC request ERROR",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ae693c23-0b94-4364-a46e-0c3836a0f16d",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 409\", function () {",
+							"    pm.response.to.have.status(409);",
+							"});",
+							"",
+							"pm.test(\"Asset data is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.error).to.include(\"pq: duplicate key value violates unique constraint\");",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"assets\": [\n\t\t{\n\t\t\t\"type\": \"IP\",\n\t\t\t\"identifier\": \"127.0.0.66\",\n\t\t\t\"scannable\": true\n\t\t}\n\t]\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/assets",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"assets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add multiple assets, some success, some failure, transaction rolled back",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b635f7c5-184f-4b3f-84dd-107eb5585f21",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 409\", function () {",
+							"    pm.response.to.have.status(409);",
+							"});",
+							"",
+							"pm.test(\"Asset data is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.error).to.include(\"pq: duplicate key value violates unique\");",
+							"});",
+							"",
+							"",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"assets\": [\n\t\t{\n\t\t\t\"type\": \"IP\",\n\t\t\t\"identifier\": \"127.0.0.1\",\n\t\t\t\"scannable\": true\n\t\t},\n\t\t{\n\t\t\t\"identifier\": \"127.0.0.2\"\n\t\t},\n\t\t{\n\t\t\t\"identifier\": \"localhost\"\n\t\t},\n\t\t{\n\t\t\t\"identifier\": \"vulcan.com\"\n\t\t}\n\t]\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/assets",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"assets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add asset with invalid asset type",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6b8205a6-05ad-4fa3-a3d8-ab7984d9f08b",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 422\", function () {",
+							"    pm.response.to.have.status(422);",
+							"});",
+							"",
+							"pm.test(\"Asset not type not found\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.error).to.eql(\"[asset][127.0.0.1][xyz] Asset type not found\");",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"assets\": [\n\t\t{\n\t\t\t\"type\": \"xyz\",\n\t\t\t\"identifier\": \"127.0.0.1\",\n\t\t\t\"scannable\": true\n\t\t}\n\t]\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/assets",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"assets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add asset with missing identifier",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c1965afc-c8e8-4cb3-b3e8-7a00a42ff6a1",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 422\", function () {",
+							"    pm.response.to.have.status(422);",
+							"});",
+							"",
+							"pm.test(\"Asset not type not found\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.error).to.eql(\"Key: 'Asset.Identifier' Error:Field validation for 'Identifier' failed on the 'required' tag\");",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"assets\": [\n\t\t{\n\t\t\t\"type\": \"IP\",\n\t\t\t\"scannable\": true\n\t\t}\n\t]\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/assets",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"assets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add hostname asset to team",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d7c4e58a-8de2-4212-94db-7ffc3eb154db",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Asset data is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData[0].type.name).to.eql(\"Hostname\");",
+							"    pm.expect(jsonData[0].identifier).to.eql(\"adevinta.com\");",
+							"    pm.expect(jsonData[0].scannable).to.eql(true);",
+							"    pm.environment.set(\"asset2\", jsonData[0].id);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"assets\": [\n\t{\n\t\"type\": \"Hostname\",\n\t\"identifier\": \"adevinta.com\",\n\t\"scannable\": true\n\t}\n\t]\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/assets",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"assets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add asset with invalid options",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a42c28c9-8871-4026-b227-b11dc11c05aa",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 422\", function () {",
+							"    pm.response.to.have.status(422);",
+							"});",
+							"",
+							"pm.test(\"Asset data is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.error).to.eql(\"[asset][127.0.1.1][] asset.options field has invalid json\");",
+							"",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"assets\": [\n\t{\n\t\"identifier\": \"127.0.1.1\",\n\t\"options\": \"not valid json\"\n\t}\n\t]\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/assets",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"assets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add two assets, one with invalid options",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a19f912f-3ff3-4df5-83f7-3935e6c7a678",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 422\", function () {",
+							"    pm.response.to.have.status(422);",
+							"});",
+							"",
+							"pm.test(\"Asset data is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.error).to.eql(\"[asset][127.0.1.2][] asset.options field has invalid json\")",
+							"",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"assets\": [\n\t{\n\t\"identifier\": \"127.0.1.2\",\n\t\"options\": \"not valid json\"\n\t},\n\t{\n\t\"identifier\": \"127.0.1.3\",\n\t\"options\": \"{\\\"valid\\\":\\\"json\\\"}\"\n\t}\n\t]\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/assets",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"assets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all assets for team",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1338e9b9-92ea-471e-99b9-4164815e5410",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Asset data is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData[0].type.name).to.eql(\"IP\");",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/assets",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"assets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update asset scannable field",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b8335c36-1078-4a0f-bb05-f80c6c560093",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Asset data is updated\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.scannable).to.eql(false);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"scannable\": false\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/assets/{{asset1}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"assets",
+						"{{asset1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create asset-group",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1cbf3274-c866-47a3-ae6e-49c47c6128bf",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Group data is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.name).to.eql(\"my group\");",
+							"    pm.environment.set(\"group_id\", jsonData.id);",
+							"",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\": \"my group\",\n\"options\": \"{\\\"some\\\": \\\"options\\\"}\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/groups",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"groups"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create asset-group #2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6627211b-6aec-4391-b324-ba88a592288b",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Group data is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.name).to.eql(\"my group to be deleted\");",
+							"    pm.environment.set(\"group_id2\", jsonData.id);",
+							"",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\": \"my group to be deleted\",\n\"options\": \"{\\\"some\\\": \\\"options\\\"}\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/groups",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"groups"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update options for group #2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "cbee22af-271a-4fb4-b16b-78321fd10511",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Group data is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.name).to.eql(\"my group to be deleted\");",
+							"    pm.environment.set(\"group_id2\", jsonData.id);",
+							"",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"options\": \"{\\\"some\\\": \\\"options updated\\\"}\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/groups/{{group_id2}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"groups",
+						"{{group_id2}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add asset to group",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5806463e-2ffa-4a93-9bac-2d0994d88c00",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Group data is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id).to.eql(pm.environment.get(\"asset1\"));",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"asset_id\": \"{{asset1}}\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/groups/{{group_id}}/assets",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"groups",
+						"{{group_id}}",
+						"assets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Should return 422 adding asset to group, invalid group UUID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "03f3f362-1111-44b2-8573-3226e1e51402",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 422\", function () {",
+							"    pm.response.to.have.status(422);",
+							"});",
+							"",
+							"pm.test(\"Error message indicates malformed ID\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.error).to.eql(\"ID is malformed\");",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"asset_id\": \"{{asset1}}\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/groups/{{invalid_uuid}}/assets",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"groups",
+						"{{invalid_uuid}}",
+						"assets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add asset to group (conflict)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5f80aee1-bc32-4dee-bf27-b01dcd32501e",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 409\", function () {",
+							"    pm.response.to.have.status(409);",
+							"});",
+							"",
+							"pm.test(\"Group data is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.type).to.eql(\"Duplicated record\");",
+							"    pm.expect(jsonData.error).to.eql(\"asset group relation already exists\");",
+							"    pm.expect(jsonData.code).to.eql(409);",
+							"",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"asset_id\": \"{{asset1}}\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/groups/{{group_id}}/assets",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"groups",
+						"{{group_id}}",
+						"assets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add asset #2 to group",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3b01ab4a-346f-48b2-8c0f-01085e36ab5a",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Group data is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id).to.eql(pm.environment.get(\"asset2\"));",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"asset_id\": \"{{asset2}}\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/groups/{{group_id}}/assets",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"groups",
+						"{{group_id}}",
+						"assets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create existent asset should associate it to group",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "92e37b10-5d33-43c1-b026-b46bb420b78d",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Asset data is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData[0].type.name).to.eql(\"Hostname\");",
+							"    pm.expect(jsonData[0].identifier).to.eql(\"adevinta.com\");",
+							"    pm.expect(jsonData[0].scannable).to.eql(true);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"assets\": [\n\t{\n\t\"type\": \"Hostname\",\n\t\"identifier\": \"adevinta.com\",\n\t\"scannable\": true\n\t}\n\t],\"groups\":[\n\t\"{{group_id2}}\"\n]\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/assets",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"assets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create existent asset with already associated group should return conflict",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ac53546c-b137-40e9-a377-7e881d561a00",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 409\", function () {",
+							"    pm.response.to.have.status(409);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"assets\": [\n\t{\n\t\"type\": \"Hostname\",\n\t\"identifier\": \"adevinta.com\",\n\t\"scannable\": true\n\t}\n\t],\"groups\":[\n\t\"{{group_id2}}\"\n]\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/assets",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"assets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get group",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6d4d20ad-1edd-40c1-95c4-7a263aeec1da",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"group data is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id).to.eql(pm.environment.get(\"group_id\"));",
+							"    pm.expect(jsonData.name).to.eql(\"my group\");",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/groups/{{group_id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"groups",
+						"{{group_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get global group",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "32341b43-f3d2-4c0d-a2fb-5d51dbdd31e4",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"group data is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id).to.eql(pm.environment.get(\"global-group\"));",
+							"    pm.expect(jsonData.name).to.eql(\"default-global\");",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/groups/{{global-group}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"groups",
+						"{{global-group}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create policy (for team)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c48efd92-0df9-4201-bf7c-b9c8a21f41db",
+						"type": "text/javascript",
+						"exec": [
+							"/* TODO fix return/status code",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"*/",
+							"",
+							"pm.test(\"Policy data is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.name).to.eql(\"my policy\");",
+							"    pm.environment.set(\"policy_id\", jsonData.id);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"my policy\",\n\t\"global\": true\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/policies",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"policies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update policy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "94c71675-5049-433e-901e-0d9a97217666",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"policy is updated \", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.name).to.eql(\"my policy updated\");",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"my policy updated\",\n\t\"global\": true\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/policies/{{policy_id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"policies",
+						"{{policy_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Checktype Setting",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e63e4989-a2fe-4d0c-ad6f-9ddb5b0a1458",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Checktype setting data is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.checktype_name).to.eql(\"my checktype setting\");",
+							"    pm.expect(jsonData.options).to.eql(\"{\\\"some\\\": \\\"options\\\"}\");",
+							"    pm.environment.set(\"policy_setting_id\", jsonData.id);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"checktype_name\": \"my checktype setting\",\n\t\"options\": \"{\\\"some\\\": \\\"options\\\"}\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/policies/{{policy_id}}/settings",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"policies",
+						"{{policy_id}}",
+						"settings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Checktype Setting",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4e4f5c53-f932-4729-896b-1e6afcf2b4be",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Checktype setting data is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.checktype_name).to.eql(\"my checktype setting2\");",
+							"    pm.expect(jsonData.options).to.eql(\"{\\\"some\\\": \\\"options\\\"}\");",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"checktype_name\": \"my checktype setting2\",\n\t\"options\": \"{\\\"some\\\": \\\"options\\\"}\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/policies/{{policy_id}}/settings/{{policy_setting_id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"policies",
+						"{{policy_id}}",
+						"settings",
+						"{{policy_setting_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create program",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2afd92d8-99c9-4ec7-a522-c57cc0c50640",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"program data is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.policy_groups[0].group.id).to.eql(pm.environment.get(\"group_id\"));",
+							"    pm.expect(jsonData.policy_groups[0].policy.id).to.eql(pm.environment.get(\"policy_id\"))",
+							"    pm.expect(jsonData.name).to.eql(\"my program\")",
+							"    pm.environment.set(\"program_id\", jsonData.id);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"my program\",\n    \"cron\": \"some cron\",\n    \"policy_groups\": [\n        {\n            \"group_id\": \"{{group_id}}\",\n            \"policy_id\": \"{{policy_id}}\"\n        }\n    ]\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/programs",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"programs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update program",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9778119c-6fc9-4626-b21b-fa8adc5a2134",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"program data is updated\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.policy_groups[0].group.id).to.eql(pm.environment.get(\"group_id\"));",
+							"    pm.expect(jsonData.name).to.eql(\"my program updated\")",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"my program updated\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/programs/{{program_id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"programs",
+						"{{program_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Disable Program",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "40cbace4-ee79-4b49-9649-0d120959236d",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"program data is updated\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.policy_groups[0].group.id).to.eql(pm.environment.get(\"group_id\"));",
+							"    pm.expect(jsonData.disabled).to.eql(true)",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"disabled\": true\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/programs/{{program_id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"programs",
+						"{{program_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Enable Program",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "bf81a5d2-1e7b-4679-9cb5-f2867f57d4c7",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"program data is updated\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.policy_groups[0].group.id).to.eql(pm.environment.get(\"group_id\"));",
+							"    pm.expect(jsonData.disabled).to.eql(false)",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"disabled\": false\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/programs/{{program_id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"programs",
+						"{{program_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create scan",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1966c8c3-424d-4048-b98c-00faf9007361",
+						"type": "text/javascript",
+						"exec": [
+							"/*",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"program data is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.program.id).to.eql(pm.environment.get(\"program_id\"));",
+							"    pm.environment.set(\"scan_id\", jsonData.id);",
+							"});",
+							"*/"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"scheduled_time\": \"2018-04-19T14:24:57.647044Z\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/programs/{{program_id}}/scans",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"programs",
+						"{{program_id}}",
+						"scans"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Scan",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0cac4b43-9b64-4ae1-b44a-b3d0d29da1d5",
+						"type": "text/javascript",
+						"exec": [
+							"/*",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Scan is updated\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id).to.eql(pm.environment.get(\"scan_id\"));",
+							"    pm.expect(jsonData.scheduled_time).to.eql(\"2019-04-19T14:24:57.647044Z\");",
+							"",
+							"});",
+							"*/"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"scheduled_time\": \"2019-04-19T14:24:57.647044Z\",\n\"end_time\": \"2019-04-19T14:24:57.647044Z\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/programs/{{program_id}}/scans/{{scan_id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"programs",
+						"{{program_id}}",
+						"scans",
+						"{{scan_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Find scans per team/program",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "17aff41d-4b02-46e7-b865-033496cbea63",
+						"type": "text/javascript",
+						"exec": [
+							"/*pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"scan data is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData[0].program.id).to.eql(pm.environment.get(\"program_id\"));",
+							"    pm.environment.set(\"scan_id\", jsonData[0].id);",
+							"});",
+							"*/"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/programs/{{program_id}}/scans",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"programs",
+						"{{program_id}}",
+						"scans"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Disable Program - 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ccc4b8cb-8485-4b17-b4ae-b7e4e3e2646b",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"program data is updated\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.policy_groups[0].group.id).to.eql(pm.environment.get(\"group_id\"));",
+							"    pm.expect(jsonData.disabled).to.eql(true)",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"disabled\": true\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/programs/{{program_id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"programs",
+						"{{program_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Trigger Scan (disabled program)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9b00183b-d0d6-4179-b918-5eb1f52b4c70",
+						"exec": [
+							"pm.test(\"Status code is 422\", function () {",
+							"    pm.response.to.have.status(422);",
+							"});",
+							"",
+							"pm.test(\"program data is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.error).to.eql(\"Program my program updated is disabled. [Program ID: \"+pm.environment.get(\"program_id\")+\"]\")",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"program_id\": \"{{program_id}}\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/scans",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"scans"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Remove user2 from team",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "057169e9-b325-430e-b45f-8df00eca801c",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"    pm.environment.unset(\"user_id2\");",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/members/{{user_id2}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"members",
+						"{{user_id2}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete asset2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6f858066-ff6f-4f53-9fd0-36ba982b6b0d",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"    pm.environment.unset(\"asset2\");",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/assets/{{asset2}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"assets",
+						"{{asset2}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete asset-group #2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1f187506-e710-4ef8-9c99-e7c15b4176a1",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"    pm.environment.unset(\"group_id2\");",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/groups/{{group_id2}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"groups",
+						"{{group_id2}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Ungroup asset1 from asset group1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "68411552-971b-4ae3-8455-97c7f0e99d44",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"    pm.environment.unset(\"group_id2\");",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/groups/{{group_id}}/assets/{{asset1}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"groups",
+						"{{group_id}}",
+						"assets",
+						"{{asset1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete policy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ee7da8bd-b116-4311-a40a-bcb3f302d5ec",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"    pm.environment.unset(\"policy_id\");",
+							"});",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/policies/{{policy_id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"policies",
+						"{{policy_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete program",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a1c676bd-49a6-46b8-8b34-780f9ec51e1f",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"    pm.environment.unset(\"program_id\");",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/programs/{{program_id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"programs",
+						"{{program_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Scan",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "80deb222-60b1-4853-87b0-c0a9f9b1f1b8",
+						"type": "text/javascript",
+						"exec": [
+							"/*",
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"    pm.environment.unset(\"scan_id\");",
+							"});",
+							"*/"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/programs/{{program_id}}/scans/{{scan_id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"programs",
+						"{{program_id}}",
+						"scans",
+						"{{scan_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete team",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "fd96102a-fb27-4ea6-a11f-56af1c3e3fca",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"    pm.environment.unset(\"team_id\");",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "b34a2836-708c-44ff-8e26-0104a3448a87",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "9fc75e1f-e221-4bad-a9e9-6a5f9f008b9c",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "8c3ff514-7b15-4f57-afb8-a01fa462d1fa",
+			"key": "host",
+			"value": "{{host}}/",
+			"type": "string"
+		}
+	],
+	"protocolProfileBehavior": {}
+}

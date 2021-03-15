@@ -1,0 +1,7 @@
+defer func() {
+	XRequestID := ""
+	if ctx != nil {
+		XRequestID, _ = ctx.Value(kithttp.ContextKeyRequestXRequestID).(string)
+	}
+	_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "{{.Name}}", {{range $i, $e := .Params}}{{if gt $i 0}}"{{$e.Name}}", mySprintf({{$e.Name}}), {{end}}{{end}}) }();
+return middleware.next.{{.Name}}({{range .Params}}{{.Name}}, {{end}});

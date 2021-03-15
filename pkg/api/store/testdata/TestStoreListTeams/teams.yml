@@ -1,0 +1,16 @@
+# Copyright 2021 Adevinta
+
+# teams.yml
+- id: a14c7c65-66ab-4676-bcf6-0dea9719f5c6
+  name: Foo Team
+  description: Foo foo...
+  tag: team:foo-team
+  created_at: 2017-01-01 12:30:12
+  updated_at: 2017-01-01 12:30:12
+
+- id: d92e6a31-d889-425d-9a16-5d3e3f0bc169
+  name: Bar Team
+  description: Bar bar...
+  tag: a.b.c.5d3e3f0bc169
+  created_at: 2018-01-01 12:30:12
+  updated_at: 2018-01-01 12:30:12

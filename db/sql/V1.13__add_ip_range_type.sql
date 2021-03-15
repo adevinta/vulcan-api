@@ -1,0 +1,1 @@
+INSERT INTO asset_types (id, name) VALUES ('84466A4D-A3D5-475A-AE3E-36B68B13E7C9','IPRange');

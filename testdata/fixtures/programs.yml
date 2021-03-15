@@ -1,0 +1,33 @@
+# Copyright 2021 Adevinta
+
+# programsz.yml
+
+# program
+- id: 0473F67E-E262-4086-BEC5-55CB5071481D
+  name: myprogram
+  cron: cr0n
+
+  # group_id: 721d1c6b-f559-4c56-8ea5-ca1820173a3c # belongs to team id 3C7C2963-6A03-4A25-A822-EBEB237DB065
+- id: 1789B7B6-E8ED-49D9-A5A8-9FF9323593B6
+  name: daily
+  cron: time
+  team_id: 3C7C2963-6A03-4A25-A822-EBEB237DB065
+
+  # group_id: 721d1c6b-f559-4c56-8ea5-ca1820173a3c # belongs to team id 3C7C2963-6A03-4A25-A822-EBEB237DB065
+- id: b75c2371-3a90-40dc-8831-98374506c80e
+  name: daily
+  cron: time
+  team_id: 3C7C2963-6A03-4A25-A822-EBEB237DB065
+  # group_id: 784d3130-5fe2-461f-9a62-61322c79f8b8 # belongs to team id 93449fc4-6a84-4058-bac2-200e584ec435
+
+- id: 8d30cb6d-0cf6-4c54-8ec1-1e7c4249e094
+  name: Enabled Program
+  cron: time
+  disabled: false
+  team_id: 3C7C2963-6A03-4A25-A822-EBEB237DB065
+
+- id: abd059d0-f81a-433b-be8a-ace3ebb6c926
+  name: Disabled Program
+  cron: time
+  disabled: true
+  team_id: 3C7C2963-6A03-4A25-A822-EBEB237DB065

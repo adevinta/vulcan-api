@@ -1,0 +1,28 @@
+version: '2'
+
+services:
+    dev:
+        container_name: vulcanito_db
+        image: postgres:9.6.1
+        command: "postgres -c log_connections=true -c log_min_duration_statement=0"
+        ports:
+            - "5432:5432"
+        expose:
+            - "5432"
+        volumes:
+            - /var/lib/postgresql/data
+        environment:
+            - POSTGRES_USER=vulcanito
+            - POSTGRES_PASSWORD=vulcanito
+            - POSTGRES_DB=vulcanito
+    pgadmin:
+        container_name: pgadmin
+        image: dpage/pgadmin4
+        ports:
+            - "8000:80"
+            - "8443:443"
+        links:
+            - dev
+        environment:
+            - PGADMIN_DEFAULT_EMAIL=vulcanito
+            - PGADMIN_DEFAULT_PASSWORD=vulcanito

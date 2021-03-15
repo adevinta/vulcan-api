@@ -1,0 +1,2746 @@
+{
+	"info": {
+		"_postman_id": "c27d2d5c-3e6f-445b-b54a-a2ac93afec66",
+		"name": "vulcan-authorization",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "init",
+			"item": [
+				{
+					"name": "Init teams",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3eee6672-6106-4672-b4e2-42306a86c68d",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Teams needed are present\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var team1present = false;",
+									"    var team2present = false;",
+									"    ",
+									"    jsonData.forEach(function(element){",
+									"        switch(element.name) {",
+									"            case \"Team1\":",
+									"                team1present = true;",
+									"                pm.environment.set(\"team1_uuid\", element.id);",
+									"                break;",
+									"            case \"Team2\":",
+									"                team2present = true;",
+									"                pm.environment.set(\"team2_uuid\", element.id);",
+									"                break;",
+									"        }",
+									"    });",
+									"    pm.expect(team1present).to.be.true;",
+									"    pm.expect(team2present).to.be.true;",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenuser1}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/v1/teams",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams"
+							]
+						},
+						"description": "List teams"
+					},
+					"response": []
+				},
+				{
+					"name": "Init users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6ce95249-ae3b-4dac-8fd4-fb4d08e08f51",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Users needed are present\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var user1present = false;",
+									"    var user2present = false;",
+									"    ",
+									"    jsonData.forEach(function(element){",
+									"        switch(element.email) {",
+									"            case \"testuser1@vulcan.com\":",
+									"                pm.expect(element.admin).to.be.false;",
+									"                pm.expect(element.active).to.be.true;",
+									"                user1present = true;",
+									"                pm.environment.set(\"user1_uuid\", element.id);",
+									"                pm.environment.set(\"user1_email\", element.email);",
+									"                break;",
+									"            case \"testuser2@vulcan.com\":",
+									"                pm.expect(element.admin).to.be.false;",
+									"                pm.expect(element.active).to.be.true;",
+									"                user2present = true;",
+									"                pm.environment.set(\"user2_uuid\", element.id);",
+									"                pm.environment.set(\"user2_email\", element.email);",
+									"                break;",
+									"        }",
+									"    });",
+									"    pm.expect(user1present).to.be.true;",
+									"    pm.expect(user2present).to.be.true;",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenuser1}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/v1/users",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						},
+						"description": "List teams"
+					},
+					"response": []
+				},
+				{
+					"name": "Check User1 ownership",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "185e7a30-1ec5-4ca6-a516-52589b830497",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"User1 is Owner\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData[0].role).to.eql(\"owner\");",
+									"    pm.expect(jsonData[0].user.id).to.eql(pm.environment.get(\"user1_uuid\"));",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenuser1}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team1_uuid}}/members",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team1_uuid}}",
+								"members"
+							]
+						},
+						"description": "List teams"
+					},
+					"response": []
+				},
+				{
+					"name": "Check User2 ownership",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "be388c6b-aada-4129-9b0b-a1baf317262b",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"User2 is Owner\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData[0].role).to.eql(\"owner\");",
+									"    pm.expect(jsonData[0].user.id).to.eql(pm.environment.get(\"user2_uuid\"));",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenuser2}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team2_uuid}}/members",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team2_uuid}}",
+								"members"
+							]
+						},
+						"description": "List teams"
+					},
+					"response": []
+				},
+				{
+					"name": "Init Team1 assets",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f98c22c0-e487-4fcc-85ad-44e687905fc3",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Asset1 is present\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var asset = jsonData[0];",
+									"    ",
+									"    pm.expect(asset.identifier).to.eql(\"Asset1\");",
+									"    pm.environment.set(\"asset1_uuid\", asset.id);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenuser1}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team1_uuid}}/assets",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team1_uuid}}",
+								"assets"
+							]
+						},
+						"description": "List teams"
+					},
+					"response": []
+				},
+				{
+					"name": "Init Team2 assets",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d62cdaf2-808a-46f6-9192-9b377bf131b3",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Asset2 is present\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var asset = jsonData[0];",
+									"    ",
+									"    pm.expect(asset.identifier).to.eql(\"Asset2\");",
+									"    pm.environment.set(\"asset2_uuid\", asset.id);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenuser2}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team2_uuid}}/assets",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team2_uuid}}",
+								"assets"
+							]
+						},
+						"description": "List teams"
+					},
+					"response": []
+				},
+				{
+					"name": "Init Team1 groups",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "03e3ceab-1d8f-476a-af7a-7944d5cd9bf0",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Group1 is present\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var group = jsonData[0];",
+									"    ",
+									"    pm.expect(group.name).to.eql(\"Group1\");",
+									"    pm.environment.set(\"group1_uuid\", group.id);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenuser1}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team1_uuid}}/groups",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team1_uuid}}",
+								"groups"
+							]
+						},
+						"description": "List teams"
+					},
+					"response": []
+				},
+				{
+					"name": "Init Team2 groups",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7ca1970b-0a8a-4308-9411-3905022971f4",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Group2 is present\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var group = jsonData[0];",
+									"    ",
+									"    pm.expect(group.name).to.eql(\"Group2\");",
+									"    pm.expect(group.assets_count).to.eql(1);",
+									"    ",
+									"    pm.environment.set(\"group2_uuid\", group.id);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenuser2}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team2_uuid}}/groups",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team2_uuid}}",
+								"groups"
+							]
+						},
+						"description": "List teams"
+					},
+					"response": []
+				},
+				{
+					"name": "Init Team2 recipients",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e77d1d08-7110-4489-8b08-b75bd4e00353",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Recipient is present\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    ",
+									"    pm.expect(jsonData.length).to.eql(1);",
+									"    pm.expect(jsonData[0].email).to.eql(\"testuser2@vulcan.com\");",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenuser2}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team2_uuid}}/recipients",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team2_uuid}}",
+								"recipients"
+							]
+						},
+						"description": "List teams"
+					},
+					"response": []
+				},
+				{
+					"name": "Create New ObserverAdmin User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b0d896e5-72d0-4ad6-ae47-a80eb4910ccb",
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"user data is correct\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.firstname).to.eql(\"obs\");",
+									"    pm.expect(jsonData.lastname).to.eql(\"observer\");",
+									"    pm.expect(jsonData.email).to.eql(\"obs.observer@adevinta.com\")",
+									"    pm.environment.set(\"observerUserId\", jsonData.id);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"firstname\": \"obs\",\n\t\"lastname\": \"observer\",\n\t\"email\": \"obs.observer@adevinta.com\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/users",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Set Admin and Observer for ObserverAdmin User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b0d896e5-72d0-4ad6-ae47-a80eb4910ccb",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"user data is correct\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.firstname).to.eql(\"obs\");",
+									"    pm.expect(jsonData.lastname).to.eql(\"observer\");",
+									"    pm.expect(jsonData.email).to.eql(\"obs.observer@adevinta.com\")",
+									"    pm.environment.set(\"observerUserId\", jsonData.id);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"admin\": true,\n\t\"observer\": true\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/users/{{observerUserId}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"{{observerUserId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Token for ObserverAdmin user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b0d896e5-72d0-4ad6-ae47-a80eb4910ccb",
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"user data is correct\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.token).to.not.be.empty;",
+									"    pm.environment.set(\"tokenObserver\", jsonData.token);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"firstname\": \"obs\",\n\t\"lastname\": \"observer\",\n\t\"admin\": true,\n\t\"observer\": true,\n\t\"email\": \"obs.observer@adevinta.com\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/users/{{observerUserId}}/token",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"{{observerUserId}}",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ObserverAdmin User can list all teams with Observer and Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b0d896e5-72d0-4ad6-ae47-a80eb4910ccb",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"data is correct\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an('array');",
+									"    pm.expect(jsonData.length).to.be.eql(4);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenObserver}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"firstname\": \"obs\",\n\t\"lastname\": \"observer\",\n\t\"admin\": true,\n\t\"observer\": true,\n\t\"email\": \"obs.observer@adevinta.com\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/teams",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ObserverAdmin User can list Team1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b0d896e5-72d0-4ad6-ae47-a80eb4910ccb",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"data is correct\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.name).to.be.eql('Team1');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenObserver}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"firstname\": \"obs\",\n\t\"lastname\": \"observer\",\n\t\"admin\": true,\n\t\"observer\": true,\n\t\"email\": \"obs.observer@adevinta.com\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team1_uuid}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team1_uuid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ObserverAdmin User can create groups in Team1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b0d896e5-72d0-4ad6-ae47-a80eb4910ccb",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"data is correct\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.name).to.be.eql('new group');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenObserver}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"new group\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team1_uuid}}/groups",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team1_uuid}}",
+								"groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Disable Admin status for ObserverAdmin User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b0d896e5-72d0-4ad6-ae47-a80eb4910ccb",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"user data is correct\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.firstname).to.eql(\"obs\");",
+									"    pm.expect(jsonData.lastname).to.eql(\"observer\");",
+									"    pm.expect(jsonData.email).to.eql(\"obs.observer@adevinta.com\")",
+									"    pm.environment.set(\"observerUserId\", jsonData.id);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"admin\": false,\n\t\"observer\": true\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/users/{{observerUserId}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"{{observerUserId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ObserverAdmin User can list all teams - II",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b0d896e5-72d0-4ad6-ae47-a80eb4910ccb",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"data is correct\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an('array');",
+									"    pm.expect(jsonData.length).to.be.eql(4);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenObserver}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"firstname\": \"obs\",\n\t\"lastname\": \"observer\",\n\t\"admin\": true,\n\t\"observer\": true,\n\t\"email\": \"obs.observer@adevinta.com\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/teams",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ObserverAdmin User can list Team1 - II",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b0d896e5-72d0-4ad6-ae47-a80eb4910ccb",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"data is correct\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.name).to.be.eql('Team1');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenObserver}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"firstname\": \"obs\",\n\t\"lastname\": \"observer\",\n\t\"admin\": true,\n\t\"observer\": true,\n\t\"email\": \"obs.observer@adevinta.com\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team1_uuid}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team1_uuid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ObserverAdmin User can create groups in Team1 - Forbidden",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b0d896e5-72d0-4ad6-ae47-a80eb4910ccb",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenObserver}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"new group\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team1_uuid}}/groups",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team1_uuid}}",
+								"groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ObserverAdmin User (observer ATM) can query global GET endpoint - Not Forbidden",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f0d896a5-72dd-4ae6-ae37-a80eb4210ccb",
+								"exec": [
+									"pm.test(\"Status code is NOT 403\", function () {",
+									"    pm.response.to.not.have.status(403);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenObserver}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"url": {
+							"raw": "{{host}}/api/v1/stats/mttr",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"stats",
+								"mttr"
+							]
+						}
+					},
+					"response": []
+				}
+				
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "users authorization",
+			"item": [
+				{
+					"name": "User1 can not modify User2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "da4ab02f-ccce-4777-8f19-daf16ad635f2",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"firstname\": \"first-name\",\n\t\"lastname\": \"last-name\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/users/{{user2_uuid}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"{{user2_uuid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User1 can not delete User2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "136f87f9-16da-418e-9f8f-77b584a3eeee",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "b3dcdf31-1519-4eaf-84ef-ce4c8d8bd269",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test.skip('This is a work in progress', function () {",
+									"  pm.expect({}).to.be.empty;",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/users/{{user2_uuid}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"{{user2_uuid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User1 can not generate User2 API token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b7baf5ec-c977-4845-9199-42f165512779",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"firstname\": \"first-name\",\n\t\"lastname\": \"last-name\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/users/{{user2_uuid}}/token",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"{{user2_uuid}}",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User1 can not create admin user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8d0aa5c8-6c14-4438-b4ac-ef5c56b2a628",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"User is not admin\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.admin).to.be.false;",
+									"    ",
+									"    pm.environment.set(\"user_to_delete\", jsonData.id);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"admin-no-create\",\n\t\"firstname\": \"first-name\",\n\t\"lastname\": \"last-name\",\n\t\"admin\": true\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/users",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete created user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e3846892-10e2-4c36-a6d3-6d85bb155eb0",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/users/{{user_to_delete}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"{{user_to_delete}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{tokenuser1}}",
+						"type": "string"
+					}
+				]
+			},
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "release controlling",
+			"item": [
+				{
+					"name": "User1 can not access policies",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "37708ce1-57c5-4df6-a613-05c98cac4b68",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team1_uuid}}/policies",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team1_uuid}}",
+								"policies"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{tokenuser1}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "1ddd7608-a3c4-4558-aa04-6716eb4d5a36",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "e392d696-a351-49ee-9f2c-8bac831775e7",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "team tenancy",
+			"item": [
+				{
+					"name": "User1 can not read Team2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "35b83f61-8ed4-4b89-a0a6-bac7b4df07bb",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team2_uuid}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team2_uuid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User1 can not modify Team2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "35b83f61-8ed4-4b89-a0a6-bac7b4df07bb",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Team2\",\n\t\"description\": \"changed\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team2_uuid}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team2_uuid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User1 can not delete Team2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "35b83f61-8ed4-4b89-a0a6-bac7b4df07bb",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team2_uuid}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team2_uuid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User1 can not join Team2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "35b83f61-8ed4-4b89-a0a6-bac7b4df07bb",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"user_to_add@vulcan.com\",\n\t\"role\": \"owner\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team2_uuid}}/members",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team2_uuid}}",
+								"members"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User1 can not  modify User2 membership to Team2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "35b83f61-8ed4-4b89-a0a6-bac7b4df07bb",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"{{user2_email}}}\",\n\t\"role\": \"member\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team2_uuid}}/members/{{user2_uuid}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team2_uuid}}",
+								"members",
+								"{{user2_uuid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User1 can not delete User2 from Team2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "35b83f61-8ed4-4b89-a0a6-bac7b4df07bb",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team2_uuid}}/members/{{user2_uuid}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team2_uuid}}",
+								"members",
+								"{{user2_uuid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User1 can not read recipients from Team2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "35b83f61-8ed4-4b89-a0a6-bac7b4df07bb",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team2_uuid}}/recipients",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team2_uuid}}",
+								"recipients"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User1 can not  update recipients of Team2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "35b83f61-8ed4-4b89-a0a6-bac7b4df07bb",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"emails\": [\n      \"{{user1_email}}\"\n   ]\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team2_uuid}}/recipients",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team2_uuid}}",
+								"recipients"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User1 can not retrieve asset list from Team2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "35b83f61-8ed4-4b89-a0a6-bac7b4df07bb",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team2_uuid}}/assets",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team2_uuid}}",
+								"assets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User1 can not download assets from Team2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "35b83f61-8ed4-4b89-a0a6-bac7b4df07bb",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team2_uuid}}/assets",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team2_uuid}}",
+								"assets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User1 can not download Asset2 from Team2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "35b83f61-8ed4-4b89-a0a6-bac7b4df07bb",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team2_uuid}}/assets/{{asset2_uuid}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team2_uuid}}",
+								"assets",
+								"{{asset2_uuid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User1 can not create asset in Team2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "35b83f61-8ed4-4b89-a0a6-bac7b4df07bb",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"environmental_cvss\": \"Sit deserunt.\",\n   \"identifier\": \"Reiciendis quisquam excepturi.\",\n   \"options\": \"Voluptatem optio exercitationem in velit.\",\n   \"scannable\": true,\n   \"type\": \"IP\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team2_uuid}}/assets",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team2_uuid}}",
+								"assets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User1 can not modify Asset2 in Team2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "35b83f61-8ed4-4b89-a0a6-bac7b4df07bb",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"environmental_cvss\": \"Sit deserunt.\",\n   \"identifier\": \"Reiciendis quisquam excepturi.\",\n   \"options\": \"Voluptatem optio exercitationem in velit.\",\n   \"scannable\": true,\n   \"type\": \"IP\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team2_uuid}}/assets/{{asset2_uuid}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team2_uuid}}",
+								"assets",
+								"{{asset2_uuid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User1 can not delete Asset2 from Team2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "35b83f61-8ed4-4b89-a0a6-bac7b4df07bb",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team2_uuid}}/assets/{{asset2_uuid}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team2_uuid}}",
+								"assets",
+								"{{asset2_uuid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User1 can not create group in Team2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "35b83f61-8ed4-4b89-a0a6-bac7b4df07bb",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"name\": \"NewGroup\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team2_uuid}}/groups",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team2_uuid}}",
+								"groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User1 can not download groups from Team2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "35b83f61-8ed4-4b89-a0a6-bac7b4df07bb",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team2_uuid}}/groups",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team2_uuid}}",
+								"groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User1 can not download Group2 from Team2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "35b83f61-8ed4-4b89-a0a6-bac7b4df07bb",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team2_uuid}}/groups/{{group2_uuid}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team2_uuid}}",
+								"groups",
+								"{{group2_uuid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User1 can not update Group2 in Team2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "35b83f61-8ed4-4b89-a0a6-bac7b4df07bb",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"name\": \"ModifiedGroup\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team2_uuid}}/groups/{{group2_uuid}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team2_uuid}}",
+								"groups",
+								"{{group2_uuid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User1 can not delete Group2 from Team2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "35b83f61-8ed4-4b89-a0a6-bac7b4df07bb",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team2_uuid}}/assets/{{group2_uuid}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team2_uuid}}",
+								"assets",
+								"{{group2_uuid}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{tokenuser1}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "37d3a542-4d40-4f37-b2d6-0ec7dd192d91",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "a8d259ba-fda5-47fd-bf9a-5711b5f9bdb4",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "team tenancy corner cases",
+			"item": [
+				{
+					"name": "User1 can not download Asset2 from Team1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f13fdf9e-ac4f-4622-8607-71a6293b550a",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team1_uuid}}/assets/{{asset2_uuid}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team1_uuid}}",
+								"assets",
+								"{{asset2_uuid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User1 can not modify Asset2 in Team1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "35b83f61-8ed4-4b89-a0a6-bac7b4df07bb",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"environmental_cvss\": \"Sit deserunt.\",\n   \"identifier\": \"Reiciendis quisquam excepturi.\",\n   \"options\": \"{}\",\n   \"scannable\": true,\n   \"type\": \"IP\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team1_uuid}}/assets/{{asset2_uuid}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team1_uuid}}",
+								"assets",
+								"{{asset2_uuid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User1 can not delete Asset2 from Team1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "35b83f61-8ed4-4b89-a0a6-bac7b4df07bb",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team1_uuid}}/assets/{{asset2_uuid}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team1_uuid}}",
+								"assets",
+								"{{asset2_uuid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User1 can not download Group2 from Team1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "145600da-9145-4225-a5bc-bd79b29a01ff",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team1_uuid}}/groups/{{group2_uuid}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team1_uuid}}",
+								"groups",
+								"{{group2_uuid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User1 can not update Group2 in Team1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "35b83f61-8ed4-4b89-a0a6-bac7b4df07bb",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"name\": \"ModifiedGroup\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team1_uuid}}/groups/{{group2_uuid}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team1_uuid}}",
+								"groups",
+								"{{group2_uuid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User1 can not delete Group2 from Team1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "35b83f61-8ed4-4b89-a0a6-bac7b4df07bb",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team1_uuid}}/assets/{{group2_uuid}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team1_uuid}}",
+								"assets",
+								"{{group2_uuid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User1 can not associate Asset1 to Group2 in Team1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "35b83f61-8ed4-4b89-a0a6-bac7b4df07bb",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"asset_id\": \"{{asset1_uuid}}\",\n   \"group_id\": \"{{group2_uuid}}\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team1_uuid}}/groups/{{group2_uuid}}/assets",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team1_uuid}}",
+								"groups",
+								"{{group2_uuid}}",
+								"assets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User1 can not associate Asset2 to Group1 in Team1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "35b83f61-8ed4-4b89-a0a6-bac7b4df07bb",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"asset_id\": \"{{asset2_uuid}}\",\n   \"group_id\": \"{{group1_uuid}}\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team1_uuid}}/groups/{{group1_uuid}}/assets",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team1_uuid}}",
+								"groups",
+								"{{group1_uuid}}",
+								"assets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User1 can not de-associate Asset2 to Group2 in Team1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8253d131-a476-405e-a669-7c1f9d6ad9c1",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"asset_id\": \"{{asset2_uuid}}\",\n   \"group_id\": \"{{group1_uuid}}\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/teams/{{team1_uuid}}/groups/{{group2_uuid}}/assets/{{asset2_uuid}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"{{team1_uuid}}",
+								"groups",
+								"{{group2_uuid}}",
+								"assets",
+								"{{asset2_uuid}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{tokenuser1}}",
+						"type": "string"
+					}
+				]
+			},
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "906b8c4a-ecad-4908-8e15-e9588a57b97a",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "61e85a27-5320-4a4a-9702-bd5126f332b6",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

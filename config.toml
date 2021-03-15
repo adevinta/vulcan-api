@@ -1,0 +1,66 @@
+[server]
+port = $PORT
+secret_key = "$SECRET_KEY"
+cookie_name = "$COOKIE_NAME"
+cookie_domain = "$COOKIE_DOMAIN"
+cookie_secure = false
+
+[db]
+connection_string = "host=$PG_HOST port=$PG_PORT user=$PG_USER dbname=$PG_NAME password=$PG_PASSWORD sslmode=$PG_SSLMODE"
+log_mode = false
+
+[log]
+# Log level: ERROR, WARN, INFO or DEBUG (default INFO)
+level = "$LOG_LEVEL"
+
+[saml]
+saml_metadata = "$SAML_MEATADATA"
+saml_issuer = "$SAML_ISSUER"
+saml_callback = "$SAML_CALLBACK"
+saml_trusted_domains = $SAML_TRUSTED_DOMAINS
+
+[defaults]
+owners = $DEFAULT_OWNERS
+
+[scanengine]
+url = "$SCANENGINE_URL"
+
+[scheduler]
+url = "$SCHEDULER_URL"
+# Minimum period time in minutes that a program can be scheduled to run
+minimum_interval = 0.1
+
+[sqs]
+enabled = true
+log_messages = true
+polling_interval = $SQS_POLLING_INTERVAL
+wait_time = $SQS_WAIT_TIME
+timeout = $SQS_TIMEOUT
+queue_arn = "$SQS_QUEUE_ARN"
+endpoint = "$AWS_SQS_ENDPOINT"
+
+[reports]
+sns_arn = "$REPORTS_SNS_ARN"
+sns_endpoint = "$AWS_SNS_ENDPOINT"
+api_base_url = "$REPORTS_API_URL"
+scan_redirect_url= "$SCAN_REDIRECT_URL"
+vulcanui_url = "$VULCAN_UI_URL"
+
+[vulcancore]
+schema = "http"
+host = "$PERSISTENCE_HOST"
+
+[vulnerabilitydb]
+url = "$VULNERABILITYDB_URL"
+insecure_tls = true
+
+[metrics]
+enabled = $DOGSTATSD_ENABLED
+
+
+[awscatalogue]
+kind = "$AWSCATALOGUE_KIND"
+url = "$AWSCATALOGUE_URL"
+key = "$AWSCATALOGUE_KEY"
+retries = $AWSCATALOGUE_RETRIES
+retry_interval = $AWSCATALOGUE_RETRY_INTERVAL
