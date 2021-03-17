@@ -93,14 +93,14 @@
 									"    ",
 									"    jsonData.forEach(function(element){",
 									"        switch(element.email) {",
-									"            case \"testuser1@vulcan.com\":",
+									"            case \"testuser1@vulcan.example.com\":",
 									"                pm.expect(element.admin).to.be.false;",
 									"                pm.expect(element.active).to.be.true;",
 									"                user1present = true;",
 									"                pm.environment.set(\"user1_uuid\", element.id);",
 									"                pm.environment.set(\"user1_email\", element.email);",
 									"                break;",
-									"            case \"testuser2@vulcan.com\":",
+									"            case \"testuser2@vulcan.example.com\":",
 									"                pm.expect(element.admin).to.be.false;",
 									"                pm.expect(element.active).to.be.true;",
 									"                user2present = true;",
@@ -483,7 +483,7 @@
 									"    var jsonData = pm.response.json();",
 									"    ",
 									"    pm.expect(jsonData.length).to.eql(1);",
-									"    pm.expect(jsonData[0].email).to.eql(\"testuser2@vulcan.com\");",
+									"    pm.expect(jsonData[0].email).to.eql(\"testuser2@vulcan.example.com\");",
 									"});"
 								]
 							}
@@ -1640,7 +1640,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"email\": \"user_to_add@vulcan.com\",\n\t\"role\": \"owner\"\n}"
+							"raw": "{\n\t\"email\": \"user_to_add@vulcan.example.com\",\n\t\"role\": \"owner\"\n}"
 						},
 						"url": {
 							"raw": "{{host}}/api/v1/teams/{{team2_uuid}}/members",

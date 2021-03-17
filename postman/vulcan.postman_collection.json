@@ -319,7 +319,7 @@
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData.firstname).to.eql(\"first-name\");",
 							"     pm.expect(jsonData.lastname).to.eql(\"last-name\");",
-							"    pm.expect(jsonData.email).to.eql(\"firstname.lastname@vulcan.com\")",
+							"    pm.expect(jsonData.email).to.eql(\"firstname.lastname@vulcan.example.com\")",
 							"    pm.environment.set(\"newUserId\", jsonData.id);",
 							"});"
 						]
@@ -336,7 +336,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"firstname\": \"first-name\",\n\t\"lastname\": \"last-name\",\n\t\"email\": \"firstname.lastname@vulcan.com\"\n}"
+					"raw": "{\n\t\"firstname\": \"first-name\",\n\t\"lastname\": \"last-name\",\n\t\"email\": \"firstname.lastname@vulcan.example.com\"\n}"
 				},
 				"url": {
 					"raw": "{{host}}/api/v1/users",
@@ -368,7 +368,7 @@
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData.firstname).to.eql(\"first-name2\");",
 							"     pm.expect(jsonData.lastname).to.eql(\"last-name\");",
-							"    pm.expect(jsonData.email).to.eql(\"firstname2.lastname@vulcan.com\")",
+							"    pm.expect(jsonData.email).to.eql(\"firstname2.lastname@vulcan.example.com\")",
 							"});"
 						],
 						"type": "text/javascript"
@@ -385,7 +385,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"firstname\": \"first-name2\",\n\t\"lastname\": \"last-name\",\n\t\"email\": \"FIRSTname2.LASTname@vulcan.com\"\n}"
+					"raw": "{\n\t\"firstname\": \"first-name2\",\n\t\"lastname\": \"last-name\",\n\t\"email\": \"FIRSTname2.LASTname@vulcan.example.com\"\n}"
 				},
 				"url": {
 					"raw": "{{host}}/api/v1/users",
@@ -655,7 +655,7 @@
 							"pm.test(\"User is added to team with correct response data\", function () {",
 							"    var jsonData = pm.response.json();",
 							"     pm.expect(jsonData.user.id).to.eql(pm.environment.get(\"newUserId\"));",
-							"     pm.expect(jsonData.user.email).to.eql(\"firstname.lastname@vulcan.com\");",
+							"     pm.expect(jsonData.user.email).to.eql(\"firstname.lastname@vulcan.example.com\");",
 							"     pm.expect(jsonData.role).to.eql(\"owner\")",
 							"});"
 						]
@@ -773,7 +773,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"email\": \"test@vulcan.com\"\n}"
+					"raw": "{\n\t\"email\": \"test@vulcan.example.com\"\n}"
 				},
 				"url": {
 					"raw": "{{host}}/api/v1/teams/{{team_id}}/members",
@@ -1172,7 +1172,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"assets\": [\n\t\t{\n\t\t\t\"type\": \"IP\",\n\t\t\t\"identifier\": \"127.0.0.1\",\n\t\t\t\"scannable\": true\n\t\t},\n\t\t{\n\t\t\t\"identifier\": \"127.0.0.2\"\n\t\t},\n\t\t{\n\t\t\t\"identifier\": \"localhost\"\n\t\t},\n\t\t{\n\t\t\t\"identifier\": \"vulcan.com\"\n\t\t}\n\t]\n}"
+					"raw": "{\n\t\"assets\": [\n\t\t{\n\t\t\t\"type\": \"IP\",\n\t\t\t\"identifier\": \"127.0.0.1\",\n\t\t\t\"scannable\": true\n\t\t},\n\t\t{\n\t\t\t\"identifier\": \"127.0.0.2\"\n\t\t},\n\t\t{\n\t\t\t\"identifier\": \"localhost\"\n\t\t},\n\t\t{\n\t\t\t\"identifier\": \"vulcan.example.com\"\n\t\t}\n\t]\n}"
 				},
 				"url": {
 					"raw": "{{host}}/api/v1/teams/{{team_id}}/assets",

@@ -45,7 +45,7 @@ Those are the variables you have to setup:
 |REPORTS_SNS_ARN||arn:aws:sns:xxx:123456789012:yyy|
 |AWS_SNS_ENDPOINT|Optional||
 |REPORTS_API_URL||http://localhost:8084|
-|PERSISTENCE_HOST||persistence.vulcan.com|
+|PERSISTENCE_HOST||persistence.vulcan.example.com|
 |VULNERABILITYDB_URL||http://localhost:8083|
 |SCAN_REDIRECT_URL|Redirecting URL for reports, OPTIONAL|https://insights-redirect.vulcan.s3-xxx.amazonaws.com/index.html?reportUrl=|
 |VULCAN_UI_URL|Vulcan UI base URL for Digest report link|http://localhost:1234|

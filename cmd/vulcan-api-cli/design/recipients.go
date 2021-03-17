@@ -13,7 +13,7 @@ import (
 var RecipientMedia = MediaType("recipient", func() {
 	Description("Recipient")
 	Attributes(func() {
-		Attribute("email", String, "email", func() { Example("john.doe@vulcan.com") })
+		Attribute("email", String, "email", func() { Example("john.doe@vulcan.example.com") })
 	})
 	View("default", func() {
 		Attribute("email")
@@ -21,7 +21,7 @@ var RecipientMedia = MediaType("recipient", func() {
 })
 
 var RecipientsPayload = Type("RecipientsPayload", func() {
-	Attribute("emails", ArrayOf(String), "Emails", func() { Example([]string{"john.doe@vulcan.com", "jane.doe@vulcan.com"}) })
+	Attribute("emails", ArrayOf(String), "Emails", func() { Example([]string{"john.doe@vulcan.example.com", "jane.doe@vulcan.example.com"}) })
 	Required("emails")
 })
 

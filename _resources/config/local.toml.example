@@ -45,7 +45,7 @@ vulcanui_url = "http://localhost:1234"
 
 [vulcancore]
 schema = "https"
-host = "persistence.vulcan.com"
+host = "persistence.vulcan.example.com"
 
 [vulnerabilitydb]
 url = "http://localhost:8083"

@@ -38,7 +38,7 @@ func TestStoreCreateUser(t *testing.T) {
 		{
 			name: "HappyPath",
 			user: &api.User{
-				Email:     "new-user@vulcan.com",
+				Email:     "new-user@vulcan.example.com",
 				Firstname: "New",
 				Lastname:  "User",
 				Admin:     common.Bool(true),
@@ -47,7 +47,7 @@ func TestStoreCreateUser(t *testing.T) {
 				APIToken:  "",
 			},
 			want: &api.User{
-				Email:     "new-user@vulcan.com",
+				Email:     "new-user@vulcan.example.com",
 				Firstname: "New",
 				Lastname:  "User",
 				Admin:     common.Bool(true),
@@ -60,7 +60,7 @@ func TestStoreCreateUser(t *testing.T) {
 		{
 			name: "AlreadyExists",
 			user: &api.User{
-				Email: "vulcan-team@vulcan.com",
+				Email: "vulcan-team@vulcan.example.com",
 			},
 			wantErr: errors.New("User already exists"),
 		},
@@ -99,7 +99,7 @@ func TestStoreUpdateUser(t *testing.T) {
 			name: "HappyPath",
 			user: &api.User{
 				ID:        "1123af8f-a9cd-48b1-8a0d-382d3cfb47c4",
-				Email:     "update-user@vulcan.com",
+				Email:     "update-user@vulcan.example.com",
 				Firstname: "new name",
 				Lastname:  "new lastname",
 				Admin:     common.Bool(true),
@@ -109,7 +109,7 @@ func TestStoreUpdateUser(t *testing.T) {
 			},
 			want: &api.User{
 				ID:        "1123af8f-a9cd-48b1-8a0d-382d3cfb47c4",
-				Email:     "update-user@vulcan.com",
+				Email:     "update-user@vulcan.example.com",
 				Firstname: "new name",
 				Lastname:  "new lastname",
 				Admin:     common.Bool(true),
@@ -159,7 +159,7 @@ func TestStoreCreateUserIfNotExists(t *testing.T) {
 		{
 			name: "HappyPath",
 			user: saml.UserData{
-				Email:     "saml-user@vulcan.com",
+				Email:     "saml-user@vulcan.example.com",
 				FirstName: "saml",
 				LastName:  "user",
 				UserName:  "username"},
@@ -168,7 +168,7 @@ func TestStoreCreateUserIfNotExists(t *testing.T) {
 		{
 			name: "UserAlreadyExists",
 			user: saml.UserData{
-				Email: "vulcan-team@vulcan.com",
+				Email: "vulcan-team@vulcan.example.com",
 			},
 			wantErr: nil,
 		},
@@ -202,7 +202,7 @@ func TestStoreCreateRecipientsAsTeamMembers(t *testing.T) {
 			name:   "HappyPath",
 			teamID: "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
 			user: saml.UserData{
-				Email:     "saml-user@vulcan.com",
+				Email:     "saml-user@vulcan.example.com",
 				FirstName: "saml",
 				LastName:  "user",
 				UserName:  "username"},
@@ -212,7 +212,7 @@ func TestStoreCreateRecipientsAsTeamMembers(t *testing.T) {
 			name:   "UserAlreadyExists",
 			teamID: "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
 			user: saml.UserData{
-				Email: "vulcan-team@vulcan.com",
+				Email: "vulcan-team@vulcan.example.com",
 			},
 			wantErr: nil,
 		},
@@ -264,13 +264,13 @@ func TestStoreFindUserByID(t *testing.T) {
 			userID: "4a4bec34-8c1b-42c4-a6fb-2a2dbafc572e",
 			want: &api.User{
 				ID:        "4a4bec34-8c1b-42c4-a6fb-2a2dbafc572e",
-				Email:     "vulcan-team@vulcan.com",
+				Email:     "vulcan-team@vulcan.example.com",
 				Firstname: "Vulcan",
 				Lastname:  "Team",
 				Admin:     common.Bool(false),
 				Observer:  common.Bool(false),
 				Active:    common.Bool(true),
-				APIToken:  "1620a50e4099061bf503dffba2a2874dde207b56f733891285e539825b15481c",
+				APIToken:  "3e666891f17cbb8defe642cd38eb9b7fd7ec0937e8ed5323e598fa983a35cbd6",
 			},
 			wantErr: nil,
 		},
@@ -312,22 +312,22 @@ func TestStoreFindUserByEmail(t *testing.T) {
 	}{
 		{
 			name:      "HappyPath",
-			userEmail: "vulcan-team@vulcan.com",
+			userEmail: "vulcan-team@vulcan.example.com",
 			want: &api.User{
 				ID:        "4a4bec34-8c1b-42c4-a6fb-2a2dbafc572e",
-				Email:     "vulcan-team@vulcan.com",
+				Email:     "vulcan-team@vulcan.example.com",
 				Firstname: "Vulcan",
 				Lastname:  "Team",
 				Admin:     common.Bool(false),
 				Observer:  common.Bool(false),
 				Active:    common.Bool(true),
-				APIToken:  "1620a50e4099061bf503dffba2a2874dde207b56f733891285e539825b15481c",
+				APIToken:  "3e666891f17cbb8defe642cd38eb9b7fd7ec0937e8ed5323e598fa983a35cbd6",
 			},
 			wantErr: nil,
 		},
 		{
 			name:      "UserDoesNotExists",
-			userEmail: "inexistent-user@vulcan.com",
+			userEmail: "inexistent-user@vulcan.example.com",
 			wantErr:   errors.New("User does not exists"),
 		},
 	}

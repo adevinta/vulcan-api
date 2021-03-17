@@ -16,7 +16,7 @@ var UserMedia = MediaType("user", func() {
 		Attribute("id", String, "User ID", func() { Example("967d9966-b561-4233-bd6f-cac603fd8320") })
 		Attribute("firstname", String, "First name", func() { Example("John") })
 		Attribute("lastname", String, "Last name", func() { Example("Doe") })
-		Attribute("email", String, "Email", func() { Example("john.doe@vulcan.com") })
+		Attribute("email", String, "Email", func() { Example("john.doe@vulcan.example.com") })
 		Attribute("admin", Boolean, "Admin", func() { Example(true) })
 		Attribute("observer", Boolean, "Observer", func() { Example(true) })
 		Attribute("active", Boolean, "Active", func() { Example(true) })
@@ -38,7 +38,7 @@ var UserMedia = MediaType("user", func() {
 var UserPayload = Type("UserPayload", func() {
 	Attribute("firstname", String, "First Name", func() { Example("John") })
 	Attribute("lastname", String, "Last Name", func() { Example("Doe") })
-	Attribute("email", String, "Email", func() { Example("john.doe@vulcan.com") })
+	Attribute("email", String, "Email", func() { Example("john.doe@vulcan.example.com") })
 	Attribute("admin", Boolean, "Admin", func() {
 		Example(false)
 		Default(false)

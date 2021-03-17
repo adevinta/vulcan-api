@@ -43,14 +43,14 @@ func TestLoginHandler(t *testing.T) {
 		{
 			name: "happy path",
 			trustedDomains: []string{
-				"vulcan.com",
+				"vulcan.example.com",
 			},
 			req: &http.Request{
 				Method: http.MethodGet,
 				URL: &url.URL{
 					Scheme:   "http://",
-					Host:     "vulcan.com",
-					RawQuery: "redirect_to=http://vulcan.com/callback",
+					Host:     "vulcan.example.com",
+					RawQuery: "redirect_to=http://vulcan.example.com/callback",
 				},
 			},
 			wantHTTPStatus: http.StatusFound,
@@ -58,7 +58,7 @@ func TestLoginHandler(t *testing.T) {
 		{
 			name: "should return untrusted domain",
 			trustedDomains: []string{
-				"vulcan.com",
+				"vulcan.example.com",
 			},
 			req: &http.Request{
 				Method: http.MethodGet,
@@ -117,7 +117,7 @@ func TestLoginCallbackHandler(t *testing.T) {
 			},
 			cfg: CallbackConfig{
 				CookieName:   "vulcancookie",
-				CookieDomain: "vulcan.com",
+				CookieDomain: "vulcan.example.com",
 				TokenGenerator: func(data map[string]interface{}) (string, error) {
 					return "vulcanToken", nil
 				},
@@ -126,7 +126,7 @@ func TestLoginCallbackHandler(t *testing.T) {
 				Method: http.MethodPost,
 				URL: &url.URL{
 					Scheme: "http://",
-					Host:   "vulcan.com",
+					Host:   "vulcan.example.com",
 				},
 				PostForm: url.Values{},
 			},
@@ -146,7 +146,7 @@ func TestLoginCallbackHandler(t *testing.T) {
 				Method: http.MethodPost,
 				URL: &url.URL{
 					Scheme: "http://",
-					Host:   "vulcan.com",
+					Host:   "vulcan.example.com",
 				},
 				PostForm: url.Values{},
 			},
@@ -165,7 +165,7 @@ func TestLoginCallbackHandler(t *testing.T) {
 				Method: http.MethodPost,
 				URL: &url.URL{
 					Scheme: "http://",
-					Host:   "vulcan.com",
+					Host:   "vulcan.example.com",
 				},
 				PostForm: url.Values{},
 			},
@@ -184,7 +184,7 @@ func TestLoginCallbackHandler(t *testing.T) {
 				Method: http.MethodPost,
 				URL: &url.URL{
 					Scheme: "http://",
-					Host:   "vulcan.com",
+					Host:   "vulcan.example.com",
 				},
 				PostForm: url.Values{},
 			},
@@ -201,7 +201,7 @@ func TestLoginCallbackHandler(t *testing.T) {
 			},
 			cfg: CallbackConfig{
 				CookieName:   "vulcancookie2",
-				CookieDomain: "vulcan.com",
+				CookieDomain: "vulcan.example.com",
 				UserDataCallback: func(ud UserData) error {
 					if ud.UserName != "JDoe" || ud.FirstName != "John" ||
 						ud.LastName != "Doe" || ud.Email != "jd@jd.com" {
@@ -217,7 +217,7 @@ func TestLoginCallbackHandler(t *testing.T) {
 				Method: http.MethodPost,
 				URL: &url.URL{
 					Scheme: "http://",
-					Host:   "vulcan.com",
+					Host:   "vulcan.example.com",
 				},
 				PostForm: url.Values{},
 			},
@@ -235,7 +235,7 @@ func TestLoginCallbackHandler(t *testing.T) {
 			},
 			cfg: CallbackConfig{
 				CookieName:   "vulcancookie2",
-				CookieDomain: "vulcan.com",
+				CookieDomain: "vulcan.example.com",
 				UserDataCallback: func(ud UserData) error {
 					return errors.New("err")
 				},
@@ -244,7 +244,7 @@ func TestLoginCallbackHandler(t *testing.T) {
 				Method: http.MethodPost,
 				URL: &url.URL{
 					Scheme: "http://",
-					Host:   "vulcan.com",
+					Host:   "vulcan.example.com",
 				},
 				PostForm: url.Values{},
 			},

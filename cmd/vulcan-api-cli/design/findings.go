@@ -193,7 +193,7 @@ var FindingsTargetMedia = MediaType("findings_target", func() {
 	Description("Findings by Target")
 	Attributes(func() {
 		Attribute("target_id", String, "Target ID", func() { Example("a8720503-0284-45fd-9cf4-5bb6c500966f") })
-		Attribute("identifier", String, "Target Identifier", func() { Example("vulcan.com") })
+		Attribute("identifier", String, "Target Identifier", func() { Example("vulcan.example.com") })
 		Attribute("findings_count", Number, "Number of findings for the target", func() { Example(5) })
 		Attribute("max_score", Number, "Max score for the issue among the affected assets", func() { Example(6.9) })
 	})

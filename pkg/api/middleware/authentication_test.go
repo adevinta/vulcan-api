@@ -16,8 +16,8 @@ import (
 	"github.com/go-kit/kit/log"
 	"github.com/google/go-cmp/cmp"
 
-	"github.com/adevinta/vulcan-api/pkg/jwt"
 	"github.com/adevinta/vulcan-api/pkg/api/store"
+	"github.com/adevinta/vulcan-api/pkg/jwt"
 	"github.com/adevinta/vulcan-api/pkg/testutil"
 )
 
@@ -44,17 +44,17 @@ func TestAuthentication(t *testing.T) {
 	sessionToken, err := jwt.NewJWTConfig(jwtSignKey).GenerateToken(map[string]interface{}{
 		"first_name": "Newman",
 		"last_name":  "testuser",
-		"email":      "vulcan-team@vulcan.com",
+		"email":      "vulcan-team@vulcan.example.com",
 		"username":   "testuser",
 		"iat":        tokenGenTime.Unix(),
 		"exp":        tokenGenTime.Add(6 * time.Hour).Unix(),
-		"sub":        "vulcan-team@vulcan.com",
+		"sub":        "vulcan-team@vulcan.example.com",
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	apiToken := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MTUzNjQ3NTcsInN1YiI6InZ1bGNhbi10ZWFtQHZ1bGNhbi5jb20iLCJ0eXBlIjoiQVBJIn0.Ym7gocLREqa7fXYq9hP1lNunckDXGaSrCYAXBEi5DlA"
+	apiToken := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MTU5OTY4MjcsInN1YiI6InZ1bGNhbi10ZWFtQHZ1bGNhbi5leGFtcGxlLmNvbSIsInR5cGUiOiJBUEkifQ.nivnzBJAK-mFgaT9V6hGzSgqrVyw-r1O8_8PbTgiBuo"
 
 	invalidAPIToken := "WRONG"
 

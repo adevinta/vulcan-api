@@ -13,13 +13,13 @@ import (
 	"testing"
 
 	apierrors "github.com/adevinta/errors"
-	"github.com/go-kit/kit/log"
-	"github.com/google/go-cmp/cmp"
-	"github.com/google/go-cmp/cmp/cmpopts"
 	"github.com/adevinta/vulcan-api/pkg/api"
 	"github.com/adevinta/vulcan-api/pkg/api/store"
 	"github.com/adevinta/vulcan-api/pkg/common"
 	"github.com/adevinta/vulcan-api/pkg/testutil"
+	"github.com/go-kit/kit/log"
+	"github.com/google/go-cmp/cmp"
+	"github.com/google/go-cmp/cmp/cmpopts"
 )
 
 func TestGetTypesFromIdentifier(t *testing.T) {
@@ -39,7 +39,7 @@ func TestGetTypesFromIdentifier(t *testing.T) {
 		{"containers.adevinta.com/vulcan/application:5.5.2", []string{"DockerImage"}, []string{"containers.adevinta.com/vulcan/application:5.5.2"}},
 		{"registry-1.docker.io/library/postgres:latest", []string{"DockerImage"}, []string{"registry-1.docker.io/library/postgres:latest"}},
 		{"finntech/docker-elasticsearch-kubernetes", nil, nil},
-		{"https://www.vulcan.com", []string{"Hostname", "WebAddress"}, []string{"www.vulcan.com", "https://www.vulcan.com"}},
+		{"https://www.example.com", []string{"Hostname", "WebAddress"}, []string{"www.example.com", "https://www.example.com"}},
 		{"registry-1.docker.io/artifact", []string{"DockerImage"}, []string{"registry-1.docker.io/artifact"}},
 	}
 
@@ -97,7 +97,7 @@ func TestServiceListAssets(t *testing.T) {
 			want: []*api.Asset{
 				&api.Asset{
 					TeamID:      "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
-					Identifier:  "foo1.vulcan.com",
+					Identifier:  "foo1.vulcan.example.com",
 					AssetTypeID: hostnameType.ID,
 					Scannable:   common.Bool(true),
 					Options:     common.String(`{"checktype_options":[{"name":"vulcan-exposed-memcheck","options":{"https":"true","port":"11211"}},{"name":"vulcan-nessus","options":{"enabled":"false"}}]}`),
@@ -116,7 +116,7 @@ func TestServiceListAssets(t *testing.T) {
 				},
 				&api.Asset{
 					TeamID:      "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
-					Identifier:  "foo1.vulcan.com",
+					Identifier:  "foo1.vulcan.example.com",
 					AssetTypeID: domainType.ID,
 					Scannable:   common.Bool(true),
 					Options:     common.String(`{"checktype_options":[{"name":"vulcan-exposed-memcheck","options":{"https":"true","port":"11211"}},{"name":"vulcan-nessus","options":{"enabled":"false"}}]}`),
@@ -135,7 +135,7 @@ func TestServiceListAssets(t *testing.T) {
 				},
 				&api.Asset{
 					TeamID:      "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
-					Identifier:  "foo2.vulcan.io",
+					Identifier:  "foo2.vulcan.example.com",
 					AssetTypeID: hostnameType.ID,
 					Scannable:   common.Bool(true),
 					Options:     common.String(`{"checktype_options":[{"name":"vulcan-exposed-memcheck","options":{"https":"true","port":"11211"}}]}`),
@@ -154,7 +154,7 @@ func TestServiceListAssets(t *testing.T) {
 				},
 				&api.Asset{
 					TeamID:            "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
-					Identifier:        "foo3.vulcan.com",
+					Identifier:        "foo3.vulcan.example.com",
 					AssetTypeID:       "1937b564-bbc4-47f6-9722-b4a8c8ac0595",
 					Options:           common.String("{}"),
 					Scannable:         common.Bool(true),
@@ -344,7 +344,7 @@ func TestVulcanitoService_CreateAssets(t *testing.T) {
 				},
 				api.Asset{
 					TeamID:     "3c7c2963-6a03-4a25-a822-ebeb237db065",
-					Identifier: "vulcan.com",
+					Identifier: "example.com",
 					AssetType:  &api.AssetType{},
 					Options:    common.String(""),
 					Scannable:  common.Bool(true),
@@ -391,7 +391,7 @@ func TestVulcanitoService_CreateAssets(t *testing.T) {
 				},
 				api.Asset{
 					TeamID:      "3c7c2963-6a03-4a25-a822-ebeb237db065",
-					Identifier:  "vulcan.com",
+					Identifier:  "example.com",
 					AssetTypeID: "1937b564-bbc4-47f6-9722-b4a8c8ac0595",
 					AssetType:   &api.AssetType{ID: "1937b564-bbc4-47f6-9722-b4a8c8ac0595", Name: "Hostname"},
 					Options:     common.String(""),
@@ -400,7 +400,7 @@ func TestVulcanitoService_CreateAssets(t *testing.T) {
 				},
 				api.Asset{
 					TeamID:      "3c7c2963-6a03-4a25-a822-ebeb237db065",
-					Identifier:  "vulcan.com",
+					Identifier:  "example.com",
 					AssetTypeID: "e2e4b23e-b72c-40a6-9f72-e6ade33a7b00",
 					AssetType:   &api.AssetType{ID: "e2e4b23e-b72c-40a6-9f72-e6ade33a7b00", Name: "DomainName"},
 					Options:     common.String(""),

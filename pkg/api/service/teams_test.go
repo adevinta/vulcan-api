@@ -185,7 +185,7 @@ func TestCreateTeam(t *testing.T) {
 					Description: "Test team description",
 					Tag:         "a:b:c:d",
 				},
-				email: "vulcan-team@vulcan.com",
+				email: "vulcan-team@vulcan.example.com",
 			},
 
 			want: &api.Team{
@@ -206,7 +206,7 @@ func TestCreateTeam(t *testing.T) {
 					Description: "Create this team...",
 					Tag:         "a:b:c:d",
 				},
-				email: "not-exists@vulcan.com",
+				email: "not-exists@vulcan.example.com",
 			},
 			wantErr: apiErrors.Validation(`Key: 'Team.Name' Error:Field validation for 'Name' failed on the 'required' tag`),
 		},
