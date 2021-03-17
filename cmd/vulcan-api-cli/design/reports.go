@@ -16,13 +16,13 @@ var ReportMedia = MediaType("report", func() {
 		Attribute("id", String, "Report ID", func() { Example("a7f3a072-67bb-41ad-941e-25afcafc0ed5") })
 		Attribute("scan_id", String, "Scan ID", func() { Example("360f1c3a-f0e9-4c10-b557-ebf3015a61a9") })
 		Attribute("report", String, "Report URL", func() {
-			Example("https://insights.vulcan.com/2b3123c0b0083ab6d87b7bb743652b9a58125079258b8b4650511bd47bc1a552/2018-07-10/360f1c3a-f0e9-4c10-b557-ebf3015a61a9-full-report.html")
+			Example("https://insights.vulcan.example.com/2b3123c0b0083ab6d87b7bb743652b9a58125079258b8b4650511bd47bc1a552/2018-07-10/360f1c3a-f0e9-4c10-b557-ebf3015a61a9-full-report.html")
 		})
 		Attribute("report_json", String, "Report JSON URL", func() {
-			Example("https://insights.vulcan.com/2b3123c0b0083ab6d87b7bb743652b9a58125079258b8b4650511bd47bc1a552/2018-07-10/360f1c3a-f0e9-4c10-b557-ebf3015a61a9-full-report.json")
+			Example("https://insights.vulcan.example.com/2b3123c0b0083ab6d87b7bb743652b9a58125079258b8b4650511bd47bc1a552/2018-07-10/360f1c3a-f0e9-4c10-b557-ebf3015a61a9-full-report.json")
 		})
 		Attribute("status", String, "Status", func() { Example("FINISHED") })
-		Attribute("delivered_to", String, "Delivered To", func() { Example("john.doe@vulcan.com, jane.doe@vulcan.com") })
+		Attribute("delivered_to", String, "Delivered To", func() { Example("john.doe@vulcan.example.com, jane.doe@vulcan.example.com") })
 	})
 	View("default", func() {
 		Attribute("id")

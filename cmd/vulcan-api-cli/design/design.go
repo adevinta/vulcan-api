@@ -18,7 +18,7 @@ var _ = API("Vulcan-API", func() {
 	Title("Vulcan API")
 	Description("Public API for Vulcan Vulnerability Scan Engine")
 	Scheme("https")
-	Host("www.vulcan.com")
+	Host("www.vulcan.example.com")
 	BasePath("/api/v1")
 	Consumes("application/json")
 	//Consumes("application/x-www-form-urlencoded", func() {

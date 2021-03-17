@@ -4,12 +4,12 @@
 - id: 4a4bec34-8c1b-42c4-a6fb-2a2dbafc572e
   firstname: Vulcan
   lastname: Team
-  email: vulcan-team@vulcan.com
+  email: vulcan-team@vulcan.example.com
   active: true
   admin: false
   observer: false
-  # eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MTUzNjQ3NTcsInN1YiI6InZ1bGNhbi10ZWFtQHZ1bGNhbi5jb20iLCJ0eXBlIjoiQVBJIn0.Ym7gocLREqa7fXYq9hP1lNunckDXGaSrCYAXBEi5DlA
-  api_token: 1620a50e4099061bf503dffba2a2874dde207b56f733891285e539825b15481c
+  # eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MTU5OTY4MjcsInN1YiI6InZ1bGNhbi10ZWFtQHZ1bGNhbi5leGFtcGxlLmNvbSIsInR5cGUiOiJBUEkifQ.nivnzBJAK-mFgaT9V6hGzSgqrVyw-r1O8_8PbTgiBuo
+  api_token: 3e666891f17cbb8defe642cd38eb9b7fd7ec0937e8ed5323e598fa983a35cbd6
   created_at: 2017-01-01 12:30:12
   updated_at: 2017-01-01 12:30:12
 
@@ -17,7 +17,7 @@
 - id: 0585b0ce-e1f5-474b-a7c5-04e51673f8b4
   firstname: Without
   lastname: Teams
-  email: without-teams@vulcan.com
+  email: without-teams@vulcan.example.com
   active: true
   admin: false
   observer: false
@@ -27,7 +27,7 @@
 - id: 1123af8f-a9cd-48b1-8a0d-382d3cfb47c4
   firstname: Update
   lastname: User
-  email: update-user@vulcan.com
+  email: update-user@vulcan.example.com
   active: true
   admin: false
   observer: false
@@ -38,7 +38,7 @@
 - id: 175b48c6-043b-48cf-a7c5-1934f6f50c7a
   firstname: Add User
   lastname: To Team
-  email: add-user@vulcan.com
+  email: add-user@vulcan.example.com
   active: true
   admin: false
   observer: false
@@ -49,7 +49,7 @@
 - id: b58a941b-6c2f-402a-80ba-fbbf3c270dc6
   firstname: Delete
   lastname: User
-  email: delete-user@vulcan.com
+  email: delete-user@vulcan.example.com
   active: true
   admin: false
   observer: false
@@ -59,7 +59,7 @@
 - id: c2cbf3ee-1b2e-11e9-ab14-d663bd873d93
   firstname: Delete
   lastname: WithTeamMemberships
-  email: delete-with-teams-user@vulcan.com
+  email: delete-with-teams-user@vulcan.example.com
   active: true
   admin: false
   observer: false
@@ -70,7 +70,7 @@
 - id: 1f862079-bd72-43d3-b09f-d855e01e67c5
   firstname: User To
   lastname: Be Deleted From Team
-  email: delete-user@vulcan.com
+  email: delete-user@vulcan.example.com
   active: true
   admin: false
   observer: false

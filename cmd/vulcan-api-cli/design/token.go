@@ -13,7 +13,7 @@ import (
 var TokenMedia = MediaType("token", func() {
 	Description("Token")
 	Attributes(func() {
-		Attribute("email", String, "Email", func() { Example("john.doe@vulcan.com") })
+		Attribute("email", String, "Email", func() { Example("john.doe@vulcan.example.com") })
 		Attribute("hash", String, "Hash", func() { Example("903af1a77ea4eda46b60d85fac0f312ff9d3b6ea092434c8a6ef1868bf95da77") })
 		Attribute("creation_time", String, "Creation time", func() { Example("2018-09-07T10:40:52Z") })
 		Attribute("token", String, "Token", func() {

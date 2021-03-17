@@ -15,7 +15,7 @@ var AssetMedia = MediaType("asset", func() {
 	Attributes(func() {
 		Attribute("id", String, "Asset ID", func() { Example("a8720503-0284-45fd-9cf4-5bb6c500966f") })
 		Attribute("type", AssetTypeMedia, "Type")
-		Attribute("identifier", String, "Identifier", func() { Example("vulcan.com") })
+		Attribute("identifier", String, "Identifier", func() { Example("vulcan.example.com") })
 		Attribute("options", String, "Options", func() { Example("{\"timeout\":60}") })
 		Attribute("environmental_cvss", String, "Environmental CVSS", func() { Example("AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H") })
 		Attribute("rolfp", String, "Rolfp plus scope vector", func() { Example("R:1/O:1/L:0/F:0/P:0+S:1") })
@@ -41,7 +41,7 @@ var ListAssetMedia = MediaType("ListAssetEntry", func() {
 	Attributes(func() {
 		Attribute("id", String, "Asset ID", func() { Example("a8720503-0284-45fd-9cf4-5bb6c500966f") })
 		Attribute("type", AssetTypeMedia, "Type")
-		Attribute("identifier", String, "Identifier", func() { Example("vulcan.com") })
+		Attribute("identifier", String, "Identifier", func() { Example("vulcan.example.com") })
 		Attribute("options", String, "Options", func() { Example("{\"timeout\":60}") })
 		Attribute("environmental_cvss", String, "Environmental CVSS", func() { Example("AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H") })
 		Attribute("rolfp", String, "Rolfp plus scope vector", func() { Example("R:1/O:1/L:0/F:0/P:0+S:1") })
@@ -71,7 +71,7 @@ var AssetResponseMedia = MediaType("assetResponse", func() {
 	Attributes(func() {
 		Attribute("id", String, "Asset ID", func() { Example("a8720503-0284-45fd-9cf4-5bb6c500966f") })
 		Attribute("type", AssetTypeMedia, "Type")
-		Attribute("identifier", String, "Identifier", func() { Example("vulcan.com") })
+		Attribute("identifier", String, "Identifier", func() { Example("vulcan.example.com") })
 		Attribute("options", String, "Options", func() { Example("{\"timeout\":60}") })
 		Attribute("environmental_cvss", String, "Environmental CVSS", func() { Example("AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H") })
 		Attribute("rolfp", String, "Rolfp plus scope vector", func() { Example("R:1/O:1/L:0/F:0/P:0+S:1") })
@@ -108,7 +108,7 @@ var AssetTypeMedia = MediaType("assetType", func() {
 
 var AssetPayload = Type("AssetPayload", func() {
 	Attribute("type", String, "Type", func() { Example("Hostname") })
-	Attribute("identifier", String, "Identifier", func() { Example("vulcan.com") })
+	Attribute("identifier", String, "Identifier", func() { Example("vulcan.example.com") })
 	Attribute("options", String, "Options", func() { Example("{\"timeout\":60}") })
 	Attribute("environmental_cvss", String, "Environmental CVSS", func() { Example("AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H") })
 	Attribute("rolfp", String, "Rolfp plus scope vector", func() { Example("R:1/O:1/L:0/F:0/P:0+S:1") })
@@ -121,7 +121,7 @@ var AssetPayload = Type("AssetPayload", func() {
 
 var AssetUpdatePayload = Type("AssetUpdatePayload", func() {
 	Attribute("type", String, "Type", func() { Example("Hostname") })
-	Attribute("identifier", String, "Identifier", func() { Example("vulcan.com") })
+	Attribute("identifier", String, "Identifier", func() { Example("vulcan.example.com") })
 	Attribute("options", String, "Options", func() { Example("{\"timeout\":60}") })
 	Attribute("environmental_cvss", String, "Environmental CVSS", func() { Example("AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H") })
 	Attribute("rolfp", String, "Rolfp plus scope vector", func() { Example("R:1/O:1/L:0/F:0/P:0+S:1") })
@@ -202,9 +202,9 @@ var _ = Resource("assets", func() {
 			If the asset type is informed, then Vulcan will use that value to create the new asset.
 			Otherwise, Vulcan will try to automatically discover the asset type.
 			Notice that this may result in Vulcan creating more than one asset.
-			For instance, an user trying to create an asset for "vulcan.com", without specifying the asset type, will end up with two assets created:
-			- vulcan.com (DomainName) and
-			- vulcan.com (Hostname).`)
+			For instance, an user trying to create an asset for "vulcan.example.com", without specifying the asset type, will end up with two assets created:
+			- vulcan.example.com (DomainName) and
+			- vulcan.example.com (Hostname).`)
 		Routing(POST(""))
 		Payload(CreateAssetPayload)
 		Security("Bearer")

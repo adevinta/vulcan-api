@@ -54,7 +54,7 @@ func TestStoreListAssets(t *testing.T) {
 			want: []*api.Asset{
 				&api.Asset{
 					TeamID:      "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
-					Identifier:  "foo1.vulcan.com",
+					Identifier:  "foo1.vulcan.example.com",
 					AssetTypeID: hostnameType.ID,
 					Scannable:   common.Bool(true),
 					Options:     common.String(`{"checktype_options":[{"name":"vulcan-exposed-memcheck","options":{"https":"true","port":"11211"}},{"name":"vulcan-nessus","options":{"enabled":"false"}}]}`),
@@ -73,7 +73,7 @@ func TestStoreListAssets(t *testing.T) {
 				},
 				&api.Asset{
 					TeamID:      "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
-					Identifier:  "foo1.vulcan.com",
+					Identifier:  "foo1.vulcan.example.com",
 					AssetTypeID: domainType.ID,
 					Scannable:   common.Bool(true),
 					Options:     common.String(`{"checktype_options":[{"name":"vulcan-exposed-memcheck","options":{"https":"true","port":"11211"}},{"name":"vulcan-nessus","options":{"enabled":"false"}}]}`),
@@ -92,7 +92,7 @@ func TestStoreListAssets(t *testing.T) {
 				},
 				&api.Asset{
 					TeamID:      "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
-					Identifier:  "foo2.vulcan.io",
+					Identifier:  "foo2.vulcan.example.com",
 					AssetTypeID: hostnameType.ID,
 					Scannable:   common.Bool(true),
 					Options:     common.String(`{"checktype_options":[{"name":"vulcan-exposed-memcheck","options":{"https":"true","port":"11211"}}]}`),
@@ -111,7 +111,7 @@ func TestStoreListAssets(t *testing.T) {
 				},
 				&api.Asset{
 					TeamID:            "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
-					Identifier:        "foo3.vulcan.com",
+					Identifier:        "foo3.vulcan.example.com",
 					AssetTypeID:       "1937b564-bbc4-47f6-9722-b4a8c8ac0595",
 					Scannable:         common.Bool(true),
 					Options:           common.String("{}"),
@@ -164,7 +164,7 @@ func TestStoreCreateAssets(t *testing.T) {
 			assets: []api.Asset{
 				api.Asset{
 					TeamID:            "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
-					Identifier:        "vulcan.com",
+					Identifier:        "vulcan.example.com",
 					AssetTypeID:       hostnameType.ID,
 					EnvironmentalCVSS: common.String("c.v.s.s."),
 					Scannable:         common.Bool(true),
@@ -180,7 +180,7 @@ func TestStoreCreateAssets(t *testing.T) {
 			want: []api.Asset{
 				api.Asset{
 					TeamID:            "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
-					Identifier:        "vulcan.com",
+					Identifier:        "vulcan.example.com",
 					AssetTypeID:       hostnameType.ID,
 					EnvironmentalCVSS: common.String("c.v.s.s."),
 					Scannable:         common.Bool(true),
@@ -195,7 +195,7 @@ func TestStoreCreateAssets(t *testing.T) {
 			assets: []api.Asset{
 				api.Asset{
 					TeamID:            "9f7a0c78-b752-4126-aa6d-0f286ada7b8f",
-					Identifier:        "vulcan.com",
+					Identifier:        "vulcan.example.com",
 					AssetTypeID:       hostnameType.ID,
 					EnvironmentalCVSS: common.String("c.v.s.s."),
 					Scannable:         common.Bool(true),
@@ -204,7 +204,7 @@ func TestStoreCreateAssets(t *testing.T) {
 				}},
 			groups:  []api.Group{},
 			want:    nil,
-			wantErr: errors.New("[asset][vulcan.com][] record not found"),
+			wantErr: errors.New("[asset][vulcan.example.com][] record not found"),
 		},
 	}
 
@@ -247,7 +247,7 @@ func TestStoreCreateAsset(t *testing.T) {
 			name: "HappyPath",
 			asset: api.Asset{
 				TeamID:            "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
-				Identifier:        "vulcan.com",
+				Identifier:        "vulcan.example.com",
 				AssetTypeID:       hostnameType.ID,
 				EnvironmentalCVSS: common.String("c.v.s.s."),
 				Scannable:         common.Bool(true),
@@ -262,7 +262,7 @@ func TestStoreCreateAsset(t *testing.T) {
 			},
 			want: &api.Asset{
 				TeamID:            "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
-				Identifier:        "vulcan.com",
+				Identifier:        "vulcan.example.com",
 				AssetTypeID:       hostnameType.ID,
 				EnvironmentalCVSS: common.String("c.v.s.s."),
 				Scannable:         common.Bool(true),
@@ -276,7 +276,7 @@ func TestStoreCreateAsset(t *testing.T) {
 			name: "NonExistentTeam",
 			asset: api.Asset{
 				TeamID:            "9f7a0c78-b752-4126-aa6d-0f286ada7b8f",
-				Identifier:        "vulcan.com",
+				Identifier:        "vulcan.example.com",
 				AssetTypeID:       hostnameType.ID,
 				EnvironmentalCVSS: common.String("c.v.s.s."),
 				Scannable:         common.Bool(true),
@@ -285,7 +285,7 @@ func TestStoreCreateAsset(t *testing.T) {
 			},
 			groups:  []api.Group{},
 			want:    nil,
-			wantErr: errors.New("[asset][vulcan.com][] record not found"),
+			wantErr: errors.New("[asset][vulcan.example.com][] record not found"),
 		},
 	}
 
@@ -502,7 +502,7 @@ func TestStoreDeleteAsset(t *testing.T) {
 							CreatedAt:   &expTeamCreatedAt,
 							UpdatedAt:   &expTeamUpdatedAt,
 						},
-						Identifier:  "foo1.vulcan.com",
+						Identifier:  "foo1.vulcan.example.com",
 						AssetTypeID: "e2e4b23e-b72c-40a6-9f72-e6ade33a7b00",
 						ROLFP:       api.DefaultROLFP,
 						Scannable:   &varTrue,
@@ -532,7 +532,7 @@ func TestStoreDeleteAsset(t *testing.T) {
 							CreatedAt:   &expTeamCreatedAt,
 							UpdatedAt:   &expTeamUpdatedAt,
 						},
-						Identifier:  "foo1.vulcan.com",
+						Identifier:  "foo1.vulcan.example.com",
 						AssetTypeID: "1937b564-bbc4-47f6-9722-b4a8c8ac0595",
 						ROLFP:       api.DefaultROLFP,
 						Scannable:   &varTrue,

@@ -423,7 +423,7 @@ func parseAsset(line string) (*Asset, error) {
 	switch len(parts) {
 	case 5:
 		// Existing asset with or without rolfp.
-		// e.g.: example3.vulcan.com;Hostname;R:0/O:1/L:0/F:1/P:0+S:2;2abfe9a3-78ad-4e6b-a82e-8de7e40a3c58
+		// e.g.: example3.vulcan.example.com;Hostname;R:0/O:1/L:0/F:1/P:0+S:2;2abfe9a3-78ad-4e6b-a82e-8de7e40a3c58
 		// e.g.: arn:aws:iam::239557989611:root;AWSAccount;;fe004598-ba75-4be6-89...
 		// arn:aws:iam::581382904508:root;AWSAccount;R:1/O:1/L:1/F:1/P:1+S:2;SPT Infrastructure Public (DEV);308262f3-f681-49b8-8210-321726273957
 		a.ID = parts[4]
@@ -433,14 +433,14 @@ func parseAsset(line string) (*Asset, error) {
 		a.AssetType = parts[1]
 		a.Target = parts[0]
 	case 4:
-		// New asset with rolfp and alias e.g. example3.vulcan.com;Hostname;R:0/O:1/L:0/F:1/P:0+S:2;alias
+		// New asset with rolfp and alias e.g. example3.vulcan.example.com;Hostname;R:0/O:1/L:0/F:1/P:0+S:2;alias
 		a.Alias = parts[3]
 		a.Rolfp = parts[2]
 		a.AssetType = parts[1]
 		a.Target = parts[0]
 	case 3:
 		// New asset with rolfp but without alias.
-		// exmpale3.vulcan.com;Hostname
+		// exmpale3.vulcan.example.com;Hostname
 		a.Target = parts[0]
 		a.Rolfp = parts[2]
 		a.AssetType = parts[1]
@@ -449,7 +449,7 @@ func parseAsset(line string) (*Asset, error) {
 		}
 	case 2:
 		// New asset without rolfp and without alias
-		// exmpale3.vulcan.com;Hostname
+		// exmpale3.vulcan.example.com;Hostname
 		a.Target = parts[0]
 		a.AssetType = parts[1]
 		if a.Target == "" || a.AssetType == "" {

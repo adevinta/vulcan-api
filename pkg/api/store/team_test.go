@@ -214,8 +214,8 @@ func TestStoreFindTeamByIDForUser(t *testing.T) {
 					Active:    common.Bool(true),
 					Admin:     common.Bool(false),
 					Observer:  common.Bool(false),
-					Email:     "vulcan-team@vulcan.com",
-					APIToken:  "1620a50e4099061bf503dffba2a2874dde207b56f733891285e539825b15481c"},
+					Email:     "vulcan-team@vulcan.example.com",
+					APIToken:  "3e666891f17cbb8defe642cd38eb9b7fd7ec0937e8ed5323e598fa983a35cbd6"},
 				Role: "member",
 			},
 			wantErr: nil,
@@ -262,7 +262,7 @@ func TestStoreCreateTeam(t *testing.T) {
 	}{
 		{
 			name:       "HappyPath",
-			emailOwner: "vulcan-team@vulcan.com",
+			emailOwner: "vulcan-team@vulcan.example.com",
 			team: &api.Team{
 				Name:        "Create Team",
 				Description: "Create this team...",
@@ -277,7 +277,7 @@ func TestStoreCreateTeam(t *testing.T) {
 		},
 		{
 			name:       "UserNotExists",
-			emailOwner: "not-exists@vulcan.com",
+			emailOwner: "not-exists@vulcan.example.com",
 			team: &api.Team{
 				Name:        "Create Team",
 				Description: "Create this team...",

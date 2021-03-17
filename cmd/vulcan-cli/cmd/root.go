@@ -56,7 +56,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&cliCfg.Format, "format", "Bearer %s", "Format used to create auth header or query from key")
 	// Register global flags
 	rootCmd.PersistentFlags().StringVarP(&cliCfg.Scheme, "scheme", "s", "https", "Set the requests scheme")
-	rootCmd.PersistentFlags().StringVarP(&cliCfg.Host, "host", "H", "www.vulcan.com", "API hostname")
+	rootCmd.PersistentFlags().StringVarP(&cliCfg.Host, "host", "H", "www.vulcan.example.com", "API hostname")
 	rootCmd.PersistentFlags().DurationVarP(&cliCfg.Timeout, "timeout", "t", time.Duration(20)*time.Second, "Set the request timeout")
 	rootCmd.PersistentFlags().BoolVar(&cliCfg.Dump, "dump", false, "Dump HTTP request and response.")
 }

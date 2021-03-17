@@ -15,10 +15,10 @@ import (
 	_ "github.com/lib/pq"
 
 	apiErrors "github.com/adevinta/errors"
-	"github.com/adevinta/vulcan-api/pkg/jwt"
 	"github.com/adevinta/vulcan-api/pkg/api"
 	"github.com/adevinta/vulcan-api/pkg/api/store"
 	"github.com/adevinta/vulcan-api/pkg/common"
+	"github.com/adevinta/vulcan-api/pkg/jwt"
 	"github.com/adevinta/vulcan-api/pkg/reports"
 	"github.com/adevinta/vulcan-api/pkg/scanengine"
 	"github.com/adevinta/vulcan-api/pkg/schedule"
@@ -75,7 +75,7 @@ func TestServiceCreateUser(t *testing.T) {
 				BuildSrv: buildUserVulcanitoSrv,
 			},
 			user: &api.User{
-				Email:     "new-user@vulcan.com",
+				Email:     "new-user@vulcan.example.com",
 				Firstname: "New",
 				Lastname:  "User",
 				Admin:     common.Bool(true),
@@ -84,7 +84,7 @@ func TestServiceCreateUser(t *testing.T) {
 				APIToken:  "",
 			},
 			want: &api.User{
-				Email:     "new-user@vulcan.com",
+				Email:     "new-user@vulcan.example.com",
 				Firstname: "New",
 				Lastname:  "User",
 				Admin:     common.Bool(true),
@@ -152,7 +152,7 @@ func TestServiceUpdateUser(t *testing.T) {
 			},
 			user: &api.User{
 				ID:        "1123af8f-a9cd-48b1-8a0d-382d3cfb47c4",
-				Email:     "update-user@vulcan.com",
+				Email:     "update-user@vulcan.example.com",
 				Firstname: "new name",
 				Lastname:  "new lastname",
 				Admin:     common.Bool(true),
@@ -162,7 +162,7 @@ func TestServiceUpdateUser(t *testing.T) {
 			},
 			want: &api.User{
 				ID:        "1123af8f-a9cd-48b1-8a0d-382d3cfb47c4",
-				Email:     "update-user@vulcan.com",
+				Email:     "update-user@vulcan.example.com",
 				Firstname: "new name",
 				Lastname:  "new lastname",
 				Admin:     common.Bool(true),
@@ -283,13 +283,13 @@ func TestServiceFindUser(t *testing.T) {
 			},
 			want: &api.User{
 				ID:        "4a4bec34-8c1b-42c4-a6fb-2a2dbafc572e",
-				Email:     "vulcan-team@vulcan.com",
+				Email:     "vulcan-team@vulcan.example.com",
 				Firstname: "Vulcan",
 				Lastname:  "Team",
 				Admin:     common.Bool(false),
 				Observer:  common.Bool(false),
 				Active:    common.Bool(true),
-				APIToken:  "1620a50e4099061bf503dffba2a2874dde207b56f733891285e539825b15481c",
+				APIToken:  "3e666891f17cbb8defe642cd38eb9b7fd7ec0937e8ed5323e598fa983a35cbd6",
 			},
 			wantErr: nil,
 		},
@@ -345,21 +345,21 @@ func TestServiceGenerateAPIToken(t *testing.T) {
 			name:              "HappyPath",
 			claim:             "email",
 			signKey:           "SUPERSECRETSIGNKEY",
-			authenticatedUser: "vulcan-team@vulcan.com",
+			authenticatedUser: "vulcan-team@vulcan.example.com",
 			activeUser:        common.Bool(true),
 			adminUser:         common.Bool(false),
 			Observer:          common.Bool(false),
 			userID:            "4a4bec34-8c1b-42c4-a6fb-2a2dbafc572e",
 			want: &api.Token{
-				Email: "vulcan-team@vulcan.com",
-				Token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MTUzNjQ3NTcsInN1YiI6InZ1bGNhbi10ZWFtQHZ1bGNhbi5jb20iLCJ0eXBlIjoiQVBJIn0.Ym7gocLREqa7fXYq9hP1lNunckDXGaSrCYAXBEi5DlA"},
+				Email: "vulcan-team@vulcan.example.com",
+				Token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MTU5OTU1NTgsInN1YiI6InZ1bGNhbi10ZWFtQHZ1bGNhbi5leGFtcGxlLmNvbSIsInR5cGUiOiJBUEkifQ.nRYZN3Yg-A59i5H4xz6KrvQcWYUq0FrpRtHlDq0Lmeg"},
 			wantErr: nil,
 		},
 		{
 			name:              "Missing email field on context",
 			claim:             "",
 			signKey:           "SUPERSECRETSIGNKEY",
-			authenticatedUser: "vulcan-team@vulcan.com",
+			authenticatedUser: "vulcan-team@vulcan.example.com",
 			activeUser:        common.Bool(true),
 			adminUser:         common.Bool(false),
 			Observer:          common.Bool(false),
@@ -371,7 +371,7 @@ func TestServiceGenerateAPIToken(t *testing.T) {
 			name:              "MissingUserID",
 			claim:             "email",
 			signKey:           "SUPERSECRETSIGNKEY",
-			authenticatedUser: "vulcan-team@vulcan.com",
+			authenticatedUser: "vulcan-team@vulcan.example.com",
 			activeUser:        common.Bool(true),
 			adminUser:         common.Bool(false),
 			Observer:          common.Bool(false),
@@ -383,7 +383,7 @@ func TestServiceGenerateAPIToken(t *testing.T) {
 			name:              "UserDoesNotExists",
 			claim:             "email",
 			signKey:           "SUPERSECRETSIGNKEY",
-			authenticatedUser: "vulcan-team@vulcan.com",
+			authenticatedUser: "vulcan-team@vulcan.example.com",
 			activeUser:        common.Bool(true),
 			adminUser:         common.Bool(false),
 			Observer:          common.Bool(false),
@@ -395,7 +395,7 @@ func TestServiceGenerateAPIToken(t *testing.T) {
 			name:              "UserWithWrongID",
 			claim:             "email",
 			signKey:           "SUPERSECRETSIGNKEY",
-			authenticatedUser: "vulcan-team@vulcan.com",
+			authenticatedUser: "vulcan-team@vulcan.example.com",
 			activeUser:        common.Bool(true),
 			adminUser:         common.Bool(false),
 			Observer:          common.Bool(false),
@@ -407,7 +407,7 @@ func TestServiceGenerateAPIToken(t *testing.T) {
 			name:              "InvalidPermissions",
 			claim:             "email",
 			signKey:           "SUPERSECRETSIGNKEY",
-			authenticatedUser: "vulcan-team@vulcan.com",
+			authenticatedUser: "vulcan-team@vulcan.example.com",
 			activeUser:        common.Bool(true),
 			adminUser:         common.Bool(false),
 			Observer:          common.Bool(false),

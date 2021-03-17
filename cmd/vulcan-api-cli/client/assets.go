@@ -41,9 +41,9 @@ func CreateAssetsPath(teamID string) string {
 // If the asset type is informed, then Vulcan will use that value to create the new asset.
 // Otherwise, Vulcan will try to automatically discover the asset type.
 // Notice that this may result in Vulcan creating more than one asset.
-// For instance, an user trying to create an asset for "vulcan.com", without specifying the asset type, will end up with two assets created:
-// - vulcan.com (DomainName) and
-// - vulcan.com (Hostname).
+// For instance, an user trying to create an asset for "vulcan.example.com", without specifying the asset type, will end up with two assets created:
+// - vulcan.example.com (DomainName) and
+// - vulcan.example.com (Hostname).
 func (c *Client) CreateAssets(ctx context.Context, path string, payload *CreateAssetPayload) (*http.Response, error) {
 	req, err := c.NewCreateAssetsRequest(ctx, path, payload)
 	if err != nil {

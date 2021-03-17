@@ -31,7 +31,7 @@ var (
 		ProgramName:   "progName",
 		Status:        "FINISHED",
 		Risk:          2,
-		DeliveredTo:   "tom@vulcan.com",
+		DeliveredTo:   "tom@vulcan.example.com",
 	}
 
 	// mockNotification to return from
@@ -336,7 +336,7 @@ func TestSendReportNotification(t *testing.T) {
 		{
 			name:         "Happy path",
 			scanID:       "11",
-			recipients:   []string{"tom@vulcan.com"},
+			recipients:   []string{"tom@vulcan.example.com"},
 			expectedPath: "/api/v1/reports/scan/11/send",
 		},
 		{
@@ -492,7 +492,7 @@ func TestGenerateReport(t *testing.T) {
 				teamID:      "21",
 				teamName:    "teamName",
 				programName: "progName",
-				recipients:  []string{"tom@vulcan.com"},
+				recipients:  []string{"tom@vulcan.example.com"},
 				autoSend:    true,
 			},
 			snsAPI: &snsAPIMock{
@@ -502,7 +502,7 @@ func TestGenerateReport(t *testing.T) {
 						TeamInfo: teamInfo{
 							ID:         "21",
 							Name:       "teamName",
-							Recipients: []string{"tom@vulcan.com"},
+							Recipients: []string{"tom@vulcan.example.com"},
 						},
 						Data: scanData{
 							ScanID:      "11",
@@ -533,7 +533,7 @@ func TestGenerateReport(t *testing.T) {
 				teamID:      "22",
 				teamName:    "teamName",
 				programName: "progName",
-				recipients:  []string{"tom@vulcan.com"},
+				recipients:  []string{"tom@vulcan.example.com"},
 				autoSend:    true,
 			},
 			snsAPI: &snsAPIMock{

@@ -21,7 +21,7 @@ var ScanMedia = MediaType("scan", func() {
 		Attribute("progress", Number, "Progress", func() { Example(1) })
 		Attribute("checks_count", Integer, "Checks Count", func() { Example(20) })
 		Attribute("status", String, "Status", func() { Example("FINISHED") })
-		Attribute("requested_by", String, "Requested By", func() { Example("john.doe@vulcan.com") })
+		Attribute("requested_by", String, "Requested By", func() { Example("john.doe@vulcan.example.com") })
 	})
 	View("default", func() {
 		Attribute("id")

@@ -24,7 +24,7 @@ var TeamMemberMedia = MediaType("teamMember", func() {
 
 var TeamMemberPayload = Type("TeamMemberPayload", func() {
 	Attribute("user_id", String, "User ID", func() { Example("967d9966-b561-4233-bd6f-cac603fd8320") })
-	Attribute("email", String, "Email", func() { Example("john.doe@vulcan.com") })
+	Attribute("email", String, "Email", func() { Example("john.doe@vulcan.example.com") })
 	Attribute("role", String, "Member role. Valid values are: owner, member", func() { Example("owner") })
 })
 

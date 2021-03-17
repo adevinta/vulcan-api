@@ -2,7 +2,7 @@
 
 # recipients
 - team_id: a14c7c65-66ab-4676-bcf6-0dea9719f5c6
-  email: "vulcan.dev@vulcan.com"
+  email: "vulcan.dev@vulcan.example.com"
 
 - team_id: a14c7c65-66ab-4676-bcf6-0dea9719f5c6
-  email: "saml-user@vulcan.com"
+  email: "saml-user@vulcan.example.com"

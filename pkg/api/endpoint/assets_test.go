@@ -45,7 +45,7 @@ func TestMakeListAssetsEndpoint(t *testing.T) {
 				Data: []api.AssetResponse{
 					api.AssetResponse{
 						ID:         "0f206826-14ec-4e85-a5a4-e2decdfbc193",
-						Identifier: "foo1.vulcan.com",
+						Identifier: "foo1.vulcan.example.com",
 						Scannable:  common.Bool(true),
 						Options:    common.String(`{"checktype_options":[{"name":"vulcan-exposed-memcheck","options":{"https":"true","port":"11211"}},{"name":"vulcan-nessus","options":{"enabled":"false"}}]}`),
 						ROLFP:      api.DefaultROLFP,
@@ -53,7 +53,7 @@ func TestMakeListAssetsEndpoint(t *testing.T) {
 					},
 					api.AssetResponse{
 						ID:         "283e773d-54b5-460a-91fe-f3dfca5838a6",
-						Identifier: "foo1.vulcan.com",
+						Identifier: "foo1.vulcan.example.com",
 						Scannable:  common.Bool(true),
 						Options:    common.String(`{"checktype_options":[{"name":"vulcan-exposed-memcheck","options":{"https":"true","port":"11211"}},{"name":"vulcan-nessus","options":{"enabled":"false"}}]}`),
 						ROLFP:      api.DefaultROLFP,
@@ -61,7 +61,7 @@ func TestMakeListAssetsEndpoint(t *testing.T) {
 					},
 					api.AssetResponse{
 						ID:         "53ef6c94-0b07-4ba2-bc8c-6cef68c20ddb",
-						Identifier: "foo2.vulcan.io",
+						Identifier: "foo2.vulcan.example.com",
 						Scannable:  common.Bool(true),
 						Options:    common.String(`{"checktype_options":[{"name":"vulcan-exposed-memcheck","options":{"https":"true","port":"11211"}}]}`),
 						ROLFP:      api.DefaultROLFP,
@@ -72,7 +72,7 @@ func TestMakeListAssetsEndpoint(t *testing.T) {
 						AssetType: api.AssetTypeResponse{
 							ID: "1937b564-bbc4-47f6-9722-b4a8c8ac0595",
 						},
-						Identifier:        "foo3.vulcan.com",
+						Identifier:        "foo3.vulcan.example.com",
 						Options:           common.String("{}"),
 						EnvironmentalCVSS: common.String("5"),
 						Scannable:         common.Bool(true),
@@ -490,7 +490,7 @@ func TestMakeUpdateAssetsEndpoint(t *testing.T) {
 				EnvironmentalCVSS: common.String("10"),
 			},
 			want: Ok{api.AssetResponse{
-				Identifier: "foo3.vulcan.com",
+				Identifier: "foo3.vulcan.example.com",
 				AssetType: api.AssetTypeResponse{
 					ID: "1937b564-bbc4-47f6-9722-b4a8c8ac0595",
 				},
@@ -520,7 +520,7 @@ func TestMakeUpdateAssetsEndpoint(t *testing.T) {
 				},
 			},
 			want: Ok{api.AssetResponse{
-				Identifier: "foo3.vulcan.com",
+				Identifier: "foo3.vulcan.example.com",
 				AssetType: api.AssetTypeResponse{
 					ID: "1937b564-bbc4-47f6-9722-b4a8c8ac0595",
 				},

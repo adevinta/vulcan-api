@@ -3,42 +3,42 @@
 # assets.yml
 - id: 0f206826-14ec-4e85-a5a4-e2decdfbc193
   team_id: a14c7c65-66ab-4676-bcf6-0dea9719f5c6
-  identifier: foo1.vulcan.com
+  identifier: foo1.vulcan.example.com
   asset_type_id: 1937b564-bbc4-47f6-9722-b4a8c8ac0595
   scannable: true
   options: {"checktype_options":[{"name":"vulcan-exposed-memcheck","options":{"https":"true","port":"11211"}},{"name":"vulcan-nessus","options":{"enabled":"false"}}]}
 
 - id: 283e773d-54b5-460a-91fe-f3dfca5838a6
   team_id: a14c7c65-66ab-4676-bcf6-0dea9719f5c6
-  identifier: foo1.vulcan.com
+  identifier: foo1.vulcan.example.com
   asset_type_id: e2e4b23e-b72c-40a6-9f72-e6ade33a7b00
   scannable: true
   options: {"checktype_options":[{"name":"vulcan-exposed-memcheck","options":{"https":"true","port":"11211"}},{"name":"vulcan-nessus","options":{"enabled":"false"}}]}
 
 - id: 53ef6c94-0b07-4ba2-bc8c-6cef68c20ddb
   team_id: a14c7c65-66ab-4676-bcf6-0dea9719f5c6
-  identifier: foo2.vulcan.io
+  identifier: foo2.vulcan.example.com
   asset_type_id: 1937b564-bbc4-47f6-9722-b4a8c8ac0595
   scannable: true
   options: {"checktype_options":[{"name":"vulcan-exposed-memcheck","options":{"https":"true","port":"11211"}}]}
 
 - id: db716d86-067c-4920-9ba8-0c86fcee0572
   team_id: d92e6a31-d889-425d-9a16-5d3e3f0bc169
-  identifier: bar.vulcan.com
+  identifier: bar.vulcan.example.com
   asset_type_id: 1937b564-bbc4-47f6-9722-b4a8c8ac0595
   scannable: true
   options: {"checktype_options":[{"name":"vulcan-exposed-memcheck","options":{"https":"true","port":"11211"}},{"name":"vulcan-nessus","options":{"enabled":"false"}}]}
 
 - id: d1b92485-63b0-4871-baf8-a33bbcb8fb65
   team_id: d92e6a31-d889-425d-9a16-5d3e3f0bc169
-  identifier: bar2.vulcan.io
+  identifier: bar2.vulcan.example.com
   asset_type_id: 1937b564-bbc4-47f6-9722-b4a8c8ac0595
   scannable: true
   options: {"checktype_options":[{"name":"vulcan-exposed-memcheck","options":{"https":"true","port":"11211"}}]}
 
 - id: 13376826-14ec-4e85-a5a4-e2decdfbc193
   team_id: a14c7c65-66ab-4676-bcf6-0dea9719f5c6
-  identifier: foo3.vulcan.com
+  identifier: foo3.vulcan.example.com
   asset_type_id: 1937b564-bbc4-47f6-9722-b4a8c8ac0595
   scannable: true
   environmental_cvss: 5
@@ -46,7 +46,7 @@
 
 - id: 7f3d7926-bea8-42be-b065-30a6cfa48889
   team_id: 5125225e-4912-4464-b22e-e2542410c352
-  identifier: ok.vulcan.com
+  identifier: ok.vulcan.example.com
   asset_type_id: 1937b564-bbc4-47f6-9722-b4a8c8ac0595
   scannable: true
   environmental_cvss: 5
@@ -54,7 +54,7 @@
 
 - id: b5ba2592-d08a-4ad1-afb7-5701e97c7858
   team_id: 5125225e-4912-4464-b22e-e2542410c352
-  identifier: ok2.vulcan.com
+  identifier: ok2.vulcan.example.com
   asset_type_id: 1937b564-bbc4-47f6-9722-b4a8c8ac0595
   scannable: true
   environmental_cvss: 5
@@ -62,7 +62,7 @@
 
 - id: 49f90ed2-2f71-11e9-b210-d663bd873d93
   team_id: 5125225e-4912-4464-b22e-e2542410c352
-  identifier: noscan.vulcan.com
+  identifier: noscan.vulcan.example.com
   asset_type_id: 1937b564-bbc4-47f6-9722-b4a8c8ac0595
   scannable: false
   environmental_cvss: 5

@@ -184,8 +184,8 @@ That's it. If you want to see a demo just play the asciicast :)
 ## Scan, Review, Send
 
 ```
-$ vulcan-cli -H vulcan.com -k $(cat ~/.vulcan-api-token-dev) scan /tmp/assets/ "Vulcan Team"
-2019/04/09 16:58:25 [INFO] started id=/KBgdVVn POST=https://vulcan.com/api/v1/teams/ba2f2a9b-1ea8-4a28-9519-eab4ed290866/scans
+$ vulcan-cli -H vulcan.example.com -k $(cat ~/.vulcan-api-token-dev) scan /tmp/assets/ "Vulcan Team"
+2019/04/09 16:58:25 [INFO] started id=/KBgdVVn POST=https://vulcan.example.com/api/v1/teams/ba2f2a9b-1ea8-4a28-9519-eab4ed290866/scans
 2019/04/09 16:58:26 [INFO] completed id=/KBgdVVn status=201 time=958.661143ms
 [*] Writing scans to file '/var/folders/j0/59t1xk6116qbgbzy3qz4v4740000gn/T/vulcan-scan-354488336.txt'
 ```
@@ -196,27 +196,27 @@ periodic-full-scan;CREATED;Vulcan Team;1e6717df-dc40-46ba-8673-8e3a7a738bdd
 ```
 
 ```
-$ vulcan-cli -H vulcan.com -k $(cat ~/.vulcan-api-token-dev) scan refresh /var/folders/j0/59t1xk6116qbgbzy3qz4v4740000gn/T/vulcan-scan-354488336.txt
-2019/04/09 16:59:16 [INFO] started id=nPdoRkxl GET=https://vulcan.com/api/v1/teams
+$ vulcan-cli -H vulcan.example.com -k $(cat ~/.vulcan-api-token-dev) scan refresh /var/folders/j0/59t1xk6116qbgbzy3qz4v4740000gn/T/vulcan-scan-354488336.txt
+2019/04/09 16:59:16 [INFO] started id=nPdoRkxl GET=https://vulcan.example.com/api/v1/teams
 2019/04/09 16:59:17 [INFO] completed id=nPdoRkxl status=200 time=603.788877ms
-2019/04/09 16:59:17 [INFO] started id=QdoTwezh GET=https://vulcan.com/api/v1/teams/ba2f2a9b-1ea8-4a28-9519-eab4ed290866/scans/1e6717df-dc40-46ba-8673-8e3a7a738bdd
+2019/04/09 16:59:17 [INFO] started id=QdoTwezh GET=https://vulcan.example.com/api/v1/teams/ba2f2a9b-1ea8-4a28-9519-eab4ed290866/scans/1e6717df-dc40-46ba-8673-8e3a7a738bdd
 2019/04/09 16:59:17 [INFO] completed id=QdoTwezh status=200 time=110.124293ms
 periodic-full-scan;RUNNING;Vulcan Team;1e6717df-dc40-46ba-8673-8e3a7a738bdd
 
-$ vulcan-cli -H vulcan.com -k $(cat ~/.vulcan-api-token-dev) scan refresh /var/folders/j0/59t1xk6116qbgbzy3qz4v4740000gn/T/vulcan-scan-354488336.txt
-2019/04/09 17:13:47 [INFO] started id=+rtijCK/ GET=https://vulcan.com/api/v1/teams
+$ vulcan-cli -H vulcan.example.com -k $(cat ~/.vulcan-api-token-dev) scan refresh /var/folders/j0/59t1xk6116qbgbzy3qz4v4740000gn/T/vulcan-scan-354488336.txt
+2019/04/09 17:13:47 [INFO] started id=+rtijCK/ GET=https://vulcan.example.com/api/v1/teams
 2019/04/09 17:13:48 [INFO] completed id=+rtijCK/ status=200 time=408.593893ms
-2019/04/09 17:13:48 [INFO] started id=Zu6+m+tF GET=https://vulcan.com/api/v1/teams/ba2f2a9b-1ea8-4a28-9519-eab4ed290866/scans/1e6717df-dc40-46ba-8673-8e3a7a738bdd
+2019/04/09 17:13:48 [INFO] started id=Zu6+m+tF GET=https://vulcan.example.com/api/v1/teams/ba2f2a9b-1ea8-4a28-9519-eab4ed290866/scans/1e6717df-dc40-46ba-8673-8e3a7a738bdd
 2019/04/09 17:13:48 [INFO] completed id=Zu6+m+tF status=200 time=268.202334ms
 periodic-full-scan;FINISHED;Vulcan Team;1e6717df-dc40-46ba-8673-8e3a7a738bdd
 ```
 
 
 ```
-$ vulcan-cli -H vulcan.com -k $(cat ~/.vulcan-api-token-dev) scan report --scan-file /var/folders/j0/59t1xk6116qbgbzy3qz4v4740000gn/T/vulcan-scan-354488336.txt
-2019/04/09 17:14:35 [INFO] started id=W9hq6X1D GET=https://vulcan.com/api/v1/teams
+$ vulcan-cli -H vulcan.example.com -k $(cat ~/.vulcan-api-token-dev) scan report --scan-file /var/folders/j0/59t1xk6116qbgbzy3qz4v4740000gn/T/vulcan-scan-354488336.txt
+2019/04/09 17:14:35 [INFO] started id=W9hq6X1D GET=https://vulcan.example.com/api/v1/teams
 2019/04/09 17:14:35 [INFO] completed id=W9hq6X1D status=200 time=326.289085ms
-2019/04/09 17:14:35 [INFO] started id=AEPXS1zI GET=https://vulcan.com/api/v1/teams/ba2f2a9b-1ea8-4a28-9519-eab4ed290866/scans/1e6717df-dc40-46ba-8673-8e3a7a738bdd/report/email
+2019/04/09 17:14:35 [INFO] started id=AEPXS1zI GET=https://vulcan.example.com/api/v1/teams/ba2f2a9b-1ea8-4a28-9519-eab4ed290866/scans/1e6717df-dc40-46ba-8673-8e3a7a738bdd/report/email
 2019/04/09 17:14:35 [INFO] completed id=AEPXS1zI status=200 time=52.245906ms
 [*] Writing report emails to file '/var/folders/j0/59t1xk6116qbgbzy3qz4v4740000gn/T/vulcan-reports-044883121'
 
@@ -238,9 +238,9 @@ $ head /var/folders/j0/59t1xk6116qbgbzy3qz4v4740000gn/T/vulcan-reports-044883121
 ```
 
 ```
-$ vulcan-cli -H vulcan.com -k $(cat ~/.vulcan-api-token-dev) scan report send --scan-file /var/folders/j0/59t1xk6116qbgbzy3qz4v4740000gn/T/vulcan-scan-354488336.txt
-2019/04/09 17:16:01 [INFO] started id=vddPWSjO GET=https://vulcan.com/api/v1/teams
+$ vulcan-cli -H vulcan.example.com -k $(cat ~/.vulcan-api-token-dev) scan report send --scan-file /var/folders/j0/59t1xk6116qbgbzy3qz4v4740000gn/T/vulcan-scan-354488336.txt
+2019/04/09 17:16:01 [INFO] started id=vddPWSjO GET=https://vulcan.example.com/api/v1/teams
 2019/04/09 17:16:01 [INFO] completed id=vddPWSjO status=200 time=407.480497ms
-2019/04/09 17:16:01 [INFO] started id=/XIODrpx POST=https://vulcan.com/api/v1/teams/ba2f2a9b-1ea8-4a28-9519-eab4ed290866/scans/1e6717df-dc40-46ba-8673-8e3a7a738bdd/report/send
+2019/04/09 17:16:01 [INFO] started id=/XIODrpx POST=https://vulcan.example.com/api/v1/teams/ba2f2a9b-1ea8-4a28-9519-eab4ed290866/scans/1e6717df-dc40-46ba-8673-8e3a7a738bdd/report/send
 2019/04/09 17:16:01 [INFO] completed id=/XIODrpx status=200 time=270.11222ms
 ```

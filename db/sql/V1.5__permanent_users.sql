@@ -21,7 +21,7 @@ INSERT INTO users(id,
     updated_at,
     deleted_at) VALUES ('4434140a-05fc-4411-8fee-73acdb0c4c95',
 'Crontinuous','The Scheduler',
-'vulcan@vulcan.com',null,false,true,current_date,current_date,null);
+'vulcan@vulcan.example.com',null,false,true,current_date,current_date,null);
 
 INSERT INTO user_team(
     user_id,
