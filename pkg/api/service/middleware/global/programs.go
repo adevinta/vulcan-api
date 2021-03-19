@@ -134,7 +134,7 @@ func (e *globalEntities) UpdateProgram(ctx context.Context, program api.Program,
 	}
 	// We allow to modify autosend and disabled flags.
 	if (program.Autosend == nil && program.Disabled == nil) || program.Name != "" {
-		return nil, errors.Validation("only autosend and disabled fields can be modified for global program")
+		return nil, errors.Validation("only autosend and disabled fields can be modified for a global program")
 	}
 	defaultAutosend := false
 	if gp.DefaultMetadata.Autosend != nil {
