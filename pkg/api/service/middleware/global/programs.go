@@ -99,8 +99,12 @@ func (e *globalEntities) FindProgram(ctx context.Context, programID string, team
 		autosend = *metadata.Autosend
 	}
 
+	var disabled bool
+	if metadata.Disabled != nil {
+		disabled = *metadata.Disabled
+	}
+
 	var cron = metadata.Cron
-	var disabled = p.Disabled
 
 	name := p.Name
 	if name == "" {
@@ -109,7 +113,7 @@ func (e *globalEntities) FindProgram(ctx context.Context, programID string, team
 	global := true
 	program := &api.Program{
 		Autosend: &autosend,
-		Disabled: disabled,
+		Disabled: &disabled,
 		ID:       programID,
 		Name:     name,
 		Cron:     cron,
@@ -128,15 +132,19 @@ func (e *globalEntities) UpdateProgram(ctx context.Context, program api.Program,
 	if !ok {
 		return e.VulcanitoService.UpdateProgram(ctx, program, teamID)
 	}
-	// We allow only to modify the autosend flag.
-	if program.Autosend == nil || program.Name != "" || program.Disabled != nil {
-		return nil, errors.Validation("only autosend field can be modified for global program")
+	// We allow to modify autosend and disabled flags.
+	if (program.Autosend == nil && program.Disabled == nil) || program.Name != "" {
+		return nil, errors.Validation("only autosend and disabled fields can be modified for global program")
 	}
 	defaultAutosend := false
 	if gp.DefaultMetadata.Autosend != nil {
 		defaultAutosend = *gp.DefaultMetadata.Autosend
 	}
-	err := e.metadata.UpsertGlobalProgramMetadata(teamID, program.ID, defaultAutosend, gp.DefaultMetadata.Cron, program.Autosend, nil)
+	defaultDisabled := false
+	if gp.DefaultMetadata.Disabled != nil {
+		defaultDisabled = *gp.DefaultMetadata.Disabled
+	}
+	err := e.metadata.UpsertGlobalProgramMetadata(teamID, program.ID, defaultAutosend, defaultDisabled, gp.DefaultMetadata.Cron, program.Autosend, program.Disabled, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -166,7 +174,11 @@ func (e *globalEntities) CreateSchedule(ctx context.Context, programID string, c
 	if gp.DefaultMetadata.Autosend != nil {
 		defaultAutosend = *gp.DefaultMetadata.Autosend
 	}
-	err = e.metadata.UpsertGlobalProgramMetadata(teamID, programID, defaultAutosend, gp.DefaultMetadata.Cron, nil, &cronExpr)
+	defaultDisabled := false
+	if gp.DefaultMetadata.Disabled != nil {
+		defaultDisabled = *gp.DefaultMetadata.Disabled
+	}
+	err = e.metadata.UpsertGlobalProgramMetadata(teamID, programID, defaultAutosend, defaultDisabled, gp.DefaultMetadata.Cron, nil, nil, &cronExpr)
 	if err != nil {
 		return nil, err
 	}

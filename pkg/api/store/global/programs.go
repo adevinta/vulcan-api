@@ -18,9 +18,8 @@ var vTrue = true
 var (
 	// PeriodicFullScan represents the global program used for periodic full scans.
 	PeriodicFullScan = Program{
-		ID:       "periodic-full-scan",
-		Name:     "Periodic Scan",
-		Disabled: &vFalse,
+		ID:   "periodic-full-scan",
+		Name: "Periodic Scan",
 		Policies: []PolicyGroup{
 			PolicyGroup{
 				Group:  "default-global",
@@ -39,14 +38,16 @@ var (
 
 			// Autosend is set by default to false for this program.
 			Autosend: &vFalse,
+
+			// Disabled is set by default to false for this program.
+			Disabled: &vFalse,
 		},
 	}
 	// RedconScan represents the global program used for periodic scans
 	// of the Redcon discovered assets.
 	RedconScan = Program{
-		ID:       "redcon-scan",
-		Name:     "Redcon Scan",
-		Disabled: &vTrue,
+		ID:   "redcon-scan",
+		Name: "Redcon Scan",
 		Policies: []PolicyGroup{
 			PolicyGroup{
 				Group:  "redcon-global",
@@ -58,13 +59,18 @@ var (
 			// Standard crontab specs, e.g. "* * * * ?"
 			// Descriptors, e.g. "@midnight", "@every 1h30m"
 			Cron: "0 8 7 10 *", // Run the scan every October 7th at 8am UTC.
+
+			// Autosend is set by default to false for this program.
+			Autosend: &vFalse,
+
+			// Disabled is set by default to true for this program.
+			Disabled: &vTrue,
 		},
 	}
 	// WebScanning represents the global program used for web scans
 	WebScanning = Program{
-		ID:       "web-scanning",
-		Name:     "Web Scanning",
-		Disabled: &vFalse,
+		ID:   "web-scanning",
+		Name: "Web Scanning",
 		Policies: []PolicyGroup{
 			PolicyGroup{
 				Group:  "web-scanning-global",
@@ -79,6 +85,9 @@ var (
 
 			// Autosend is set by default to false for this program.
 			Autosend: &vFalse,
+
+			// Disabled is set by default to false for this program.
+			Disabled: &vFalse,
 		},
 	}
 )

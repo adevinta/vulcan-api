@@ -13,18 +13,20 @@ import (
 
 	"github.com/go-kit/kit/log"
 
-	"github.com/google/go-cmp/cmp"
-	"github.com/google/go-cmp/cmp/cmpopts"
-	"github.com/adevinta/vulcan-api/pkg/jwt"
 	"github.com/adevinta/vulcan-api/pkg/api"
 	global "github.com/adevinta/vulcan-api/pkg/api/store/global"
+	"github.com/adevinta/vulcan-api/pkg/jwt"
 	"github.com/adevinta/vulcan-api/pkg/scanengine"
 	"github.com/adevinta/vulcan-api/pkg/schedule"
 	"github.com/adevinta/vulcan-api/pkg/testutil"
+	"github.com/google/go-cmp/cmp"
+	"github.com/google/go-cmp/cmp/cmpopts"
 )
 
 var (
 	loggerProgram log.Logger
+	False         = false
+	True          = true
 )
 
 func errToStr(err error) string {
@@ -70,19 +72,25 @@ func (m *MockMetadataStore) FindGlobalProgramMetadata(programID string, teamID s
 	if programID == "redcon-scan" {
 		return &api.GlobalProgramsMetadata{
 			Autosend: m.programsRepository[programID].DefaultMetadata.Autosend,
+			Disabled: m.programsRepository[programID].DefaultMetadata.Disabled,
 		}, nil
 	}
 
 	return nil, nil
 }
 
-func (m *MockMetadataStore) UpsertGlobalProgramMetadata(teamID, programID string, defaultAutosend bool, defaultCron string, autosend *bool, cron *string) error {
+func (m *MockMetadataStore) UpsertGlobalProgramMetadata(teamID, programID string, defaultAutosend bool, defaultDisabled bool, efaultCron string, autosend *bool, disabled *bool, cron *string) error {
 	m.mux.Lock()
 	defer m.mux.Unlock()
 
 	if programID == "redcon-scan" {
 		v := m.programsRepository[programID]
-		v.DefaultMetadata.Autosend = autosend
+		if autosend != nil {
+			v.DefaultMetadata.Autosend = autosend
+		}
+		if disabled != nil {
+			v.DefaultMetadata.Disabled = disabled
+		}
 		m.programsRepository[programID] = v
 	}
 
@@ -129,9 +137,6 @@ func Test_vulcanitoService_UpdateProgram(t *testing.T) {
 		program api.Program
 		team    string
 	}
-
-	var False = false
-	var True = true
 
 	tests := []struct {
 		name    string
@@ -184,27 +189,37 @@ func Test_vulcanitoService_UpdateProgram(t *testing.T) {
 				},
 			},
 			want:    nil,
-			wantErr: fmt.Errorf("only autosend field can be modified for global program"),
+			wantErr: fmt.Errorf("only autosend and disabled fields can be modified for a global program"),
 		},
 		{
-			name: "SetDisabled",
+			name: "SetDisabledToFalse",
 			args: args{
 				program: api.Program{
-					Disabled: &True,
+					Disabled: &False,
 					ID:       "redcon-scan",
-					Autosend: &False,
 				},
 			},
-			want:    nil,
-			wantErr: fmt.Errorf("only autosend field can be modified for global program"),
+			want: &api.Program{
+				ID:                     "redcon-scan",
+				ProgramsGroupsPolicies: []*api.ProgramsGroupsPolicies{},
+				Name:                   "redcon-scan",
+				Disabled:               &False,
+				Autosend:               &False,
+				Global:                 &True,
+			},
 		},
 	}
-	var vTrue = true
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			programsRepository := map[string]global.Program{"redcon-scan": global.Program{
-				Disabled: &vTrue,
-			}}
+			programsRepository := map[string]global.Program{
+				"redcon-scan": global.Program{
+					DefaultMetadata: api.GlobalProgramsMetadata{
+						Autosend: &False,
+						Disabled: &True,
+					},
+				},
+			}
 
 			e := globalEntities{}
 			e.store = &MockGlobalStore{

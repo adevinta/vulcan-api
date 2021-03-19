@@ -38,7 +38,7 @@ type GlobalStore interface {
 // to store a retrive metadata about global entities.
 type MetadataStore interface {
 	FindGlobalProgramMetadata(programID string, teamID string) (*api.GlobalProgramsMetadata, error)
-	UpsertGlobalProgramMetadata(teamID, program string, defaultAutosend bool, defaultCron string, autosend *bool, cron *string) error
+	UpsertGlobalProgramMetadata(teamID, program string, defaultAutosend bool, defaultDisabled bool, defaultCron string, autosend *bool, disabled *bool, cron *string) error
 	DeleteProgramMetadata(program string) error
 }
 

@@ -104,7 +104,7 @@ func (p Program) ToResponse() *ProgramResponse {
 		autosend = *p.Autosend
 	}
 
-	var disabled bool = false // Default value
+	var disabled bool
 	// Disabled should be never nil this is just to avoid panics if for whatever
 	// reason this precondition is not meet.
 	if p.Disabled != nil {
@@ -148,6 +148,7 @@ type GlobalProgramsMetadata struct {
 	TeamID    string `gorm:"primary_key"`
 	Program   string `gorm:"primary_key"`
 	Autosend  *bool
+	Disabled  *bool
 	Cron      string `gorm:"-" json:"cron"` // A program can have empty cron expression, e.g: a program to be run on demand.
 	CreatedAt *time.Time
 	UpdatedAt *time.Time

@@ -379,8 +379,8 @@ func (b *BrokerProxy) DeleteChecktypeSetting(checktypeSettingID string) error {
 func (b *BrokerProxy) FindGlobalProgramMetadata(programID string, teamID string) (*api.GlobalProgramsMetadata, error) {
 	return b.store.FindGlobalProgramMetadata(programID, teamID)
 }
-func (b *BrokerProxy) UpsertGlobalProgramMetadata(teamID, program string, defaultAutosend bool, defaultCron string, autosend *bool, cron *string) error {
-	return b.store.UpsertGlobalProgramMetadata(teamID, program, defaultAutosend, defaultCron, autosend, cron)
+func (b *BrokerProxy) UpsertGlobalProgramMetadata(teamID, program string, defaultAutosend bool, defaultDisabled bool, defaultCron string, autosend *bool, disabled *bool, cron *string) error {
+	return b.store.UpsertGlobalProgramMetadata(teamID, program, defaultAutosend, defaultDisabled, defaultCron, autosend, disabled, cron)
 }
 func (b *BrokerProxy) DeleteProgramMetadata(program string) error {
 	return b.store.DeleteProgramMetadata(program)
