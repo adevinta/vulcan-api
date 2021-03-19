@@ -38,6 +38,17 @@ DO
 		}
 	}
 
+	if disabled != nil {
+		err = db.Conn.Exec(`INSERT INTO global_programs_metadata(team_id, program, autosend, disabled, cron) VALUES(?,?,?,?,?)
+ON CONFLICT ON CONSTRAINT global_programs_metadata_pkey
+DO
+ UPDATE
+	SET disabled=EXCLUDED.disabled`, teamID, program, paramAutosend, paramDisabled, paramCron).Error
+		if err != nil {
+			return err
+		}
+	}
+
 	if cron != nil {
 		err = db.Conn.Exec(`INSERT INTO global_programs_metadata(team_id, program, autosend, disabled, cron) VALUES(?,?,?,?,?)
 ON CONFLICT ON CONSTRAINT global_programs_metadata_pkey
