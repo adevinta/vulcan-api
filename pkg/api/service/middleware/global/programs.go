@@ -13,6 +13,11 @@ import (
 	global "github.com/adevinta/vulcan-api/pkg/api/store/global"
 )
 
+const (
+	defaultDisabledValue = false
+	defaultAutosendValue = false
+)
+
 func (e *globalEntities) CreateProgram(ctx context.Context, program api.Program, teamID string) (*api.Program, error) {
 	if _, ok := e.store.Programs()[program.ID]; ok {
 		return nil, errors.MethodNotAllowed(errEntityNotModifiable)
@@ -136,11 +141,11 @@ func (e *globalEntities) UpdateProgram(ctx context.Context, program api.Program,
 	if (program.Autosend == nil && program.Disabled == nil) || program.Name != "" {
 		return nil, errors.Validation("only autosend and disabled fields can be modified for a global program")
 	}
-	defaultAutosend := false
+	defaultAutosend := defaultAutosendValue
 	if gp.DefaultMetadata.Autosend != nil {
 		defaultAutosend = *gp.DefaultMetadata.Autosend
 	}
-	defaultDisabled := false
+	defaultDisabled := defaultDisabledValue
 	if gp.DefaultMetadata.Disabled != nil {
 		defaultDisabled = *gp.DefaultMetadata.Disabled
 	}
@@ -170,11 +175,11 @@ func (e *globalEntities) CreateSchedule(ctx context.Context, programID string, c
 	if err != nil {
 		return nil, err
 	}
-	defaultAutosend := false
+	defaultAutosend := defaultAutosendValue
 	if gp.DefaultMetadata.Autosend != nil {
 		defaultAutosend = *gp.DefaultMetadata.Autosend
 	}
-	defaultDisabled := false
+	defaultDisabled := defaultDisabledValue
 	if gp.DefaultMetadata.Disabled != nil {
 		defaultDisabled = *gp.DefaultMetadata.Disabled
 	}
