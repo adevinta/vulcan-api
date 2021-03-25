@@ -226,6 +226,50 @@ func makeFindFindingEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpo
 	}
 }
 
+type UpdateFindingRequest struct {
+	ID     string  `json:"id" urlvar:"finding_id"`
+	TeamID string  `json:"team_id" urlvar:"team_id"`
+	Status *string `json:"status"`
+}
+
+func makeUpdateFindingEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		r, ok := request.(*UpdateFindingRequest)
+		if !ok {
+			return nil, errors.Assertion("Type assertion failed")
+		}
+		team, err := s.FindTeam(ctx, r.TeamID)
+		if err != nil {
+			return nil, err
+		}
+		if team.Tag == "" {
+			return nil, errors.Validation("no tag defined for the team")
+		}
+
+		finding, err := s.FindFinding(ctx, r.ID)
+		if err != nil {
+			return nil, err
+		}
+
+		if authorizedFindFindingRequest(finding.Finding.Target.Tags, team.Tag) {
+			payload := api.UpdateFinding{}
+
+			if r.Status != nil {
+				payload.Status = r.Status
+			}
+
+			updatedFinding, err := s.UpdateFinding(ctx, r.ID, payload, team.Tag)
+			if err != nil {
+				return nil, err
+			}
+
+			return Ok{updatedFinding.Finding}, nil
+		}
+
+		return Forbidden{nil}, nil
+	}
+}
+
 func isValidListFindingsRequest(r *FindingsRequest) bool {
 	return (r.MinDate == "" || isValidDate(r.MinDate)) &&
 		(r.MaxDate == "" || isValidDate(r.MaxDate)) &&
