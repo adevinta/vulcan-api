@@ -53,6 +53,11 @@ type Finding struct {
 	Finding vulndb.FindingExpanded `json:"finding"`
 }
 
+// UpdateFinding represents the payload submitted to update a finding.
+type UpdateFinding struct {
+	Status *string `json:"status"`
+}
+
 // TargetsParams represents the group of parameters
 // that can be used to customize the call to retrieve
 // the list of targets.
