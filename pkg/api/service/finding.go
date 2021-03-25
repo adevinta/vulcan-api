@@ -33,3 +33,7 @@ func (s vulcanitoService) ListFindingsByTarget(ctx context.Context, params api.F
 func (s vulcanitoService) FindFinding(ctx context.Context, findingID string) (*api.Finding, error) {
 	return s.vulndbClient.Finding(ctx, findingID)
 }
+
+func (s vulcanitoService) UpdateFinding(ctx context.Context, findingID string, payload api.UpdateFinding, tag string) (*api.Finding, error) {
+	return s.vulndbClient.UpdateFinding(ctx, findingID, &payload, tag)
+}
