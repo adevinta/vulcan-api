@@ -385,3 +385,9 @@ func (b *BrokerProxy) UpsertGlobalProgramMetadata(teamID, program string, defaul
 func (b *BrokerProxy) DeleteProgramMetadata(program string) error {
 	return b.store.DeleteProgramMetadata(program)
 }
+
+func (b *BrokerProxy) UpdateFinding(findingOverride api.FindingOverride) error {
+	err := b.store.UpdateFinding(findingOverride)
+	go b.awakeBroker()
+	return err
+}
