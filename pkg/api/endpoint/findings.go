@@ -226,16 +226,16 @@ func makeFindFindingEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpo
 	}
 }
 
-type UpdateFindingRequest struct {
+type FindingOverrideRequest struct {
 	FindingID string `json:"finding_id" urlvar:"finding_id"`
 	TeamID    string `json:"team_id" urlvar:"team_id"`
 	Status    string `json:"status"`
 	Notes     string `json:"notes"`
 }
 
-func makeUpdateFindingEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
+func makeCreateFindingOverrideEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
-		r, ok := request.(*UpdateFindingRequest)
+		r, ok := request.(*FindingOverrideRequest)
 		if !ok {
 			return nil, errors.Assertion("Type assertion failed")
 		}
@@ -267,7 +267,7 @@ func makeUpdateFindingEndpoint(s api.VulcanitoService, logger kitlog.Logger) end
 		}
 
 		if authorizedFindFindingRequest(finding.Finding.Target.Tags, team.Tag) {
-			err := s.UpdateFinding(ctx, findingOverride)
+			err := s.CreateFindingOverride(ctx, findingOverride)
 			if err != nil {
 				return nil, err
 			}

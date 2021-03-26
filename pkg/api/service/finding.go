@@ -37,7 +37,7 @@ func (s vulcanitoService) FindFinding(ctx context.Context, findingID string) (*a
 	return s.vulndbClient.Finding(ctx, findingID)
 }
 
-func (s vulcanitoService) UpdateFinding(ctx context.Context, findingOverride api.FindingOverride) error {
+func (s vulcanitoService) CreateFindingOverride(ctx context.Context, findingOverride api.FindingOverride) error {
 	validationErr := validator.New().Struct(findingOverride)
 	if validationErr != nil {
 		return errors.Validation(validationErr)
@@ -61,7 +61,7 @@ func (s vulcanitoService) UpdateFinding(ctx context.Context, findingOverride api
 		return errors.Validation(fmt.Sprintf("Status transition not allowed: from '%s' to '%s'", findingOverride.StatusPrevious, findingOverride.Status))
 	}
 
-	return s.db.UpdateFinding(findingOverride)
+	return s.db.CreateFindingOverride(findingOverride)
 }
 
 func isValidFindingStatus(status string) bool {

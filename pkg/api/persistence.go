@@ -91,5 +91,5 @@ type VulcanitoStore interface {
 	UpsertGlobalProgramMetadata(teamID, program string, defaultAutosend bool, defaultDisabled bool, defaultCron string, autosend *bool, disabled *bool, cron *string) error
 	DeleteProgramMetadata(program string) error
 
-	UpdateFinding(findingOverride FindingOverride) error
+	CreateFindingOverride(findingOverride FindingOverride) error
 }

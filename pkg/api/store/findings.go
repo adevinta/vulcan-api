@@ -9,7 +9,7 @@ import (
 	"github.com/adevinta/vulcan-api/pkg/api"
 )
 
-func (db vulcanitoStore) UpdateFinding(findingOverride api.FindingOverride) error {
+func (db vulcanitoStore) CreateFindingOverride(findingOverride api.FindingOverride) error {
 	// Begin transaction.
 	tx := db.Conn.Begin()
 	if tx.Error != nil {

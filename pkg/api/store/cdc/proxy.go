@@ -386,8 +386,8 @@ func (b *BrokerProxy) DeleteProgramMetadata(program string) error {
 	return b.store.DeleteProgramMetadata(program)
 }
 
-func (b *BrokerProxy) UpdateFinding(findingOverride api.FindingOverride) error {
-	err := b.store.UpdateFinding(findingOverride)
+func (b *BrokerProxy) CreateFindingOverride(findingOverride api.FindingOverride) error {
+	err := b.store.CreateFindingOverride(findingOverride)
 	go b.awakeBroker()
 	return err
 }
