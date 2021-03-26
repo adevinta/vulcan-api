@@ -27,3 +27,9 @@ type OpDeleteAssetDTO struct {
 type OpDeleteAllAssetsDTO struct {
 	Team api.Team `json:"team"`
 }
+
+// OpFindingOverrideDTO represents the data to store
+// as part of CDC log for a FindingOverride operation.
+type OpFindingOverrideDTO struct {
+	FindingOverride api.FindingOverride `json:"finding_override"`
+}
