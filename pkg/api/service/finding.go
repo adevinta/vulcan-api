@@ -6,8 +6,11 @@ package service
 
 import (
 	"context"
+	"fmt"
 
+	"github.com/adevinta/errors"
 	"github.com/adevinta/vulcan-api/pkg/api"
+	"gopkg.in/go-playground/validator.v9"
 )
 
 func (s vulcanitoService) ListFindings(ctx context.Context, params api.FindingsParams, pagination api.Pagination) (*api.FindingsList, error) {
@@ -34,6 +37,42 @@ func (s vulcanitoService) FindFinding(ctx context.Context, findingID string) (*a
 	return s.vulndbClient.Finding(ctx, findingID)
 }
 
-func (s vulcanitoService) UpdateFinding(ctx context.Context, findingID string, payload api.UpdateFinding, tag string) (*api.Finding, error) {
-	return s.vulndbClient.UpdateFinding(ctx, findingID, &payload, tag)
+func (s vulcanitoService) UpdateFinding(ctx context.Context, findingOverride api.FindingOverride) error {
+	validationErr := validator.New().Struct(findingOverride)
+	if validationErr != nil {
+		return errors.Validation(validationErr)
+	}
+
+	if !isValidFindingStatus(findingOverride.Status) {
+		return errors.Validation(fmt.Sprintf("Invalid status: '%s'", findingOverride.Status))
+	}
+
+	// Valid transitions:
+	//
+	// OPEN           -> OPEN
+	// FALSE_POSITIVE -> OPEN
+	// OPEN           -> FALSE_POSITIVE
+	// FALSE_POSITIVE -> FALSE_POSITIVE
+	if findingOverride.StatusPrevious != "OPEN" && findingOverride.StatusPrevious != "FALSE_POSITIVE" {
+		return errors.Validation(fmt.Sprintf("Status transition not allowed: from '%s' to '%s'", findingOverride.StatusPrevious, findingOverride.Status))
+	}
+
+	if findingOverride.Status != "OPEN" && findingOverride.Status != "FALSE_POSITIVE" {
+		return errors.Validation(fmt.Sprintf("Status transition not allowed: from '%s' to '%s'", findingOverride.StatusPrevious, findingOverride.Status))
+	}
+
+	return s.db.UpdateFinding(findingOverride)
+}
+
+func isValidFindingStatus(status string) bool {
+	// Set of valid status type
+	validStatus := map[string]struct{}{
+		"OPEN":           struct{}{},
+		"FIXED":          struct{}{},
+		"EXPIRED":        struct{}{},
+		"FALSE_POSITIVE": struct{}{},
+	}
+
+	_, existsInSet := validStatus[status]
+	return existsInSet
 }
