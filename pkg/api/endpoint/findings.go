@@ -227,9 +227,10 @@ func makeFindFindingEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpo
 }
 
 type UpdateFindingRequest struct {
-	ID     string  `json:"id" urlvar:"finding_id"`
-	TeamID string  `json:"team_id" urlvar:"team_id"`
-	Status *string `json:"status"`
+	FindingID string `json:"finding_id" urlvar:"finding_id"`
+	TeamID    string `json:"team_id" urlvar:"team_id"`
+	Status    string `json:"status"`
+	Notes     string `json:"notes"`
 }
 
 func makeUpdateFindingEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
@@ -246,24 +247,32 @@ func makeUpdateFindingEndpoint(s api.VulcanitoService, logger kitlog.Logger) end
 			return nil, errors.Validation("no tag defined for the team")
 		}
 
-		finding, err := s.FindFinding(ctx, r.ID)
+		finding, err := s.FindFinding(ctx, r.FindingID)
 		if err != nil {
 			return nil, err
 		}
 
+		user, err := api.UserFromContext(ctx)
+		if err != nil {
+			return nil, errors.Default(err)
+		}
+
+		findingOverride := api.FindingOverride{
+			UserID:         user.ID,
+			FindingID:      r.FindingID,
+			StatusPrevious: finding.Finding.Status,
+			Status:         r.Status,
+			Notes:          r.Notes,
+			Tag:            team.Tag,
+		}
+
 		if authorizedFindFindingRequest(finding.Finding.Target.Tags, team.Tag) {
-			payload := api.UpdateFinding{}
-
-			if r.Status != nil {
-				payload.Status = r.Status
-			}
-
-			updatedFinding, err := s.UpdateFinding(ctx, r.ID, payload, team.Tag)
+			err := s.UpdateFinding(ctx, findingOverride)
 			if err != nil {
 				return nil, err
 			}
 
-			return Ok{updatedFinding.Finding}, nil
+			return Ok{}, nil
 		}
 
 		return Forbidden{nil}, nil
