@@ -1,0 +1,1 @@
+ALTER TABLE global_programs_metadata ADD COLUMN disabled boolean NOT NULL DEFAULT(false);

@@ -88,6 +88,6 @@ type VulcanitoStore interface {
 	DeleteChecktypeSetting(checktypeSettingID string) error
 
 	FindGlobalProgramMetadata(programID string, teamID string) (*GlobalProgramsMetadata, error)
-	UpsertGlobalProgramMetadata(teamID, program string, defaultAutosend bool, defaultCron string, autosend *bool, cron *string) error
+	UpsertGlobalProgramMetadata(teamID, program string, defaultAutosend bool, defaultDisabled bool, defaultCron string, autosend *bool, disabled *bool, cron *string) error
 	DeleteProgramMetadata(program string) error
 }

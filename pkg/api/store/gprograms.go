@@ -9,12 +9,17 @@ import (
 	"github.com/adevinta/vulcan-api/pkg/api"
 )
 
-func (db vulcanitoStore) UpsertGlobalProgramMetadata(teamID, program string, defaultAutosend bool, defaultCron string, autosend *bool, cron *string) error {
+func (db vulcanitoStore) UpsertGlobalProgramMetadata(teamID, program string, defaultAutosend bool, defaultDisabled bool, defaultCron string, autosend *bool, disabled *bool, cron *string) error {
 	var err error
 
 	paramAutosend := defaultAutosend
 	if autosend != nil {
 		paramAutosend = *autosend
+	}
+
+	paramDisabled := defaultDisabled
+	if disabled != nil {
+		paramDisabled = *disabled
 	}
 
 	paramCron := defaultCron
@@ -23,22 +28,33 @@ func (db vulcanitoStore) UpsertGlobalProgramMetadata(teamID, program string, def
 	}
 
 	if autosend != nil {
-		err = db.Conn.Exec(`INSERT INTO global_programs_metadata(team_id, program, autosend, cron) VALUES(?,?,?,?)
+		err = db.Conn.Exec(`INSERT INTO global_programs_metadata(team_id, program, autosend, disabled, cron) VALUES(?,?,?,?,?)
 ON CONFLICT ON CONSTRAINT global_programs_metadata_pkey
 DO
  UPDATE
-	SET autosend=EXCLUDED.autosend`, teamID, program, paramAutosend, paramCron).Error
+	SET autosend=EXCLUDED.autosend`, teamID, program, paramAutosend, paramDisabled, paramCron).Error
+		if err != nil {
+			return err
+		}
+	}
+
+	if disabled != nil {
+		err = db.Conn.Exec(`INSERT INTO global_programs_metadata(team_id, program, autosend, disabled, cron) VALUES(?,?,?,?,?)
+ON CONFLICT ON CONSTRAINT global_programs_metadata_pkey
+DO
+ UPDATE
+	SET disabled=EXCLUDED.disabled`, teamID, program, paramAutosend, paramDisabled, paramCron).Error
 		if err != nil {
 			return err
 		}
 	}
 
 	if cron != nil {
-		err = db.Conn.Exec(`INSERT INTO global_programs_metadata(team_id, program, autosend, cron) VALUES(?,?,?,?)
+		err = db.Conn.Exec(`INSERT INTO global_programs_metadata(team_id, program, autosend, disabled, cron) VALUES(?,?,?,?,?)
 ON CONFLICT ON CONSTRAINT global_programs_metadata_pkey
 DO
  UPDATE
-	SET cron=EXCLUDED.cron`, teamID, program, paramAutosend, paramCron).Error
+	SET cron=EXCLUDED.cron`, teamID, program, paramAutosend, paramDisabled, paramCron).Error
 		if err != nil {
 			return err
 		}

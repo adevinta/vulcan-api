@@ -129,7 +129,6 @@ type Policy interface {
 type Program struct {
 	ID              string
 	Name            string
-	Disabled        *bool
 	Policies        []PolicyGroup
 	DefaultMetadata api.GlobalProgramsMetadata
 }
