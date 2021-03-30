@@ -391,3 +391,7 @@ func (b *BrokerProxy) CreateFindingOverride(findingOverride api.FindingOverride)
 	go b.awakeBroker()
 	return err
 }
+
+func (b *BrokerProxy) ListFindingOverrides(findingID string) ([]*api.FindingOverride, error) {
+	return b.store.ListFindingOverrides(findingID)
+}

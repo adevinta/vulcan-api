@@ -92,4 +92,5 @@ type VulcanitoStore interface {
 	DeleteProgramMetadata(program string) error
 
 	CreateFindingOverride(findingOverride FindingOverride) error
+	ListFindingOverrides(findingID string) ([]*FindingOverride, error)
 }

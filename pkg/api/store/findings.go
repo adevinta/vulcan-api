@@ -36,3 +36,16 @@ func (db vulcanitoStore) CreateFindingOverride(findingOverride api.FindingOverri
 	return nil
 
 }
+
+func (db vulcanitoStore) ListFindingOverrides(findingID string) ([]*api.FindingOverride, error) {
+	findingOverrides := []*api.FindingOverride{}
+	result := db.Conn.Preload("User").Find(&findingOverrides, "finding_id = ?", findingID)
+	if result.Error != nil {
+		if db.NotFoundError(result.Error) {
+			return nil, db.logError(errors.NotFound(result.Error))
+		}
+		return nil, db.logError(errors.Database(result.Error))
+	}
+
+	return findingOverrides, nil
+}
