@@ -64,6 +64,10 @@ func (s vulcanitoService) CreateFindingOverride(ctx context.Context, findingOver
 	return s.db.CreateFindingOverride(findingOverride)
 }
 
+func (s vulcanitoService) ListFindingOverrides(ctx context.Context, findingID string) ([]*api.FindingOverride, error) {
+	return s.db.ListFindingOverrides(findingID)
+}
+
 func isValidFindingStatus(status string) bool {
 	// Set of valid status type
 	validStatus := map[string]struct{}{

@@ -852,6 +852,17 @@ func (middleware loggingMiddleware) CreateFindingOverride(ctx context.Context, f
 	return middleware.next.CreateFindingOverride(ctx, findingOverride)
 }
 
+func (middleware loggingMiddleware) ListFindingOverrides(ctx context.Context, findingID string) ([]*api.FindingOverride, error) {
+	defer func() {
+		XRequestID := ""
+		if ctx != nil {
+			XRequestID, _ = ctx.Value(kithttp.ContextKeyRequestXRequestID).(string)
+		}
+		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "ListFindingOverrides", "findingID", mySprintf(findingID))
+	}()
+	return middleware.next.ListFindingOverrides(ctx, findingID)
+}
+
 func (middleware loggingMiddleware) StatsMTTR(ctx context.Context, params api.StatsParams) (*api.StatsMTTR, error) {
 	defer func() {
 		XRequestID := ""
