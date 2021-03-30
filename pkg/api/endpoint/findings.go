@@ -279,6 +279,27 @@ func makeCreateFindingOverrideEndpoint(s api.VulcanitoService, logger kitlog.Log
 	}
 }
 
+func makeListFindingOverridesEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		r, ok := request.(*FindingsRequest)
+		if !ok {
+			return nil, errors.Assertion("Type assertion failed")
+		}
+
+		findingOverrides, err := s.ListFindingOverrides(ctx, r.ID)
+		if err != nil {
+			return nil, err
+		}
+
+		output := []api.FindingOverrideResponse{}
+		for _, fr := range findingOverrides {
+			output = append(output, fr.ToResponse())
+		}
+
+		return Ok{output}, nil
+	}
+}
+
 func isValidListFindingsRequest(r *FindingsRequest) bool {
 	return (r.MinDate == "" || isValidDate(r.MinDate)) &&
 		(r.MaxDate == "" || isValidDate(r.MaxDate)) &&
