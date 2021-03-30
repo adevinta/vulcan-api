@@ -219,7 +219,7 @@ func makeFindFindingEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpo
 		}
 
 		if authorizedFindFindingRequest(finding.Finding.Target.Tags, team.Tag) {
-			return Ok{finding}, nil
+			return Ok{finding.Finding}, nil
 		}
 
 		return Forbidden{nil}, nil
