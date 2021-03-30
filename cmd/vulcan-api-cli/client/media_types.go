@@ -302,6 +302,47 @@ func (c *Client) DecodeFindingCollection(resp *http.Response) (FindingCollection
 	return decoded, err
 }
 
+// Finding Override (default view)
+//
+// Identifier: finding_override; view=default
+type FindingOverride struct {
+	// Creation time
+	CreatedAt *time.Time `form:"created_at,omitempty" json:"created_at,omitempty" yaml:"created_at,omitempty" xml:"created_at,omitempty"`
+	// Finding ID
+	FindingID *string `form:"finding_id,omitempty" json:"finding_id,omitempty" yaml:"finding_id,omitempty" xml:"finding_id,omitempty"`
+	// Finding Override ID
+	ID *string `form:"id,omitempty" json:"id,omitempty" yaml:"id,omitempty" xml:"id,omitempty"`
+	// Complementary information
+	Notes *string `form:"notes,omitempty" json:"notes,omitempty" yaml:"notes,omitempty" xml:"notes,omitempty"`
+	// The status requested for the finding referenced by the finding_id field
+	Status *string `form:"status,omitempty" json:"status,omitempty" yaml:"status,omitempty" xml:"status,omitempty"`
+	// The previous status for the finding referenced by the finding_id field
+	StatusPrevious *string `form:"status_previous,omitempty" json:"status_previous,omitempty" yaml:"status_previous,omitempty" xml:"status_previous,omitempty"`
+	// The tag associated to the user/team who requested this override
+	Tag *string `form:"tag,omitempty" json:"tag,omitempty" yaml:"tag,omitempty" xml:"tag,omitempty"`
+	// User who requested the finding override
+	User *string `form:"user,omitempty" json:"user,omitempty" yaml:"user,omitempty" xml:"user,omitempty"`
+}
+
+// DecodeFindingOverride decodes the FindingOverride instance encoded in resp body.
+func (c *Client) DecodeFindingOverride(resp *http.Response) (*FindingOverride, error) {
+	var decoded FindingOverride
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return &decoded, err
+}
+
+// Finding_overrideCollection is the media type for an array of Finding_override (default view)
+//
+// Identifier: finding_override; type=collection; view=default
+type FindingOverrideCollection []*FindingOverride
+
+// DecodeFindingOverrideCollection decodes the FindingOverrideCollection instance encoded in resp body.
+func (c *Client) DecodeFindingOverrideCollection(resp *http.Response) (FindingOverrideCollection, error) {
+	var decoded FindingOverrideCollection
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return decoded, err
+}
+
 // Findings by Issue (default view)
 //
 // Identifier: findings_issue; view=default

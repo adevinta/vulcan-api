@@ -292,12 +292,40 @@ definitions:
         rolfp: R:1/O:1/L:0/F:0/P:0+S:1
         scannable: true
         type: Hostname
+      - alias: AnAlias
+        environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+        identifier: vulcan.example.com
+        options: '{"timeout":60}'
+        rolfp: R:1/O:1/L:0/F:0/P:0+S:1
+        scannable: true
+        type: Hostname
+      - alias: AnAlias
+        environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+        identifier: vulcan.example.com
+        options: '{"timeout":60}'
+        rolfp: R:1/O:1/L:0/F:0/P:0+S:1
+        scannable: true
+        type: Hostname
       groups:
       - a14c7c65-66ab-4676-bcf6-0dea9719f5c6
       - 9f7a0c78-b752-4126-aa6d-0f286ada7b8f
     properties:
       assets:
         example:
+        - alias: AnAlias
+          environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+          identifier: vulcan.example.com
+          options: '{"timeout":60}'
+          rolfp: R:1/O:1/L:0/F:0/P:0+S:1
+          scannable: true
+          type: Hostname
+        - alias: AnAlias
+          environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+          identifier: vulcan.example.com
+          options: '{"timeout":60}'
+          rolfp: R:1/O:1/L:0/F:0/P:0+S:1
+          scannable: true
+          type: Hostname
         - alias: AnAlias
           environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
           identifier: vulcan.example.com
@@ -493,6 +521,87 @@ definitions:
         type: number
     title: 'Mediatype identifier: finding; view=default'
     type: object
+  Finding_override:
+    description: Finding Override (default view)
+    example:
+      created_at: "2021-03-27T00:26:43.211506Z"
+      finding_id: 3c7d7003-c53d-4ccc-80e7-f21da241b2d4
+      id: b0720503-0a84-43fd-9cf4-5bb6c500226f
+      notes: This finding is a false positive because...
+      status: FALSE_POSITIVE
+      status_previous: OPEN
+      tag: team:security
+      user: user@adevinta.com
+    properties:
+      created_at:
+        description: Creation time
+        example: "2021-03-27T00:26:43.211506Z"
+        format: date-time
+        type: string
+      finding_id:
+        description: Finding ID
+        example: 3c7d7003-c53d-4ccc-80e7-f21da241b2d4
+        type: string
+      id:
+        description: Finding Override ID
+        example: b0720503-0a84-43fd-9cf4-5bb6c500226f
+        type: string
+      notes:
+        description: Complementary information
+        example: This finding is a false positive because...
+        type: string
+      status:
+        description: The status requested for the finding referenced by the finding_id
+          field
+        example: FALSE_POSITIVE
+        type: string
+      status_previous:
+        description: The previous status for the finding referenced by the finding_id
+          field
+        example: OPEN
+        type: string
+      tag:
+        description: The tag associated to the user/team who requested this override
+        example: team:security
+        type: string
+      user:
+        description: User who requested the finding override
+        example: user@adevinta.com
+        type: string
+    title: 'Mediatype identifier: finding_override; view=default'
+    type: object
+  Finding_overrideCollection:
+    description: Finding_overrideCollection is the media type for an array of Finding_override
+      (default view)
+    example:
+    - created_at: "2021-03-27T00:26:43.211506Z"
+      finding_id: 3c7d7003-c53d-4ccc-80e7-f21da241b2d4
+      id: b0720503-0a84-43fd-9cf4-5bb6c500226f
+      notes: This finding is a false positive because...
+      status: FALSE_POSITIVE
+      status_previous: OPEN
+      tag: team:security
+      user: user@adevinta.com
+    - created_at: "2021-03-27T00:26:43.211506Z"
+      finding_id: 3c7d7003-c53d-4ccc-80e7-f21da241b2d4
+      id: b0720503-0a84-43fd-9cf4-5bb6c500226f
+      notes: This finding is a false positive because...
+      status: FALSE_POSITIVE
+      status_previous: OPEN
+      tag: team:security
+      user: user@adevinta.com
+    - created_at: "2021-03-27T00:26:43.211506Z"
+      finding_id: 3c7d7003-c53d-4ccc-80e7-f21da241b2d4
+      id: b0720503-0a84-43fd-9cf4-5bb6c500226f
+      notes: This finding is a false positive because...
+      status: FALSE_POSITIVE
+      status_previous: OPEN
+      tag: team:security
+      user: user@adevinta.com
+    items:
+      $ref: '#/definitions/Finding_override'
+    title: 'Mediatype identifier: finding_override; type=collection; view=default'
+    type: array
   FindingCollection:
     description: FindingCollection is the media type for an array of Finding (default
       view)
@@ -660,6 +769,24 @@ definitions:
       $ref: '#/definitions/Finding'
     title: 'Mediatype identifier: finding; type=collection; view=default'
     type: array
+  FindingOverridePayload:
+    example:
+      notes: This is a false positive because...
+      status: FALSE_POSITIVE
+    properties:
+      notes:
+        description: Notes
+        example: This is a false positive because...
+        type: string
+      status:
+        description: Status
+        example: FALSE_POSITIVE
+        type: string
+    required:
+    - status
+    - notes
+    title: FindingOverridePayload
+    type: object
   Findings_issue:
     description: Findings by Issue (default view)
     example:
@@ -696,14 +823,6 @@ definitions:
       max_score: 6.9
       summary: Site Without HTTPS
       targets_count: 14
-    - issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
-      max_score: 6.9
-      summary: Site Without HTTPS
-      targets_count: 14
-    - issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
-      max_score: 6.9
-      summary: Site Without HTTPS
-      targets_count: 14
     items:
       $ref: '#/definitions/Findings_issue'
     title: 'Mediatype identifier: findings_issue; type=collection; view=default'
@@ -717,10 +836,10 @@ definitions:
         summary: Site Without HTTPS
         targets_count: 14
       pagination:
-        limit: 0.11867421993190391
-        more: true
-        offset: 0.06622922554559177
-        total: 0.11075891542163877
+        limit: 0.8451506497515555
+        more: false
+        offset: 0.11075891542163877
+        total: 0.733137232779022
     properties:
       issues:
         $ref: '#/definitions/Findings_issueCollection'
@@ -786,10 +905,10 @@ definitions:
           - team:vulcan
         total_exposure: 4631
       pagination:
-        limit: 0.11867421993190391
-        more: true
-        offset: 0.06622922554559177
-        total: 0.11075891542163877
+        limit: 0.8451506497515555
+        more: false
+        offset: 0.11075891542163877
+        total: 0.733137232779022
     properties:
       findings:
         $ref: '#/definitions/FindingCollection'
@@ -833,6 +952,14 @@ definitions:
       identifier: vulcan.example.com
       max_score: 6.9
       target_id: a8720503-0284-45fd-9cf4-5bb6c500966f
+    - findings_count: 5
+      identifier: vulcan.example.com
+      max_score: 6.9
+      target_id: a8720503-0284-45fd-9cf4-5bb6c500966f
+    - findings_count: 5
+      identifier: vulcan.example.com
+      max_score: 6.9
+      target_id: a8720503-0284-45fd-9cf4-5bb6c500966f
     items:
       $ref: '#/definitions/Findings_target'
     title: 'Mediatype identifier: findings_target; type=collection; view=default'
@@ -841,19 +968,11 @@ definitions:
     description: Findings by Target list (default view)
     example:
       pagination:
-        limit: 0.11867421993190391
-        more: true
-        offset: 0.06622922554559177
-        total: 0.11075891542163877
+        limit: 0.8451506497515555
+        more: false
+        offset: 0.11075891542163877
+        total: 0.733137232779022
       targets:
-      - findings_count: 5
-        identifier: vulcan.example.com
-        max_score: 6.9
-        target_id: a8720503-0284-45fd-9cf4-5bb6c500966f
-      - findings_count: 5
-        identifier: vulcan.example.com
-        max_score: 6.9
-        target_id: a8720503-0284-45fd-9cf4-5bb6c500966f
       - findings_count: 5
         identifier: vulcan.example.com
         max_score: 6.9
@@ -901,6 +1020,11 @@ definitions:
     description: GroupCollection is the media type for an array of Group (default
       view)
     example:
+    - assets_count: 1
+      description: All newly created assets are added to the Default group
+      id: f6360346-77a5-4f97-b919-331363b3af26
+      name: Default group
+      options: '{"timeout":60}'
     - assets_count: 1
       description: All newly created assets are added to the Default group
       id: f6360346-77a5-4f97-b919-331363b3af26
@@ -1032,6 +1156,14 @@ definitions:
         id: f6360346-77a5-4f97-b919-331363b3af26
         name: Default group
         options: '{"timeout":60}'
+      - description: All newly created assets are added to the Default group
+        id: f6360346-77a5-4f97-b919-331363b3af26
+        name: Default group
+        options: '{"timeout":60}'
+      - description: All newly created assets are added to the Default group
+        id: f6360346-77a5-4f97-b919-331363b3af26
+        name: Default group
+        options: '{"timeout":60}'
       id: a8720503-0284-45fd-9cf4-5bb6c500966f
       identifier: vulcan.example.com
       options: '{"timeout":60}'
@@ -1091,6 +1223,14 @@ definitions:
         id: f6360346-77a5-4f97-b919-331363b3af26
         name: Default group
         options: '{"timeout":60}'
+      - description: All newly created assets are added to the Default group
+        id: f6360346-77a5-4f97-b919-331363b3af26
+        name: Default group
+        options: '{"timeout":60}'
+      - description: All newly created assets are added to the Default group
+        id: f6360346-77a5-4f97-b919-331363b3af26
+        name: Default group
+        options: '{"timeout":60}'
       id: a8720503-0284-45fd-9cf4-5bb6c500966f
       identifier: vulcan.example.com
       options: '{"timeout":60}'
@@ -1107,12 +1247,12 @@ definitions:
     description: MTTR stats (default view)
     example:
       mttr:
-        critical: 0.19220168857228337
-        high: 0.4834744722342159
-        informational: 0.5205844348643661
-        low: 0.8413557035664904
-        medium: 0.21762696584450403
-        total: 0.8619749137392434
+        critical: 0.4834744722342159
+        high: 0.5205844348643661
+        informational: 0.8413557035664904
+        low: 0.21762696584450403
+        medium: 0.8619749137392434
+        total: 0.5958828347687471
     properties:
       mttr:
         $ref: '#/definitions/Statstotal'
@@ -1121,28 +1261,28 @@ definitions:
   Pagination:
     description: Pagination info (default view)
     example:
-      limit: 0.11867421993190391
-      more: true
-      offset: 0.06622922554559177
-      total: 0.11075891542163877
+      limit: 0.8451506497515555
+      more: false
+      offset: 0.11075891542163877
+      total: 0.733137232779022
     properties:
       limit:
         description: Limit of results for the list
-        example: 0.11867421993190391
+        example: 0.8451506497515555
         format: double
         type: number
       more:
         description: Indicates if there are more results to query for the list
-        example: true
+        example: false
         type: boolean
       offset:
         description: Results list offset
-        example: 0.06622922554559177
+        example: 0.11075891542163877
         format: double
         type: number
       total:
         description: Total number of results for the list
-        example: 0.11075891542163877
+        example: 0.733137232779022
         format: double
         type: number
     title: 'Mediatype identifier: pagination; view=default'
@@ -1173,9 +1313,6 @@ definitions:
     description: PolicyCollection is the media type for an array of Policy (default
       view)
     example:
-    - id: af36818a-0f30-412c-9692-d37716075861
-      name: Sample Policy
-      settings_count: 12
     - id: af36818a-0f30-412c-9692-d37716075861
       name: Sample Policy
       settings_count: 12
@@ -1273,8 +1410,8 @@ definitions:
     description: Program (default view)
     example:
       autosend: false
-      disabled: false
-      global: true
+      disabled: true
+      global: false
       id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
       name: Every midnight
       policy_groups:
@@ -1297,11 +1434,11 @@ definitions:
         type: boolean
       disabled:
         description: Disabled
-        example: false
+        example: true
         type: boolean
       global:
         description: Global
-        example: true
+        example: false
         type: boolean
       id:
         description: Program ID
@@ -1356,8 +1493,8 @@ definitions:
       view)
     example:
     - autosend: false
-      disabled: false
-      global: true
+      disabled: true
+      global: false
       id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
       name: Every midnight
       policy_groups:
@@ -1380,13 +1517,15 @@ definitions:
   ProgramPayload:
     example:
       autosend: true
-      disabled: true
+      disabled: false
       name: Every midnight
       policy_groups:
-      - group_id: Perferendis sit.
-        policy_id: Quia aut et voluptatum suscipit ea.
-      - group_id: Perferendis sit.
-        policy_id: Quia aut et voluptatum suscipit ea.
+      - group_id: Sit sed.
+        policy_id: Aut et voluptatum suscipit ea.
+      - group_id: Sit sed.
+        policy_id: Aut et voluptatum suscipit ea.
+      - group_id: Sit sed.
+        policy_id: Aut et voluptatum suscipit ea.
     properties:
       autosend:
         description: Autosend
@@ -1394,7 +1533,7 @@ definitions:
         type: boolean
       disabled:
         description: Disabled
-        example: true
+        example: false
         type: boolean
       name:
         description: name
@@ -1403,10 +1542,12 @@ definitions:
       policy_groups:
         description: PolicyGroups
         example:
-        - group_id: Perferendis sit.
-          policy_id: Quia aut et voluptatum suscipit ea.
-        - group_id: Perferendis sit.
-          policy_id: Quia aut et voluptatum suscipit ea.
+        - group_id: Sit sed.
+          policy_id: Aut et voluptatum suscipit ea.
+        - group_id: Sit sed.
+          policy_id: Aut et voluptatum suscipit ea.
+        - group_id: Sit sed.
+          policy_id: Aut et voluptatum suscipit ea.
         items:
           $ref: '#/definitions/ProgramPolicyGroupPayload'
         type: array
@@ -1414,16 +1555,16 @@ definitions:
     type: object
   ProgramPolicyGroupPayload:
     example:
-      group_id: Perferendis sit.
-      policy_id: Quia aut et voluptatum suscipit ea.
+      group_id: Sit sed.
+      policy_id: Aut et voluptatum suscipit ea.
     properties:
       group_id:
         description: group
-        example: Perferendis sit.
+        example: Sit sed.
         type: string
       policy_id:
         description: policy
-        example: Quia aut et voluptatum suscipit ea.
+        example: Aut et voluptatum suscipit ea.
         type: string
     title: ProgramPolicyGroupPayload
     type: object
@@ -1433,12 +1574,12 @@ definitions:
       disabled: false
       name: Every midnight
       policy_groups:
-      - group_id: Perferendis sit.
-        policy_id: Quia aut et voluptatum suscipit ea.
-      - group_id: Perferendis sit.
-        policy_id: Quia aut et voluptatum suscipit ea.
-      - group_id: Perferendis sit.
-        policy_id: Quia aut et voluptatum suscipit ea.
+      - group_id: Sit sed.
+        policy_id: Aut et voluptatum suscipit ea.
+      - group_id: Sit sed.
+        policy_id: Aut et voluptatum suscipit ea.
+      - group_id: Sit sed.
+        policy_id: Aut et voluptatum suscipit ea.
     properties:
       autosend:
         description: Autosend
@@ -1455,12 +1596,12 @@ definitions:
       policy_groups:
         description: PolicyGroups
         example:
-        - group_id: Perferendis sit.
-          policy_id: Quia aut et voluptatum suscipit ea.
-        - group_id: Perferendis sit.
-          policy_id: Quia aut et voluptatum suscipit ea.
-        - group_id: Perferendis sit.
-          policy_id: Quia aut et voluptatum suscipit ea.
+        - group_id: Sit sed.
+          policy_id: Aut et voluptatum suscipit ea.
+        - group_id: Sit sed.
+          policy_id: Aut et voluptatum suscipit ea.
+        - group_id: Sit sed.
+          policy_id: Aut et voluptatum suscipit ea.
         items:
           $ref: '#/definitions/ProgramPolicyGroupPayload'
         type: array
@@ -1498,7 +1639,7 @@ definitions:
         - john.doe@vulcan.example.com
         - jane.doe@vulcan.example.com
         items:
-          example: Sed qui sint ratione perferendis cumque.
+          example: Qui sint ratione perferendis cumque enim totam.
           type: string
         type: array
     required:
@@ -1569,7 +1710,7 @@ definitions:
         - Hostname
         - Port
         items:
-          example: Corrupti rerum deleniti aut sed illo.
+          example: Natus esse neque aliquid.
           type: string
         type: array
       name:
@@ -1584,7 +1725,7 @@ definitions:
         items:
           additionalProperties: true
           example:
-            Omnis perferendis.: Natus esse neque aliquid.
+            Rerum deleniti aut sed illo porro.: Omnis perferendis.
           type: object
         type: array
     title: 'Mediatype identifier: resource; view=default'
@@ -1597,8 +1738,8 @@ definitions:
       id: 23e7034f-8180-4895-8e7f-73f2f7d90631
       program:
         autosend: false
-        disabled: false
-        global: true
+        disabled: true
+        global: false
         id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
         name: Every midnight
         policy_groups:
@@ -1669,8 +1810,8 @@ definitions:
       id: 23e7034f-8180-4895-8e7f-73f2f7d90631
       program:
         autosend: false
-        disabled: false
-        global: true
+        disabled: true
+        global: false
         id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
         name: Every midnight
         policy_groups:
@@ -1785,35 +1926,35 @@ definitions:
   Stats:
     description: Stats by severity (default view)
     example:
-      critical: 0.9878276236897935
-      high: 0.19639983058229388
-      informational: 0.06491961493419728
-      low: 0.14622255544569557
-      medium: 0.18441607619283212
+      critical: 0.19639983058229388
+      high: 0.06491961493419728
+      informational: 0.14622255544569557
+      low: 0.18441607619283212
+      medium: 0.9474707029546127
     properties:
       critical:
         description: Stats for critical vulnerabilities
-        example: 0.9878276236897935
+        example: 0.19639983058229388
         format: double
         type: number
       high:
         description: Stats for high vulnerabilities
-        example: 0.19639983058229388
+        example: 0.06491961493419728
         format: double
         type: number
       informational:
         description: Stats for informational vulnerabilities
-        example: 0.06491961493419728
+        example: 0.14622255544569557
         format: double
         type: number
       low:
         description: Stats for low vulnerabilities
-        example: 0.14622255544569557
+        example: 0.18441607619283212
         format: double
         type: number
       medium:
         description: Stats for medium vulnerabilities
-        example: 0.18441607619283212
+        example: 0.9474707029546127
         format: double
         type: number
     title: 'Mediatype identifier: stats; view=default'
@@ -1821,11 +1962,11 @@ definitions:
   Statscoverage:
     description: 'Asset Coverage: discovered vs. confirmed (default view)'
     example:
-      coverage: 0.9474707029546127
+      coverage: 0.829278688095066
     properties:
       coverage:
         description: Percentage of assets confirmed respect to discovered
-        example: 0.9474707029546127
+        example: 0.829278688095066
         format: double
         type: number
     title: 'Mediatype identifier: statscoverage; view=default'
@@ -1834,11 +1975,11 @@ definitions:
     description: Fixed issues stats (default view)
     example:
       fixed_issues:
-        critical: 0.9878276236897935
-        high: 0.19639983058229388
-        informational: 0.06491961493419728
-        low: 0.14622255544569557
-        medium: 0.18441607619283212
+        critical: 0.19639983058229388
+        high: 0.06491961493419728
+        informational: 0.14622255544569557
+        low: 0.18441607619283212
+        medium: 0.9474707029546127
     properties:
       fixed_issues:
         $ref: '#/definitions/Stats'
@@ -1848,11 +1989,11 @@ definitions:
     description: Open issues stats (default view)
     example:
       open_issues:
-        critical: 0.9878276236897935
-        high: 0.19639983058229388
-        informational: 0.06491961493419728
-        low: 0.14622255544569557
-        medium: 0.18441607619283212
+        critical: 0.19639983058229388
+        high: 0.06491961493419728
+        informational: 0.14622255544569557
+        low: 0.18441607619283212
+        medium: 0.9474707029546127
     properties:
       open_issues:
         $ref: '#/definitions/Stats'
@@ -1861,41 +2002,41 @@ definitions:
   Statstotal:
     description: Stats by severity (default view)
     example:
-      critical: 0.19220168857228337
-      high: 0.4834744722342159
-      informational: 0.5205844348643661
-      low: 0.8413557035664904
-      medium: 0.21762696584450403
-      total: 0.8619749137392434
+      critical: 0.4834744722342159
+      high: 0.5205844348643661
+      informational: 0.8413557035664904
+      low: 0.21762696584450403
+      medium: 0.8619749137392434
+      total: 0.5958828347687471
     properties:
       critical:
         description: Stats for critical vulnerabilities
-        example: 0.19220168857228337
+        example: 0.4834744722342159
         format: double
         type: number
       high:
         description: Stats for high vulnerabilities
-        example: 0.4834744722342159
+        example: 0.5205844348643661
         format: double
         type: number
       informational:
         description: Stats for informational vulnerabilities
-        example: 0.5205844348643661
+        example: 0.8413557035664904
         format: double
         type: number
       low:
         description: Stats for low vulnerabilities
-        example: 0.8413557035664904
+        example: 0.21762696584450403
         format: double
         type: number
       medium:
         description: Stats for medium vulnerabilities
-        example: 0.21762696584450403
+        example: 0.8619749137392434
         format: double
         type: number
       total:
         description: Stats for all vulnerabilities
-        example: 0.8619749137392434
+        example: 0.5958828347687471
         format: double
         type: number
     title: 'Mediatype identifier: statstotal; view=default'
@@ -2080,16 +2221,6 @@ definitions:
         last_login: "2018-09-07T10:40:52Z"
         lastname: Doe
         observer: true
-    - role: owner
-      user:
-        active: true
-        admin: true
-        email: john.doe@vulcan.example.com
-        firstname: John
-        id: 967d9966-b561-4233-bd6f-cac603fd8320
-        last_login: "2018-09-07T10:40:52Z"
-        lastname: Doe
-        observer: true
     items:
       $ref: '#/definitions/Teammember'
     title: 'Mediatype identifier: teammember; type=collection; view=default'
@@ -2170,6 +2301,22 @@ definitions:
   UserCollection:
     description: UserCollection is the media type for an array of User (default view)
     example:
+    - active: true
+      admin: true
+      email: john.doe@vulcan.example.com
+      firstname: John
+      id: 967d9966-b561-4233-bd6f-cac603fd8320
+      last_login: "2018-09-07T10:40:52Z"
+      lastname: Doe
+      observer: true
+    - active: true
+      admin: true
+      email: john.doe@vulcan.example.com
+      firstname: John
+      id: 967d9966-b561-4233-bd6f-cac603fd8320
+      last_login: "2018-09-07T10:40:52Z"
+      lastname: Doe
+      observer: true
     - active: true
       admin: true
       email: john.doe@vulcan.example.com
@@ -2737,6 +2884,66 @@ paths:
       security:
       - Bearer: []
       summary: Find finding findings
+      tags:
+      - findings
+  /teams/{team_id}/findings/{finding_id}/override:
+    get:
+      description: List Finding Overrides.
+      operationId: findings#List Finding Overrides
+      parameters:
+      - in: path
+        name: finding_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      produces:
+      - finding_override; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Finding_overrideCollection'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: List Finding Overrides findings
+      tags:
+      - findings
+    post:
+      description: Override data for a specific finding.
+      operationId: findings#Submit a Finding Override
+      parameters:
+      - in: path
+        name: finding_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/FindingOverridePayload'
+      produces:
+      - findings_list
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Findings_list'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: Submit a Finding Override findings
       tags:
       - findings
   /teams/{team_id}/findings/issues:

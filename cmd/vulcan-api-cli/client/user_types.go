@@ -276,6 +276,56 @@ type DigestPayload struct {
 	StartDate *string `form:"start_date,omitempty" json:"start_date,omitempty" yaml:"start_date,omitempty" xml:"start_date,omitempty"`
 }
 
+// findingOverridePayload user type.
+type findingOverridePayload struct {
+	// Notes
+	Notes *string `form:"notes,omitempty" json:"notes,omitempty" yaml:"notes,omitempty" xml:"notes,omitempty"`
+	// Status
+	Status *string `form:"status,omitempty" json:"status,omitempty" yaml:"status,omitempty" xml:"status,omitempty"`
+}
+
+// Validate validates the findingOverridePayload type instance.
+func (ut *findingOverridePayload) Validate() (err error) {
+	if ut.Status == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "status"))
+	}
+	if ut.Notes == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "notes"))
+	}
+	return
+}
+
+// Publicize creates FindingOverridePayload from findingOverridePayload
+func (ut *findingOverridePayload) Publicize() *FindingOverridePayload {
+	var pub FindingOverridePayload
+	if ut.Notes != nil {
+		pub.Notes = *ut.Notes
+	}
+	if ut.Status != nil {
+		pub.Status = *ut.Status
+	}
+	return &pub
+}
+
+// FindingOverridePayload user type.
+type FindingOverridePayload struct {
+	// Notes
+	Notes string `form:"notes" json:"notes" yaml:"notes" xml:"notes"`
+	// Status
+	Status string `form:"status" json:"status" yaml:"status" xml:"status"`
+}
+
+// Validate validates the FindingOverridePayload type instance.
+func (ut *FindingOverridePayload) Validate() (err error) {
+	if ut.Status == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "status"))
+	}
+	if ut.Notes == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "notes"))
+	}
+	return
+}
+
 // groupPayload user type.
 type groupPayload struct {
 	// name
