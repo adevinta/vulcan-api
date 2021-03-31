@@ -58,7 +58,7 @@ var (
 			// Minute | Hour | Dom | Month | Dow
 			// Standard crontab specs, e.g. "* * * * ?"
 			// Descriptors, e.g. "@midnight", "@every 1h30m"
-			Cron: "0 8 7 10 *", // Run the scan every October 7th at 8am UTC.
+			Cron: "0 12 * * 2", // Run the scan every October 7th at 8am UTC.
 
 			// Autosend is set by default to false for this program.
 			Autosend: &vFalse,
