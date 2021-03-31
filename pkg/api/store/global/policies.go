@@ -16,6 +16,7 @@ func init() {
 	registerPolicy(&DefaultPolicy{})
 	registerPolicy(&SensitivePolicy{})
 	registerPolicy(&WebScanningPolicy{})
+	registerPolicy(&RedconPolicy{})
 }
 
 // DefaultPolicy contains all checks execpts the ones for docker images.
