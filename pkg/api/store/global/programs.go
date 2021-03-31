@@ -51,7 +51,7 @@ var (
 		Policies: []PolicyGroup{
 			PolicyGroup{
 				Group:  "redcon-global",
-				Policy: "default-global",
+				Policy: "redcon-global",
 			},
 		},
 		DefaultMetadata: api.GlobalProgramsMetadata{
