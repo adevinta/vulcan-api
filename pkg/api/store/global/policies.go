@@ -182,3 +182,44 @@ func (ws *WebScanningPolicy) Eval(ctx context.Context) ([]*api.ChecktypeSetting,
 	}
 	return checktypes, nil
 }
+
+// RedconPolicy contains all checks associated with the "DefaultPolicy", but
+// excluding "vulcan-nessus"
+type RedconPolicy struct {
+	checktypeInformer ChecktypesInformer
+}
+
+// Name returns the name of the group.
+func (r *RedconPolicy) Name() string {
+	return "redcon-global"
+}
+
+// Description returns a meaningful explanation of the group.
+func (r *RedconPolicy) Description() string {
+	return "Default set of checktypes that will be executed against the assets present in the redcon-global group"
+}
+
+func (r *RedconPolicy) Init(informer ChecktypesInformer) error {
+	r.checktypeInformer = informer
+	return nil
+}
+
+func (r *RedconPolicy) Eval(ctx context.Context) ([]*api.ChecktypeSetting, error) {
+	// The Redcon policy is the same that the Default policy
+	// but excluding "vulcan-nessus".
+	dp := &DefaultPolicy{checktypeInformer: r.checktypeInformer}
+	checktypes, err := dp.Eval(ctx)
+	if err != nil {
+		return nil, err
+	}
+	index := -1
+	for i, c := range checktypes {
+		if c.CheckTypeName == "vulcan-nessus" {
+			index = i
+		}
+	}
+	if index == -1 {
+		return checktypes, nil
+	}
+	return append(checktypes[:index], checktypes[index+1:]...), nil
+}
