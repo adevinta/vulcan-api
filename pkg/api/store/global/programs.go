@@ -64,7 +64,7 @@ var (
 			Autosend: &vFalse,
 
 			// Disabled is set by default to true for this program.
-			Disabled: &vTrue,
+			Disabled: &vFalse,
 		},
 	}
 	// WebScanning represents the global program used for web scans
