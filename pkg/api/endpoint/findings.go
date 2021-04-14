@@ -275,7 +275,7 @@ func makeCreateFindingOverwriteEndpoint(s api.VulcanitoService, logger kitlog.Lo
 			return Ok{}, nil
 		}
 
-		return Forbidden{nil}, nil
+		return Forbidden{}, nil
 	}
 }
 
