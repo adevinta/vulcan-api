@@ -330,7 +330,7 @@ var _ = Resource("findings", func() {
 
 	Action("Submit a Finding Overwrite", func() {
 		Description("Overwrite data for a specific finding.")
-		Routing(POST("/:finding_id/overwrite"))
+		Routing(POST("/:finding_id/overwrites"))
 		Payload(FindingOverwritePayload)
 		Security("Bearer")
 		Response(OK, func() {})
@@ -338,7 +338,7 @@ var _ = Resource("findings", func() {
 
 	Action("List Finding Overwrites", func() {
 		Description("List Finding Overwrites.")
-		Routing(GET("/:finding_id/overwrite"))
+		Routing(GET("/:finding_id/overwrites"))
 		Security("Bearer")
 		Response(OK, CollectionOf(FindingOverwriteMedia))
 	})

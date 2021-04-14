@@ -195,7 +195,7 @@ func ListFindingOverwritesFindingsPath(teamID string, findingID string) string {
 	param0 := teamID
 	param1 := findingID
 
-	return fmt.Sprintf("/api/v1/teams/%s/findings/%s/overwrite", param0, param1)
+	return fmt.Sprintf("/api/v1/teams/%s/findings/%s/overwrites", param0, param1)
 }
 
 // List Finding Overwrites.
@@ -231,7 +231,7 @@ func SubmitAFindingOverwriteFindingsPath(teamID string, findingID string) string
 	param0 := teamID
 	param1 := findingID
 
-	return fmt.Sprintf("/api/v1/teams/%s/findings/%s/overwrite", param0, param1)
+	return fmt.Sprintf("/api/v1/teams/%s/findings/%s/overwrites", param0, param1)
 }
 
 // Overwrite data for a specific finding.
