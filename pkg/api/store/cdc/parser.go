@@ -74,7 +74,7 @@ func (p *VulnDBTxParser) Parse(log []Event) (nParsed uint) {
 		case opDeleteAllAssets:
 			processFunc = p.processDeleteAllAssets
 		case opFindingOverwrite:
-			processFunc = p.findingOverwrite
+			processFunc = p.processFindingOverwrite
 		default:
 			// If action is not supported
 			// log err and stop processing
@@ -191,7 +191,7 @@ func (p *VulnDBTxParser) processDeleteAllAssets(data []byte) error {
 	return nil
 }
 
-func (p *VulnDBTxParser) findingOverwrite(data []byte) error {
+func (p *VulnDBTxParser) processFindingOverwrite(data []byte) error {
 	var dto OpFindingOverwriteDTO
 
 	err := json.Unmarshal(data, &dto)
