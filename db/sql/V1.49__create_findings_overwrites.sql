@@ -11,3 +11,5 @@ CREATE TABLE finding_overwrites (
         FOREIGN KEY(user_id) 
 	    REFERENCES users(id)
 );
+
+CREATE INDEX idx_finding_overwrites_finding_id ON finding_overwrites (finding_id);
