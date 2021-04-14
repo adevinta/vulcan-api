@@ -1,4 +1,4 @@
-CREATE TABLE finding_overrides (
+CREATE TABLE finding_overwrites (
     id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id         UUID NOT NULL,
     finding_id      UUID NOT NULL,
@@ -7,7 +7,7 @@ CREATE TABLE finding_overrides (
     notes           TEXT NOT NULL,
     tag             TEXT NOT NULL,
     created_at      TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    CONSTRAINT fk_findings_overrides_user
+    CONSTRAINT fk_findings_overwrites_user
         FOREIGN KEY(user_id) 
 	    REFERENCES users(id)
 );

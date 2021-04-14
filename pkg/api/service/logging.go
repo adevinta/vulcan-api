@@ -841,26 +841,26 @@ func (middleware loggingMiddleware) FindFinding(ctx context.Context, findingID s
 	return middleware.next.FindFinding(ctx, findingID)
 }
 
-func (middleware loggingMiddleware) CreateFindingOverride(ctx context.Context, findingOverride api.FindingOverride) error {
+func (middleware loggingMiddleware) CreateFindingOverwrite(ctx context.Context, findingOverwrite api.FindingOverwrite) error {
 	defer func() {
 		XRequestID := ""
 		if ctx != nil {
 			XRequestID, _ = ctx.Value(kithttp.ContextKeyRequestXRequestID).(string)
 		}
-		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "CreateFindingOverride", "findingOverride", mySprintf(findingOverride))
+		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "CreateFindingOverwrite", "findingOverwrite", mySprintf(findingOverwrite))
 	}()
-	return middleware.next.CreateFindingOverride(ctx, findingOverride)
+	return middleware.next.CreateFindingOverwrite(ctx, findingOverwrite)
 }
 
-func (middleware loggingMiddleware) ListFindingOverrides(ctx context.Context, findingID string) ([]*api.FindingOverride, error) {
+func (middleware loggingMiddleware) ListFindingOverwrites(ctx context.Context, findingID string) ([]*api.FindingOverwrite, error) {
 	defer func() {
 		XRequestID := ""
 		if ctx != nil {
 			XRequestID, _ = ctx.Value(kithttp.ContextKeyRequestXRequestID).(string)
 		}
-		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "ListFindingOverrides", "findingID", mySprintf(findingID))
+		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "ListFindingOverwrites", "findingID", mySprintf(findingID))
 	}()
-	return middleware.next.ListFindingOverrides(ctx, findingID)
+	return middleware.next.ListFindingOverwrites(ctx, findingID)
 }
 
 func (middleware loggingMiddleware) StatsMTTR(ctx context.Context, params api.StatsParams) (*api.StatsMTTR, error) {

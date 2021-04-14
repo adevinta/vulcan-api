@@ -328,40 +328,40 @@ var _ = Resource("findings", func() {
 		Response(OK, FindingMedia)
 	})
 
-	Action("Submit a Finding Override", func() {
-		Description("Override data for a specific finding.")
-		Routing(POST("/:finding_id/override"))
-		Payload(FindingOverridePayload)
+	Action("Submit a Finding Overwrite", func() {
+		Description("Overwrite data for a specific finding.")
+		Routing(POST("/:finding_id/overwrite"))
+		Payload(FindingOverwritePayload)
 		Security("Bearer")
 		Response(OK, func() {})
 	})
 
-	Action("List Finding Overrides", func() {
-		Description("List Finding Overrides.")
-		Routing(GET("/:finding_id/override"))
+	Action("List Finding Overwrites", func() {
+		Description("List Finding Overwrites.")
+		Routing(GET("/:finding_id/overwrite"))
 		Security("Bearer")
-		Response(OK, CollectionOf(FindingOverrideMedia))
+		Response(OK, CollectionOf(FindingOverwriteMedia))
 	})
 })
 
-var FindingOverridePayload = Type("FindingOverridePayload", func() {
+var FindingOverwritePayload = Type("FindingOverwritePayload", func() {
 	Attribute("status", String, "Status", func() { Example("FALSE_POSITIVE") })
 	Attribute("notes", String, "Notes", func() { Example("This is a false positive because...") })
 	Required("status")
 	Required("notes")
 })
 
-// FindingOverride
-var FindingOverrideMedia = MediaType("finding_override", func() {
-	Description("Finding Override")
+// FindingOverwrite
+var FindingOverwriteMedia = MediaType("finding_overwrite", func() {
+	Description("Finding Overwrite")
 	Attributes(func() {
-		Attribute("id", String, "Finding Override ID", func() { Example("b0720503-0a84-43fd-9cf4-5bb6c500226f") })
-		Attribute("user", String, "User who requested the finding override", func() { Example("user@adevinta.com") })
+		Attribute("id", String, "Finding Overwrite ID", func() { Example("b0720503-0a84-43fd-9cf4-5bb6c500226f") })
+		Attribute("user", String, "User who requested the finding overwrite", func() { Example("user@adevinta.com") })
 		Attribute("finding_id", String, "Finding ID", func() { Example("3c7d7003-c53d-4ccc-80e7-f21da241b2d4") })
 		Attribute("status", String, "The status requested for the finding referenced by the finding_id field", func() { Example("FALSE_POSITIVE") })
 		Attribute("status_previous", String, "The previous status for the finding referenced by the finding_id field", func() { Example("OPEN") })
 		Attribute("notes", String, "Complementary information", func() { Example("This finding is a false positive because...") })
-		Attribute("tag", String, "The tag associated to the user/team who requested this override", func() { Example("team:security") })
+		Attribute("tag", String, "The tag associated to the user/team who requested this overwrite", func() { Example("team:security") })
 		Attribute("created_at", DateTime, "Creation time", func() { Example("2021-03-27T00:26:43.211506Z") })
 	})
 	View("default", func() {

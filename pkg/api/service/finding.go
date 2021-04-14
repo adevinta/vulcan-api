@@ -37,14 +37,14 @@ func (s vulcanitoService) FindFinding(ctx context.Context, findingID string) (*a
 	return s.vulndbClient.Finding(ctx, findingID)
 }
 
-func (s vulcanitoService) CreateFindingOverride(ctx context.Context, findingOverride api.FindingOverride) error {
-	validationErr := validator.New().Struct(findingOverride)
+func (s vulcanitoService) CreateFindingOverwrite(ctx context.Context, findingOverwrite api.FindingOverwrite) error {
+	validationErr := validator.New().Struct(findingOverwrite)
 	if validationErr != nil {
 		return errors.Validation(validationErr)
 	}
 
-	if !isValidFindingStatus(findingOverride.Status) {
-		return errors.Validation(fmt.Sprintf("Invalid status: '%s'", findingOverride.Status))
+	if !isValidFindingStatus(findingOverwrite.Status) {
+		return errors.Validation(fmt.Sprintf("Invalid status: '%s'", findingOverwrite.Status))
 	}
 
 	// Valid transitions:
@@ -53,16 +53,16 @@ func (s vulcanitoService) CreateFindingOverride(ctx context.Context, findingOver
 	// FALSE_POSITIVE -> OPEN
 	// OPEN           -> FALSE_POSITIVE
 	// FALSE_POSITIVE -> FALSE_POSITIVE
-	if (findingOverride.StatusPrevious != "OPEN" && findingOverride.StatusPrevious != "FALSE_POSITIVE") ||
-		(findingOverride.Status != "OPEN" && findingOverride.Status != "FALSE_POSITIVE") {
-		return errors.Validation(fmt.Sprintf("Status transition not allowed: from '%s' to '%s'", findingOverride.StatusPrevious, findingOverride.Status))
+	if (findingOverwrite.StatusPrevious != "OPEN" && findingOverwrite.StatusPrevious != "FALSE_POSITIVE") ||
+		(findingOverwrite.Status != "OPEN" && findingOverwrite.Status != "FALSE_POSITIVE") {
+		return errors.Validation(fmt.Sprintf("Status transition not allowed: from '%s' to '%s'", findingOverwrite.StatusPrevious, findingOverwrite.Status))
 	}
 
-	return s.db.CreateFindingOverride(findingOverride)
+	return s.db.CreateFindingOverwrite(findingOverwrite)
 }
 
-func (s vulcanitoService) ListFindingOverrides(ctx context.Context, findingID string) ([]*api.FindingOverride, error) {
-	return s.db.ListFindingOverrides(findingID)
+func (s vulcanitoService) ListFindingOverwrites(ctx context.Context, findingID string) ([]*api.FindingOverwrite, error) {
+	return s.db.ListFindingOverwrites(findingID)
 }
 
 func isValidFindingStatus(status string) bool {

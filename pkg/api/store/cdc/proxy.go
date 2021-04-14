@@ -386,12 +386,12 @@ func (b *BrokerProxy) DeleteProgramMetadata(program string) error {
 	return b.store.DeleteProgramMetadata(program)
 }
 
-func (b *BrokerProxy) CreateFindingOverride(findingOverride api.FindingOverride) error {
-	err := b.store.CreateFindingOverride(findingOverride)
+func (b *BrokerProxy) CreateFindingOverwrite(findingOverwrite api.FindingOverwrite) error {
+	err := b.store.CreateFindingOverwrite(findingOverwrite)
 	go b.awakeBroker()
 	return err
 }
 
-func (b *BrokerProxy) ListFindingOverrides(findingID string) ([]*api.FindingOverride, error) {
-	return b.store.ListFindingOverrides(findingID)
+func (b *BrokerProxy) ListFindingOverwrites(findingID string) ([]*api.FindingOverwrite, error) {
+	return b.store.ListFindingOverwrites(findingID)
 }

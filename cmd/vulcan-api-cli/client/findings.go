@@ -190,25 +190,25 @@ func (c *Client) NewFindFindingsFromATargetFindingsRequest(ctx context.Context, 
 	return req, nil
 }
 
-// ListFindingOverridesFindingsPath computes a request path to the List Finding Overrides action of findings.
-func ListFindingOverridesFindingsPath(teamID string, findingID string) string {
+// ListFindingOverwritesFindingsPath computes a request path to the List Finding Overwrites action of findings.
+func ListFindingOverwritesFindingsPath(teamID string, findingID string) string {
 	param0 := teamID
 	param1 := findingID
 
-	return fmt.Sprintf("/api/v1/teams/%s/findings/%s/override", param0, param1)
+	return fmt.Sprintf("/api/v1/teams/%s/findings/%s/overwrite", param0, param1)
 }
 
-// List Finding Overrides.
-func (c *Client) ListFindingOverridesFindings(ctx context.Context, path string) (*http.Response, error) {
-	req, err := c.NewListFindingOverridesFindingsRequest(ctx, path)
+// List Finding Overwrites.
+func (c *Client) ListFindingOverwritesFindings(ctx context.Context, path string) (*http.Response, error) {
+	req, err := c.NewListFindingOverwritesFindingsRequest(ctx, path)
 	if err != nil {
 		return nil, err
 	}
 	return c.Client.Do(ctx, req)
 }
 
-// NewListFindingOverridesFindingsRequest create the request corresponding to the List Finding Overrides action endpoint of the findings resource.
-func (c *Client) NewListFindingOverridesFindingsRequest(ctx context.Context, path string) (*http.Request, error) {
+// NewListFindingOverwritesFindingsRequest create the request corresponding to the List Finding Overwrites action endpoint of the findings resource.
+func (c *Client) NewListFindingOverwritesFindingsRequest(ctx context.Context, path string) (*http.Request, error) {
 	scheme := c.Scheme
 	if scheme == "" {
 		scheme = "https"
@@ -226,25 +226,25 @@ func (c *Client) NewListFindingOverridesFindingsRequest(ctx context.Context, pat
 	return req, nil
 }
 
-// SubmitAFindingOverrideFindingsPath computes a request path to the Submit a Finding Override action of findings.
-func SubmitAFindingOverrideFindingsPath(teamID string, findingID string) string {
+// SubmitAFindingOverwriteFindingsPath computes a request path to the Submit a Finding Overwrite action of findings.
+func SubmitAFindingOverwriteFindingsPath(teamID string, findingID string) string {
 	param0 := teamID
 	param1 := findingID
 
-	return fmt.Sprintf("/api/v1/teams/%s/findings/%s/override", param0, param1)
+	return fmt.Sprintf("/api/v1/teams/%s/findings/%s/overwrite", param0, param1)
 }
 
-// Override data for a specific finding.
-func (c *Client) SubmitAFindingOverrideFindings(ctx context.Context, path string, payload *FindingOverridePayload) (*http.Response, error) {
-	req, err := c.NewSubmitAFindingOverrideFindingsRequest(ctx, path, payload)
+// Overwrite data for a specific finding.
+func (c *Client) SubmitAFindingOverwriteFindings(ctx context.Context, path string, payload *FindingOverwritePayload) (*http.Response, error) {
+	req, err := c.NewSubmitAFindingOverwriteFindingsRequest(ctx, path, payload)
 	if err != nil {
 		return nil, err
 	}
 	return c.Client.Do(ctx, req)
 }
 
-// NewSubmitAFindingOverrideFindingsRequest create the request corresponding to the Submit a Finding Override action endpoint of the findings resource.
-func (c *Client) NewSubmitAFindingOverrideFindingsRequest(ctx context.Context, path string, payload *FindingOverridePayload) (*http.Request, error) {
+// NewSubmitAFindingOverwriteFindingsRequest create the request corresponding to the Submit a Finding Overwrite action endpoint of the findings resource.
+func (c *Client) NewSubmitAFindingOverwriteFindingsRequest(ctx context.Context, path string, payload *FindingOverwritePayload) (*http.Request, error) {
 	var body bytes.Buffer
 	err := c.Encoder.Encode(payload, &body, "*/*")
 	if err != nil {

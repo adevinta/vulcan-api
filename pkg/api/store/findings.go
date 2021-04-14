@@ -9,21 +9,21 @@ import (
 	"github.com/adevinta/vulcan-api/pkg/api"
 )
 
-func (db vulcanitoStore) CreateFindingOverride(findingOverride api.FindingOverride) error {
+func (db vulcanitoStore) CreateFindingOverwrite(findingOverwrite api.FindingOverwrite) error {
 	// Begin transaction.
 	tx := db.Conn.Begin()
 	if tx.Error != nil {
 		return db.logError(errors.Database(tx.Error))
 	}
 
-	// create entry in finding_override
-	result := tx.Create(&findingOverride)
+	// create entry in finding_overwrite
+	result := tx.Create(&findingOverwrite)
 	if result.Error != nil {
 		tx.Rollback()
 		return db.logError(errors.Delete(result.Error))
 	}
 
-	err := db.pushToOutbox(tx, opFindingOverride, findingOverride)
+	err := db.pushToOutbox(tx, opFindingOverwrite, findingOverwrite)
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -37,9 +37,9 @@ func (db vulcanitoStore) CreateFindingOverride(findingOverride api.FindingOverri
 
 }
 
-func (db vulcanitoStore) ListFindingOverrides(findingID string) ([]*api.FindingOverride, error) {
-	findingOverrides := []*api.FindingOverride{}
-	result := db.Conn.Preload("User").Find(&findingOverrides, "finding_id = ?", findingID)
+func (db vulcanitoStore) ListFindingOverwrites(findingID string) ([]*api.FindingOverwrite, error) {
+	findingOverwrites := []*api.FindingOverwrite{}
+	result := db.Conn.Preload("User").Find(&findingOverwrites, "finding_id = ?", findingID)
 	if result.Error != nil {
 		if db.NotFoundError(result.Error) {
 			return nil, db.logError(errors.NotFound(result.Error))
@@ -47,5 +47,5 @@ func (db vulcanitoStore) ListFindingOverrides(findingID string) ([]*api.FindingO
 		return nil, db.logError(errors.Database(result.Error))
 	}
 
-	return findingOverrides, nil
+	return findingOverwrites, nil
 }

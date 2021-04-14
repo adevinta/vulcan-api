@@ -19,10 +19,10 @@ import (
 
 const (
 	// supported operations
-	opDeleteTeam      = "DeleteTeam"
-	opDeleteAsset     = "DeleteAsset"
-	opDeleteAllAssets = "DeleteAllAssets"
-	opFindingOverride = "FindingOverride"
+	opDeleteTeam       = "DeleteTeam"
+	opDeleteAsset      = "DeleteAsset"
+	opDeleteAllAssets  = "DeleteAllAssets"
+	opFindingOverwrite = "FindingOverwrite"
 )
 
 var (
@@ -73,8 +73,8 @@ func (p *VulnDBTxParser) Parse(log []Event) (nParsed uint) {
 			processFunc = p.processDeleteAsset
 		case opDeleteAllAssets:
 			processFunc = p.processDeleteAllAssets
-		case opFindingOverride:
-			processFunc = p.findingOverride
+		case opFindingOverwrite:
+			processFunc = p.findingOverwrite
 		default:
 			// If action is not supported
 			// log err and stop processing
@@ -191,8 +191,8 @@ func (p *VulnDBTxParser) processDeleteAllAssets(data []byte) error {
 	return nil
 }
 
-func (p *VulnDBTxParser) findingOverride(data []byte) error {
-	var dto OpFindingOverrideDTO
+func (p *VulnDBTxParser) findingOverwrite(data []byte) error {
+	var dto OpFindingOverwriteDTO
 
 	err := json.Unmarshal(data, &dto)
 	if err != nil {
@@ -201,11 +201,11 @@ func (p *VulnDBTxParser) findingOverride(data []byte) error {
 
 	_, err = p.VulnDBClient.UpdateFinding(
 		context.Background(),
-		dto.FindingOverride.FindingID,
+		dto.FindingOverwrite.FindingID,
 		&api.UpdateFinding{
-			Status: &dto.FindingOverride.Status,
+			Status: &dto.FindingOverwrite.Status,
 		},
-		dto.FindingOverride.Tag)
+		dto.FindingOverwrite.Tag)
 	if err != nil {
 		if errors.IsKind(err, errors.ErrNotFound) {
 			return nil

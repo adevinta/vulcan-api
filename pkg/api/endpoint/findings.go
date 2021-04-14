@@ -226,16 +226,16 @@ func makeFindFindingEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpo
 	}
 }
 
-type FindingOverrideRequest struct {
+type FindingOverwriteRequest struct {
 	FindingID string `json:"finding_id" urlvar:"finding_id"`
 	TeamID    string `json:"team_id" urlvar:"team_id"`
 	Status    string `json:"status"`
 	Notes     string `json:"notes"`
 }
 
-func makeCreateFindingOverrideEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
+func makeCreateFindingOverwriteEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
-		r, ok := request.(*FindingOverrideRequest)
+		r, ok := request.(*FindingOverwriteRequest)
 		if !ok {
 			return nil, errors.Assertion("Type assertion failed")
 		}
@@ -257,7 +257,7 @@ func makeCreateFindingOverrideEndpoint(s api.VulcanitoService, logger kitlog.Log
 			return nil, errors.Default(err)
 		}
 
-		findingOverride := api.FindingOverride{
+		findingOverwrite := api.FindingOverwrite{
 			UserID:         user.ID,
 			FindingID:      r.FindingID,
 			StatusPrevious: finding.Finding.Status,
@@ -267,7 +267,7 @@ func makeCreateFindingOverrideEndpoint(s api.VulcanitoService, logger kitlog.Log
 		}
 
 		if authorizedFindFindingRequest(finding.Finding.Target.Tags, team.Tag) {
-			err := s.CreateFindingOverride(ctx, findingOverride)
+			err := s.CreateFindingOverwrite(ctx, findingOverwrite)
 			if err != nil {
 				return nil, err
 			}
@@ -279,20 +279,20 @@ func makeCreateFindingOverrideEndpoint(s api.VulcanitoService, logger kitlog.Log
 	}
 }
 
-func makeListFindingOverridesEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
+func makeListFindingOverwritesEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		r, ok := request.(*FindingsRequest)
 		if !ok {
 			return nil, errors.Assertion("Type assertion failed")
 		}
 
-		findingOverrides, err := s.ListFindingOverrides(ctx, r.ID)
+		findingOverwrites, err := s.ListFindingOverwrites(ctx, r.ID)
 		if err != nil {
 			return nil, err
 		}
 
-		output := []api.FindingOverrideResponse{}
-		for _, fr := range findingOverrides {
+		output := []api.FindingOverwriteResponse{}
+		for _, fr := range findingOverwrites {
 			output = append(output, fr.ToResponse())
 		}
 

@@ -16,10 +16,10 @@ import (
 
 const (
 	// operations
-	opDeleteTeam      = "DeleteTeam"
-	opDeleteAsset     = "DeleteAsset"
-	opDeleteAllAssets = "DeleteAllAssets"
-	opFindingOverride = "FindingOverride"
+	opDeleteTeam       = "DeleteTeam"
+	opDeleteAsset      = "DeleteAsset"
+	opDeleteAllAssets  = "DeleteAllAssets"
+	opFindingOverwrite = "FindingOverwrite"
 )
 
 var (
@@ -36,8 +36,8 @@ func (db vulcanitoStore) pushToOutbox(tx *gorm.DB, op string, data ...interface{
 		buildFunc = db.buildDeleteAssetDTO
 	case opDeleteAllAssets:
 		buildFunc = db.buildDeleteAllAssetsDTO
-	case opFindingOverride:
-		buildFunc = db.buildFindingOverrideDTO
+	case opFindingOverwrite:
+		buildFunc = db.buildFindingOverwriteDTO
 	default:
 		return errUnimplementedOp
 	}
@@ -131,19 +131,19 @@ func (db vulcanitoStore) buildDeleteAllAssetsDTO(tx *gorm.DB, data ...interface{
 	return cdc.OpDeleteAllAssetsDTO{Team: *team}, nil
 }
 
-// buildFindingOverrideDTO builds a FindingOverride action DTO for outbox.
+// buildFindingOverwriteDTO builds a FindingOverwrite action DTO for outbox.
 // Expected input:
-//	- api.FindingOverride
-func (db vulcanitoStore) buildFindingOverrideDTO(tx *gorm.DB, data ...interface{}) (interface{}, error) {
+//	- api.FindingOverwrite
+func (db vulcanitoStore) buildFindingOverwriteDTO(tx *gorm.DB, data ...interface{}) (interface{}, error) {
 	if len(data) != 1 {
 		return nil, errInvalidParams
 	}
-	findingOverride, ok := data[0].(api.FindingOverride)
+	findingOverwrite, ok := data[0].(api.FindingOverwrite)
 	if !ok {
 		return nil, errInvalidParams
 	}
 
-	return cdc.OpFindingOverrideDTO{FindingOverride: findingOverride}, nil
+	return cdc.OpFindingOverwriteDTO{FindingOverwrite: findingOverwrite}, nil
 }
 
 func (db vulcanitoStore) insertIntoOutbox(tx *gorm.DB, outbox cdc.Outbox) error {
