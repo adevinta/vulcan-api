@@ -53,11 +53,8 @@ func (s vulcanitoService) CreateFindingOverride(ctx context.Context, findingOver
 	// FALSE_POSITIVE -> OPEN
 	// OPEN           -> FALSE_POSITIVE
 	// FALSE_POSITIVE -> FALSE_POSITIVE
-	if findingOverride.StatusPrevious != "OPEN" && findingOverride.StatusPrevious != "FALSE_POSITIVE" {
-		return errors.Validation(fmt.Sprintf("Status transition not allowed: from '%s' to '%s'", findingOverride.StatusPrevious, findingOverride.Status))
-	}
-
-	if findingOverride.Status != "OPEN" && findingOverride.Status != "FALSE_POSITIVE" {
+	if (findingOverride.StatusPrevious != "OPEN" && findingOverride.StatusPrevious != "FALSE_POSITIVE") ||
+		(findingOverride.Status != "OPEN" && findingOverride.Status != "FALSE_POSITIVE") {
 		return errors.Validation(fmt.Sprintf("Status transition not allowed: from '%s' to '%s'", findingOverride.StatusPrevious, findingOverride.Status))
 	}
 
