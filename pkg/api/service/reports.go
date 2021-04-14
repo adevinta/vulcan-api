@@ -133,6 +133,16 @@ func (s vulcanitoService) SendDigestReport(ctx context.Context, teamID string, s
 		return err
 	}
 
+	fixedStats, err := s.vulndbClient.StatsFixed(ctx, api.StatsParams{
+		Tag:     team.Tag,
+		MinDate: dateFromStr,
+		MaxDate: dateToStr,
+	})
+	if err != nil {
+		_ = s.logger.Log("ErrStatsFixed", err)
+		return err
+	}
+
 	//s.vulndbClient.StatsOpen(ctx, params)
 	severitiesStats := make(map[string]int)
 	severitiesStats["info"] = currentStats.OpenIssues.Informational
@@ -146,6 +156,12 @@ func (s vulcanitoService) SendDigestReport(ctx context.Context, teamID string, s
 	severitiesStats["mediumDiff"] = diffStats.OpenIssues.Medium
 	severitiesStats["highDiff"] = diffStats.OpenIssues.High
 	severitiesStats["criticalDiff"] = diffStats.OpenIssues.Critical
+
+	severitiesStats["infoFixed"] = fixedStats.FixedIssues.Informational
+	severitiesStats["lowFixed"] = fixedStats.FixedIssues.Low
+	severitiesStats["mediumFixed"] = fixedStats.FixedIssues.Medium
+	severitiesStats["highFixed"] = fixedStats.FixedIssues.High
+	severitiesStats["criticalFixed"] = fixedStats.FixedIssues.Critical
 
 	liveReportURL := fmt.Sprintf("%s/report/report.html?team_id=%s&minDate=%s&maxDate=%s", s.reportsConfig.VulcanUIURL, teamID, dateFromStr, dateToStr)
 

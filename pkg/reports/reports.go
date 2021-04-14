@@ -84,4 +84,9 @@ type digestReportData struct {
 	MediumDiff    int    `json:"medium_diff"`
 	HighDiff      int    `json:"high_diff"`
 	CriticalDiff  int    `json:"critical_diff"`
+	InfoFixed     int    `json:"info_fixed"`
+	LowFixed      int    `json:"low_fixed"`
+	MediumFixed   int    `json:"medium_fixed"`
+	HighFixed     int    `json:"high_fixed"`
+	CriticalFixed int    `json:"critical_fixed"`
 }
