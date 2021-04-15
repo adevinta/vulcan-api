@@ -90,4 +90,7 @@ type VulcanitoStore interface {
 	FindGlobalProgramMetadata(programID string, teamID string) (*GlobalProgramsMetadata, error)
 	UpsertGlobalProgramMetadata(teamID, program string, defaultAutosend bool, defaultDisabled bool, defaultCron string, autosend *bool, disabled *bool, cron *string) error
 	DeleteProgramMetadata(program string) error
+
+	CreateFindingOverwrite(findingOverwrite FindingOverwrite) error
+	ListFindingOverwrites(findingID string) ([]*FindingOverwrite, error)
 }

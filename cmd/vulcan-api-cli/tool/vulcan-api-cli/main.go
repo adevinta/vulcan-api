@@ -1,19 +1,14 @@
-/*
-Copyright 2021 Adevinta
-*/
-
 package main
 
 import (
 	"fmt"
-	"net/http"
-	"os"
-	"time"
-
 	"github.com/adevinta/vulcan-api/cmd/vulcan-api-cli/client"
 	"github.com/adevinta/vulcan-api/cmd/vulcan-api-cli/tool/cli"
 	goaclient "github.com/goadesign/goa/client"
 	"github.com/spf13/cobra"
+	"net/http"
+	"os"
+	"time"
 )
 
 func main() {

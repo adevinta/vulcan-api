@@ -9,16 +9,17 @@ import (
 	errs "errors"
 
 	errors "github.com/adevinta/errors"
-	"github.com/jinzhu/gorm"
 	"github.com/adevinta/vulcan-api/pkg/api"
 	"github.com/adevinta/vulcan-api/pkg/api/store/cdc"
+	"github.com/jinzhu/gorm"
 )
 
 const (
 	// operations
-	opDeleteTeam      = "DeleteTeam"
-	opDeleteAsset     = "DeleteAsset"
-	opDeleteAllAssets = "DeleteAllAssets"
+	opDeleteTeam       = "DeleteTeam"
+	opDeleteAsset      = "DeleteAsset"
+	opDeleteAllAssets  = "DeleteAllAssets"
+	opFindingOverwrite = "FindingOverwrite"
 )
 
 var (
@@ -28,7 +29,6 @@ var (
 
 func (db vulcanitoStore) pushToOutbox(tx *gorm.DB, op string, data ...interface{}) error {
 	var buildFunc func(*gorm.DB, ...interface{}) (interface{}, error)
-
 	switch op {
 	case opDeleteTeam:
 		buildFunc = db.buildDeleteTeamDTO
@@ -36,6 +36,8 @@ func (db vulcanitoStore) pushToOutbox(tx *gorm.DB, op string, data ...interface{
 		buildFunc = db.buildDeleteAssetDTO
 	case opDeleteAllAssets:
 		buildFunc = db.buildDeleteAllAssetsDTO
+	case opFindingOverwrite:
+		buildFunc = db.buildFindingOverwriteDTO
 	default:
 		return errUnimplementedOp
 	}
@@ -127,6 +129,21 @@ func (db vulcanitoStore) buildDeleteAllAssetsDTO(tx *gorm.DB, data ...interface{
 	team.Groups = nil
 
 	return cdc.OpDeleteAllAssetsDTO{Team: *team}, nil
+}
+
+// buildFindingOverwriteDTO builds a FindingOverwrite action DTO for outbox.
+// Expected input:
+//	- api.FindingOverwrite
+func (db vulcanitoStore) buildFindingOverwriteDTO(tx *gorm.DB, data ...interface{}) (interface{}, error) {
+	if len(data) != 1 {
+		return nil, errInvalidParams
+	}
+	findingOverwrite, ok := data[0].(api.FindingOverwrite)
+	if !ok {
+		return nil, errInvalidParams
+	}
+
+	return cdc.OpFindingOverwriteDTO{FindingOverwrite: findingOverwrite}, nil
 }
 
 func (db vulcanitoStore) insertIntoOutbox(tx *gorm.DB, outbox cdc.Outbox) error {

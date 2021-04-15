@@ -226,6 +226,80 @@ func makeFindFindingEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpo
 	}
 }
 
+type FindingOverwriteRequest struct {
+	FindingID string `json:"finding_id" urlvar:"finding_id"`
+	TeamID    string `json:"team_id" urlvar:"team_id"`
+	Status    string `json:"status"`
+	Notes     string `json:"notes"`
+}
+
+func makeCreateFindingOverwriteEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		r, ok := request.(*FindingOverwriteRequest)
+		if !ok {
+			return nil, errors.Assertion("Type assertion failed")
+		}
+		team, err := s.FindTeam(ctx, r.TeamID)
+		if err != nil {
+			return nil, err
+		}
+		if team.Tag == "" {
+			return nil, errors.Validation("no tag defined for the team")
+		}
+
+		finding, err := s.FindFinding(ctx, r.FindingID)
+		if err != nil {
+			return nil, err
+		}
+
+		user, err := api.UserFromContext(ctx)
+		if err != nil {
+			return nil, errors.Default(err)
+		}
+
+		findingOverwrite := api.FindingOverwrite{
+			UserID:         user.ID,
+			FindingID:      r.FindingID,
+			StatusPrevious: finding.Finding.Status,
+			Status:         r.Status,
+			Notes:          r.Notes,
+			Tag:            team.Tag,
+		}
+
+		if authorizedFindFindingRequest(finding.Finding.Target.Tags, team.Tag) {
+			err := s.CreateFindingOverwrite(ctx, findingOverwrite)
+			if err != nil {
+				return nil, err
+			}
+
+			return Ok{}, nil
+		}
+
+		return Forbidden{}, nil
+	}
+}
+
+func makeListFindingOverwritesEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		r, ok := request.(*FindingsRequest)
+		if !ok {
+			return nil, errors.Assertion("Type assertion failed")
+		}
+
+		findingOverwrites, err := s.ListFindingOverwrites(ctx, r.ID)
+		if err != nil {
+			return nil, err
+		}
+
+		output := []api.FindingOverwriteResponse{}
+		for _, fr := range findingOverwrites {
+			output = append(output, fr.ToResponse())
+		}
+
+		return Ok{output}, nil
+	}
+}
+
 func isValidListFindingsRequest(r *FindingsRequest) bool {
 	return (r.MinDate == "" || isValidDate(r.MinDate)) &&
 		(r.MaxDate == "" || isValidDate(r.MaxDate)) &&

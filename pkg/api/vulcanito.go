@@ -108,6 +108,8 @@ type VulcanitoService interface {
 	ListFindingsTargets(ctx context.Context, params FindingsParams, pagination Pagination) (*FindingsTargetsList, error)
 	ListFindingsByTarget(ctx context.Context, params FindingsParams, pagination Pagination) (*FindingsList, error)
 	FindFinding(ctx context.Context, findingID string) (*Finding, error)
+	CreateFindingOverwrite(ctx context.Context, findingOverwrite FindingOverwrite) error
+	ListFindingOverwrites(ctx context.Context, findingID string) ([]*FindingOverwrite, error)
 	StatsMTTR(ctx context.Context, params StatsParams) (*StatsMTTR, error)
 	StatsOpen(ctx context.Context, params StatsParams) (*StatsOpen, error)
 	StatsFixed(ctx context.Context, params StatsParams) (*StatsFixed, error)

@@ -19,9 +19,10 @@ import (
 
 const (
 	// supported operations
-	opDeleteTeam      = "DeleteTeam"
-	opDeleteAsset     = "DeleteAsset"
-	opDeleteAllAssets = "DeleteAllAssets"
+	opDeleteTeam       = "DeleteTeam"
+	opDeleteAsset      = "DeleteAsset"
+	opDeleteAllAssets  = "DeleteAllAssets"
+	opFindingOverwrite = "FindingOverwrite"
 )
 
 var (
@@ -72,6 +73,8 @@ func (p *VulnDBTxParser) Parse(log []Event) (nParsed uint) {
 			processFunc = p.processDeleteAsset
 		case opDeleteAllAssets:
 			processFunc = p.processDeleteAllAssets
+		case opFindingOverwrite:
+			processFunc = p.processFindingOverwrite
 		default:
 			// If action is not supported
 			// log err and stop processing
@@ -179,6 +182,30 @@ func (p *VulnDBTxParser) processDeleteAllAssets(data []byte) error {
 	}
 
 	err = p.VulnDBClient.DeleteTag(context.Background(), dto.Team.Tag, dto.Team.Tag)
+	if err != nil {
+		if errors.IsKind(err, errors.ErrNotFound) {
+			return nil
+		}
+		return err
+	}
+	return nil
+}
+
+func (p *VulnDBTxParser) processFindingOverwrite(data []byte) error {
+	var dto OpFindingOverwriteDTO
+
+	err := json.Unmarshal(data, &dto)
+	if err != nil {
+		return errInvalidData
+	}
+
+	_, err = p.VulnDBClient.UpdateFinding(
+		context.Background(),
+		dto.FindingOverwrite.FindingID,
+		&api.UpdateFinding{
+			Status: &dto.FindingOverwrite.Status,
+		},
+		dto.FindingOverwrite.Tag)
 	if err != nil {
 		if errors.IsKind(err, errors.ErrNotFound) {
 			return nil

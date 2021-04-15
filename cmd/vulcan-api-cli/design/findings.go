@@ -327,4 +327,51 @@ var _ = Resource("findings", func() {
 		Security("Bearer")
 		Response(OK, FindingMedia)
 	})
+
+	Action("Submit a Finding Overwrite", func() {
+		Description("Overwrite data for a specific finding.")
+		Routing(POST("/:finding_id/overwrites"))
+		Payload(FindingOverwritePayload)
+		Security("Bearer")
+		Response(OK, func() {})
+	})
+
+	Action("List Finding Overwrites", func() {
+		Description("List Finding Overwrites.")
+		Routing(GET("/:finding_id/overwrites"))
+		Security("Bearer")
+		Response(OK, CollectionOf(FindingOverwriteMedia))
+	})
+})
+
+var FindingOverwritePayload = Type("FindingOverwritePayload", func() {
+	Attribute("status", String, "Status", func() { Example("FALSE_POSITIVE") })
+	Attribute("notes", String, "Notes", func() { Example("This is a false positive because...") })
+	Required("status")
+	Required("notes")
+})
+
+// FindingOverwrite
+var FindingOverwriteMedia = MediaType("finding_overwrite", func() {
+	Description("Finding Overwrite")
+	Attributes(func() {
+		Attribute("id", String, "Finding Overwrite ID", func() { Example("b0720503-0a84-43fd-9cf4-5bb6c500226f") })
+		Attribute("user", String, "User who requested the finding overwrite", func() { Example("user@adevinta.com") })
+		Attribute("finding_id", String, "Finding ID", func() { Example("3c7d7003-c53d-4ccc-80e7-f21da241b2d4") })
+		Attribute("status", String, "The status requested for the finding referenced by the finding_id field", func() { Example("FALSE_POSITIVE") })
+		Attribute("status_previous", String, "The previous status for the finding referenced by the finding_id field", func() { Example("OPEN") })
+		Attribute("notes", String, "Complementary information", func() { Example("This finding is a false positive because...") })
+		Attribute("tag", String, "The tag associated to the user/team who requested this overwrite", func() { Example("team:security") })
+		Attribute("created_at", DateTime, "Creation time", func() { Example("2021-03-27T00:26:43.211506Z") })
+	})
+	View("default", func() {
+		Attribute("id")
+		Attribute("user")
+		Attribute("finding_id")
+		Attribute("status")
+		Attribute("status_previous")
+		Attribute("notes")
+		Attribute("tag")
+		Attribute("created_at")
+	})
 })

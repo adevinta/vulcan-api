@@ -93,17 +93,19 @@ const (
 
 	SendDigestReport = "SendDigestReport"
 
-	StatsCoverage        = "StatsCoverage"
-	ListFindings         = "ListFindings"
-	ListFindingsIssues   = "ListFindingsIssues"
-	ListFindingsByIssue  = "ListFindingsByIssue"
-	ListFindingsTargets  = "ListFindingsTargets"
-	ListFindingsByTarget = "ListFindingsByTarget"
-	FindFinding          = "FindFinding"
-	StatsMTTR            = "StatsMTTR"
-	StatsOpen            = "StatsOpen"
-	StatsFixed           = "StatsFixed"
-	GlobalStatsMTTR      = "GlobalStatsMTTR"
+	StatsCoverage          = "StatsCoverage"
+	ListFindings           = "ListFindings"
+	ListFindingsIssues     = "ListFindingsIssues"
+	ListFindingsByIssue    = "ListFindingsByIssue"
+	ListFindingsTargets    = "ListFindingsTargets"
+	ListFindingsByTarget   = "ListFindingsByTarget"
+	FindFinding            = "FindFinding"
+	CreateFindingOverwrite = "CreateFindingOverwrite"
+	ListFindingOverwrites  = "ListFindingOverwrites"
+	StatsMTTR              = "StatsMTTR"
+	StatsOpen              = "StatsOpen"
+	StatsFixed             = "StatsFixed"
+	GlobalStatsMTTR        = "GlobalStatsMTTR"
 )
 
 // Endpoints contains all available endpoints for this api
@@ -197,6 +199,8 @@ func MakeEndpoints(s api.VulcanitoService, logger log.Logger) Endpoints {
 	endpoints[ListFindingsTargets] = makeListFindingsTargetsEndpoint(s, logger)
 	endpoints[ListFindingsByTarget] = makeListFindingsByTargetEndpoint(s, logger)
 	endpoints[FindFinding] = makeFindFindingEndpoint(s, logger)
+	endpoints[CreateFindingOverwrite] = makeCreateFindingOverwriteEndpoint(s, logger)
+	endpoints[ListFindingOverwrites] = makeListFindingOverwritesEndpoint(s, logger)
 	endpoints[StatsMTTR] = makeStatsMTTREndpoint(s, logger)
 	endpoints[StatsOpen] = makeStatsOpenEndpoint(s, logger)
 	endpoints[StatsFixed] = makeStatsFixedEndpoint(s, logger)
