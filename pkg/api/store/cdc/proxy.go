@@ -18,8 +18,6 @@ import (
 const (
 	// default advisory lock ID so we can handle sync across instances.
 	defLockID uint32 = 1869877622
-	// default N changes to query for DB log.
-	defNChanges = 10
 	// CDCLogTag is a tag to use for logging.
 	CDCLogTag = "CDC"
 )
@@ -107,7 +105,7 @@ LOOP:
 		}
 
 		// Get log
-		log, err := b.db.GetLog(defNChanges)
+		log, err := b.db.GetLog()
 		if err != nil {
 			b.logErr(err)
 			b.db.ReleaseLock(lock) // nolint
