@@ -21,7 +21,7 @@ const (
 // perform CDC related operations synchronized
 // across different instances.
 type DB interface {
-	GetLog(nEntries uint) ([]Event, error)
+	GetLog() ([]Event, error)
 	FailedEvent(event Event) error
 	CleanEvent(event Event) error
 	CleanLog(nEntries uint) error
@@ -104,11 +104,11 @@ func NewPQDB(conStr, dbTable string) (*PQDB, error) {
 	}, nil
 }
 
-// GetLog retrieves the oldest nEntries from the outbox table.
-func (p *PQDB) GetLog(nEntries uint) ([]Event, error) {
+// GetLog retrieves the log entries from the outbox table ordered by creation time.
+func (p *PQDB) GetLog() ([]Event, error) {
 	query := fmt.Sprintf(`SELECT id, operation, version, data, retries
-		FROM %s ORDER BY created_at LIMIT $1`, p.dbTable)
-	res, err := p.db.Query(query, nEntries)
+		FROM %s ORDER BY created_at`, p.dbTable)
+	res, err := p.db.Query(query)
 	if err != nil {
 		return []Event{}, err
 	}

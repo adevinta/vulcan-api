@@ -20,10 +20,7 @@ type mockDB struct {
 	logEntries []Event
 }
 
-func (m *mockDB) GetLog(nEntries uint) ([]Event, error) {
-	if int(nEntries) <= len(m.logEntries) {
-		return m.logEntries[:nEntries], nil
-	}
+func (m *mockDB) GetLog() ([]Event, error) {
 	return m.logEntries, nil
 }
 func (m *mockDB) FailedEvent(event Event) error {
@@ -121,6 +118,8 @@ func TestBrokerProxySync(t *testing.T) {
 		brokerProxy := NewBrokerProxy(&mockLogger{},
 			mockDB, mockStore, mockParser)
 
+		wantNParsed := uint(len(mockDB.logEntries))
+
 		// Verify that broker proxy is waiting for signal
 		wait()
 		if mockParser.totalParsed > 0 {
@@ -141,9 +140,9 @@ func TestBrokerProxySync(t *testing.T) {
 		// and starts processing entries
 		_ = brokerProxy.DeleteTeam("teamID")
 		wait()
-		if mockParser.totalParsed != defNChanges {
+		if mockParser.totalParsed != wantNParsed {
 			t.Fatalf("expected %d parsed entries, but got: %d",
-				defNChanges, mockParser.totalParsed)
+				wantNParsed, mockParser.totalParsed)
 		}
 
 	})
