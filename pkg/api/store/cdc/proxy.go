@@ -287,7 +287,9 @@ func (b *BrokerProxy) DeleteAllAssets(teamID string) error {
 	return err
 }
 func (b *BrokerProxy) UpdateAsset(asset api.Asset) (*api.Asset, error) {
-	return b.store.UpdateAsset(asset)
+	a, err := b.store.UpdateAsset(asset)
+	go b.awakeBroker()
+	return a, err
 }
 
 func (b *BrokerProxy) GetAssetType(assetTypeName string) (*api.AssetType, error) {
