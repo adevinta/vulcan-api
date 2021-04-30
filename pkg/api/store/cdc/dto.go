@@ -12,6 +12,12 @@ type OpDeleteTeamDTO struct {
 	Team api.Team `json:"team"`
 }
 
+// OpCreateAssetDTO represents the data to store
+// as part of CDC log for a CreateAsset operation.
+type OpCreateAssetDTO struct {
+	Asset api.Asset `json:"asset"`
+}
+
 // OpDeleteAssetDTO represents the data to store
 // as part of CDC log for a DeleteAsset operation.
 type OpDeleteAssetDTO struct {

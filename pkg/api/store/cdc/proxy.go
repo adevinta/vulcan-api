@@ -266,10 +266,14 @@ func (b *BrokerProxy) FindAsset(teamID, assetID string) (*api.Asset, error) {
 	return b.store.FindAsset(teamID, assetID)
 }
 func (b *BrokerProxy) CreateAsset(asset api.Asset, groups []api.Group) (*api.Asset, error) {
-	return b.store.CreateAsset(asset, groups)
+	a, err := b.store.CreateAsset(asset, groups)
+	go b.awakeBroker()
+	return a, err
 }
 func (b *BrokerProxy) CreateAssets(assets []api.Asset, groups []api.Group) ([]api.Asset, error) {
-	return b.store.CreateAssets(assets, groups)
+	aa, err := b.store.CreateAssets(assets, groups)
+	go b.awakeBroker()
+	return aa, err
 }
 func (b *BrokerProxy) DeleteAsset(asset api.Asset) error {
 	err := b.store.DeleteAsset(asset)

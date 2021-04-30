@@ -184,6 +184,11 @@ func (db vulcanitoStore) createAsset(tx *gorm.DB, asset api.Asset) (*api.Asset, 
 		return nil, db.logError(errors.Database(res.Error))
 	}
 
+	err := db.pushToOutbox(tx, opCreateAsset, asset)
+	if err != nil {
+		return nil, err
+	}
+
 	return &asset, nil
 }
 
@@ -294,6 +299,7 @@ func (db vulcanitoStore) DeleteAsset(asset api.Asset) error {
 	}
 
 	if result.RowsAffected == 0 {
+		tx.Rollback()
 		return db.logError(errors.Delete("Asset was not deleted"))
 	}
 

@@ -17,6 +17,7 @@ import (
 const (
 	// operations
 	opDeleteTeam       = "DeleteTeam"
+	opCreateAsset      = "CreateAsset"
 	opDeleteAsset      = "DeleteAsset"
 	opDeleteAllAssets  = "DeleteAllAssets"
 	opFindingOverwrite = "FindingOverwrite"
@@ -32,6 +33,8 @@ func (db vulcanitoStore) pushToOutbox(tx *gorm.DB, op string, data ...interface{
 	switch op {
 	case opDeleteTeam:
 		buildFunc = db.buildDeleteTeamDTO
+	case opCreateAsset:
+		buildFunc = db.buildCreateAssetDTO
 	case opDeleteAsset:
 		buildFunc = db.buildDeleteAssetDTO
 	case opDeleteAllAssets:
@@ -77,6 +80,24 @@ func (db vulcanitoStore) buildDeleteTeamDTO(tx *gorm.DB, data ...interface{}) (i
 	team.Groups = nil
 
 	return cdc.OpDeleteTeamDTO{Team: team}, nil
+}
+
+// buildCreateAssetDTO builds a CreateAsset action DTO for outbox.
+// Expected input:
+//	- api.Asset
+func (db vulcanitoStore) buildCreateAssetDTO(tx *gorm.DB, data ...interface{}) (interface{}, error) {
+	if len(data) != 1 {
+		return nil, errInvalidParams
+	}
+	asset, ok := data[0].(api.Asset)
+	if !ok || asset.Team == nil {
+		return nil, errInvalidParams
+	}
+
+	// Don't store unnecessary data
+	asset.AssetGroups = nil
+
+	return cdc.OpCreateAssetDTO{Asset: asset}, nil
 }
 
 // buildDeleteAssetDTO builds a DeleteAsset action DTO for outbox.

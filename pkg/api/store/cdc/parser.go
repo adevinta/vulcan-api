@@ -20,6 +20,7 @@ import (
 const (
 	// supported operations
 	opDeleteTeam       = "DeleteTeam"
+	opCreateAsset      = "CreateAsset"
 	opDeleteAsset      = "DeleteAsset"
 	opDeleteAllAssets  = "DeleteAllAssets"
 	opFindingOverwrite = "FindingOverwrite"
@@ -69,6 +70,8 @@ func (p *VulnDBTxParser) Parse(log []Event) (nParsed uint) {
 		switch event.Action() {
 		case opDeleteTeam:
 			processFunc = p.processDeleteTeam
+		case opCreateAsset:
+			processFunc = p.processCreateAsset
 		case opDeleteAsset:
 			processFunc = p.processDeleteAsset
 		case opDeleteAllAssets:
@@ -113,6 +116,24 @@ func (p *VulnDBTxParser) processDeleteTeam(data []byte) error {
 		return err
 	}
 	return nil
+}
+
+func (p *VulnDBTxParser) processCreateAsset(data []byte) error {
+	var dto OpCreateAssetDTO
+	ctx := context.Background()
+
+	err := json.Unmarshal(data, &dto)
+	if err != nil {
+		return errInvalidData
+	}
+
+	payload := api.CreateTarget{
+		Identifier: dto.Asset.Identifier,
+		Tags:       []string{dto.Asset.Team.Tag},
+	}
+
+	_, err = p.VulnDBClient.CreateTarget(ctx, payload)
+	return err
 }
 
 func (p *VulnDBTxParser) processDeleteAsset(data []byte) error {
