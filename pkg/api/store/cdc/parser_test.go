@@ -27,6 +27,17 @@ var (
 		},
 	}
 
+	mockOpCreateAssetData []byte
+	mockOpCreateAssetDTO  = OpCreateAssetDTO{
+		Asset: api.Asset{
+			ID:         "a0",
+			Identifier: "somehost.com",
+			Team: &api.Team{
+				Tag: "mockCreateAssetTag",
+			},
+		},
+	}
+
 	mockOpDeleteAssetData []byte
 	mockOpDeleteAssetDTO  = OpDeleteAssetDTO{
 		Asset: api.Asset{
@@ -44,6 +55,15 @@ var (
 		Team: api.Team{
 			ID:  "t2",
 			Tag: "mockDeleteAllAssetsTag",
+		},
+	}
+
+	mockOpFindingOverwriteData []byte
+	mockOpFindingOverwriteDTO  = OpFindingOverwriteDTO{
+		FindingOverwrite: api.FindingOverwrite{
+			FindingID: "f1",
+			Status:    "newstatus",
+			Tag:       "mockFindingOverwriteTag",
 		},
 	}
 )
@@ -71,18 +91,26 @@ func (m *mockLoggr) verifyErr(targetErr error) bool {
 type mockVulnDBClient struct {
 	vulnerabilitydb.Client
 	targetsF         func(ctx context.Context, params api.TargetsParams, pagination api.Pagination) (*api.TargetsList, error)
+	createTargetF    func(ctx context.Context, payload api.CreateTarget) (*api.Target, error)
 	deleteTagF       func(ctx context.Context, authTag, tag string) error
 	deleteTargetTagF func(ctx context.Context, authTag, targetID, tag string) error
+	updateFindingF   func(ctx context.Context, findingID string, payload *api.UpdateFinding, tag string) (*api.Finding, error)
 }
 
 func (m *mockVulnDBClient) Targets(ctx context.Context, params api.TargetsParams, pagination api.Pagination) (*api.TargetsList, error) {
 	return m.targetsF(ctx, params, pagination)
+}
+func (m *mockVulnDBClient) CreateTarget(ctx context.Context, payload api.CreateTarget) (*api.Target, error) {
+	return m.createTargetF(ctx, payload)
 }
 func (m *mockVulnDBClient) DeleteTag(ctx context.Context, authTag, tag string) error {
 	return m.deleteTagF(ctx, authTag, tag)
 }
 func (m *mockVulnDBClient) DeleteTargetTag(ctx context.Context, authTag, targetID, tag string) error {
 	return m.deleteTargetTagF(ctx, authTag, targetID, tag)
+}
+func (m *mockVulnDBClient) UpdateFinding(ctx context.Context, findingID string, payload *api.UpdateFinding, tag string) (*api.Finding, error) {
+	return m.updateFindingF(ctx, findingID, payload, tag)
 }
 
 func init() {
@@ -91,11 +119,19 @@ func init() {
 	if err != nil {
 		panic("Err setting up test")
 	}
+	mockOpCreateAssetData, err = json.Marshal(mockOpCreateAssetDTO)
+	if err != nil {
+		panic("Err setting up test")
+	}
 	mockOpDeleteAssetData, err = json.Marshal(mockOpDeleteAssetDTO)
 	if err != nil {
 		panic("Err setting up test")
 	}
 	mockOpDeleteAllAssetsData, err = json.Marshal(mockOpDeleteAllAssetsDTO)
+	if err != nil {
+		panic("Err setting up test")
+	}
+	mockOpFindingOverwriteData, err = json.Marshal(mockOpFindingOverwriteDTO)
 	if err != nil {
 		panic("Err setting up test")
 	}
@@ -118,6 +154,10 @@ func TestParse(t *testing.T) {
 					DTO:       mockOpDeleteTeamData,
 				},
 				Outbox{
+					Operation: opCreateAsset,
+					DTO:       mockOpCreateAssetData,
+				},
+				Outbox{
 					Operation: opDeleteAsset,
 					DTO:       mockOpDeleteAssetData,
 				},
@@ -125,10 +165,22 @@ func TestParse(t *testing.T) {
 					Operation: opDeleteAllAssets,
 					DTO:       mockOpDeleteAllAssetsData,
 				},
+				Outbox{
+					Operation: opFindingOverwrite,
+					DTO:       mockOpFindingOverwriteData,
+				},
 			},
 			vulnDBClient: &mockVulnDBClient{
 				targetsF: func(ctx context.Context, params api.TargetsParams, pagination api.Pagination) (*api.TargetsList, error) {
 					return &api.TargetsList{Targets: []vulndb.Target{{}}}, nil
+				},
+				createTargetF: func(ctx context.Context, payload api.CreateTarget) (*api.Target, error) {
+					var t = &api.Target{Target: vulndb.Target{
+						ID:         "1",
+						Identifier: payload.Identifier,
+						Tags:       payload.Tags,
+					}}
+					return t, nil
 				},
 				deleteTagF: func(ctx context.Context, authTag, tag string) error {
 					return nil
@@ -136,8 +188,12 @@ func TestParse(t *testing.T) {
 				deleteTargetTagF: func(ctx context.Context, authTag, targetID, tag string) error {
 					return nil
 				},
+				updateFindingF: func(ctx context.Context, findingID string, payload *api.UpdateFinding, tag string) (*api.Finding, error) {
+					var f = &api.Finding{}
+					return f, nil
+				},
 			},
-			wantNParsed: 3,
+			wantNParsed: 5,
 		},
 		{
 			name: "Should return err unsupported action",

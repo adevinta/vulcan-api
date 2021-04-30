@@ -120,7 +120,6 @@ func (p *VulnDBTxParser) processDeleteTeam(data []byte) error {
 
 func (p *VulnDBTxParser) processCreateAsset(data []byte) error {
 	var dto OpCreateAssetDTO
-	ctx := context.Background()
 
 	err := json.Unmarshal(data, &dto)
 	if err != nil {
@@ -132,7 +131,7 @@ func (p *VulnDBTxParser) processCreateAsset(data []byte) error {
 		Tags:       []string{dto.Asset.Team.Tag},
 	}
 
-	_, err = p.VulnDBClient.CreateTarget(ctx, payload)
+	_, err = p.VulnDBClient.CreateTarget(context.Background(), payload)
 	return err
 }
 
