@@ -210,7 +210,7 @@ func (p *VulnDBTxParser) processUpdateAsset(data []byte) error {
 
 	// Process asset deletion
 	delDTO := OpDeleteAssetDTO{
-		Asset:     dto.Asset,
+		Asset:     dto.OldAsset,
 		DupAssets: dto.DupAssets,
 	}
 	delJSON, err := json.Marshal(delDTO)
@@ -224,7 +224,7 @@ func (p *VulnDBTxParser) processUpdateAsset(data []byte) error {
 
 	// Process asset creation
 	createDTO := OpCreateAssetDTO{
-		Asset: dto.Asset,
+		Asset: dto.NewAsset,
 	}
 	createJSON, err := json.Marshal(createDTO)
 	if err != nil {
