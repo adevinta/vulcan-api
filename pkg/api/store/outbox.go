@@ -19,6 +19,7 @@ const (
 	opDeleteTeam       = "DeleteTeam"
 	opCreateAsset      = "CreateAsset"
 	opDeleteAsset      = "DeleteAsset"
+	opUpdateAsset      = "UpdateAsset"
 	opDeleteAllAssets  = "DeleteAllAssets"
 	opFindingOverwrite = "FindingOverwrite"
 )
@@ -37,6 +38,8 @@ func (db vulcanitoStore) pushToOutbox(tx *gorm.DB, op string, data ...interface{
 		buildFunc = db.buildCreateAssetDTO
 	case opDeleteAsset:
 		buildFunc = db.buildDeleteAssetDTO
+	case opUpdateAsset:
+		buildFunc = db.buildUpdateAssetDTO
 	case opDeleteAllAssets:
 		buildFunc = db.buildDeleteAllAssetsDTO
 	case opFindingOverwrite:
@@ -126,6 +129,29 @@ func (db vulcanitoStore) buildDeleteAssetDTO(tx *gorm.DB, data ...interface{}) (
 	asset.AssetGroups = nil
 
 	return cdc.OpDeleteAssetDTO{Asset: asset, DupAssets: dupAssets}, nil
+}
+
+// buildUpdateAssetDTO builds a UpdateAsset action DTO for outbox.
+// This action should only be triggered when the asset update operation
+// changes the asset's identifier.
+// Expected input:
+//	- api.Asset
+func (db vulcanitoStore) buildUpdateAssetDTO(tx *gorm.DB, data ...interface{}) (interface{}, error) {
+	// The data that we need to store for an asset identifier update is the
+	// same as for an asset delete operation, because we have to know if the
+	// identifier has duplicates or not in order to remove the association
+	// from the Vulnerability DB or not.
+	dto, err := db.buildDeleteAssetDTO(tx, data)
+	if err != nil {
+		return nil, err
+	}
+
+	delAssetDTO, ok := dto.(cdc.OpDeleteAssetDTO)
+	if !ok {
+		return nil, errs.New("error building intermediate DeleteAssetDTO for outbox UpdateAsset")
+	}
+
+	return cdc.OpUpdateAssetDTO{Asset: delAssetDTO.Asset, DupAssets: delAssetDTO.DupAssets}, nil
 }
 
 // buildDeleteAllAssetsDTO builds a DeleteAllAssets action DTO for outbox.

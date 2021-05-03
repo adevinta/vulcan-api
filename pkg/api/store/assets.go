@@ -284,9 +284,9 @@ func (db vulcanitoStore) UpdateAsset(asset api.Asset) (*api.Asset, error) {
 
 	// If asset identifier is changed, we have to propagate the action
 	// to the vulnerability DB so ownership from previous identifier is
-	// removed for this team.
+	// removed for this team if necessary, and also the new one is created.
 	if findAsset.Identifier != asset.Identifier {
-		err := db.pushToOutbox(tx, opDeleteAsset, findAsset)
+		err := db.pushToOutbox(tx, opUpdateAsset, findAsset)
 		if err != nil {
 			return nil, err
 		}
