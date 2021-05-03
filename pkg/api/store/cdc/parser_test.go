@@ -18,6 +18,10 @@ import (
 	vulndb "github.com/adevinta/vulnerability-db-api/pkg/model"
 )
 
+const (
+	errTestSetup = "err setting up test"
+)
+
 var (
 	mockOpDeleteTeamData []byte
 	mockOpDeleteTeamDTO  = OpDeleteTeamDTO{
@@ -45,6 +49,25 @@ var (
 			Identifier: "example.com",
 			Team: &api.Team{
 				Tag: "mockDeleteAssetTag",
+			},
+		},
+		DupAssets: 0,
+	}
+
+	mockOpUpdateAssetData []byte
+	mockOpUpdateAssetDTO  = OpUpdateAssetDTO{
+		OldAsset: api.Asset{
+			ID:         "aO",
+			Identifier: "exampleNew.com",
+			Team: &api.Team{
+				Tag: "mockUpdateAssetTag",
+			},
+		},
+		NewAsset: api.Asset{
+			ID:         "aN",
+			Identifier: "exampleOld.com",
+			Team: &api.Team{
+				Tag: "mockUpdateAssetTag",
 			},
 		},
 		DupAssets: 0,
@@ -117,23 +140,27 @@ func init() {
 	var err error
 	mockOpDeleteTeamData, err = json.Marshal(mockOpDeleteTeamDTO)
 	if err != nil {
-		panic("Err setting up test")
+		panic(errTestSetup)
 	}
 	mockOpCreateAssetData, err = json.Marshal(mockOpCreateAssetDTO)
 	if err != nil {
-		panic("Err setting up test")
+		panic(errTestSetup)
 	}
 	mockOpDeleteAssetData, err = json.Marshal(mockOpDeleteAssetDTO)
 	if err != nil {
-		panic("Err setting up test")
+		panic(errTestSetup)
+	}
+	mockOpUpdateAssetData, err = json.Marshal(mockOpUpdateAssetDTO)
+	if err != nil {
+		panic(errTestSetup)
 	}
 	mockOpDeleteAllAssetsData, err = json.Marshal(mockOpDeleteAllAssetsDTO)
 	if err != nil {
-		panic("Err setting up test")
+		panic(errTestSetup)
 	}
 	mockOpFindingOverwriteData, err = json.Marshal(mockOpFindingOverwriteDTO)
 	if err != nil {
-		panic("Err setting up test")
+		panic(errTestSetup)
 	}
 }
 
@@ -160,6 +187,10 @@ func TestParse(t *testing.T) {
 				Outbox{
 					Operation: opDeleteAsset,
 					DTO:       mockOpDeleteAssetData,
+				},
+				Outbox{
+					Operation: opUpdateAsset,
+					DTO:       mockOpUpdateAssetData,
 				},
 				Outbox{
 					Operation: opDeleteAllAssets,
@@ -193,7 +224,7 @@ func TestParse(t *testing.T) {
 					return f, nil
 				},
 			},
-			wantNParsed: 5,
+			wantNParsed: 6,
 		},
 		{
 			name: "Should return err unsupported action",
