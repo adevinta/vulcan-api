@@ -175,8 +175,8 @@ func (m *metricsMiddleware) Measure(next kitendpoint.Endpoint) kitendpoint.Endpo
 		user, _ := api.UserFromContext(ctx)
 		team := ""
 		httpPath := ctx.Value(kithttp.ContextKeyRequestPath).(string)
-		if strings.HasPrefix(httpPath, "/v1/teams/") {
-			team = strings.Split(httpPath, "/")[3]
+		if strings.HasPrefix(httpPath, "/api/v1/teams/") {
+			team = strings.Split(httpPath, "/")[4]
 		}
 
 		// Build tags
