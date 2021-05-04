@@ -17,7 +17,9 @@ import (
 const (
 	// operations
 	opDeleteTeam       = "DeleteTeam"
+	opCreateAsset      = "CreateAsset"
 	opDeleteAsset      = "DeleteAsset"
+	opUpdateAsset      = "UpdateAsset"
 	opDeleteAllAssets  = "DeleteAllAssets"
 	opFindingOverwrite = "FindingOverwrite"
 )
@@ -32,8 +34,12 @@ func (db vulcanitoStore) pushToOutbox(tx *gorm.DB, op string, data ...interface{
 	switch op {
 	case opDeleteTeam:
 		buildFunc = db.buildDeleteTeamDTO
+	case opCreateAsset:
+		buildFunc = db.buildCreateAssetDTO
 	case opDeleteAsset:
 		buildFunc = db.buildDeleteAssetDTO
+	case opUpdateAsset:
+		buildFunc = db.buildUpdateAssetDTO
 	case opDeleteAllAssets:
 		buildFunc = db.buildDeleteAllAssetsDTO
 	case opFindingOverwrite:
@@ -79,6 +85,24 @@ func (db vulcanitoStore) buildDeleteTeamDTO(tx *gorm.DB, data ...interface{}) (i
 	return cdc.OpDeleteTeamDTO{Team: team}, nil
 }
 
+// buildCreateAssetDTO builds a CreateAsset action DTO for outbox.
+// Expected input:
+//	- api.Asset
+func (db vulcanitoStore) buildCreateAssetDTO(tx *gorm.DB, data ...interface{}) (interface{}, error) {
+	if len(data) != 1 {
+		return nil, errInvalidParams
+	}
+	asset, ok := data[0].(api.Asset)
+	if !ok || asset.Team == nil {
+		return nil, errInvalidParams
+	}
+
+	// Don't store unnecessary data
+	asset.AssetGroups = nil
+
+	return cdc.OpCreateAssetDTO{Asset: asset}, nil
+}
+
 // buildDeleteAssetDTO builds a DeleteAsset action DTO for outbox.
 // Expected input:
 //	- api.Asset
@@ -105,6 +129,48 @@ func (db vulcanitoStore) buildDeleteAssetDTO(tx *gorm.DB, data ...interface{}) (
 	asset.AssetGroups = nil
 
 	return cdc.OpDeleteAssetDTO{Asset: asset, DupAssets: dupAssets}, nil
+}
+
+// buildUpdateAssetDTO builds a UpdateAsset action DTO for outbox.
+// This action should only be triggered when the asset update operation
+// changes the asset's identifier.
+// Expected input:
+//	- api.Asset (Old Asset)
+//  - api.Asset (New Asset)
+func (db vulcanitoStore) buildUpdateAssetDTO(tx *gorm.DB, data ...interface{}) (interface{}, error) {
+	if len(data) != 2 {
+		return nil, errInvalidParams
+	}
+	oldAsset, ok := data[0].(api.Asset)
+	if !ok || oldAsset.Team == nil {
+		return nil, errInvalidParams
+	}
+	newAsset, ok := data[1].(api.Asset)
+	if !ok {
+		return nil, errInvalidParams
+	}
+
+	// If team data is not filled for new
+	// asset, copy it from old asset
+	if newAsset.Team == nil {
+		newAsset.Team = oldAsset.Team
+	}
+
+	// The data that we need to store for old asset is the same as for an
+	// asset delete operation, because we have to know if the identifier
+	// has duplicates or not in order to remove the association from the
+	// Vulnerability DB or not.
+	dto, err := db.buildDeleteAssetDTO(tx, oldAsset)
+	if err != nil {
+		return nil, err
+	}
+
+	delAssetDTO, ok := dto.(cdc.OpDeleteAssetDTO)
+	if !ok {
+		return nil, errs.New("error building intermediate DeleteAssetDTO for outbox UpdateAsset")
+	}
+
+	return cdc.OpUpdateAssetDTO{OldAsset: delAssetDTO.Asset, NewAsset: newAsset, DupAssets: delAssetDTO.DupAssets}, nil
 }
 
 // buildDeleteAllAssetsDTO builds a DeleteAllAssets action DTO for outbox.

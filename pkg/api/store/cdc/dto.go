@@ -12,6 +12,12 @@ type OpDeleteTeamDTO struct {
 	Team api.Team `json:"team"`
 }
 
+// OpCreateAssetDTO represents the data to store
+// as part of CDC log for a CreateAsset operation.
+type OpCreateAssetDTO struct {
+	Asset api.Asset `json:"asset"`
+}
+
 // OpDeleteAssetDTO represents the data to store
 // as part of CDC log for a DeleteAsset operation.
 type OpDeleteAssetDTO struct {
@@ -19,6 +25,17 @@ type OpDeleteAssetDTO struct {
 	// DupAssets is the number of assets
 	// which have the same identifier in
 	// the same team as Asset
+	DupAssets int `json:"duplicates"`
+}
+
+// OpUpdateAssetDTO represents the data to store
+// as part of CDC log for a UpdateAsset operation.
+type OpUpdateAssetDTO struct {
+	OldAsset api.Asset `json:"old_asset"`
+	NewAsset api.Asset `json:"new_asset"`
+	// DupAssets is the number of assets
+	// which have the same identifier as
+	// OldAsset for the same team.
 	DupAssets int `json:"duplicates"`
 }
 

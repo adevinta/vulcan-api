@@ -418,7 +418,7 @@ func TestStoreDeleteTeam(t *testing.T) {
 						CreatedAt:   &expCreatedAt,
 						UpdatedAt:   &expUpdatedAt,
 					},
-				})
+				}, nil)
 			}
 		})
 	}

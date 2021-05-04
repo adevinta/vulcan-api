@@ -20,7 +20,9 @@ import (
 const (
 	// supported operations
 	opDeleteTeam       = "DeleteTeam"
+	opCreateAsset      = "CreateAsset"
 	opDeleteAsset      = "DeleteAsset"
+	opUpdateAsset      = "UpdateAsset"
 	opDeleteAllAssets  = "DeleteAllAssets"
 	opFindingOverwrite = "FindingOverwrite"
 )
@@ -69,8 +71,12 @@ func (p *VulnDBTxParser) Parse(log []Event) (nParsed uint) {
 		switch event.Action() {
 		case opDeleteTeam:
 			processFunc = p.processDeleteTeam
+		case opCreateAsset:
+			processFunc = p.processCreateAsset
 		case opDeleteAsset:
 			processFunc = p.processDeleteAsset
+		case opUpdateAsset:
+			processFunc = p.processUpdateAsset
 		case opDeleteAllAssets:
 			processFunc = p.processDeleteAllAssets
 		case opFindingOverwrite:
@@ -113,6 +119,23 @@ func (p *VulnDBTxParser) processDeleteTeam(data []byte) error {
 		return err
 	}
 	return nil
+}
+
+func (p *VulnDBTxParser) processCreateAsset(data []byte) error {
+	var dto OpCreateAssetDTO
+
+	err := json.Unmarshal(data, &dto)
+	if err != nil {
+		return errInvalidData
+	}
+
+	payload := api.CreateTarget{
+		Identifier: dto.Asset.Identifier,
+		Tags:       []string{dto.Asset.Team.Tag},
+	}
+
+	_, err = p.VulnDBClient.CreateTarget(context.Background(), payload)
+	return err
 }
 
 func (p *VulnDBTxParser) processDeleteAsset(data []byte) error {
@@ -171,6 +194,43 @@ func (p *VulnDBTxParser) processDeleteAsset(data []byte) error {
 		return err
 	}
 	return nil
+}
+
+func (p *VulnDBTxParser) processUpdateAsset(data []byte) error {
+	// An asset update where identifier has changed can imply 2 operations in VulnDB:
+	// - A delete of the asset association wih the team if team has no duplicates
+	//   for the same identifier.
+	// - A creation of the target with the new identifier.
+
+	var dto OpUpdateAssetDTO
+	err := json.Unmarshal(data, &dto)
+	if err != nil {
+		return errInvalidData
+	}
+
+	// Process asset deletion
+	delDTO := OpDeleteAssetDTO{
+		Asset:     dto.OldAsset,
+		DupAssets: dto.DupAssets,
+	}
+	delJSON, err := json.Marshal(delDTO)
+	if err != nil {
+		return errInvalidData
+	}
+	err = p.processDeleteAsset(delJSON)
+	if err != nil {
+		return err
+	}
+
+	// Process asset creation
+	createDTO := OpCreateAssetDTO{
+		Asset: dto.NewAsset,
+	}
+	createJSON, err := json.Marshal(createDTO)
+	if err != nil {
+		return errInvalidData
+	}
+	return p.processCreateAsset(createJSON)
 }
 
 func (p *VulnDBTxParser) processDeleteAllAssets(data []byte) error {

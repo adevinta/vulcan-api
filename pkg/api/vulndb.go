@@ -58,6 +58,13 @@ type UpdateFinding struct {
 	Status *string `json:"status"`
 }
 
+// CreateTarget specifies the payload for the vulnerability DB
+// create target endpoint.
+type CreateTarget struct {
+	Identifier string   `json:"identifier"`
+	Tags       []string `json:"tags"`
+}
+
 // TargetsParams represents the group of parameters
 // that can be used to customize the call to retrieve
 // the list of targets.
@@ -65,6 +72,12 @@ type TargetsParams struct {
 	Tag             string
 	Identifier      string
 	IdentifierMatch bool
+}
+
+// Target represents the response data returned from the vulnerability DB
+// for the create target request.
+type Target struct {
+	Target vulndb.Target `json:"target"`
 }
 
 // TargetsList represents the response data returned

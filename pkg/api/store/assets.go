@@ -184,6 +184,11 @@ func (db vulcanitoStore) createAsset(tx *gorm.DB, asset api.Asset) (*api.Asset, 
 		return nil, db.logError(errors.Database(res.Error))
 	}
 
+	err := db.pushToOutbox(tx, opCreateAsset, asset)
+	if err != nil {
+		return nil, err
+	}
+
 	return &asset, nil
 }
 
@@ -255,16 +260,44 @@ func (db vulcanitoStore) countTeamAssetsByIdentifier(teamID, identifier string) 
 
 func (db vulcanitoStore) UpdateAsset(asset api.Asset) (*api.Asset, error) {
 	findAsset := api.Asset{ID: asset.ID}
-	if db.Conn.Where("team_id = ? and id = ?", asset.TeamID, asset.ID).First(&findAsset).RecordNotFound() {
+	if db.Conn.
+		Preload("Team").
+		Where("team_id = ? and id = ?", asset.TeamID, asset.ID).
+		First(&findAsset).
+		RecordNotFound() {
 		return nil, db.logError(errors.Forbidden("asset does not belong to team"))
 	}
-	result := db.Conn.Model(&asset).Where("team_id = ?", asset.TeamID).Update(asset)
-	if result.RowsAffected == 0 {
-		return nil, db.logError(errors.Update("Asset was not updated"))
+
+	tx := db.Conn.Begin()
+	if tx.Error != nil {
+		return nil, db.logError(errors.Database(tx.Error))
 	}
+
+	result := tx.Model(&asset).Where("team_id = ?", asset.TeamID).Update(asset)
 	if result.Error != nil {
+		tx.Rollback()
 		return nil, db.logError(errors.Update(result.Error))
 	}
+	if result.RowsAffected == 0 {
+		tx.Rollback()
+		return nil, db.logError(errors.Update("Asset was not updated"))
+	}
+
+	// If asset identifier is changed, we have to propagate the action
+	// to the vulnerability DB so ownership from previous identifier is
+	// removed for this team if necessary, and also the new one is created.
+	if findAsset.Identifier != asset.Identifier {
+		err := db.pushToOutbox(tx, opUpdateAsset, findAsset, asset)
+		if err != nil {
+			tx.Rollback()
+			return nil, err
+		}
+	}
+
+	if tx.Commit().Error != nil {
+		return nil, db.logError(errors.Database(tx.Error))
+	}
+
 	return &asset, nil
 }
 
@@ -294,6 +327,7 @@ func (db vulcanitoStore) DeleteAsset(asset api.Asset) error {
 	}
 
 	if result.RowsAffected == 0 {
+		tx.Rollback()
 		return db.logError(errors.Delete("Asset was not deleted"))
 	}
 

@@ -6,15 +6,15 @@ package store
 
 import (
 	"encoding/json"
-	"reflect"
 	"testing"
 
 	"github.com/adevinta/vulcan-api/pkg/api"
 	"github.com/adevinta/vulcan-api/pkg/api/store/cdc"
+	"github.com/google/go-cmp/cmp"
 )
 
 // verifyOutbox is a testing helper function to verify outbox data.
-func verifyOutbox(t *testing.T, store api.VulcanitoStore, expOp string, expDTO interface{}) {
+func verifyOutbox(t *testing.T, store api.VulcanitoStore, expOp string, expDTO interface{}, ignoreFields map[string][]string) {
 	t.Helper()
 
 	var outbox cdc.Outbox
@@ -37,14 +37,26 @@ func verifyOutbox(t *testing.T, store api.VulcanitoStore, expOp string, expDTO i
 	if err != nil {
 		t.Fatalf("error verifying outbox, error converting expDTO: %v", err)
 	}
+	filterFields(expMap, ignoreFields)
 
 	gotMap, err := bSliceToMapIface(outbox.DTO)
 	if err != nil {
 		t.Fatalf("error verifying outbox, error converting gotDTO: %v", err)
 	}
+	filterFields(gotMap, ignoreFields)
 
-	if !reflect.DeepEqual(expMap, gotMap) {
-		t.Fatalf("error verifying outbox, DTO's do not match:\n%v\n%v", expMap, gotMap)
+	diff := cmp.Diff(expMap, gotMap)
+	if diff != "" {
+		t.Fatalf("error verifying outbox, DTO's do not match.\nDiff:\n%v", diff)
+	}
+}
+
+func filterFields(m map[string]interface{}, ignoreFields map[string][]string) {
+	for objName, objFields := range ignoreFields {
+		obj := m[objName].(map[string]interface{})
+		for _, f := range objFields {
+			delete(obj, f)
+		}
 	}
 }
 

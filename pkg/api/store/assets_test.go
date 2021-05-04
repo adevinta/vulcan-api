@@ -25,6 +25,11 @@ var (
 	ignoreFieldsGroup   = cmpopts.IgnoreFields(api.Group{}, []string{"ID", "CreatedAt", "UpdatedAt", "Team", "AssetGroup"}...)
 )
 
+type expOutbox struct {
+	action string
+	dto    interface{}
+}
+
 func TestStoreListAssets(t *testing.T) {
 	testStoreLocal, err := testutil.PrepareDatabaseLocal("../../../testdata/fixtures", NewDB)
 	if err != nil {
@@ -236,12 +241,17 @@ func TestStoreCreateAsset(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	opts := `{"checktype_options":[{"name":"vulcan-exposed-memcheck","options":{"https":"true","port":"11211"}},{"name":"vulcan-nessus","options":{"enabled":"false"}}]}`
+	expTeamCreatedAt, _ := time.Parse("2006-01-02 15:04:05", "2017-01-01 12:30:12")
+	expTeamUpdatedAt, _ := time.Parse("2006-01-02 15:04:05", "2017-01-01 12:30:12")
+
 	tests := []struct {
-		name    string
-		asset   api.Asset
-		groups  []api.Group
-		want    *api.Asset
-		wantErr error
+		name      string
+		asset     api.Asset
+		groups    []api.Group
+		want      *api.Asset
+		wantErr   error
+		expOutbox expOutbox
 	}{
 		{
 			name: "HappyPath",
@@ -251,7 +261,7 @@ func TestStoreCreateAsset(t *testing.T) {
 				AssetTypeID:       hostnameType.ID,
 				EnvironmentalCVSS: common.String("c.v.s.s."),
 				Scannable:         common.Bool(true),
-				Options:           common.String(`{"checktype_options":[{"name":"vulcan-exposed-memcheck","options":{"https":"true","port":"11211"}},{"name":"vulcan-nessus","options":{"enabled":"false"}}]}`),
+				Options:           common.String(opts),
 				ROLFP:             &api.ROLFP{IsEmpty: true},
 				Alias:             "Alias1",
 			},
@@ -266,11 +276,38 @@ func TestStoreCreateAsset(t *testing.T) {
 				AssetTypeID:       hostnameType.ID,
 				EnvironmentalCVSS: common.String("c.v.s.s."),
 				Scannable:         common.Bool(true),
-				Options:           common.String(`{"checktype_options":[{"name":"vulcan-exposed-memcheck","options":{"https":"true","port":"11211"}},{"name":"vulcan-nessus","options":{"enabled":"false"}}]}`),
+				Options:           common.String(opts),
 				ROLFP:             &api.ROLFP{IsEmpty: true},
 				Alias:             "Alias1",
 			},
 			wantErr: nil,
+			expOutbox: expOutbox{
+				action: opCreateAsset,
+				dto: cdc.OpCreateAssetDTO{
+					Asset: api.Asset{
+						TeamID: "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
+						Team: &api.Team{
+							ID:          "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
+							Name:        "Foo Team",
+							Description: "Foo foo...",
+							Tag:         "team:foo-team",
+							CreatedAt:   &expTeamCreatedAt,
+							UpdatedAt:   &expTeamUpdatedAt,
+						},
+						Alias:      "Alias1",
+						Identifier: "vulcan.example.com",
+						AssetType: &api.AssetType{
+							ID:   hostnameType.ID,
+							Name: hostnameType.Name,
+						},
+						AssetTypeID:       hostnameType.ID,
+						EnvironmentalCVSS: common.String("c.v.s.s."),
+						ROLFP:             &api.ROLFP{IsEmpty: true},
+						Scannable:         common.Bool(true),
+						Options:           common.String(opts),
+					},
+				},
+			},
 		},
 		{
 			name: "NonExistentTeam",
@@ -300,6 +337,146 @@ func TestStoreCreateAsset(t *testing.T) {
 			diff := cmp.Diff(tt.want, got, cmp.Options{ignoreFieldsAsset})
 			if diff != "" {
 				t.Errorf("%v\n", diff)
+			}
+
+			if tt.wantErr == nil {
+				ignoreFieldsOutbox := map[string][]string{"asset": {"id", "classified_at"}}
+				verifyOutbox(t, testStoreLocal, tt.expOutbox.action, tt.expOutbox.dto, ignoreFieldsOutbox)
+			}
+		})
+	}
+}
+
+func TestStoreUpdateAsset(t *testing.T) {
+	testStoreLocal, err := testutil.PrepareDatabaseLocal("../../../testdata/fixtures", NewDB)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer testStoreLocal.Close()
+
+	hpExpTeamCreatedAt, _ := time.Parse("2006-01-02 15:04:05", "2017-01-01 12:30:12")
+	hpExpTeamUpdatedAt, _ := time.Parse("2006-01-02 15:04:05", "2017-01-01 12:30:12")
+	ndExpTeamCreatedAt, _ := time.Parse("2006-01-02 15:04:05", "2018-01-01 12:30:12")
+	ndExpTeamUpdatedAt, _ := time.Parse("2006-01-02 15:04:05", "2018-01-01 12:30:12")
+
+	tests := []struct {
+		name      string
+		asset     api.Asset
+		want      *api.Asset
+		wantErr   error
+		expOutbox expOutbox
+	}{
+		{
+			name: "HappyPath",
+			asset: api.Asset{
+				ID:         "0f206826-14ec-4e85-a5a4-e2decdfbc193",
+				TeamID:     "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
+				Identifier: "vulcan.example.bis.com",
+			},
+			want: &api.Asset{
+				ID:         "0f206826-14ec-4e85-a5a4-e2decdfbc193",
+				TeamID:     "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
+				Identifier: "vulcan.example.bis.com",
+			},
+			wantErr: nil,
+			expOutbox: expOutbox{
+				action: opUpdateAsset,
+				dto: cdc.OpUpdateAssetDTO{
+					OldAsset: api.Asset{
+						ID:     "0f206826-14ec-4e85-a5a4-e2decdfbc193",
+						TeamID: "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
+						Team: &api.Team{
+							ID:          "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
+							Name:        "Foo Team",
+							Description: "Foo foo...",
+							Tag:         "team:foo-team",
+							CreatedAt:   &hpExpTeamCreatedAt,
+							UpdatedAt:   &hpExpTeamUpdatedAt,
+						},
+						Identifier: "foo1.vulcan.example.com",
+					},
+					NewAsset: api.Asset{
+						ID:     "0f206826-14ec-4e85-a5a4-e2decdfbc193",
+						TeamID: "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
+						Team: &api.Team{
+							ID:          "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
+							Name:        "Foo Team",
+							Description: "Foo foo...",
+							Tag:         "team:foo-team",
+							CreatedAt:   &hpExpTeamCreatedAt,
+							UpdatedAt:   &hpExpTeamUpdatedAt,
+						},
+						Identifier: "vulcan.example.bis.com",
+					},
+					DupAssets: 1,
+				},
+			},
+		},
+		{
+			name: "Should report no duplicates",
+			asset: api.Asset{
+				ID:         "49f90ed2-2f71-11e9-b210-d663bd873d93",
+				TeamID:     "5125225e-4912-4464-b22e-e2542410c352",
+				Identifier: "updated.vulcan.example.com",
+			},
+			want: &api.Asset{
+				ID:         "49f90ed2-2f71-11e9-b210-d663bd873d93",
+				TeamID:     "5125225e-4912-4464-b22e-e2542410c352",
+				Identifier: "updated.vulcan.example.com",
+			},
+			wantErr: nil,
+			expOutbox: expOutbox{
+				action: opUpdateAsset,
+				dto: cdc.OpUpdateAssetDTO{
+					OldAsset: api.Asset{
+						ID:     "49f90ed2-2f71-11e9-b210-d663bd873d93",
+						TeamID: "5125225e-4912-4464-b22e-e2542410c352",
+						Team: &api.Team{
+							ID:          "5125225e-4912-4464-b22e-e2542410c352",
+							Name:        "TeamWithAssetsDefaultSensitive",
+							Description: "TeamWithAssetsDefaultSensitive",
+							CreatedAt:   &ndExpTeamCreatedAt,
+							UpdatedAt:   &ndExpTeamUpdatedAt,
+						},
+						Identifier: "noscan.vulcan.example.com",
+					},
+					NewAsset: api.Asset{
+						ID:     "49f90ed2-2f71-11e9-b210-d663bd873d93",
+						TeamID: "5125225e-4912-4464-b22e-e2542410c352",
+						Team: &api.Team{
+							ID:          "5125225e-4912-4464-b22e-e2542410c352",
+							Name:        "TeamWithAssetsDefaultSensitive",
+							Description: "TeamWithAssetsDefaultSensitive",
+							CreatedAt:   &ndExpTeamCreatedAt,
+							UpdatedAt:   &ndExpTeamUpdatedAt,
+						},
+						Identifier: "updated.vulcan.example.com",
+					},
+					DupAssets: 0,
+				},
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := testStoreLocal.UpdateAsset(tt.asset)
+			if errToStr(err) != errToStr(tt.wantErr) {
+				t.Fatal(err)
+			}
+
+			diff := cmp.Diff(tt.want, got, cmp.Options{ignoreFieldsAsset})
+			if diff != "" {
+				t.Errorf("%v\n", diff)
+			}
+
+			if tt.wantErr == nil {
+				ignoreFieldsOutbox := map[string][]string{
+					"old_asset": {"alias", "asset_type", "asset_type_id", "environmental_cvss", "rolfp", "scannable", "classified_at", "options"},
+					"new_asset": {"alias", "asset_type", "asset_type_id", "environmental_cvss", "rolfp", "scannable", "classified_at", "options"},
+				}
+				verifyOutbox(t, testStoreLocal, tt.expOutbox.action, tt.expOutbox.dto, ignoreFieldsOutbox)
 			}
 		})
 	}
@@ -466,11 +643,6 @@ func TestStoreDeleteAsset(t *testing.T) {
 	}
 	defer testStoreLocal.Close()
 
-	type expOutbox struct {
-		action string
-		dto    interface{}
-	}
-
 	varTrue := true
 	opts := `{"checktype_options":[{"name":"vulcan-exposed-memcheck","options":{"https":"true","port":"11211"}},{"name":"vulcan-nessus","options":{"enabled":"false"}}]}`
 	expTeamCreatedAt, _ := time.Parse("2006-01-02 15:04:05", "2017-01-01 12:30:12")
@@ -570,7 +742,7 @@ func TestStoreDeleteAsset(t *testing.T) {
 				t.Fatalf("Asset %v was not deleted", tt.asset)
 			}
 
-			verifyOutbox(t, testStoreLocal, tt.expOutbox.action, tt.expOutbox.dto)
+			verifyOutbox(t, testStoreLocal, tt.expOutbox.action, tt.expOutbox.dto, nil)
 		})
 	}
 }
@@ -581,11 +753,6 @@ func TestStoreDeleteAllAssets(t *testing.T) {
 		log.Fatal(err)
 	}
 	defer testStoreLocal.Close()
-
-	type expOutbox struct {
-		action string
-		dto    interface{}
-	}
 
 	expCreatedAt, _ := time.Parse("2006-01-02 15:04:05", "2017-01-01 12:30:12")
 	expUpdatedAt, _ := time.Parse("2006-01-02 15:04:05", "2017-01-01 12:30:12")
@@ -639,7 +806,7 @@ func TestStoreDeleteAllAssets(t *testing.T) {
 				t.Fatalf("Number of orphan asset group associations left on database is different than zero: %d", result.Count)
 			}
 
-			verifyOutbox(t, testStoreLocal, tt.expOutbox.action, tt.expOutbox.dto)
+			verifyOutbox(t, testStoreLocal, tt.expOutbox.action, tt.expOutbox.dto, nil)
 		})
 	}
 }

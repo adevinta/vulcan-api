@@ -18,12 +18,27 @@ import (
 	vulndb "github.com/adevinta/vulnerability-db-api/pkg/model"
 )
 
+const (
+	errTestSetup = "err setting up test"
+)
+
 var (
 	mockOpDeleteTeamData []byte
 	mockOpDeleteTeamDTO  = OpDeleteTeamDTO{
 		Team: api.Team{
 			ID:  "t1",
 			Tag: "mockDeleteTeamTag",
+		},
+	}
+
+	mockOpCreateAssetData []byte
+	mockOpCreateAssetDTO  = OpCreateAssetDTO{
+		Asset: api.Asset{
+			ID:         "a0",
+			Identifier: "somehost.com",
+			Team: &api.Team{
+				Tag: "mockCreateAssetTag",
+			},
 		},
 	}
 
@@ -39,11 +54,39 @@ var (
 		DupAssets: 0,
 	}
 
+	mockOpUpdateAssetData []byte
+	mockOpUpdateAssetDTO  = OpUpdateAssetDTO{
+		OldAsset: api.Asset{
+			ID:         "aO",
+			Identifier: "exampleNew.com",
+			Team: &api.Team{
+				Tag: "mockUpdateAssetTag",
+			},
+		},
+		NewAsset: api.Asset{
+			ID:         "aN",
+			Identifier: "exampleOld.com",
+			Team: &api.Team{
+				Tag: "mockUpdateAssetTag",
+			},
+		},
+		DupAssets: 0,
+	}
+
 	mockOpDeleteAllAssetsData []byte
 	mockOpDeleteAllAssetsDTO  = OpDeleteAllAssetsDTO{
 		Team: api.Team{
 			ID:  "t2",
 			Tag: "mockDeleteAllAssetsTag",
+		},
+	}
+
+	mockOpFindingOverwriteData []byte
+	mockOpFindingOverwriteDTO  = OpFindingOverwriteDTO{
+		FindingOverwrite: api.FindingOverwrite{
+			FindingID: "f1",
+			Status:    "newstatus",
+			Tag:       "mockFindingOverwriteTag",
 		},
 	}
 )
@@ -71,12 +114,17 @@ func (m *mockLoggr) verifyErr(targetErr error) bool {
 type mockVulnDBClient struct {
 	vulnerabilitydb.Client
 	targetsF         func(ctx context.Context, params api.TargetsParams, pagination api.Pagination) (*api.TargetsList, error)
+	createTargetF    func(ctx context.Context, payload api.CreateTarget) (*api.Target, error)
 	deleteTagF       func(ctx context.Context, authTag, tag string) error
 	deleteTargetTagF func(ctx context.Context, authTag, targetID, tag string) error
+	updateFindingF   func(ctx context.Context, findingID string, payload *api.UpdateFinding, tag string) (*api.Finding, error)
 }
 
 func (m *mockVulnDBClient) Targets(ctx context.Context, params api.TargetsParams, pagination api.Pagination) (*api.TargetsList, error) {
 	return m.targetsF(ctx, params, pagination)
+}
+func (m *mockVulnDBClient) CreateTarget(ctx context.Context, payload api.CreateTarget) (*api.Target, error) {
+	return m.createTargetF(ctx, payload)
 }
 func (m *mockVulnDBClient) DeleteTag(ctx context.Context, authTag, tag string) error {
 	return m.deleteTagF(ctx, authTag, tag)
@@ -84,20 +132,35 @@ func (m *mockVulnDBClient) DeleteTag(ctx context.Context, authTag, tag string) e
 func (m *mockVulnDBClient) DeleteTargetTag(ctx context.Context, authTag, targetID, tag string) error {
 	return m.deleteTargetTagF(ctx, authTag, targetID, tag)
 }
+func (m *mockVulnDBClient) UpdateFinding(ctx context.Context, findingID string, payload *api.UpdateFinding, tag string) (*api.Finding, error) {
+	return m.updateFindingF(ctx, findingID, payload, tag)
+}
 
 func init() {
 	var err error
 	mockOpDeleteTeamData, err = json.Marshal(mockOpDeleteTeamDTO)
 	if err != nil {
-		panic("Err setting up test")
+		panic(errTestSetup)
+	}
+	mockOpCreateAssetData, err = json.Marshal(mockOpCreateAssetDTO)
+	if err != nil {
+		panic(errTestSetup)
 	}
 	mockOpDeleteAssetData, err = json.Marshal(mockOpDeleteAssetDTO)
 	if err != nil {
-		panic("Err setting up test")
+		panic(errTestSetup)
+	}
+	mockOpUpdateAssetData, err = json.Marshal(mockOpUpdateAssetDTO)
+	if err != nil {
+		panic(errTestSetup)
 	}
 	mockOpDeleteAllAssetsData, err = json.Marshal(mockOpDeleteAllAssetsDTO)
 	if err != nil {
-		panic("Err setting up test")
+		panic(errTestSetup)
+	}
+	mockOpFindingOverwriteData, err = json.Marshal(mockOpFindingOverwriteDTO)
+	if err != nil {
+		panic(errTestSetup)
 	}
 }
 
@@ -118,17 +181,37 @@ func TestParse(t *testing.T) {
 					DTO:       mockOpDeleteTeamData,
 				},
 				Outbox{
+					Operation: opCreateAsset,
+					DTO:       mockOpCreateAssetData,
+				},
+				Outbox{
 					Operation: opDeleteAsset,
 					DTO:       mockOpDeleteAssetData,
+				},
+				Outbox{
+					Operation: opUpdateAsset,
+					DTO:       mockOpUpdateAssetData,
 				},
 				Outbox{
 					Operation: opDeleteAllAssets,
 					DTO:       mockOpDeleteAllAssetsData,
 				},
+				Outbox{
+					Operation: opFindingOverwrite,
+					DTO:       mockOpFindingOverwriteData,
+				},
 			},
 			vulnDBClient: &mockVulnDBClient{
 				targetsF: func(ctx context.Context, params api.TargetsParams, pagination api.Pagination) (*api.TargetsList, error) {
 					return &api.TargetsList{Targets: []vulndb.Target{{}}}, nil
+				},
+				createTargetF: func(ctx context.Context, payload api.CreateTarget) (*api.Target, error) {
+					var t = &api.Target{Target: vulndb.Target{
+						ID:         "1",
+						Identifier: payload.Identifier,
+						Tags:       payload.Tags,
+					}}
+					return t, nil
 				},
 				deleteTagF: func(ctx context.Context, authTag, tag string) error {
 					return nil
@@ -136,8 +219,12 @@ func TestParse(t *testing.T) {
 				deleteTargetTagF: func(ctx context.Context, authTag, targetID, tag string) error {
 					return nil
 				},
+				updateFindingF: func(ctx context.Context, findingID string, payload *api.UpdateFinding, tag string) (*api.Finding, error) {
+					var f = &api.Finding{}
+					return f, nil
+				},
 			},
-			wantNParsed: 3,
+			wantNParsed: 6,
 		},
 		{
 			name: "Should return err unsupported action",
