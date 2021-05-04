@@ -8,6 +8,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/adevinta/errors"
@@ -15,6 +16,7 @@ import (
 	kitendpoint "github.com/go-kit/kit/endpoint"
 	kithttp "github.com/go-kit/kit/transport/http"
 
+	"github.com/adevinta/vulcan-api/pkg/api"
 	"github.com/adevinta/vulcan-api/pkg/api/endpoint"
 	"github.com/adevinta/vulcan-api/pkg/api/transport"
 )
@@ -31,6 +33,8 @@ const (
 	tagEntity    = "entity"
 	tagMethod    = "method"
 	tagStatus    = "status"
+	tagUser      = "user"
+	tagTeam      = "team"
 
 	// Entities
 	entityUser      = "user"
@@ -168,6 +172,12 @@ func (m *metricsMiddleware) Measure(next kitendpoint.Endpoint) kitendpoint.Endpo
 		httpStatus := parseHTTPStatus(res, err)
 		duration := reqEnd.Sub(reqStart).Milliseconds()
 		failed := httpStatus >= 400
+		user, _ := api.UserFromContext(ctx)
+		team := ""
+		httpPath := ctx.Value(kithttp.ContextKeyRequestPath).(string)
+		if strings.HasPrefix(httpPath, "/v1/teams/") {
+			team = strings.Split(httpPath, "/")[3]
+		}
 
 		// Build tags
 		tags := []string{
@@ -176,6 +186,8 @@ func (m *metricsMiddleware) Measure(next kitendpoint.Endpoint) kitendpoint.Endpo
 			fmt.Sprint(tagEntity, ":", endpointToEntity[endpoint]),
 			fmt.Sprint(tagMethod, ":", httpMethod),
 			fmt.Sprint(tagStatus, ":", httpStatus),
+			fmt.Sprint(tagUser, ":", user.Email),
+			fmt.Sprint(tagTeam, ":", team),
 		}
 
 		// Push metrics
