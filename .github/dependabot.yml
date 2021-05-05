@@ -7,3 +7,4 @@ updates:
   open-pull-requests-limit: 10
   allow:
   - dependency-name: "*adevinta*"
+  - dependency-name: "github.com/filewalkwithme/impl"
