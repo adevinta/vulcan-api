@@ -1,12 +1,12 @@
 language: go
-dist: trusty
+dist: bionic
 go:
   - 1.13.3
 services:
   - postgresql
   - docker
 addons:
-  postgresql: "9.6"
+  postgresql: "11"
 go_import_path: github.com/adevinta/vulcan-api
 script:
   - _script/cibuild
