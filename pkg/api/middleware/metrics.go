@@ -8,10 +8,13 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/adevinta/errors"
 	metrics "github.com/adevinta/vulcan-metrics-client"
+	stdjwt "github.com/dgrijalva/jwt-go"
+	jwtkit "github.com/go-kit/kit/auth/jwt"
 	kitendpoint "github.com/go-kit/kit/endpoint"
 	kithttp "github.com/go-kit/kit/transport/http"
 
@@ -31,6 +34,8 @@ const (
 	tagEntity    = "entity"
 	tagMethod    = "method"
 	tagStatus    = "status"
+	tagUser      = "user"
+	tagTeam      = "team"
 
 	// Entities
 	entityUser      = "user"
@@ -168,6 +173,8 @@ func (m *metricsMiddleware) Measure(next kitendpoint.Endpoint) kitendpoint.Endpo
 		httpStatus := parseHTTPStatus(res, err)
 		duration := reqEnd.Sub(reqStart).Milliseconds()
 		failed := httpStatus >= 400
+		user := parseUser(ctx)
+		team := parseTeam(ctx)
 
 		// Build tags
 		tags := []string{
@@ -176,6 +183,8 @@ func (m *metricsMiddleware) Measure(next kitendpoint.Endpoint) kitendpoint.Endpo
 			fmt.Sprint(tagEntity, ":", endpointToEntity[endpoint]),
 			fmt.Sprint(tagMethod, ":", httpMethod),
 			fmt.Sprint(tagStatus, ":", httpStatus),
+			fmt.Sprint(tagUser, ":", user),
+			fmt.Sprint(tagTeam, ":", team),
 		}
 
 		// Push metrics
@@ -232,4 +241,31 @@ func parseHTTPStatus(resp interface{}, err error) int {
 		return httpResp.StatusCode()
 	}
 	return http.StatusOK
+}
+
+// parseUser returns the user from the JWT token.
+func parseUser(ctx context.Context) string {
+	user := ""
+	token, ok := ctx.Value(jwtkit.JWTTokenContextKey).(string)
+	if ok {
+		claims := stdjwt.MapClaims{}
+
+		// IMPORTANT: This trusts the user provided in the JWT token without
+		// verifying its signature. This is only used for metrics purposes.
+		_, _, err := new(stdjwt.Parser).ParseUnverified(token, claims)
+		if err == nil {
+			user = claims["sub"].(string)
+		}
+	}
+	return user
+}
+
+// parseTeam team returns the team from the URL path.
+func parseTeam(ctx context.Context) string {
+	team := ""
+	httpPath := ctx.Value(kithttp.ContextKeyRequestPath).(string)
+	if strings.HasPrefix(httpPath, "/api/v1/teams/") {
+		team = strings.Split(httpPath, "/")[4]
+	}
+	return team
 }
