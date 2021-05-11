@@ -173,27 +173,8 @@ func (m *metricsMiddleware) Measure(next kitendpoint.Endpoint) kitendpoint.Endpo
 		httpStatus := parseHTTPStatus(res, err)
 		duration := reqEnd.Sub(reqStart).Milliseconds()
 		failed := httpStatus >= 400
-
-		// Obtain user from JWT token.
-		user := ""
-		tokenRaw, ok := ctx.Value(jwtkit.JWTTokenContextKey).(string)
-		if ok {
-			claims := stdjwt.MapClaims{}
-
-			// This trusts the user provided in the JWT token without
-			// verifying its signature for metrics purposes.
-			_, _, err := new(stdjwt.Parser).ParseUnverified(tokenRaw, claims)
-			if err == nil {
-				user = claims["sub"].(string)
-			}
-		}
-
-		// Obtain team from URL path.
-		team := ""
-		httpPath := ctx.Value(kithttp.ContextKeyRequestPath).(string)
-		if strings.HasPrefix(httpPath, "/api/v1/teams/") {
-			team = strings.Split(httpPath, "/")[4]
-		}
+		user := parseUser(ctx)
+		team := parseTeam(ctx)
 
 		// Build tags
 		tags := []string{
@@ -260,4 +241,31 @@ func parseHTTPStatus(resp interface{}, err error) int {
 		return httpResp.StatusCode()
 	}
 	return http.StatusOK
+}
+
+// parseUser returns the user from the JWT token.
+func parseUser(ctx context.Context) string {
+	user := ""
+	token, ok := ctx.Value(jwtkit.JWTTokenContextKey).(string)
+	if ok {
+		claims := stdjwt.MapClaims{}
+
+		// IMPORTANT: This trusts the user provided in the JWT token without
+		// verifying its signature. This is only used for metrics purposes.
+		_, _, err := new(stdjwt.Parser).ParseUnverified(token, claims)
+		if err == nil {
+			user = claims["sub"].(string)
+		}
+	}
+	return user
+}
+
+// parseTeam team returns the team from the URL path.
+func parseTeam(ctx context.Context) string {
+	team := ""
+	httpPath := ctx.Value(kithttp.ContextKeyRequestPath).(string)
+	if strings.HasPrefix(httpPath, "/api/v1/teams/") {
+		team = strings.Split(httpPath, "/")[4]
+	}
+	return team
 }
