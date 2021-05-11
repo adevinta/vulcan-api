@@ -13,10 +13,11 @@ import (
 
 	"github.com/adevinta/errors"
 	metrics "github.com/adevinta/vulcan-metrics-client"
+	stdjwt "github.com/dgrijalva/jwt-go"
+	jwtkit "github.com/go-kit/kit/auth/jwt"
 	kitendpoint "github.com/go-kit/kit/endpoint"
 	kithttp "github.com/go-kit/kit/transport/http"
 
-	"github.com/adevinta/vulcan-api/pkg/api"
 	"github.com/adevinta/vulcan-api/pkg/api/endpoint"
 	"github.com/adevinta/vulcan-api/pkg/api/transport"
 )
@@ -172,7 +173,22 @@ func (m *metricsMiddleware) Measure(next kitendpoint.Endpoint) kitendpoint.Endpo
 		httpStatus := parseHTTPStatus(res, err)
 		duration := reqEnd.Sub(reqStart).Milliseconds()
 		failed := httpStatus >= 400
-		user, _ := api.UserFromContext(ctx)
+
+		// Obtain user from JWT token.
+		user := ""
+		tokenRaw, ok := ctx.Value(jwtkit.JWTTokenContextKey).(string)
+		if ok {
+			claims := stdjwt.MapClaims{}
+
+			// This trusts the user provided in the JWT token without
+			// verifying its signature for metrics purposes.
+			_, _, err := new(stdjwt.Parser).ParseUnverified(tokenRaw, claims)
+			if err == nil {
+				user = claims["sub"].(string)
+			}
+		}
+
+		// Obtain team from URL path.
 		team := ""
 		httpPath := ctx.Value(kithttp.ContextKeyRequestPath).(string)
 		if strings.HasPrefix(httpPath, "/api/v1/teams/") {
@@ -186,7 +202,7 @@ func (m *metricsMiddleware) Measure(next kitendpoint.Endpoint) kitendpoint.Endpo
 			fmt.Sprint(tagEntity, ":", endpointToEntity[endpoint]),
 			fmt.Sprint(tagMethod, ":", httpMethod),
 			fmt.Sprint(tagStatus, ":", httpStatus),
-			fmt.Sprint(tagUser, ":", user.Email),
+			fmt.Sprint(tagUser, ":", user),
 			fmt.Sprint(tagTeam, ":", team),
 		}
 
