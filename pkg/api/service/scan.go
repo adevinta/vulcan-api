@@ -15,9 +15,9 @@ import (
 	"gopkg.in/go-playground/validator.v9"
 
 	"github.com/adevinta/errors"
-	metrics "github.com/adevinta/vulcan-metrics-client"
 	"github.com/adevinta/vulcan-api/pkg/api"
 	"github.com/adevinta/vulcan-api/pkg/scanengine"
+	metrics "github.com/adevinta/vulcan-metrics-client"
 	scanengineApi "github.com/adevinta/vulcan-scan-engine/pkg/api"
 	scanengineData "github.com/adevinta/vulcan-scan-engine/pkg/api/endpoint"
 )
@@ -37,6 +37,7 @@ func (s vulcanitoService) ListScans(ctx context.Context, teamID string, programI
 		return nil, err
 	}
 	for _, scanInfo := range response.Scans {
+		scanInfo := scanInfo
 		scan, err := s.fillScanInfo(ctx, &scanInfo, program, programID, teamID)
 		if err != nil {
 
