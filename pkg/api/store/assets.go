@@ -283,10 +283,10 @@ func (db vulcanitoStore) UpdateAsset(asset api.Asset) (*api.Asset, error) {
 		return nil, db.logError(errors.Update("Asset was not updated"))
 	}
 
-	// If asset identifier is changed, we have to propagate the action
+	// If asset identifier has changed, we have to propagate the action
 	// to the vulnerability DB so ownership from previous identifier is
 	// removed for this team if necessary, and also the new one is created.
-	if findAsset.Identifier != asset.Identifier {
+	if asset.Identifier != "" && asset.Identifier != findAsset.Identifier {
 		err := db.pushToOutbox(tx, opUpdateAsset, findAsset, asset)
 		if err != nil {
 			tx.Rollback()
