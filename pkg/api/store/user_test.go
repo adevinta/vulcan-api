@@ -378,7 +378,7 @@ func TestStoreDeleteUser(t *testing.T) {
 		{
 			name:    "InvalidUserID",
 			userID:  "aaaaaaaa-bbbb-cccc-dddd",
-			wantErr: errors.New("pq: invalid input syntax for uuid: \"aaaaaaaa-bbbb-cccc-dddd\""),
+			wantErr: errors.New("pq: invalid input syntax for type uuid: \"aaaaaaaa-bbbb-cccc-dddd\""),
 		},
 	}
 
