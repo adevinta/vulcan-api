@@ -7,8 +7,12 @@ services:
   - docker
 addons:
   postgresql: "9.6"
+  apt:
+    packages:
+      - docker-ce
 go_import_path: github.com/adevinta/vulcan-api
 script:
+  - docker --version
   - _script/cibuild
   - source _script/setup-e2e-tests
   - _script/run-e2e-tests
