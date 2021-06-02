@@ -1,5 +1,16 @@
-dist: bionic
+language: go
+dist: trusty
+go:
+  - 1.13.3
 services:
+  - postgresql
   - docker
+addons:
+  postgresql: "9.6"
+go_import_path: github.com/adevinta/vulcan-api
 script:
-  - docker build . -t api
+  - _script/cibuild
+  - source _script/setup-e2e-tests
+  - _script/run-e2e-tests
+after_success:
+  - bash -c 'source <(curl -s https://raw.githubusercontent.com/adevinta/vulcan-cicd/master/docker.sh)'
