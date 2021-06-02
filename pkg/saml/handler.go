@@ -8,10 +8,7 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
-	"os"
 	"time"
-
-	"github.com/go-kit/kit/log"
 )
 
 const (
@@ -132,17 +129,16 @@ func (h *handler) LoginCallbackHandler(cfg CallbackConfig) http.HandlerFunc {
 				return
 			}
 		}
-		logger := log.NewLogfmtLogger(log.NewSyncWriter(os.Stderr))
+
 		tokenGenTime := time.Now()
-		logger.Log("email", userData.Email, "username", userData.UserName, "FirstName", userData.FirstName)
 		claims := map[string]interface{}{
 			"first_name": userData.FirstName,
 			"last_name":  userData.LastName,
-			"email":      userData.UserName,
+			"email":      userData.Email,
 			"username":   userData.UserName,
 			"iat":        tokenGenTime.Unix(),
 			"exp":        tokenGenTime.Add(tokenExpiresAt).Unix(),
-			"sub":        userData.UserName,
+			"sub":        userData.Email,
 		}
 		token, err := cfg.TokenGenerator(claims)
 		if err != nil {
