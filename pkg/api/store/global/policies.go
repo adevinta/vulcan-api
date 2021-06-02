@@ -54,6 +54,7 @@ func (d *DefaultPolicy) Eval(ctx context.Context) ([]*api.ChecktypeSetting, erro
 		"vulcan-zap":                  struct{}{},
 		"vulcan-seekret":              struct{}{},
 		"vulcan-retirejs":             struct{}{},
+		"vulcan-vulners":              struct{}{},
 	}
 
 	checkTypesInfo, err := d.checktypeInformer.ByAssettype(ctx)
