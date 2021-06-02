@@ -1,23 +1,6 @@
-language: go
 dist: bionic
-go:
-  - 1.13.3
 services:
-  - postgresql
   - docker
-addons:
-  postgresql: "9.6"
-go_import_path: github.com/adevinta/vulcan-api
-before_install:
-  - docker --version
-  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-  - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-  - sudo apt-get update
-  - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
 script:
-  - docker --version
-  - _script/cibuild
-  - source _script/setup-e2e-tests
-  - _script/run-e2e-tests
-after_success:
-  - bash -c 'source <(curl -s https://raw.githubusercontent.com/adevinta/vulcan-cicd/master/docker.sh)'
+  - docker build . -t api
+
