@@ -1,19 +1,19 @@
 # Starting a local database
 
-```
-$ postgres-start.sh
-$ flyway-migrate.sh
+```sh
+./postgres-start.sh
+./flyway-migrate.sh
 ```
 
 # Stoping the database
 
-```
+```sh
 $ postgres-stop.sh
 ```
 
 # Cleaning a running database
 
-```
+```sh
 $ flyway-clean-schema.sh
 ```
 
