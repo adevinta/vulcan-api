@@ -1,7 +1,7 @@
 language: go
-dist: trusty
+dist: bionic
 go:
-  - 1.13.3
+  - 1.13.4
 services:
   - postgresql
   - docker
@@ -14,3 +14,4 @@ script:
   - _script/run-e2e-tests
 after_success:
   - bash -c 'source <(curl -s https://raw.githubusercontent.com/adevinta/vulcan-cicd/master/docker.sh)'
+
