@@ -14,3 +14,6 @@ cd cmd/vulcan-api && go build && cd ../..
 token=$(cat _resources/config/testuser.token) && tokenuser1=$(cat _resources/config/testuser1.token) && tokenuser2=$(cat _resources/config/testuser2.token)
 node_modules/.bin/newman run postman/vulcan.postman_collection.json -e postman/vulcan.postman_environment.json --global-var token=$token -r cli,junit --reporter-junit-export build/reports/tests/newman.xml
 node_modules/.bin/newman run postman/vulcan-authorization.postman_collection.json -e postman/vulcan.postman_environment.json --global-var token=$token --global-var tokenuser1=$tokenuser1 --global-var tokenuser2=$tokenuser2 -r cli,junit --reporter-junit-export build/reports/tests/newman-auth.xml
+
+pkill mockscheduler 
+pkill vulcan-api
