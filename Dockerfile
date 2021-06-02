@@ -6,8 +6,6 @@ WORKDIR /app
 
 COPY . .
 
-RUN go mod vendor
-
 RUN cd cmd/vulcan-api && GOOS=linux GOARCH=amd64 go build -mod vendor . && cd -
 
 FROM alpine:3.11
