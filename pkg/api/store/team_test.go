@@ -62,7 +62,7 @@ func TestStoreFindTeam(t *testing.T) {
 			name:    "DatabaseErrorInvalidSyntax",
 			teamID:  "aaaaaaaa-bbbb-cccc-dddd",
 			want:    nil,
-			wantErr: errors.New(`pq: invalid input syntax for uuid: "aaaaaaaa-bbbb-cccc-dddd"`),
+			wantErr: errors.New(`pq: invalid input syntax for type uuid: "aaaaaaaa-bbbb-cccc-dddd"`),
 		},
 	}
 
@@ -166,7 +166,7 @@ func TestStoreFindTeamsByUser(t *testing.T) {
 			name:    "DatabaseErrorInvalidSyntax",
 			userID:  "aaaaaaaa-bbbb-cccc-dddd",
 			want:    nil,
-			wantErr: errors.New(`pq: invalid input syntax for uuid: "aaaaaaaa-bbbb-cccc-dddd"`),
+			wantErr: errors.New(`pq: invalid input syntax for type uuid: "aaaaaaaa-bbbb-cccc-dddd"`),
 		},
 	}
 
@@ -347,7 +347,7 @@ func TestStoreUpdateTeam(t *testing.T) {
 				Name:        "Bar Team Updated",
 				Description: "Bar bar..."},
 			wantTeam: nil,
-			wantErr:  errors.New(`pq: invalid input syntax for uuid: "aaaaaaaa-bbbb-cccc-dddd"`),
+			wantErr:  errors.New(`pq: invalid input syntax for type uuid: "aaaaaaaa-bbbb-cccc-dddd"`),
 		},
 	}
 
@@ -392,7 +392,7 @@ func TestStoreDeleteTeam(t *testing.T) {
 		{
 			name:    "DatabaseError",
 			teamID:  "aaaaaaaa-bbbb-cccc-dddd",
-			wantErr: errors.New(`pq: invalid input syntax for uuid: "aaaaaaaa-bbbb-cccc-dddd"`),
+			wantErr: errors.New(`pq: invalid input syntax for type uuid: "aaaaaaaa-bbbb-cccc-dddd"`),
 		},
 	}
 

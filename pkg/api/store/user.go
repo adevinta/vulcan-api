@@ -188,7 +188,7 @@ func (db vulcanitoStore) FindUserByID(userID string) (*api.User, error) {
 	user := &api.User{ID: userID}
 	res := db.Conn.Find(user)
 	if res.Error != nil {
-		if strings.HasPrefix(res.Error.Error(), `pq: invalid input syntax for uuid`) {
+		if strings.HasPrefix(res.Error.Error(), `pq: invalid input syntax for type uuid`) {
 			return nil, db.logError(errors.Validation(`ID is malformed`))
 		}
 		if !db.NotFoundError(res.Error) {
