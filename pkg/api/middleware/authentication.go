@@ -16,8 +16,8 @@ import (
 	"github.com/go-kit/kit/endpoint"
 	"github.com/go-kit/kit/log"
 
-	"github.com/adevinta/errors"
 	"github.com/adevinta/vulcan-api/pkg/api"
+	"github.com/adevinta/errors"
 )
 
 // Helper which returns the private signkey for a Token object
@@ -44,7 +44,6 @@ func Authentication(logger log.Logger, signKey string, userRepo api.VulcanitoSto
 				return nil, err
 			}
 
-			_ = logger.Log("context", "Authentication", "claims", tokenClaims)
 			user, err := getTokenUser(logger, userRepo, tokenClaims)
 			if err != nil {
 				return nil, err
