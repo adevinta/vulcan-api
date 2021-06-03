@@ -30,6 +30,8 @@ github.com/adevinta/vulcan-types v0.0.0-20200922093209-437fd6d5ab11 h1:BTW+HVwpn
 github.com/adevinta/vulcan-types v0.0.0-20200922093209-437fd6d5ab11/go.mod h1:gflQ+QgTgSGHMJp+kUnogHadjASIDcvCTwH1v/fqT3U=
 github.com/adevinta/vulnerability-db-api v0.0.0-20210225080913-30c973988192 h1:MBB+7dopKeVevO9B9i+4WxATBf5FJ1Ll5KOkktP/cvg=
 github.com/adevinta/vulnerability-db-api v0.0.0-20210225080913-30c973988192/go.mod h1:8t0P2DMwTAHJJVfqcX9qcIdqZ79JLQkVDPxbs65C5xs=
+github.com/adevinta/vulnerability-db-api v0.0.0-20210603131138-ae910f946bab h1:OU1a7vl8ntpUTppTNWMR+43rmE/40L6TSGtonLZx5KI=
+github.com/adevinta/vulnerability-db-api v0.0.0-20210603131138-ae910f946bab/go.mod h1:qdpH0awGevKJQzZhShX2xy8fN1tKsVlL++tGYp1M3U4=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
 github.com/alecthomas/units v0.0.0-20151022065526-2efee857e7cf/go.mod h1:ybxpYRFXyAe+OPACYpWeL0wqObRcbAqCMya13uyzqw0=
 github.com/armon/consul-api v0.0.0-20180202201655-eb2c6b5be1b6/go.mod h1:grANhF5doyWs3UAsr3K4I6qtAmlQcZDesFNEHPZAzj8=
