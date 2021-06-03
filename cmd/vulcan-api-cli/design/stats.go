@@ -59,6 +59,16 @@ var StatsMTTRMedia = MediaType("mttr", func() {
 	})
 })
 
+var StatsExposureMedia = MediaType("exposure", func() {
+	Description("Exposure stats")
+	Attributes(func() {
+		Attribute("exposure", StatsTotalMedia, "Stats for exposure by different averages")
+	})
+	View("default", func() {
+		Attribute("exposure")
+	})
+})
+
 var StatsOpenMedia = MediaType("statsOpen", func() {
 	Description("Open issues stats")
 	Attributes(func() {
@@ -107,6 +117,19 @@ var _ = Resource("stats", func() {
 		Response(OK, StatsMTTRMedia)
 	})
 
+	Action("exposure", func() {
+		Description("Get exposure statistics for a team.")
+		Routing(GET("/exposure"))
+		Params(func() {
+			Param("team_id", String, "Team ID")
+			Param("atDate", String, "Specific date to get statistics at")
+			Param("minScore", Number, "Minimum issues score filter")
+			Param("maxScore", Number, "Maximum issues score filter")
+		})
+		Security("Bearer")
+		Response(OK, StatsExposureMedia)
+	})
+
 	Action("open", func() {
 		Description("Get open issues statistics for a team.")
 		Routing(GET("/open"))
@@ -150,7 +173,7 @@ var _ = Resource("global-stats", func() {
 	DefaultMedia(StatsMedia)
 
 	Action("mttr", func() {
-		Description("Get global MTR statistics.")
+		Description("Get global MTTR statistics.")
 		Routing(GET("/mttr"))
 		Params(func() {
 			Param("minDate", String, "Minimum date to filter statistics by")
@@ -158,5 +181,17 @@ var _ = Resource("global-stats", func() {
 		})
 		Security("Bearer")
 		Response(OK, StatsMTTRMedia)
+	})
+
+	Action("exposure", func() {
+		Description("Get global exposure statistics.")
+		Routing(GET("/exposure"))
+		Params(func() {
+			Param("atDate", String, "Specific date to get statistics at")
+			Param("minScore", Number, "Minimum issues score filter")
+			Param("maxScore", Number, "Maximum issues score filter")
+		})
+		Security("Bearer")
+		Response(OK, StatsExposureMedia)
 	})
 })
