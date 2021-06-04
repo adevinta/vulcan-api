@@ -31,6 +31,27 @@ var StatsTotalMedia = MediaType("statsTotal", func() {
 	})
 })
 
+var StatsAveragesMedia = MediaType("statsAverages", func() {
+	Description("Stats by different averages")
+	Attributes(func() {
+		Attribute("percentile_10", Number, "Percentile 10 of the stats")
+		Attribute("percentile_25", Number, "Percentile 25 of the stats")
+		Attribute("percentile_50", Number, "Percentile 50 or median of the stats")
+		Attribute("percentile_75", Number, "Percentile 75 or third quartile of the stats")
+		Attribute("percentile_90", Number, "Percentile 90 of the stats")
+		Attribute("mean", Number, "Mean of the stats")
+
+	})
+	View("default", func() {
+		Attribute("percentile_10")
+		Attribute("percentile_25")
+		Attribute("percentile_50")
+		Attribute("percentile_75")
+		Attribute("percentile_90")
+		Attribute("mean")
+	})
+})
+
 var StatsMedia = MediaType("stats", func() {
 	Description("Stats by severity")
 	Attributes(func() {
