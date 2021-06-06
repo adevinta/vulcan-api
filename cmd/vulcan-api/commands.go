@@ -534,6 +534,11 @@ func addWhitelistingMiddleware(endpoints endpoint.Endpoints, logger log.Logger) 
 		endpoint.FindAsset:              true,
 		endpoint.UpdateAsset:            true,
 		endpoint.DeleteAsset:            true,
+		// Asset Annotations management.
+		endpoint.ListAssetAnnotations:   true,
+		endpoint.CreateAssetAnnotations: true,
+		endpoint.UpdateAssetAnnotations: true,
+		endpoint.DeleteAssetAnnotations: true,
 		// Group management.
 		endpoint.CreateGroup:    true,
 		endpoint.ListGroups:     true,

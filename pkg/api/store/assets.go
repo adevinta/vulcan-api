@@ -25,7 +25,12 @@ func (db vulcanitoStore) ListAssets(teamID string) ([]*api.Asset, error) {
 	}
 
 	assets := []*api.Asset{}
-	result := db.Conn.Preload("Team").Preload("AssetType").Preload("AssetGroups.Group").Find(&assets, "team_id = ?", teamID)
+	result := db.Conn.
+		Preload("Team").
+		Preload("AssetType").
+		Preload("AssetGroups.Group").
+		Preload("AssetAnnotations").
+		Find(&assets, "team_id = ?", teamID)
 	if result.Error != nil {
 		if db.NotFoundError(result.Error) {
 			return nil, db.logError(errors.NotFound(result.Error))
@@ -209,6 +214,7 @@ func (db vulcanitoStore) FindAsset(teamID, assetID string) (*api.Asset, error) {
 		Preload("AssetGroups.Asset").
 		Preload("AssetGroups.Group").
 		Preload("AssetGroups.Group.AssetGroup").
+		Preload("AssetAnnotations").
 		Preload("AssetType").Where("team_id = ?", teamID).Find(&asset)
 
 	if res.Error != nil {
@@ -228,6 +234,7 @@ func (db vulcanitoStore) findAsset(tx *gorm.DB, teamID, identifier, assetTypeID 
 		Preload("AssetGroups.Group").
 		Preload("AssetGroups.Group.AssetGroup").
 		Preload("AssetType").
+		Preload("AssetAnnotations").
 		Find(&asset, "team_id = ? and identifier = ? and asset_type_id = ?", teamID, identifier, assetTypeID)
 
 	if res.Error != nil {
@@ -262,6 +269,7 @@ func (db vulcanitoStore) UpdateAsset(asset api.Asset) (*api.Asset, error) {
 	findAsset := api.Asset{ID: asset.ID}
 	if db.Conn.
 		Preload("Team").
+		Preload("AssetAnnotations").
 		Where("team_id = ? and id = ?", asset.TeamID, asset.ID).
 		First(&findAsset).
 		RecordNotFound() {
@@ -305,7 +313,9 @@ func (db vulcanitoStore) DeleteAsset(asset api.Asset) error {
 	findAsset := api.Asset{ID: asset.ID}
 	if db.Conn.
 		Where("team_id = ? and id = ?", asset.TeamID, asset.ID).
-		Preload("Team").First(&findAsset).RecordNotFound() {
+		Preload("Team").
+		Preload("AssetAnnotations").
+		First(&findAsset).RecordNotFound() {
 		return db.logError(errors.Forbidden("asset does not belong to team"))
 	}
 

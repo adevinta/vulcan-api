@@ -41,6 +41,7 @@ type VulcanitoService interface {
 	UpdateRecipients(ctx context.Context, teamID string, emails []string) error
 	ListRecipients(ctx context.Context, teamID string) ([]*Recipient, error)
 
+	// Assets
 	ListAssets(ctx context.Context, teamID string) ([]*Asset, error)
 	CreateAssets(ctx context.Context, assets []Asset, groups []Group) ([]Asset, error)
 	CreateAssetsMultiStatus(ctx context.Context, assets []Asset, groups []Group) ([]AssetCreationResponse, error)
@@ -49,6 +50,12 @@ type VulcanitoService interface {
 	DeleteAsset(ctx context.Context, asset Asset) error
 	DeleteAllAssets(ctx context.Context, teamID string) error
 	GetAssetType(ctx context.Context, assetTypeName string) (*AssetType, error)
+
+	// Asset Annotations
+	ListAssetAnnotations(ctx context.Context, teamID string, assetID string) ([]*AssetAnnotation, error)
+	CreateAssetAnnotations(ctx context.Context, teamID string, assetID string, annotations []*AssetAnnotation) ([]*AssetAnnotation, error)
+	UpdateAssetAnnotations(ctx context.Context, teamID string, assetID string, annotations []*AssetAnnotation) ([]*AssetAnnotation, error)
+	DeleteAssetAnnotations(ctx context.Context, teamID string, assedID string, annotations []*AssetAnnotation) ([]*AssetAnnotation, error)
 
 	ListGroups(ctx context.Context, teamID, groupName string) ([]*Group, error)
 	CreateGroup(ctx context.Context, group Group) (*Group, error)

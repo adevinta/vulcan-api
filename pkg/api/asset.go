@@ -13,28 +13,29 @@ import (
 	"gopkg.in/go-playground/validator.v9"
 
 	"github.com/adevinta/errors"
-	types "github.com/adevinta/vulcan-types"
 	"github.com/adevinta/vulcan-api/pkg/common"
+	types "github.com/adevinta/vulcan-types"
 )
 
 var ErrROLFPInvalidText = "invalid ROLFP representation"
 
 type Asset struct {
-	ID                string        `gorm:"primary_key;AUTO_INCREMENT" json:"id" sql:"DEFAULT:gen_random_uuid()"`
-	TeamID            string        `json:"team_id" validate:"required"`
-	Team              *Team         `json:"team,omitempty"` // This line is infered from column name "team_id".
-	AssetTypeID       string        `json:"asset_type_id" validate:"required"`
-	AssetType         *AssetType    `json:"asset_type"` // This line is infered from column name "asset_type_id".
-	Identifier        string        `json:"identifier" validate:"required"`
-	Alias             string        `json:"alias"`
-	Options           *string       `json:"options"`
-	EnvironmentalCVSS *string       `json:"environmental_cvss"`
-	ROLFP             *ROLFP        `json:"rolfp" sql:"DEFAULT:'R:1/O:1/L:1/F:1/P:1+S:2'"`
-	Scannable         *bool         `json:"scannable" gorm:"default:true"`
-	AssetGroups       []*AssetGroup `json:"groups"` // This line is infered from other tables.
-	CreatedAt         time.Time     `json:"-"`
-	UpdatedAt         time.Time     `json:"-"`
-	ClassifiedAt      *time.Time    `json:"classified_at"`
+	ID                string             `gorm:"primary_key;AUTO_INCREMENT" json:"id" sql:"DEFAULT:gen_random_uuid()"`
+	TeamID            string             `json:"team_id" validate:"required"`
+	Team              *Team              `json:"team,omitempty"` // This line is infered from column name "team_id".
+	AssetTypeID       string             `json:"asset_type_id" validate:"required"`
+	AssetType         *AssetType         `json:"asset_type"` // This line is infered from column name "asset_type_id".
+	Identifier        string             `json:"identifier" validate:"required"`
+	Alias             string             `json:"alias"`
+	Options           *string            `json:"options"`
+	EnvironmentalCVSS *string            `json:"environmental_cvss"`
+	ROLFP             *ROLFP             `json:"rolfp" sql:"DEFAULT:'R:1/O:1/L:1/F:1/P:1+S:2'"`
+	Scannable         *bool              `json:"scannable" gorm:"default:true"`
+	AssetGroups       []*AssetGroup      `json:"groups"`      // This line is infered from other tables.
+	AssetAnnotations  []*AssetAnnotation `json:"annotations"` // This line is infered from other tables.
+	CreatedAt         time.Time          `json:"-"`
+	UpdatedAt         time.Time          `json:"-"`
+	ClassifiedAt      *time.Time         `json:"classified_at"`
 }
 
 func (a Asset) Validate() error {
@@ -115,6 +116,13 @@ func (a Asset) ToResponse() AssetResponse {
 		}
 	}
 
+	if len(a.AssetAnnotations) > 0 {
+		assetReponse.Annotations = make(AssetAnnotationResponse)
+		for _, an := range a.AssetAnnotations {
+			assetReponse.Annotations[an.Key] = an.Value
+		}
+	}
+
 	return assetReponse
 }
 
@@ -183,16 +191,17 @@ var DefaultROLFP = &ROLFP{
 }
 
 type AssetResponse struct {
-	ID                string            `json:"id"`
-	AssetType         AssetTypeResponse `json:"type"` // This line is infered from column name "asset_type_id".
-	Identifier        string            `json:"identifier"`
-	Alias             string            `json:"alias"`
-	Options           *string           `json:"options"`
-	EnvironmentalCVSS *string           `json:"environmental_cvss"`
-	ROLFP             *ROLFP            `json:"rolfp"`
-	Scannable         *bool             `json:"scannable"`
-	ClassifiedAt      *time.Time        `json:"classified_at"`
-	Groups            []*GroupResponse  `json:"groups"`
+	ID                string                  `json:"id"`
+	AssetType         AssetTypeResponse       `json:"type"` // This line is infered from column name "asset_type_id".
+	Identifier        string                  `json:"identifier"`
+	Alias             string                  `json:"alias"`
+	Options           *string                 `json:"options"`
+	EnvironmentalCVSS *string                 `json:"environmental_cvss"`
+	ROLFP             *ROLFP                  `json:"rolfp"`
+	Scannable         *bool                   `json:"scannable"`
+	ClassifiedAt      *time.Time              `json:"classified_at"`
+	Groups            []*GroupResponse        `json:"groups"`
+	Annotations       AssetAnnotationResponse `json:"annotations"`
 }
 
 type AssetCreationResponse struct {

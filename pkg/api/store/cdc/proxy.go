@@ -292,6 +292,23 @@ func (b *BrokerProxy) UpdateAsset(asset api.Asset) (*api.Asset, error) {
 	return a, err
 }
 
+// Asset Annotations
+func (b *BrokerProxy) ListAssetAnnotations(teamID string, assetID string) ([]*api.AssetAnnotation, error) {
+	return b.store.ListAssetAnnotations(teamID, assetID)
+}
+
+func (b *BrokerProxy) CreateAssetAnnotations(teamID string, assetID string, annotations []*api.AssetAnnotation) ([]*api.AssetAnnotation, error) {
+	return b.store.CreateAssetAnnotations(teamID, assetID, annotations)
+}
+
+func (b *BrokerProxy) UpdateAssetAnnotations(teamID string, assetID string, annotations []*api.AssetAnnotation) ([]*api.AssetAnnotation, error) {
+	return b.store.UpdateAssetAnnotations(teamID, assetID, annotations)
+}
+
+func (b *BrokerProxy) DeleteAssetAnnotations(teamID string, assetID string, annotations []*api.AssetAnnotation) ([]*api.AssetAnnotation, error) {
+	return b.store.DeleteAssetAnnotations(teamID, assetID, annotations)
+}
+
 func (b *BrokerProxy) GetAssetType(assetTypeName string) (*api.AssetType, error) {
 	return b.store.GetAssetType(assetTypeName)
 }
