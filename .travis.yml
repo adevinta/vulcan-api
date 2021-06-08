@@ -12,7 +12,6 @@ before_install:
   - dkr_dockerhub_ratelimit
 go_import_path: github.com/adevinta/vulcan-api
 script:
-  - docker pull golang:1.13.3-alpine3.10
   - dkr_dockerhub_ratelimit
   - _script/cibuild
   - source _script/setup-e2e-tests
