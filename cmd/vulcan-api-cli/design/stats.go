@@ -83,7 +83,7 @@ var StatsMTTRMedia = MediaType("mttr", func() {
 var StatsExposureMedia = MediaType("exposure", func() {
 	Description("Exposure stats")
 	Attributes(func() {
-		Attribute("exposure", StatsTotalMedia, "Stats for exposure by different averages")
+		Attribute("exposure", StatsAveragesMedia, "Stats for exposure by different averages")
 	})
 	View("default", func() {
 		Attribute("exposure")
