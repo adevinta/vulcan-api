@@ -7,10 +7,15 @@ services:
   - docker
 addons:
   postgresql: "9.6"
+before_install:
+  - source <(curl -s https://raw.githubusercontent.com/adevinta/vulcan-cicd/split/dkr.sh)
 go_import_path: github.com/adevinta/vulcan-api
 script:
+  - dkr_dockerhub_ratelimit
   - _script/cibuild
   - source _script/setup-e2e-tests
   - _script/run-e2e-tests
+  - dkr_dockerhub_ratelimit
 after_success:
-  - bash -c 'source <(curl -s https://raw.githubusercontent.com/adevinta/vulcan-cicd/master/docker.sh)'
+  - dkr_push
+  - dkr_dockerhub_ratelimit
