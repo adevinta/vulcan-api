@@ -17,5 +17,6 @@ script:
   - _script/run-e2e-tests
   - dkr_dockerhub_ratelimit
 after_success:
+  - dkr_build
   - dkr_push
   - dkr_dockerhub_ratelimit
