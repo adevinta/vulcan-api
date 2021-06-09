@@ -68,6 +68,28 @@ definitions:
       type:
         id: 29f83d16-09c4-4be5-8cae-e232d41f388a
         name: Hostname
+    - alias: AnAlias
+      classified_at: "2020-09-03T15:00:42.112975Z"
+      environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+      id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      identifier: vulcan.example.com
+      options: '{"timeout":60}'
+      rolfp: R:1/O:1/L:0/F:0/P:0+S:1
+      scannable: true
+      type:
+        id: 29f83d16-09c4-4be5-8cae-e232d41f388a
+        name: Hostname
+    - alias: AnAlias
+      classified_at: "2020-09-03T15:00:42.112975Z"
+      environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+      id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      identifier: vulcan.example.com
+      options: '{"timeout":60}'
+      rolfp: R:1/O:1/L:0/F:0/P:0+S:1
+      scannable: true
+      type:
+        id: 29f83d16-09c4-4be5-8cae-e232d41f388a
+        name: Hostname
     items:
       $ref: '#/definitions/Asset'
     title: 'Mediatype identifier: asset; type=collection; view=default'
@@ -242,6 +264,36 @@ definitions:
       type:
         id: 29f83d16-09c4-4be5-8cae-e232d41f388a
         name: Hostname
+    - alias: AnAlias
+      classified_at: "2020-09-03T15:00:42.112975Z"
+      environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+      id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      identifier: vulcan.example.com
+      options: '{"timeout":60}'
+      rolfp: R:1/O:1/L:0/F:0/P:0+S:1
+      scannable: true
+      status:
+        code: 3944598920153519998
+        error: Quo placeat magni harum ea.
+        type: Voluptatum mollitia consequuntur dignissimos.
+      type:
+        id: 29f83d16-09c4-4be5-8cae-e232d41f388a
+        name: Hostname
+    - alias: AnAlias
+      classified_at: "2020-09-03T15:00:42.112975Z"
+      environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+      id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      identifier: vulcan.example.com
+      options: '{"timeout":60}'
+      rolfp: R:1/O:1/L:0/F:0/P:0+S:1
+      scannable: true
+      status:
+        code: 3944598920153519998
+        error: Quo placeat magni harum ea.
+        type: Voluptatum mollitia consequuntur dignissimos.
+      type:
+        id: 29f83d16-09c4-4be5-8cae-e232d41f388a
+        name: Hostname
     items:
       $ref: '#/definitions/Assetresponse'
     title: 'Mediatype identifier: assetresponse; type=collection; view=default'
@@ -299,26 +351,12 @@ definitions:
         rolfp: R:1/O:1/L:0/F:0/P:0+S:1
         scannable: true
         type: Hostname
-      - alias: AnAlias
-        environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
-        identifier: vulcan.example.com
-        options: '{"timeout":60}'
-        rolfp: R:1/O:1/L:0/F:0/P:0+S:1
-        scannable: true
-        type: Hostname
       groups:
       - a14c7c65-66ab-4676-bcf6-0dea9719f5c6
       - 9f7a0c78-b752-4126-aa6d-0f286ada7b8f
     properties:
       assets:
         example:
-        - alias: AnAlias
-          environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
-          identifier: vulcan.example.com
-          options: '{"timeout":60}'
-          rolfp: R:1/O:1/L:0/F:0/P:0+S:1
-          scannable: true
-          type: Hostname
         - alias: AnAlias
           environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
           identifier: vulcan.example.com
@@ -341,7 +379,7 @@ definitions:
         - a14c7c65-66ab-4676-bcf6-0dea9719f5c6
         - 9f7a0c78-b752-4126-aa6d-0f286ada7b8f
         items:
-          example: Quis ipsam ducimus sit odio tenetur consequatur.
+          example: Dolorem distinctio.
           type: string
         type: array
     required:
@@ -388,6 +426,21 @@ definitions:
     - error
     - type
     title: 'Mediatype identifier: error; view=default'
+    type: object
+  Exposure:
+    description: Exposure stats (default view)
+    example:
+      exposure:
+        critical: 0.5763289526227959
+        high: 0.8906963890969017
+        informational: 0.362880998872939
+        low: 0.9206384098045786
+        medium: 0.3939227905544213
+        total: 0.11867421993190391
+    properties:
+      exposure:
+        $ref: '#/definitions/Statstotal'
+    title: 'Mediatype identifier: exposure; view=default'
     type: object
   Finding:
     description: Finding (default view)
@@ -582,6 +635,22 @@ definitions:
       status_previous: OPEN
       tag: team:security
       user: user@adevinta.com
+    - created_at: "2021-03-27T00:26:43.211506Z"
+      finding_id: 3c7d7003-c53d-4ccc-80e7-f21da241b2d4
+      id: b0720503-0a84-43fd-9cf4-5bb6c500226f
+      notes: This finding is a false positive because...
+      status: FALSE_POSITIVE
+      status_previous: OPEN
+      tag: team:security
+      user: user@adevinta.com
+    - created_at: "2021-03-27T00:26:43.211506Z"
+      finding_id: 3c7d7003-c53d-4ccc-80e7-f21da241b2d4
+      id: b0720503-0a84-43fd-9cf4-5bb6c500226f
+      notes: This finding is a false positive because...
+      status: FALSE_POSITIVE
+      status_previous: OPEN
+      tag: team:security
+      user: user@adevinta.com
     items:
       $ref: '#/definitions/Finding_overwrite'
     title: 'Mediatype identifier: finding_overwrite; type=collection; view=default'
@@ -590,112 +659,6 @@ definitions:
     description: FindingCollection is the media type for an array of Finding (default
       view)
     example:
-    - attachments:
-      - content_type: application/json
-        data: e30=
-        name: JSON string
-      current_exposure: 4631
-      details: ""
-      id: a8720503-0284-45fd-9cf4-5bb6c500966f
-      impact_details: ""
-      issue:
-        cwe_id: 358
-        description: This domain has at least one MX record
-        id: b0720503-0a84-43fd-9cf4-5bb6c500226f
-        recommendations:
-        - It is recommended to run DMARC
-        reference_links: []
-        summary: MX presence
-      resources:
-      - attributes:
-        - Hostname
-        - Port
-        name: Network Resources
-        resources:
-        - Hostname: test.example.com
-          Port: "443"
-      - attributes:
-        - Hostname
-        - Port
-        name: Network Resources
-        resources:
-        - Hostname: test.example.com
-          Port: "443"
-      - attributes:
-        - Hostname
-        - Port
-        name: Network Resources
-        resources:
-        - Hostname: test.example.com
-          Port: "443"
-      score: 6.9
-      source:
-        component: vulcan-tls
-        id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
-        instance: b3320f03-1284-42fd-9cf4-5bb6c500966f
-        name: vulcan
-        options: '{"timeout":60}'
-        time: "2019-06-08 11:16:40"
-      status: OPEN
-      target:
-        id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
-        identifier: www.test.com
-        tags:
-        - team:vulcan
-      total_exposure: 4631
-    - attachments:
-      - content_type: application/json
-        data: e30=
-        name: JSON string
-      current_exposure: 4631
-      details: ""
-      id: a8720503-0284-45fd-9cf4-5bb6c500966f
-      impact_details: ""
-      issue:
-        cwe_id: 358
-        description: This domain has at least one MX record
-        id: b0720503-0a84-43fd-9cf4-5bb6c500226f
-        recommendations:
-        - It is recommended to run DMARC
-        reference_links: []
-        summary: MX presence
-      resources:
-      - attributes:
-        - Hostname
-        - Port
-        name: Network Resources
-        resources:
-        - Hostname: test.example.com
-          Port: "443"
-      - attributes:
-        - Hostname
-        - Port
-        name: Network Resources
-        resources:
-        - Hostname: test.example.com
-          Port: "443"
-      - attributes:
-        - Hostname
-        - Port
-        name: Network Resources
-        resources:
-        - Hostname: test.example.com
-          Port: "443"
-      score: 6.9
-      source:
-        component: vulcan-tls
-        id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
-        instance: b3320f03-1284-42fd-9cf4-5bb6c500966f
-        name: vulcan
-        options: '{"timeout":60}'
-        time: "2019-06-08 11:16:40"
-      status: OPEN
-      target:
-        id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
-        identifier: www.test.com
-        tags:
-        - team:vulcan
-      total_exposure: 4631
     - attachments:
       - content_type: application/json
         data: e30=
@@ -823,15 +786,11 @@ definitions:
         max_score: 6.9
         summary: Site Without HTTPS
         targets_count: 14
-      - issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
-        max_score: 6.9
-        summary: Site Without HTTPS
-        targets_count: 14
       pagination:
-        limit: 0.8451506497515555
+        limit: 0.9276149316039823
         more: false
-        offset: 0.11075891542163877
-        total: 0.733137232779022
+        offset: 0.7144421259000474
+        total: 0.9837483587621623
     properties:
       issues:
         $ref: '#/definitions/Findings_issueCollection'
@@ -896,64 +855,11 @@ definitions:
           tags:
           - team:vulcan
         total_exposure: 4631
-      - attachments:
-        - content_type: application/json
-          data: e30=
-          name: JSON string
-        current_exposure: 4631
-        details: ""
-        id: a8720503-0284-45fd-9cf4-5bb6c500966f
-        impact_details: ""
-        issue:
-          cwe_id: 358
-          description: This domain has at least one MX record
-          id: b0720503-0a84-43fd-9cf4-5bb6c500226f
-          recommendations:
-          - It is recommended to run DMARC
-          reference_links: []
-          summary: MX presence
-        resources:
-        - attributes:
-          - Hostname
-          - Port
-          name: Network Resources
-          resources:
-          - Hostname: test.example.com
-            Port: "443"
-        - attributes:
-          - Hostname
-          - Port
-          name: Network Resources
-          resources:
-          - Hostname: test.example.com
-            Port: "443"
-        - attributes:
-          - Hostname
-          - Port
-          name: Network Resources
-          resources:
-          - Hostname: test.example.com
-            Port: "443"
-        score: 6.9
-        source:
-          component: vulcan-tls
-          id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
-          instance: b3320f03-1284-42fd-9cf4-5bb6c500966f
-          name: vulcan
-          options: '{"timeout":60}'
-          time: "2019-06-08 11:16:40"
-        status: OPEN
-        target:
-          id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
-          identifier: www.test.com
-          tags:
-          - team:vulcan
-        total_exposure: 4631
       pagination:
-        limit: 0.8451506497515555
+        limit: 0.9276149316039823
         more: false
-        offset: 0.11075891542163877
-        total: 0.733137232779022
+        offset: 0.7144421259000474
+        total: 0.9837483587621623
     properties:
       findings:
         $ref: '#/definitions/FindingCollection'
@@ -1005,10 +911,10 @@ definitions:
     description: Findings by Target list (default view)
     example:
       pagination:
-        limit: 0.8451506497515555
+        limit: 0.9276149316039823
         more: false
-        offset: 0.11075891542163877
-        total: 0.733137232779022
+        offset: 0.7144421259000474
+        total: 0.9837483587621623
       targets:
       - findings_count: 5
         identifier: vulcan.example.com
@@ -1057,16 +963,6 @@ definitions:
     description: GroupCollection is the media type for an array of Group (default
       view)
     example:
-    - assets_count: 1
-      description: All newly created assets are added to the Default group
-      id: f6360346-77a5-4f97-b919-331363b3af26
-      name: Default group
-      options: '{"timeout":60}'
-    - assets_count: 1
-      description: All newly created assets are added to the Default group
-      id: f6360346-77a5-4f97-b919-331363b3af26
-      name: Default group
-      options: '{"timeout":60}'
     - assets_count: 1
       description: All newly created assets are added to the Default group
       id: f6360346-77a5-4f97-b919-331363b3af26
@@ -1179,14 +1075,14 @@ definitions:
         example:
         - It is recommended to run DMARC
         items:
-          example: Voluptatum sit eos illum.
+          example: Omnis perferendis.
           type: string
         type: array
       reference_links:
         description: Documentation reference for the issue
         example: []
         items:
-          example: Tempora nemo corrupti sed qui.
+          example: Natus esse neque aliquid.
           type: string
         type: array
       summary:
@@ -1202,10 +1098,6 @@ definitions:
       classified_at: "2020-09-03T15:00:42.112975Z"
       environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
       groups:
-      - description: All newly created assets are added to the Default group
-        id: f6360346-77a5-4f97-b919-331363b3af26
-        name: Default group
-        options: '{"timeout":60}'
       - description: All newly created assets are added to the Default group
         id: f6360346-77a5-4f97-b919-331363b3af26
         name: Default group
@@ -1277,10 +1169,6 @@ definitions:
         id: f6360346-77a5-4f97-b919-331363b3af26
         name: Default group
         options: '{"timeout":60}'
-      - description: All newly created assets are added to the Default group
-        id: f6360346-77a5-4f97-b919-331363b3af26
-        name: Default group
-        options: '{"timeout":60}'
       id: a8720503-0284-45fd-9cf4-5bb6c500966f
       identifier: vulcan.example.com
       options: '{"timeout":60}'
@@ -1301,10 +1189,6 @@ definitions:
         id: f6360346-77a5-4f97-b919-331363b3af26
         name: Default group
         options: '{"timeout":60}'
-      - description: All newly created assets are added to the Default group
-        id: f6360346-77a5-4f97-b919-331363b3af26
-        name: Default group
-        options: '{"timeout":60}'
       id: a8720503-0284-45fd-9cf4-5bb6c500966f
       identifier: vulcan.example.com
       options: '{"timeout":60}'
@@ -1317,10 +1201,6 @@ definitions:
       classified_at: "2020-09-03T15:00:42.112975Z"
       environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
       groups:
-      - description: All newly created assets are added to the Default group
-        id: f6360346-77a5-4f97-b919-331363b3af26
-        name: Default group
-        options: '{"timeout":60}'
       - description: All newly created assets are added to the Default group
         id: f6360346-77a5-4f97-b919-331363b3af26
         name: Default group
@@ -1345,12 +1225,12 @@ definitions:
     description: MTTR stats (default view)
     example:
       mttr:
-        critical: 0.4834744722342159
-        high: 0.5205844348643661
-        informational: 0.8413557035664904
-        low: 0.21762696584450403
-        medium: 0.8619749137392434
-        total: 0.5958828347687471
+        critical: 0.5763289526227959
+        high: 0.8906963890969017
+        informational: 0.362880998872939
+        low: 0.9206384098045786
+        medium: 0.3939227905544213
+        total: 0.11867421993190391
     properties:
       mttr:
         $ref: '#/definitions/Statstotal'
@@ -1359,14 +1239,14 @@ definitions:
   Pagination:
     description: Pagination info (default view)
     example:
-      limit: 0.8451506497515555
+      limit: 0.9276149316039823
       more: false
-      offset: 0.11075891542163877
-      total: 0.733137232779022
+      offset: 0.7144421259000474
+      total: 0.9837483587621623
     properties:
       limit:
         description: Limit of results for the list
-        example: 0.8451506497515555
+        example: 0.9276149316039823
         format: double
         type: number
       more:
@@ -1375,12 +1255,12 @@ definitions:
         type: boolean
       offset:
         description: Results list offset
-        example: 0.11075891542163877
+        example: 0.7144421259000474
         format: double
         type: number
       total:
         description: Total number of results for the list
-        example: 0.733137232779022
+        example: 0.9837483587621623
         format: double
         type: number
     title: 'Mediatype identifier: pagination; view=default'
@@ -1411,9 +1291,6 @@ definitions:
     description: PolicyCollection is the media type for an array of Policy (default
       view)
     example:
-    - id: af36818a-0f30-412c-9692-d37716075861
-      name: Sample Policy
-      settings_count: 12
     - id: af36818a-0f30-412c-9692-d37716075861
       name: Sample Policy
       settings_count: 12
@@ -1500,6 +1377,12 @@ definitions:
     description: PolicysettingCollection is the media type for an array of Policysetting
       (default view)
     example:
+    - checktype_name: vulcan-tls
+      id: 5e51174d-3755-48b2-98bf-37e37cb07f6e
+      options: '{"timeout":60}'
+    - checktype_name: vulcan-tls
+      id: 5e51174d-3755-48b2-98bf-37e37cb07f6e
+      options: '{"timeout":60}'
     - checktype_name: vulcan-tls
       id: 5e51174d-3755-48b2-98bf-37e37cb07f6e
       options: '{"timeout":60}'
@@ -1635,24 +1518,22 @@ definitions:
     type: array
   ProgramPayload:
     example:
-      autosend: true
-      disabled: false
+      autosend: false
+      disabled: true
       name: Every midnight
       policy_groups:
-      - group_id: Sit sed.
-        policy_id: Aut et voluptatum suscipit ea.
-      - group_id: Sit sed.
-        policy_id: Aut et voluptatum suscipit ea.
-      - group_id: Sit sed.
-        policy_id: Aut et voluptatum suscipit ea.
+      - group_id: Suscipit ea et.
+        policy_id: Quia voluptas hic est iure provident.
+      - group_id: Suscipit ea et.
+        policy_id: Quia voluptas hic est iure provident.
     properties:
       autosend:
         description: Autosend
-        example: true
+        example: false
         type: boolean
       disabled:
         description: Disabled
-        example: false
+        example: true
         type: boolean
       name:
         description: name
@@ -1661,12 +1542,10 @@ definitions:
       policy_groups:
         description: PolicyGroups
         example:
-        - group_id: Sit sed.
-          policy_id: Aut et voluptatum suscipit ea.
-        - group_id: Sit sed.
-          policy_id: Aut et voluptatum suscipit ea.
-        - group_id: Sit sed.
-          policy_id: Aut et voluptatum suscipit ea.
+        - group_id: Suscipit ea et.
+          policy_id: Quia voluptas hic est iure provident.
+        - group_id: Suscipit ea et.
+          policy_id: Quia voluptas hic est iure provident.
         items:
           $ref: '#/definitions/ProgramPolicyGroupPayload'
         type: array
@@ -1674,31 +1553,27 @@ definitions:
     type: object
   ProgramPolicyGroupPayload:
     example:
-      group_id: Sit sed.
-      policy_id: Aut et voluptatum suscipit ea.
+      group_id: Suscipit ea et.
+      policy_id: Quia voluptas hic est iure provident.
     properties:
       group_id:
         description: group
-        example: Sit sed.
+        example: Suscipit ea et.
         type: string
       policy_id:
         description: policy
-        example: Aut et voluptatum suscipit ea.
+        example: Quia voluptas hic est iure provident.
         type: string
     title: ProgramPolicyGroupPayload
     type: object
   ProgramUpdatePayload:
     example:
       autosend: false
-      disabled: false
+      disabled: true
       name: Every midnight
       policy_groups:
-      - group_id: Sit sed.
-        policy_id: Aut et voluptatum suscipit ea.
-      - group_id: Sit sed.
-        policy_id: Aut et voluptatum suscipit ea.
-      - group_id: Sit sed.
-        policy_id: Aut et voluptatum suscipit ea.
+      - group_id: Suscipit ea et.
+        policy_id: Quia voluptas hic est iure provident.
     properties:
       autosend:
         description: Autosend
@@ -1706,7 +1581,7 @@ definitions:
         type: boolean
       disabled:
         description: Disabled
-        example: false
+        example: true
         type: boolean
       name:
         description: name
@@ -1715,12 +1590,8 @@ definitions:
       policy_groups:
         description: PolicyGroups
         example:
-        - group_id: Sit sed.
-          policy_id: Aut et voluptatum suscipit ea.
-        - group_id: Sit sed.
-          policy_id: Aut et voluptatum suscipit ea.
-        - group_id: Sit sed.
-          policy_id: Aut et voluptatum suscipit ea.
+        - group_id: Suscipit ea et.
+          policy_id: Quia voluptas hic est iure provident.
         items:
           $ref: '#/definitions/ProgramPolicyGroupPayload'
         type: array
@@ -1760,7 +1631,7 @@ definitions:
         - john.doe@vulcan.example.com
         - jane.doe@vulcan.example.com
         items:
-          example: Est iure provident non consequatur perferendis dolor.
+          example: Cumque enim totam ut perspiciatis.
           type: string
         type: array
     required:
@@ -1831,7 +1702,7 @@ definitions:
         - Hostname
         - Port
         items:
-          example: Est illo et corrupti rerum deleniti aut.
+          example: Odio tenetur consequatur quibusdam et voluptate.
           type: string
         type: array
       name:
@@ -1846,8 +1717,7 @@ definitions:
         items:
           additionalProperties: true
           example:
-            Porro placeat omnis perferendis maxime natus.: Neque aliquid molestias
-              velit quis laborum.
+            Illo et.: Rerum deleniti aut sed illo porro.
           type: object
         type: array
     title: 'Mediatype identifier: resource; view=default'
@@ -2111,11 +1981,11 @@ definitions:
   Statscoverage:
     description: 'Asset Coverage: discovered vs. confirmed (default view)'
     example:
-      coverage: 0.829278688095066
+      coverage: 0.3701317536253242
     properties:
       coverage:
         description: Percentage of assets confirmed respect to discovered
-        example: 0.829278688095066
+        example: 0.3701317536253242
         format: double
         type: number
     title: 'Mediatype identifier: statscoverage; view=default'
@@ -2151,41 +2021,41 @@ definitions:
   Statstotal:
     description: Stats by severity (default view)
     example:
-      critical: 0.4834744722342159
-      high: 0.5205844348643661
-      informational: 0.8413557035664904
-      low: 0.21762696584450403
-      medium: 0.8619749137392434
-      total: 0.5958828347687471
+      critical: 0.5763289526227959
+      high: 0.8906963890969017
+      informational: 0.362880998872939
+      low: 0.9206384098045786
+      medium: 0.3939227905544213
+      total: 0.11867421993190391
     properties:
       critical:
         description: Stats for critical vulnerabilities
-        example: 0.4834744722342159
+        example: 0.5763289526227959
         format: double
         type: number
       high:
         description: Stats for high vulnerabilities
-        example: 0.5205844348643661
+        example: 0.8906963890969017
         format: double
         type: number
       informational:
         description: Stats for informational vulnerabilities
-        example: 0.8413557035664904
+        example: 0.362880998872939
         format: double
         type: number
       low:
         description: Stats for low vulnerabilities
-        example: 0.21762696584450403
+        example: 0.9206384098045786
         format: double
         type: number
       medium:
         description: Stats for medium vulnerabilities
-        example: 0.8619749137392434
+        example: 0.3939227905544213
         format: double
         type: number
       total:
         description: Stats for all vulnerabilities
-        example: 0.5958828347687471
+        example: 0.11867421993190391
         format: double
         type: number
     title: 'Mediatype identifier: statstotal; view=default'
@@ -2211,7 +2081,7 @@ definitions:
         example:
         - team:vulcan
         items:
-          example: Ratione perferendis.
+          example: Velit quis.
           type: string
         type: array
     title: 'Mediatype identifier: target; view=default'
@@ -2245,14 +2115,6 @@ definitions:
   TeamCollection:
     description: TeamCollection is the media type for an array of Team (default view)
     example:
-    - description: Security Team
-      id: ff74a33c-e683-4612-a62f-a9cf385f6522
-      name: Security
-      tag: team:security
-    - description: Security Team
-      id: ff74a33c-e683-4612-a62f-a9cf385f6522
-      name: Security
-      tag: team:security
     - description: Security Team
       id: ff74a33c-e683-4612-a62f-a9cf385f6522
       name: Security
@@ -2568,9 +2430,43 @@ paths:
       summary: profile user
       tags:
       - user
+  /stats/exposure:
+    get:
+      description: Get global exposure statistics.
+      operationId: global-stats#exposure
+      parameters:
+      - description: Specific date to get statistics at
+        in: query
+        name: atDate
+        required: false
+        type: string
+      - description: Maximum issues score filter
+        in: query
+        name: maxScore
+        required: false
+        type: number
+      - description: Minimum issues score filter
+        in: query
+        name: minScore
+        required: false
+        type: number
+      produces:
+      - exposure
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Exposure'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: exposure global-stats
+      tags:
+      - global-stats
   /stats/mttr:
     get:
-      description: Get global MTR statistics.
+      description: Get global MTTR statistics.
       operationId: global-stats#mttr
       parameters:
       - description: Maximum date to filter statistics by
@@ -4521,6 +4417,45 @@ paths:
       security:
       - Bearer: []
       summary: coverage stats
+      tags:
+      - stats
+  /teams/{team_id}/stats/exposure:
+    get:
+      description: Get exposure statistics for a team.
+      operationId: stats#exposure
+      parameters:
+      - description: Specific date to get statistics at
+        in: query
+        name: atDate
+        required: false
+        type: string
+      - description: Maximum issues score filter
+        in: query
+        name: maxScore
+        required: false
+        type: number
+      - description: Minimum issues score filter
+        in: query
+        name: minScore
+        required: false
+        type: number
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      produces:
+      - exposure
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Exposure'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: exposure stats
       tags:
       - stats
   /teams/{team_id}/stats/fixed:

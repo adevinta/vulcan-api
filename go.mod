@@ -10,11 +10,12 @@ require (
 	github.com/adevinta/vulcan-report v0.0.0-20190503133936-d8a2d4cb18ff
 	github.com/adevinta/vulcan-scan-engine v0.0.0-20210309065523-a3893a5e2469
 	github.com/adevinta/vulcan-types v0.0.0-20200922093209-437fd6d5ab11
-	github.com/adevinta/vulnerability-db-api v0.0.0-20210225080913-30c973988192
+	github.com/adevinta/vulnerability-db-api v0.0.0-20210603131138-ae910f946bab
 	github.com/aws/aws-sdk-go v1.34.28
 	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/docker/distribution v2.7.1+incompatible
+	github.com/docker/docker v1.13.1 // indirect
 	github.com/filewalkwithme/impl v0.0.0-20180509134408-886de39eded9 // indirect
 	github.com/go-kit/kit v0.9.0
 	github.com/goadesign/goa v1.4.3

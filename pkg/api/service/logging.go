@@ -874,6 +874,17 @@ func (middleware loggingMiddleware) StatsMTTR(ctx context.Context, params api.St
 	return middleware.next.StatsMTTR(ctx, params)
 }
 
+func (middleware loggingMiddleware) StatsExposure(ctx context.Context, params api.StatsParams) (*api.StatsExposure, error) {
+	defer func() {
+		XRequestID := ""
+		if ctx != nil {
+			XRequestID, _ = ctx.Value(kithttp.ContextKeyRequestXRequestID).(string)
+		}
+		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "StatsExposure", "params", mySprintf(params))
+	}()
+	return middleware.next.StatsExposure(ctx, params)
+}
+
 func (middleware loggingMiddleware) StatsOpen(ctx context.Context, params api.StatsParams) (*api.StatsOpen, error) {
 	defer func() {
 		XRequestID := ""
