@@ -379,7 +379,7 @@ definitions:
         - a14c7c65-66ab-4676-bcf6-0dea9719f5c6
         - 9f7a0c78-b752-4126-aa6d-0f286ada7b8f
         items:
-          example: Dolorem distinctio.
+          example: Sit odio tenetur consequatur quibusdam.
           type: string
         type: array
     required:
@@ -431,15 +431,15 @@ definitions:
     description: Exposure stats (default view)
     example:
       exposure:
-        critical: 0.5763289526227959
-        high: 0.8906963890969017
-        informational: 0.362880998872939
-        low: 0.9206384098045786
-        medium: 0.3939227905544213
-        total: 0.11867421993190391
+        mean: 0.5763289526227959
+        percentile_10: 0.8906963890969017
+        percentile_25: 0.362880998872939
+        percentile_50: 0.9206384098045786
+        percentile_75: 0.3939227905544213
+        percentile_90: 0.11867421993190391
     properties:
       exposure:
-        $ref: '#/definitions/Statstotal'
+        $ref: '#/definitions/Statsaverages'
     title: 'Mediatype identifier: exposure; view=default'
     type: object
   Finding:
@@ -635,22 +635,6 @@ definitions:
       status_previous: OPEN
       tag: team:security
       user: user@adevinta.com
-    - created_at: "2021-03-27T00:26:43.211506Z"
-      finding_id: 3c7d7003-c53d-4ccc-80e7-f21da241b2d4
-      id: b0720503-0a84-43fd-9cf4-5bb6c500226f
-      notes: This finding is a false positive because...
-      status: FALSE_POSITIVE
-      status_previous: OPEN
-      tag: team:security
-      user: user@adevinta.com
-    - created_at: "2021-03-27T00:26:43.211506Z"
-      finding_id: 3c7d7003-c53d-4ccc-80e7-f21da241b2d4
-      id: b0720503-0a84-43fd-9cf4-5bb6c500226f
-      notes: This finding is a false positive because...
-      status: FALSE_POSITIVE
-      status_previous: OPEN
-      tag: team:security
-      user: user@adevinta.com
     items:
       $ref: '#/definitions/Finding_overwrite'
     title: 'Mediatype identifier: finding_overwrite; type=collection; view=default'
@@ -659,6 +643,59 @@ definitions:
     description: FindingCollection is the media type for an array of Finding (default
       view)
     example:
+    - attachments:
+      - content_type: application/json
+        data: e30=
+        name: JSON string
+      current_exposure: 4631
+      details: ""
+      id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      impact_details: ""
+      issue:
+        cwe_id: 358
+        description: This domain has at least one MX record
+        id: b0720503-0a84-43fd-9cf4-5bb6c500226f
+        recommendations:
+        - It is recommended to run DMARC
+        reference_links: []
+        summary: MX presence
+      resources:
+      - attributes:
+        - Hostname
+        - Port
+        name: Network Resources
+        resources:
+        - Hostname: test.example.com
+          Port: "443"
+      - attributes:
+        - Hostname
+        - Port
+        name: Network Resources
+        resources:
+        - Hostname: test.example.com
+          Port: "443"
+      - attributes:
+        - Hostname
+        - Port
+        name: Network Resources
+        resources:
+        - Hostname: test.example.com
+          Port: "443"
+      score: 6.9
+      source:
+        component: vulcan-tls
+        id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
+        instance: b3320f03-1284-42fd-9cf4-5bb6c500966f
+        name: vulcan
+        options: '{"timeout":60}'
+        time: "2019-06-08 11:16:40"
+      status: OPEN
+      target:
+        id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
+        identifier: www.test.com
+        tags:
+        - team:vulcan
+      total_exposure: 4631
     - attachments:
       - content_type: application/json
         data: e30=
@@ -770,6 +807,14 @@ definitions:
       max_score: 6.9
       summary: Site Without HTTPS
       targets_count: 14
+    - issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      max_score: 6.9
+      summary: Site Without HTTPS
+      targets_count: 14
+    - issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      max_score: 6.9
+      summary: Site Without HTTPS
+      targets_count: 14
     items:
       $ref: '#/definitions/Findings_issue'
     title: 'Mediatype identifier: findings_issue; type=collection; view=default'
@@ -802,6 +847,112 @@ definitions:
     description: Findings list (default view)
     example:
       findings:
+      - attachments:
+        - content_type: application/json
+          data: e30=
+          name: JSON string
+        current_exposure: 4631
+        details: ""
+        id: a8720503-0284-45fd-9cf4-5bb6c500966f
+        impact_details: ""
+        issue:
+          cwe_id: 358
+          description: This domain has at least one MX record
+          id: b0720503-0a84-43fd-9cf4-5bb6c500226f
+          recommendations:
+          - It is recommended to run DMARC
+          reference_links: []
+          summary: MX presence
+        resources:
+        - attributes:
+          - Hostname
+          - Port
+          name: Network Resources
+          resources:
+          - Hostname: test.example.com
+            Port: "443"
+        - attributes:
+          - Hostname
+          - Port
+          name: Network Resources
+          resources:
+          - Hostname: test.example.com
+            Port: "443"
+        - attributes:
+          - Hostname
+          - Port
+          name: Network Resources
+          resources:
+          - Hostname: test.example.com
+            Port: "443"
+        score: 6.9
+        source:
+          component: vulcan-tls
+          id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
+          instance: b3320f03-1284-42fd-9cf4-5bb6c500966f
+          name: vulcan
+          options: '{"timeout":60}'
+          time: "2019-06-08 11:16:40"
+        status: OPEN
+        target:
+          id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
+          identifier: www.test.com
+          tags:
+          - team:vulcan
+        total_exposure: 4631
+      - attachments:
+        - content_type: application/json
+          data: e30=
+          name: JSON string
+        current_exposure: 4631
+        details: ""
+        id: a8720503-0284-45fd-9cf4-5bb6c500966f
+        impact_details: ""
+        issue:
+          cwe_id: 358
+          description: This domain has at least one MX record
+          id: b0720503-0a84-43fd-9cf4-5bb6c500226f
+          recommendations:
+          - It is recommended to run DMARC
+          reference_links: []
+          summary: MX presence
+        resources:
+        - attributes:
+          - Hostname
+          - Port
+          name: Network Resources
+          resources:
+          - Hostname: test.example.com
+            Port: "443"
+        - attributes:
+          - Hostname
+          - Port
+          name: Network Resources
+          resources:
+          - Hostname: test.example.com
+            Port: "443"
+        - attributes:
+          - Hostname
+          - Port
+          name: Network Resources
+          resources:
+          - Hostname: test.example.com
+            Port: "443"
+        score: 6.9
+        source:
+          component: vulcan-tls
+          id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
+          instance: b3320f03-1284-42fd-9cf4-5bb6c500966f
+          name: vulcan
+          options: '{"timeout":60}'
+          time: "2019-06-08 11:16:40"
+        status: OPEN
+        target:
+          id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
+          identifier: www.test.com
+          tags:
+          - team:vulcan
+        total_exposure: 4631
       - attachments:
         - content_type: application/json
           data: e30=
@@ -968,6 +1119,16 @@ definitions:
       id: f6360346-77a5-4f97-b919-331363b3af26
       name: Default group
       options: '{"timeout":60}'
+    - assets_count: 1
+      description: All newly created assets are added to the Default group
+      id: f6360346-77a5-4f97-b919-331363b3af26
+      name: Default group
+      options: '{"timeout":60}'
+    - assets_count: 1
+      description: All newly created assets are added to the Default group
+      id: f6360346-77a5-4f97-b919-331363b3af26
+      name: Default group
+      options: '{"timeout":60}'
     items:
       $ref: '#/definitions/Group'
     title: 'Mediatype identifier: group; type=collection; view=default'
@@ -1075,14 +1236,14 @@ definitions:
         example:
         - It is recommended to run DMARC
         items:
-          example: Omnis perferendis.
+          example: Illo et.
           type: string
         type: array
       reference_links:
         description: Documentation reference for the issue
         example: []
         items:
-          example: Natus esse neque aliquid.
+          example: Rerum deleniti aut sed illo porro.
           type: string
         type: array
       summary:
@@ -1225,12 +1386,12 @@ definitions:
     description: MTTR stats (default view)
     example:
       mttr:
-        critical: 0.5763289526227959
-        high: 0.8906963890969017
-        informational: 0.362880998872939
-        low: 0.9206384098045786
-        medium: 0.3939227905544213
-        total: 0.11867421993190391
+        critical: 0.9729347716970894
+        high: 0.3291856414183523
+        informational: 0.8243581388518908
+        low: 0.3602830379559806
+        medium: 0.6517825863008089
+        total: 0.4039820739887437
     properties:
       mttr:
         $ref: '#/definitions/Statstotal'
@@ -1380,12 +1541,6 @@ definitions:
     - checktype_name: vulcan-tls
       id: 5e51174d-3755-48b2-98bf-37e37cb07f6e
       options: '{"timeout":60}'
-    - checktype_name: vulcan-tls
-      id: 5e51174d-3755-48b2-98bf-37e37cb07f6e
-      options: '{"timeout":60}'
-    - checktype_name: vulcan-tls
-      id: 5e51174d-3755-48b2-98bf-37e37cb07f6e
-      options: '{"timeout":60}'
     items:
       $ref: '#/definitions/Policysetting'
     title: 'Mediatype identifier: policysetting; type=collection; view=default'
@@ -1393,8 +1548,8 @@ definitions:
   Program:
     description: Program (default view)
     example:
-      autosend: false
-      disabled: true
+      autosend: true
+      disabled: false
       global: false
       id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
       name: Every midnight
@@ -1414,11 +1569,11 @@ definitions:
     properties:
       autosend:
         description: Autosend
-        example: false
+        example: true
         type: boolean
       disabled:
         description: Disabled
-        example: true
+        example: false
         type: boolean
       global:
         description: Global
@@ -1476,8 +1631,8 @@ definitions:
     description: ProgramCollection is the media type for an array of Program (default
       view)
     example:
-    - autosend: false
-      disabled: true
+    - autosend: true
+      disabled: false
       global: false
       id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
       name: Every midnight
@@ -1494,8 +1649,26 @@ definitions:
           settings_count: 12
       schedule:
         cron: 0 7 1 * *
-    - autosend: false
-      disabled: true
+    - autosend: true
+      disabled: false
+      global: false
+      id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
+      name: Every midnight
+      policy_groups:
+      - group:
+          assets_count: 1
+          description: All newly created assets are added to the Default group
+          id: f6360346-77a5-4f97-b919-331363b3af26
+          name: Default group
+          options: '{"timeout":60}'
+        policy:
+          id: af36818a-0f30-412c-9692-d37716075861
+          name: Sample Policy
+          settings_count: 12
+      schedule:
+        cron: 0 7 1 * *
+    - autosend: true
+      disabled: false
       global: false
       id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
       name: Every midnight
@@ -1519,13 +1692,15 @@ definitions:
   ProgramPayload:
     example:
       autosend: false
-      disabled: true
+      disabled: false
       name: Every midnight
       policy_groups:
-      - group_id: Suscipit ea et.
-        policy_id: Quia voluptas hic est iure provident.
-      - group_id: Suscipit ea et.
-        policy_id: Quia voluptas hic est iure provident.
+      - group_id: Hic est iure provident non consequatur.
+        policy_id: Dolor laboriosam.
+      - group_id: Hic est iure provident non consequatur.
+        policy_id: Dolor laboriosam.
+      - group_id: Hic est iure provident non consequatur.
+        policy_id: Dolor laboriosam.
     properties:
       autosend:
         description: Autosend
@@ -1533,7 +1708,7 @@ definitions:
         type: boolean
       disabled:
         description: Disabled
-        example: true
+        example: false
         type: boolean
       name:
         description: name
@@ -1542,10 +1717,12 @@ definitions:
       policy_groups:
         description: PolicyGroups
         example:
-        - group_id: Suscipit ea et.
-          policy_id: Quia voluptas hic est iure provident.
-        - group_id: Suscipit ea et.
-          policy_id: Quia voluptas hic est iure provident.
+        - group_id: Hic est iure provident non consequatur.
+          policy_id: Dolor laboriosam.
+        - group_id: Hic est iure provident non consequatur.
+          policy_id: Dolor laboriosam.
+        - group_id: Hic est iure provident non consequatur.
+          policy_id: Dolor laboriosam.
         items:
           $ref: '#/definitions/ProgramPolicyGroupPayload'
         type: array
@@ -1553,16 +1730,16 @@ definitions:
     type: object
   ProgramPolicyGroupPayload:
     example:
-      group_id: Suscipit ea et.
-      policy_id: Quia voluptas hic est iure provident.
+      group_id: Hic est iure provident non consequatur.
+      policy_id: Dolor laboriosam.
     properties:
       group_id:
         description: group
-        example: Suscipit ea et.
+        example: Hic est iure provident non consequatur.
         type: string
       policy_id:
         description: policy
-        example: Quia voluptas hic est iure provident.
+        example: Dolor laboriosam.
         type: string
     title: ProgramPolicyGroupPayload
     type: object
@@ -1572,8 +1749,12 @@ definitions:
       disabled: true
       name: Every midnight
       policy_groups:
-      - group_id: Suscipit ea et.
-        policy_id: Quia voluptas hic est iure provident.
+      - group_id: Hic est iure provident non consequatur.
+        policy_id: Dolor laboriosam.
+      - group_id: Hic est iure provident non consequatur.
+        policy_id: Dolor laboriosam.
+      - group_id: Hic est iure provident non consequatur.
+        policy_id: Dolor laboriosam.
     properties:
       autosend:
         description: Autosend
@@ -1590,8 +1771,12 @@ definitions:
       policy_groups:
         description: PolicyGroups
         example:
-        - group_id: Suscipit ea et.
-          policy_id: Quia voluptas hic est iure provident.
+        - group_id: Hic est iure provident non consequatur.
+          policy_id: Dolor laboriosam.
+        - group_id: Hic est iure provident non consequatur.
+          policy_id: Dolor laboriosam.
+        - group_id: Hic est iure provident non consequatur.
+          policy_id: Dolor laboriosam.
         items:
           $ref: '#/definitions/ProgramPolicyGroupPayload'
         type: array
@@ -1613,8 +1798,6 @@ definitions:
       view)
     example:
     - email: john.doe@vulcan.example.com
-    - email: john.doe@vulcan.example.com
-    - email: john.doe@vulcan.example.com
     items:
       $ref: '#/definitions/Recipient'
     title: 'Mediatype identifier: recipient; type=collection; view=default'
@@ -1631,7 +1814,7 @@ definitions:
         - john.doe@vulcan.example.com
         - jane.doe@vulcan.example.com
         items:
-          example: Cumque enim totam ut perspiciatis.
+          example: Repellat eum.
           type: string
         type: array
     required:
@@ -1702,7 +1885,7 @@ definitions:
         - Hostname
         - Port
         items:
-          example: Odio tenetur consequatur quibusdam et voluptate.
+          example: Corrupti sed qui.
           type: string
         type: array
       name:
@@ -1717,7 +1900,8 @@ definitions:
         items:
           additionalProperties: true
           example:
-            Illo et.: Rerum deleniti aut sed illo porro.
+            Esse neque aliquid molestias velit quis.: Quas voluptatum sit eos illum
+              ipsum tempora.
           type: object
         type: array
     title: 'Mediatype identifier: resource; view=default'
@@ -1729,8 +1913,8 @@ definitions:
       end_time: "2018-09-07T10:40:52Z"
       id: 23e7034f-8180-4895-8e7f-73f2f7d90631
       program:
-        autosend: false
-        disabled: true
+        autosend: true
+        disabled: false
         global: false
         id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
         name: Every midnight
@@ -1801,8 +1985,8 @@ definitions:
       end_time: "2018-09-07T10:40:52Z"
       id: 23e7034f-8180-4895-8e7f-73f2f7d90631
       program:
-        autosend: false
-        disabled: true
+        autosend: true
+        disabled: false
         global: false
         id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
         name: Every midnight
@@ -1828,8 +2012,8 @@ definitions:
       end_time: "2018-09-07T10:40:52Z"
       id: 23e7034f-8180-4895-8e7f-73f2f7d90631
       program:
-        autosend: false
-        disabled: true
+        autosend: true
+        disabled: false
         global: false
         id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
         name: Every midnight
@@ -1945,47 +2129,89 @@ definitions:
   Stats:
     description: Stats by severity (default view)
     example:
-      critical: 0.19639983058229388
-      high: 0.06491961493419728
-      informational: 0.14622255544569557
-      low: 0.18441607619283212
-      medium: 0.9474707029546127
+      critical: 0.6271422644500942
+      high: 0.8147084592281026
+      informational: 0.0942444272316253
+      low: 0.2903626580923911
+      medium: 0.12127770670881338
     properties:
       critical:
         description: Stats for critical vulnerabilities
-        example: 0.19639983058229388
+        example: 0.6271422644500942
         format: double
         type: number
       high:
         description: Stats for high vulnerabilities
-        example: 0.06491961493419728
+        example: 0.8147084592281026
         format: double
         type: number
       informational:
         description: Stats for informational vulnerabilities
-        example: 0.14622255544569557
+        example: 0.0942444272316253
         format: double
         type: number
       low:
         description: Stats for low vulnerabilities
-        example: 0.18441607619283212
+        example: 0.2903626580923911
         format: double
         type: number
       medium:
         description: Stats for medium vulnerabilities
-        example: 0.9474707029546127
+        example: 0.12127770670881338
         format: double
         type: number
     title: 'Mediatype identifier: stats; view=default'
     type: object
+  Statsaverages:
+    description: Stats by different averages (default view)
+    example:
+      mean: 0.5763289526227959
+      percentile_10: 0.8906963890969017
+      percentile_25: 0.362880998872939
+      percentile_50: 0.9206384098045786
+      percentile_75: 0.3939227905544213
+      percentile_90: 0.11867421993190391
+    properties:
+      mean:
+        description: Mean of the stats
+        example: 0.5763289526227959
+        format: double
+        type: number
+      percentile_10:
+        description: Percentile 10 of the stats
+        example: 0.8906963890969017
+        format: double
+        type: number
+      percentile_25:
+        description: Percentile 25 of the stats
+        example: 0.362880998872939
+        format: double
+        type: number
+      percentile_50:
+        description: Percentile 50 or median of the stats
+        example: 0.9206384098045786
+        format: double
+        type: number
+      percentile_75:
+        description: Percentile 75 or third quartile of the stats
+        example: 0.3939227905544213
+        format: double
+        type: number
+      percentile_90:
+        description: Percentile 90 of the stats
+        example: 0.11867421993190391
+        format: double
+        type: number
+    title: 'Mediatype identifier: statsaverages; view=default'
+    type: object
   Statscoverage:
     description: 'Asset Coverage: discovered vs. confirmed (default view)'
     example:
-      coverage: 0.3701317536253242
+      coverage: 0.4952103921512922
     properties:
       coverage:
         description: Percentage of assets confirmed respect to discovered
-        example: 0.3701317536253242
+        example: 0.4952103921512922
         format: double
         type: number
     title: 'Mediatype identifier: statscoverage; view=default'
@@ -1994,11 +2220,11 @@ definitions:
     description: Fixed issues stats (default view)
     example:
       fixed_issues:
-        critical: 0.19639983058229388
-        high: 0.06491961493419728
-        informational: 0.14622255544569557
-        low: 0.18441607619283212
-        medium: 0.9474707029546127
+        critical: 0.6271422644500942
+        high: 0.8147084592281026
+        informational: 0.0942444272316253
+        low: 0.2903626580923911
+        medium: 0.12127770670881338
     properties:
       fixed_issues:
         $ref: '#/definitions/Stats'
@@ -2008,11 +2234,11 @@ definitions:
     description: Open issues stats (default view)
     example:
       open_issues:
-        critical: 0.19639983058229388
-        high: 0.06491961493419728
-        informational: 0.14622255544569557
-        low: 0.18441607619283212
-        medium: 0.9474707029546127
+        critical: 0.6271422644500942
+        high: 0.8147084592281026
+        informational: 0.0942444272316253
+        low: 0.2903626580923911
+        medium: 0.12127770670881338
     properties:
       open_issues:
         $ref: '#/definitions/Stats'
@@ -2021,41 +2247,41 @@ definitions:
   Statstotal:
     description: Stats by severity (default view)
     example:
-      critical: 0.5763289526227959
-      high: 0.8906963890969017
-      informational: 0.362880998872939
-      low: 0.9206384098045786
-      medium: 0.3939227905544213
-      total: 0.11867421993190391
+      critical: 0.9729347716970894
+      high: 0.3291856414183523
+      informational: 0.8243581388518908
+      low: 0.3602830379559806
+      medium: 0.6517825863008089
+      total: 0.4039820739887437
     properties:
       critical:
         description: Stats for critical vulnerabilities
-        example: 0.5763289526227959
+        example: 0.9729347716970894
         format: double
         type: number
       high:
         description: Stats for high vulnerabilities
-        example: 0.8906963890969017
+        example: 0.3291856414183523
         format: double
         type: number
       informational:
         description: Stats for informational vulnerabilities
-        example: 0.362880998872939
+        example: 0.8243581388518908
         format: double
         type: number
       low:
         description: Stats for low vulnerabilities
-        example: 0.9206384098045786
+        example: 0.3602830379559806
         format: double
         type: number
       medium:
         description: Stats for medium vulnerabilities
-        example: 0.3939227905544213
+        example: 0.6517825863008089
         format: double
         type: number
       total:
         description: Stats for all vulnerabilities
-        example: 0.11867421993190391
+        example: 0.4039820739887437
         format: double
         type: number
     title: 'Mediatype identifier: statstotal; view=default'
@@ -2081,7 +2307,7 @@ definitions:
         example:
         - team:vulcan
         items:
-          example: Velit quis.
+          example: Omnis perferendis.
           type: string
         type: array
     title: 'Mediatype identifier: target; view=default'
@@ -2222,6 +2448,26 @@ definitions:
     description: TeammemberCollection is the media type for an array of Teammember
       (default view)
     example:
+    - role: owner
+      user:
+        active: true
+        admin: true
+        email: john.doe@vulcan.example.com
+        firstname: John
+        id: 967d9966-b561-4233-bd6f-cac603fd8320
+        last_login: "2018-09-07T10:40:52Z"
+        lastname: Doe
+        observer: true
+    - role: owner
+      user:
+        active: true
+        admin: true
+        email: john.doe@vulcan.example.com
+        firstname: John
+        id: 967d9966-b561-4233-bd6f-cac603fd8320
+        last_login: "2018-09-07T10:40:52Z"
+        lastname: Doe
+        observer: true
     - role: owner
       user:
         active: true
