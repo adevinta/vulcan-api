@@ -258,7 +258,7 @@ func (c *Client) DecodeError(resp *http.Response) (*Error, error) {
 // Identifier: exposure; view=default
 type Exposure struct {
 	// Stats for exposure by different averages
-	Exposure *Statstotal `form:"exposure,omitempty" json:"exposure,omitempty" yaml:"exposure,omitempty" xml:"exposure,omitempty"`
+	Exposure *Statsaverages `form:"exposure,omitempty" json:"exposure,omitempty" yaml:"exposure,omitempty" xml:"exposure,omitempty"`
 }
 
 // DecodeExposure decodes the Exposure instance encoded in resp body.
