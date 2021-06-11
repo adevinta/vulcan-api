@@ -103,9 +103,11 @@ const (
 	CreateFindingOverwrite = "CreateFindingOverwrite"
 	ListFindingOverwrites  = "ListFindingOverwrites"
 	StatsMTTR              = "StatsMTTR"
+	StatsExposure          = "StatsExposure"
 	StatsOpen              = "StatsOpen"
 	StatsFixed             = "StatsFixed"
 	GlobalStatsMTTR        = "GlobalStatsMTTR"
+	GlobalStatsExposure    = "GlobalStatsExposure"
 )
 
 // Endpoints contains all available endpoints for this api
@@ -202,9 +204,11 @@ func MakeEndpoints(s api.VulcanitoService, logger log.Logger) Endpoints {
 	endpoints[CreateFindingOverwrite] = makeCreateFindingOverwriteEndpoint(s, logger)
 	endpoints[ListFindingOverwrites] = makeListFindingOverwritesEndpoint(s, logger)
 	endpoints[StatsMTTR] = makeStatsMTTREndpoint(s, logger)
+	endpoints[StatsExposure] = makeStatsExposureEndpoint(s, logger)
 	endpoints[StatsOpen] = makeStatsOpenEndpoint(s, logger)
 	endpoints[StatsFixed] = makeStatsFixedEndpoint(s, logger)
 	endpoints[GlobalStatsMTTR] = makeGlobalStatsMTTREndpoint(s, logger)
+	endpoints[GlobalStatsExposure] = makeGlobalStatsExposureEndpoint(s, logger)
 
 	return endpoints
 }

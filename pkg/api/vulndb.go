@@ -91,15 +91,22 @@ type TargetsList struct {
 // that can be used to customize the call to retrieve
 // the statistics.
 type StatsParams struct {
-	Tag     string
-	MinDate string
-	MaxDate string
-	AtDate  string
+	Tag      string
+	MinDate  string
+	MaxDate  string
+	AtDate   string
+	MinScore float64
+	MaxScore float64
 }
 
 // StatsMTTR represents the mean time to remediation stats by issue severity.
 type StatsMTTR struct {
 	MTTR vulndb.StatsMTTRSeverity `json:"mttr"`
+}
+
+// StatsExposure represents the exposure time stats by different averages.
+type StatsExposure struct {
+	Exposure vulndb.StatsExposure `json:"exposure"`
 }
 
 // StatsOpen represents the stats for open issues grouped by severity.

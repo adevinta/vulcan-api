@@ -12,7 +12,55 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strconv"
 )
+
+// ExposureGlobalStatsPath computes a request path to the exposure action of global-stats.
+func ExposureGlobalStatsPath() string {
+
+	return fmt.Sprintf("/api/v1/stats/exposure")
+}
+
+// Get global exposure statistics.
+func (c *Client) ExposureGlobalStats(ctx context.Context, path string, atDate *string, maxScore *float64, minScore *float64) (*http.Response, error) {
+	req, err := c.NewExposureGlobalStatsRequest(ctx, path, atDate, maxScore, minScore)
+	if err != nil {
+		return nil, err
+	}
+	return c.Client.Do(ctx, req)
+}
+
+// NewExposureGlobalStatsRequest create the request corresponding to the exposure action endpoint of the global-stats resource.
+func (c *Client) NewExposureGlobalStatsRequest(ctx context.Context, path string, atDate *string, maxScore *float64, minScore *float64) (*http.Request, error) {
+	scheme := c.Scheme
+	if scheme == "" {
+		scheme = "https"
+	}
+	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
+	values := u.Query()
+	if atDate != nil {
+		values.Set("atDate", *atDate)
+	}
+	if maxScore != nil {
+		tmp113 := strconv.FormatFloat(*maxScore, 'f', -1, 64)
+		values.Set("maxScore", tmp113)
+	}
+	if minScore != nil {
+		tmp114 := strconv.FormatFloat(*minScore, 'f', -1, 64)
+		values.Set("minScore", tmp114)
+	}
+	u.RawQuery = values.Encode()
+	req, err := http.NewRequestWithContext(ctx, "GET", u.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+	if c.BearerSigner != nil {
+		if err := c.BearerSigner.Sign(req); err != nil {
+			return nil, err
+		}
+	}
+	return req, nil
+}
 
 // MttrGlobalStatsPath computes a request path to the mttr action of global-stats.
 func MttrGlobalStatsPath() string {
@@ -20,7 +68,7 @@ func MttrGlobalStatsPath() string {
 	return fmt.Sprintf("/api/v1/stats/mttr")
 }
 
-// Get global MTR statistics.
+// Get global MTTR statistics.
 func (c *Client) MttrGlobalStats(ctx context.Context, path string, maxDate *string, minDate *string) (*http.Response, error) {
 	req, err := c.NewMttrGlobalStatsRequest(ctx, path, maxDate, minDate)
 	if err != nil {
