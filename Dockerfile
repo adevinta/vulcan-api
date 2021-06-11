@@ -10,10 +10,10 @@ RUN cd cmd/vulcan-api && GOOS=linux GOARCH=amd64 go build -mod vendor . && cd -
 
 FROM alpine:3.10
 
-ENV FLYWAY_VERSION 6.1.4
+ENV FLYWAY_VERSION 7.8.2
 WORKDIR /flyway
 
-RUN apk add --no-cache --update openjdk8-jre bash gettext libc6-compat
+RUN apk add --no-cache --update openjdk8-jre-base bash gettext
 RUN wget https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/${FLYWAY_VERSION}/flyway-commandline-${FLYWAY_VERSION}.tar.gz \
     && tar -xzf flyway-commandline-${FLYWAY_VERSION}.tar.gz && mv flyway-${FLYWAY_VERSION}/* . \
     && rm flyway-commandline-${FLYWAY_VERSION}.tar.gz \
