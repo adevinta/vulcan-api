@@ -257,6 +257,8 @@ func (c *Client) DecodeError(resp *http.Response) (*Error, error) {
 //
 // Identifier: finding; view=default
 type Finding struct {
+	// Affected Resource
+	AffectedResource *string `form:"affected_resource,omitempty" json:"affected_resource,omitempty" yaml:"affected_resource,omitempty" xml:"affected_resource,omitempty"`
 	// Attachments
 	Attachments []*Attachment `form:"attachments,omitempty" json:"attachments,omitempty" yaml:"attachments,omitempty" xml:"attachments,omitempty"`
 	// Current exposure (hours). Only for OPEN findings

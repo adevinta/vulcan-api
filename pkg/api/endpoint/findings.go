@@ -27,6 +27,8 @@ type FindingsRequest struct {
 	Page       int     `urlquery:"page"`
 	Size       int     `urlquery:"size"`
 	Identifier string  `urlquery:"identifier"`
+	IssueID    string  `urlquery:"issueID"`
+	TargetID   string  `urlquery:"targetID"`
 }
 
 type FindingsByIssueRequest struct {
@@ -325,6 +327,8 @@ func buildFindingsParams(tag string, r *FindingsRequest) api.FindingsParams {
 		SortBy:          r.SortBy,
 		Identifier:      r.Identifier,
 		IdentifierMatch: true,
+		IssueID:         r.IssueID,
+		TargetID:        r.TargetID,
 	}
 }
 

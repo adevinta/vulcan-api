@@ -277,8 +277,8 @@ func ListFindingsFindingsPath(teamID string) string {
 }
 
 // List all findings from a team.
-func (c *Client) ListFindingsFindings(ctx context.Context, path string, atDate *string, identifier *string, maxDate *string, maxScore *float64, minDate *string, minScore *float64, page *float64, size *float64, sortBy *string, status *string) (*http.Response, error) {
-	req, err := c.NewListFindingsFindingsRequest(ctx, path, atDate, identifier, maxDate, maxScore, minDate, minScore, page, size, sortBy, status)
+func (c *Client) ListFindingsFindings(ctx context.Context, path string, atDate *string, identifier *string, issueID *string, maxDate *string, maxScore *float64, minDate *string, minScore *float64, page *float64, size *float64, sortBy *string, status *string, targetID *string) (*http.Response, error) {
+	req, err := c.NewListFindingsFindingsRequest(ctx, path, atDate, identifier, issueID, maxDate, maxScore, minDate, minScore, page, size, sortBy, status, targetID)
 	if err != nil {
 		return nil, err
 	}
@@ -286,7 +286,7 @@ func (c *Client) ListFindingsFindings(ctx context.Context, path string, atDate *
 }
 
 // NewListFindingsFindingsRequest create the request corresponding to the list findings action endpoint of the findings resource.
-func (c *Client) NewListFindingsFindingsRequest(ctx context.Context, path string, atDate *string, identifier *string, maxDate *string, maxScore *float64, minDate *string, minScore *float64, page *float64, size *float64, sortBy *string, status *string) (*http.Request, error) {
+func (c *Client) NewListFindingsFindingsRequest(ctx context.Context, path string, atDate *string, identifier *string, issueID *string, maxDate *string, maxScore *float64, minDate *string, minScore *float64, page *float64, size *float64, sortBy *string, status *string, targetID *string) (*http.Request, error) {
 	scheme := c.Scheme
 	if scheme == "" {
 		scheme = "https"
@@ -298,6 +298,9 @@ func (c *Client) NewListFindingsFindingsRequest(ctx context.Context, path string
 	}
 	if identifier != nil {
 		values.Set("identifier", *identifier)
+	}
+	if issueID != nil {
+		values.Set("issueID", *issueID)
 	}
 	if maxDate != nil {
 		values.Set("maxDate", *maxDate)
@@ -327,6 +330,9 @@ func (c *Client) NewListFindingsFindingsRequest(ctx context.Context, path string
 	if status != nil {
 		values.Set("status", *status)
 	}
+	if targetID != nil {
+		values.Set("targetID", *targetID)
+	}
 	u.RawQuery = values.Encode()
 	req, err := http.NewRequestWithContext(ctx, "GET", u.String(), nil)
 	if err != nil {
@@ -348,8 +354,8 @@ func ListFindingsIssuesFindingsPath(teamID string) string {
 }
 
 // List number of findings and max score per issue.
-func (c *Client) ListFindingsIssuesFindings(ctx context.Context, path string, atDate *string, maxDate *string, minDate *string, page *float64, size *float64, sortBy *string, status *string) (*http.Response, error) {
-	req, err := c.NewListFindingsIssuesFindingsRequest(ctx, path, atDate, maxDate, minDate, page, size, sortBy, status)
+func (c *Client) ListFindingsIssuesFindings(ctx context.Context, path string, atDate *string, maxDate *string, minDate *string, page *float64, size *float64, sortBy *string, status *string, targetID *string) (*http.Response, error) {
+	req, err := c.NewListFindingsIssuesFindingsRequest(ctx, path, atDate, maxDate, minDate, page, size, sortBy, status, targetID)
 	if err != nil {
 		return nil, err
 	}
@@ -357,7 +363,7 @@ func (c *Client) ListFindingsIssuesFindings(ctx context.Context, path string, at
 }
 
 // NewListFindingsIssuesFindingsRequest create the request corresponding to the list findings issues action endpoint of the findings resource.
-func (c *Client) NewListFindingsIssuesFindingsRequest(ctx context.Context, path string, atDate *string, maxDate *string, minDate *string, page *float64, size *float64, sortBy *string, status *string) (*http.Request, error) {
+func (c *Client) NewListFindingsIssuesFindingsRequest(ctx context.Context, path string, atDate *string, maxDate *string, minDate *string, page *float64, size *float64, sortBy *string, status *string, targetID *string) (*http.Request, error) {
 	scheme := c.Scheme
 	if scheme == "" {
 		scheme = "https"
@@ -387,6 +393,9 @@ func (c *Client) NewListFindingsIssuesFindingsRequest(ctx context.Context, path 
 	if status != nil {
 		values.Set("status", *status)
 	}
+	if targetID != nil {
+		values.Set("targetID", *targetID)
+	}
 	u.RawQuery = values.Encode()
 	req, err := http.NewRequestWithContext(ctx, "GET", u.String(), nil)
 	if err != nil {
@@ -408,8 +417,8 @@ func ListFindingsTargetsFindingsPath(teamID string) string {
 }
 
 // List number of findings and max score per target.
-func (c *Client) ListFindingsTargetsFindings(ctx context.Context, path string, atDate *string, maxDate *string, minDate *string, page *float64, size *float64, sortBy *string, status *string) (*http.Response, error) {
-	req, err := c.NewListFindingsTargetsFindingsRequest(ctx, path, atDate, maxDate, minDate, page, size, sortBy, status)
+func (c *Client) ListFindingsTargetsFindings(ctx context.Context, path string, atDate *string, issueID *string, maxDate *string, minDate *string, page *float64, size *float64, sortBy *string, status *string) (*http.Response, error) {
+	req, err := c.NewListFindingsTargetsFindingsRequest(ctx, path, atDate, issueID, maxDate, minDate, page, size, sortBy, status)
 	if err != nil {
 		return nil, err
 	}
@@ -417,7 +426,7 @@ func (c *Client) ListFindingsTargetsFindings(ctx context.Context, path string, a
 }
 
 // NewListFindingsTargetsFindingsRequest create the request corresponding to the list findings targets action endpoint of the findings resource.
-func (c *Client) NewListFindingsTargetsFindingsRequest(ctx context.Context, path string, atDate *string, maxDate *string, minDate *string, page *float64, size *float64, sortBy *string, status *string) (*http.Request, error) {
+func (c *Client) NewListFindingsTargetsFindingsRequest(ctx context.Context, path string, atDate *string, issueID *string, maxDate *string, minDate *string, page *float64, size *float64, sortBy *string, status *string) (*http.Request, error) {
 	scheme := c.Scheme
 	if scheme == "" {
 		scheme = "https"
@@ -426,6 +435,9 @@ func (c *Client) NewListFindingsTargetsFindingsRequest(ctx context.Context, path
 	values := u.Query()
 	if atDate != nil {
 		values.Set("atDate", *atDate)
+	}
+	if issueID != nil {
+		values.Set("issueID", *issueID)
 	}
 	if maxDate != nil {
 		values.Set("maxDate", *maxDate)
