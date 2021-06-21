@@ -27,12 +27,12 @@ type asset struct {
 	assetType  string
 }
 
-func (s vulcanitoService) ListAssets(ctx context.Context, teamID string) ([]*api.Asset, error) {
+func (s vulcanitoService) ListAssets(ctx context.Context, teamID string, asset api.Asset) ([]*api.Asset, error) {
 	if teamID == "" {
 		return nil, errors.NotFound(`Team ID is empty`)
 	}
 
-	result, err := s.db.ListAssets(teamID)
+	result, err := s.db.ListAssets(teamID, asset)
 	if err != nil {
 		_ = s.logger.Log("database error", err.Error())
 	}

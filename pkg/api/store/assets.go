@@ -14,7 +14,7 @@ import (
 	"github.com/adevinta/vulcan-api/pkg/api"
 )
 
-func (db vulcanitoStore) ListAssets(teamID string) ([]*api.Asset, error) {
+func (db vulcanitoStore) ListAssets(teamID string, asset api.Asset) ([]*api.Asset, error) {
 	findTeam := &api.Team{ID: teamID}
 	res := db.Conn.Find(&findTeam)
 	if res.Error != nil {
@@ -30,7 +30,9 @@ func (db vulcanitoStore) ListAssets(teamID string) ([]*api.Asset, error) {
 		Preload("AssetType").
 		Preload("AssetGroups.Group").
 		Preload("AssetAnnotations").
-		Find(&assets, "team_id = ?", teamID)
+		Where("team_id = ?", teamID).
+		Where(&asset).
+		Find(&assets)
 	if result.Error != nil {
 		if db.NotFoundError(result.Error) {
 			return nil, db.logError(errors.NotFound(result.Error))

@@ -41,7 +41,7 @@ type VulcanitoStore interface {
 	UpdateRecipients(teamID string, emails []string) error
 	ListRecipients(teamID string) ([]*Recipient, error)
 
-	ListAssets(teamID string) ([]*Asset, error)
+	ListAssets(teamID string, asset Asset) ([]*Asset, error)
 	FindAsset(teamID, assetID string) (*Asset, error)
 	CreateAsset(asset Asset, groups []Group) (*Asset, error)
 	CreateAssets(assets []Asset, groups []Group) ([]Asset, error)

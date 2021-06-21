@@ -258,15 +258,15 @@ func (middleware loggingMiddleware) ListRecipients(ctx context.Context, teamID s
 	return middleware.next.ListRecipients(ctx, teamID)
 }
 
-func (middleware loggingMiddleware) ListAssets(ctx context.Context, teamID string) ([]*api.Asset, error) {
+func (middleware loggingMiddleware) ListAssets(ctx context.Context, teamID string, asset api.Asset) ([]*api.Asset, error) {
 	defer func() {
 		XRequestID := ""
 		if ctx != nil {
 			XRequestID, _ = ctx.Value(kithttp.ContextKeyRequestXRequestID).(string)
 		}
-		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "ListAssets", "teamID", mySprintf(teamID))
+		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "ListAssets", "teamID", mySprintf(teamID), "asset", mySprintf(asset))
 	}()
-	return middleware.next.ListAssets(ctx, teamID)
+	return middleware.next.ListAssets(ctx, teamID, asset)
 }
 
 func (middleware loggingMiddleware) CreateAssets(ctx context.Context, assets []api.Asset, groups []api.Group) ([]api.Asset, error) {

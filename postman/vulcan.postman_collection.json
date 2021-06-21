@@ -3483,6 +3483,57 @@
 			"response": []
 		},
 		{
+			"name": "Add DomainName asset to team",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Asset data is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData[0].type.name).to.eql(\"Hostname\");",
+							"    pm.expect(jsonData[0].identifier).to.eql(\"adevinta.com\");",
+							"    pm.expect(jsonData[0].scannable).to.eql(true);",
+							"    pm.environment.set(\"asset2\", jsonData[0].id);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"assets\": [\n        {\n            \"type\": \"DomainName\",\n            \"identifier\": \"adevinta.com\",\n            \"scannable\": true\n        }\n\t]\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/assets",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"assets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Add asset with invalid options",
 			"event": [
 				{
@@ -3586,7 +3637,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"type": "text/javascript",
 						"exec": [
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
@@ -3594,9 +3644,11 @@
 							"",
 							"pm.test(\"Asset data is correct\", function () {",
 							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.length).to.eql(4);",
 							"    pm.expect(jsonData[0].type.name).to.eql(\"IP\");",
 							"});"
-						]
+						],
+						"type": "text/javascript"
 					}
 				}
 			],
@@ -3619,6 +3671,58 @@
 						"teams",
 						"{{team_id}}",
 						"assets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all assets for team by Identifier",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Asset data is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.length).to.eql(2);",
+							"    pm.expect(jsonData[0].type.name).to.eql(\"Hostname\");",
+							"    pm.expect(jsonData[1].type.name).to.eql(\"DomainName\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/assets?identifier=adevinta.com",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"assets"
+					],
+					"query": [
+						{
+							"key": "identifier",
+							"value": "adevinta.com"
+						}
 					]
 				}
 			},

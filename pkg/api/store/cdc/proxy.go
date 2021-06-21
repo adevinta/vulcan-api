@@ -259,8 +259,8 @@ func (b *BrokerProxy) ListRecipients(teamID string) ([]*api.Recipient, error) {
 	return b.store.ListRecipients(teamID)
 }
 
-func (b *BrokerProxy) ListAssets(teamID string) ([]*api.Asset, error) {
-	return b.store.ListAssets(teamID)
+func (b *BrokerProxy) ListAssets(teamID string, asset api.Asset) ([]*api.Asset, error) {
+	return b.store.ListAssets(teamID, asset)
 }
 func (b *BrokerProxy) FindAsset(teamID, assetID string) (*api.Asset, error) {
 	return b.store.FindAsset(teamID, assetID)

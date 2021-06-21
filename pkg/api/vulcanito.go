@@ -42,7 +42,7 @@ type VulcanitoService interface {
 	ListRecipients(ctx context.Context, teamID string) ([]*Recipient, error)
 
 	// Assets
-	ListAssets(ctx context.Context, teamID string) ([]*Asset, error)
+	ListAssets(ctx context.Context, teamID string, asset Asset) ([]*Asset, error)
 	CreateAssets(ctx context.Context, assets []Asset, groups []Group) ([]Asset, error)
 	CreateAssetsMultiStatus(ctx context.Context, assets []Asset, groups []Group) ([]AssetCreationResponse, error)
 	FindAsset(ctx context.Context, asset Asset) (*Asset, error)
