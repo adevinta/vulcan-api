@@ -43,9 +43,10 @@ func (ar AssetRequest) NewAsset() *api.Asset {
 }
 
 type AssetsListRequest struct {
-	TeamID string         `json:"team_id" urlvar:"team_id"`
-	Assets []AssetRequest `json:"assets"`
-	Groups []string       `json:"groups"`
+	TeamID           string            `json:"team_id" urlvar:"team_id"`
+	Assets           []AssetRequest    `json:"assets"`
+	Groups           []string          `json:"groups"`
+	AssetAnnotations map[string]string `json:"annotations"`
 }
 
 func makeListAssetsEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
@@ -97,8 +98,17 @@ func makeCreateAssetEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpo
 			groups = append(groups, group)
 		}
 
+		// Iterate over asset annotation map and initialize items
+		annotations := []api.AssetAnnotation{}
+		for k, v := range requestBody.AssetAnnotations {
+			annotations = append(annotations, api.AssetAnnotation{
+				Key:   k,
+				Value: v,
+			})
+		}
+
 		// Ask for the service layer to create the assets.
-		createdAssets, err := s.CreateAssets(ctx, assets, groups)
+		createdAssets, err := s.CreateAssets(ctx, assets, groups, annotations)
 		if err != nil {
 			return nil, err
 		}
@@ -141,8 +151,17 @@ func makeCreateAssetMultiStatusEndpoint(s api.VulcanitoService, logger kitlog.Lo
 			groups = append(groups, group)
 		}
 
+		// Iterate over asset annotation map and initialize items
+		annotations := []api.AssetAnnotation{}
+		for k, v := range requestBody.AssetAnnotations {
+			annotations = append(annotations, api.AssetAnnotation{
+				Key:   k,
+				Value: v,
+			})
+		}
+
 		// Ask for the service layer to create the assets.
-		responses, err := s.CreateAssetsMultiStatus(ctx, assets, groups)
+		responses, err := s.CreateAssetsMultiStatus(ctx, assets, groups, annotations)
 		if err != nil {
 			return nil, err
 		}

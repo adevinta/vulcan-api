@@ -270,8 +270,8 @@ func (b *BrokerProxy) CreateAsset(asset api.Asset, groups []api.Group) (*api.Ass
 	go b.awakeBroker()
 	return a, err
 }
-func (b *BrokerProxy) CreateAssets(assets []api.Asset, groups []api.Group) ([]api.Asset, error) {
-	aa, err := b.store.CreateAssets(assets, groups)
+func (b *BrokerProxy) CreateAssets(assets []api.Asset, groups []api.Group, annotations []api.AssetAnnotation) ([]api.Asset, error) {
+	aa, err := b.store.CreateAssets(assets, groups, annotations)
 	go b.awakeBroker()
 	return aa, err
 }

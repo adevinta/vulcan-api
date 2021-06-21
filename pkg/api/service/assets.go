@@ -40,7 +40,7 @@ func (s vulcanitoService) ListAssets(ctx context.Context, teamID string, asset a
 }
 
 // CreateAssets receives an array of assets and creates them on store layer.
-func (s vulcanitoService) CreateAssets(ctx context.Context, assets []api.Asset, groups []api.Group) ([]api.Asset, error) {
+func (s vulcanitoService) CreateAssets(ctx context.Context, assets []api.Asset, groups []api.Group, annotations []api.AssetAnnotation) ([]api.Asset, error) {
 	assetsToCreate := []api.Asset{}
 
 	// If no group is specified, add Default group data to groups list.
@@ -104,7 +104,7 @@ func (s vulcanitoService) CreateAssets(ctx context.Context, assets []api.Asset, 
 			assetsToCreate[i] = a
 		}
 	}
-	return s.db.CreateAssets(assetsToCreate, groups)
+	return s.db.CreateAssets(assetsToCreate, groups, annotations)
 }
 
 func (s vulcanitoService) getAccountName(identifier string) string {
@@ -129,7 +129,7 @@ func (s vulcanitoService) getAccountName(identifier string) string {
 // CreateAssetsMultiStatus receives an array of assets and request their creation to the store layer.
 // Also, this method will associate the assets with the specified groups.
 // It returns an array containing one response per request, in the same order as in the original request.
-func (s vulcanitoService) CreateAssetsMultiStatus(ctx context.Context, assets []api.Asset, groups []api.Group) ([]api.AssetCreationResponse, error) {
+func (s vulcanitoService) CreateAssetsMultiStatus(ctx context.Context, assets []api.Asset, groups []api.Group, annotations []api.AssetAnnotation) ([]api.AssetCreationResponse, error) {
 	responses := []api.AssetCreationResponse{}
 
 	// If no group is specified, add Default group data to groups list.
@@ -221,7 +221,7 @@ func (s vulcanitoService) CreateAssetsMultiStatus(ctx context.Context, assets []
 		}
 
 		// Request the asset creation to the store layer.
-		assetsCreated, err := s.db.CreateAssets(assetGroup, groups)
+		assetsCreated, err := s.db.CreateAssets(assetGroup, groups, annotations)
 		if err != nil {
 			// If assets group atomic creation failed, return error
 			// for the asset specified by user, not for the ones that

@@ -43,7 +43,7 @@ func (db vulcanitoStore) ListAssets(teamID string, asset api.Asset) ([]*api.Asse
 	return assets, nil
 }
 
-func (db vulcanitoStore) CreateAssets(assets []api.Asset, groups []api.Group) ([]api.Asset, error) {
+func (db vulcanitoStore) CreateAssets(assets []api.Asset, groups []api.Group, annotations []api.AssetAnnotation) ([]api.Asset, error) {
 	tx := db.Conn.Begin()
 	if tx.Error != nil {
 		return nil, db.logError(errors.Database(tx.Error))
@@ -86,6 +86,17 @@ func (db vulcanitoStore) CreateAssets(assets []api.Asset, groups []api.Group) ([
 					err = errors.Create(err.Error(), "assetGroup", asset.ID, g.ID)
 				}
 				return nil, err
+			}
+		}
+
+		// Associate asset with input annotations
+		for _, an := range annotations {
+			an.AssetID = asset.ID
+
+			result := tx.Create(&an)
+			if result.Error != nil {
+				tx.Rollback()
+				return nil, errors.Create(result.Error, "assetAnnotation", asset.ID, an.Key)
 			}
 		}
 
