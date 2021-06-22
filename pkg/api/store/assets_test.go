@@ -20,7 +20,7 @@ import (
 )
 
 var (
-	ignoreFieldsAsset   = cmpopts.IgnoreFields(api.Asset{}, append(baseModelFieldNames, "Team", "AssetType", "AssetTypeID", "ClassifiedAt")...)
+	ignoreFieldsAsset   = cmpopts.IgnoreFields(api.Asset{}, append(baseModelFieldNames, "Team", "AssetType", "AssetTypeID", "ClassifiedAt", "AssetAnnotations")...)
 	ignoreFieldsDisjoin = cmpopts.IgnoreFields(api.Asset{}, "CreatedAt", "UpdatedAt", "Team", "AssetType")
 	ignoreFieldsGroup   = cmpopts.IgnoreFields(api.Group{}, []string{"ID", "CreatedAt", "UpdatedAt", "Team", "AssetGroup"}...)
 )
@@ -132,7 +132,7 @@ func TestStoreListAssets(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := testStoreLocal.ListAssets(tt.teamID)
+			got, err := testStoreLocal.ListAssets(tt.teamID, api.Asset{})
 			if errToStr(err) != errToStr(tt.wantErr) {
 				t.Fatal(err)
 			}
@@ -216,7 +216,7 @@ func TestStoreCreateAssets(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := testStoreLocal.CreateAssets(tt.assets, tt.groups)
+			got, err := testStoreLocal.CreateAssets(tt.assets, tt.groups, []api.AssetAnnotation{})
 			if errToStr(err) != errToStr(tt.wantErr) {
 				t.Fatal(err)
 			}
@@ -473,8 +473,8 @@ func TestStoreUpdateAsset(t *testing.T) {
 
 			if tt.wantErr == nil {
 				ignoreFieldsOutbox := map[string][]string{
-					"old_asset": {"alias", "asset_type", "asset_type_id", "environmental_cvss", "rolfp", "scannable", "classified_at", "options"},
-					"new_asset": {"alias", "asset_type", "asset_type_id", "environmental_cvss", "rolfp", "scannable", "classified_at", "options"},
+					"old_asset": {"alias", "asset_type", "asset_type_id", "environmental_cvss", "rolfp", "scannable", "classified_at", "options", "annotations"},
+					"new_asset": {"alias", "asset_type", "asset_type_id", "environmental_cvss", "rolfp", "scannable", "classified_at", "options", "annotations"},
 				}
 				verifyOutbox(t, testStoreLocal, tt.expOutbox.action, tt.expOutbox.dto, ignoreFieldsOutbox)
 			}
@@ -742,7 +742,8 @@ func TestStoreDeleteAsset(t *testing.T) {
 				t.Fatalf("Asset %v was not deleted", tt.asset)
 			}
 
-			verifyOutbox(t, testStoreLocal, tt.expOutbox.action, tt.expOutbox.dto, nil)
+			ignoreFieldsOutbox := map[string][]string{"asset": {"annotations"}}
+			verifyOutbox(t, testStoreLocal, tt.expOutbox.action, tt.expOutbox.dto, ignoreFieldsOutbox)
 		})
 	}
 }

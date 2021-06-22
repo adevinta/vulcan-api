@@ -172,12 +172,12 @@ func TestServiceListAssets(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			testService := tt.srvBuilder.BuildSrv(testStore)
 
-			got, err := testService.ListAssets(context.Background(), tt.teamID)
+			got, err := testService.ListAssets(context.Background(), tt.teamID, api.Asset{})
 			if errToStr(err) != errToStr(tt.wantErr) {
 				t.Fatal(err)
 			}
 
-			diff := cmp.Diff(tt.want, got, cmpopts.IgnoreFields(api.Asset{}, "ID", "Team", "AssetType", "CreatedAt"))
+			diff := cmp.Diff(tt.want, got, cmpopts.IgnoreFields(api.Asset{}, "ID", "Team", "AssetType", "CreatedAt", "AssetAnnotations"))
 			if diff != "" {
 				t.Errorf("%v\n", diff)
 			}
@@ -483,7 +483,7 @@ func TestVulcanitoService_CreateAssets(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			testService := tt.srvBuilder.BuildSrv(testStore)
 
-			got, err := testService.CreateAssets(context.Background(), tt.assets, tt.groups)
+			got, err := testService.CreateAssets(context.Background(), tt.assets, tt.groups, []api.AssetAnnotation{})
 			if errToStr(err) != errToStr(tt.wantErr) {
 				t.Fatal(err)
 			}
@@ -912,7 +912,7 @@ func TestVulcanitoService_CreateAssetsMultiStatus(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			testService := tt.srvBuilder.BuildSrv(testStore)
 
-			got, err := testService.CreateAssetsMultiStatus(context.Background(), tt.assets, tt.groups)
+			got, err := testService.CreateAssetsMultiStatus(context.Background(), tt.assets, tt.groups, []api.AssetAnnotation{})
 			if errToStr(err) != errToStr(tt.wantErr) {
 				t.Fatal(err)
 			}
