@@ -163,6 +163,12 @@ var CreateAssetPayload = Type("CreateAssetPayload", func() {
 			"9f7a0c78-b752-4126-aa6d-0f286ada7b8f",
 		})
 	})
+	Attribute("annotations", HashOf(String, String), func() {
+		Example(map[string]string{
+			"annotation/1": "value/1",
+			"annotation/2": "value/2",
+		})
+	})
 	Required("assets")
 })
 
@@ -178,13 +184,16 @@ var _ = Resource("assets", func() {
 	Action("list", func() {
 		Description("List all assets from a team.")
 		Routing(GET(""))
+		Params(func() {
+			Param("identifier", String)
+		})
 		Security("Bearer")
 		Response(OK, CollectionOf(ListAssetMedia))
 	})
 
 	Action("create", func() {
 		Description(`Creates assets in bulk mode.
-			This operation accepts an array of assets and an optional array of group identifiers, and returns an array of successfully created assets.
+			This operation accepts an array of assets, an optional array of group identifiers, an optional map of annotations, and returns an array of successfully created assets.
 			If no groups are specified, assets will be added to the team's Default group.
 			If one of the specified assets already exists for the team but is currently not associated with the requested groups, the association is created.
 			If for any reason, the creation of an asset fails, an error message will be returned referencing the failed asset and the entire operation will be rolled back.

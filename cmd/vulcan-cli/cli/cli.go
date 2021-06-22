@@ -14,9 +14,9 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/adevinta/vulcan-api/cmd/vulcan-api-cli/client"
 	"github.com/goadesign/goa"
 	goaclient "github.com/goadesign/goa/client"
-	"github.com/adevinta/vulcan-api/cmd/vulcan-api-cli/client"
 )
 
 var (
@@ -370,7 +370,7 @@ func (cli *CLI) Assets(teamID string) (Assets, error) {
 	ctx := cli.ctx
 	c := cli.c
 
-	resp, err := c.ListAssets(ctx, client.ListAssetsPath(teamID))
+	resp, err := c.ListAssets(ctx, client.ListAssetsPath(teamID), nil)
 	if err != nil {
 		return nil, err
 	}

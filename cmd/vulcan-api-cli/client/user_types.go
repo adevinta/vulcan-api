@@ -12,6 +12,44 @@ import (
 	"time"
 )
 
+// assetAnnotationDeleteRequest user type.
+type assetAnnotationDeleteRequest struct {
+	Annotations []string `form:"annotations,omitempty" json:"annotations,omitempty" yaml:"annotations,omitempty" xml:"annotations,omitempty"`
+}
+
+// Publicize creates AssetAnnotationDeleteRequest from assetAnnotationDeleteRequest
+func (ut *assetAnnotationDeleteRequest) Publicize() *AssetAnnotationDeleteRequest {
+	var pub AssetAnnotationDeleteRequest
+	if ut.Annotations != nil {
+		pub.Annotations = ut.Annotations
+	}
+	return &pub
+}
+
+// AssetAnnotationDeleteRequest user type.
+type AssetAnnotationDeleteRequest struct {
+	Annotations []string `form:"annotations,omitempty" json:"annotations,omitempty" yaml:"annotations,omitempty" xml:"annotations,omitempty"`
+}
+
+// assetAnnotationRequest user type.
+type assetAnnotationRequest struct {
+	Annotations map[string]string `form:"annotations,omitempty" json:"annotations,omitempty" yaml:"annotations,omitempty" xml:"annotations,omitempty"`
+}
+
+// Publicize creates AssetAnnotationRequest from assetAnnotationRequest
+func (ut *assetAnnotationRequest) Publicize() *AssetAnnotationRequest {
+	var pub AssetAnnotationRequest
+	if ut.Annotations != nil {
+		pub.Annotations = ut.Annotations
+	}
+	return &pub
+}
+
+// AssetAnnotationRequest user type.
+type AssetAnnotationRequest struct {
+	Annotations map[string]string `form:"annotations,omitempty" json:"annotations,omitempty" yaml:"annotations,omitempty" xml:"annotations,omitempty"`
+}
+
 // assetGroupPayload user type.
 type assetGroupPayload struct {
 	// Asset ID
@@ -193,8 +231,9 @@ type AssetUpdatePayload struct {
 
 // createAssetPayload user type.
 type createAssetPayload struct {
-	Assets []*assetPayload `form:"assets,omitempty" json:"assets,omitempty" yaml:"assets,omitempty" xml:"assets,omitempty"`
-	Groups []string        `form:"groups,omitempty" json:"groups,omitempty" yaml:"groups,omitempty" xml:"groups,omitempty"`
+	Annotations map[string]string `form:"annotations,omitempty" json:"annotations,omitempty" yaml:"annotations,omitempty" xml:"annotations,omitempty"`
+	Assets      []*assetPayload   `form:"assets,omitempty" json:"assets,omitempty" yaml:"assets,omitempty" xml:"assets,omitempty"`
+	Groups      []string          `form:"groups,omitempty" json:"groups,omitempty" yaml:"groups,omitempty" xml:"groups,omitempty"`
 }
 
 // Validate validates the createAssetPayload type instance.
@@ -215,6 +254,9 @@ func (ut *createAssetPayload) Validate() (err error) {
 // Publicize creates CreateAssetPayload from createAssetPayload
 func (ut *createAssetPayload) Publicize() *CreateAssetPayload {
 	var pub CreateAssetPayload
+	if ut.Annotations != nil {
+		pub.Annotations = ut.Annotations
+	}
 	if ut.Assets != nil {
 		pub.Assets = make([]*AssetPayload, len(ut.Assets))
 		for i2, elem2 := range ut.Assets {
@@ -229,8 +271,9 @@ func (ut *createAssetPayload) Publicize() *CreateAssetPayload {
 
 // CreateAssetPayload user type.
 type CreateAssetPayload struct {
-	Assets []*AssetPayload `form:"assets" json:"assets" yaml:"assets" xml:"assets"`
-	Groups []string        `form:"groups,omitempty" json:"groups,omitempty" yaml:"groups,omitempty" xml:"groups,omitempty"`
+	Annotations map[string]string `form:"annotations,omitempty" json:"annotations,omitempty" yaml:"annotations,omitempty" xml:"annotations,omitempty"`
+	Assets      []*AssetPayload   `form:"assets" json:"assets" yaml:"assets" xml:"assets"`
+	Groups      []string          `form:"groups,omitempty" json:"groups,omitempty" yaml:"groups,omitempty" xml:"groups,omitempty"`
 }
 
 // Validate validates the CreateAssetPayload type instance.

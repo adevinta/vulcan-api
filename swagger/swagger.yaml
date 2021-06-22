@@ -53,6 +53,36 @@ definitions:
         $ref: '#/definitions/Assettype'
     title: 'Mediatype identifier: asset; view=default'
     type: object
+  AssetAnnotationDeleteRequest:
+    example:
+      annotations:
+      - annotation/1
+      - annotation/2
+    properties:
+      annotations:
+        example:
+        - annotation/1
+        - annotation/2
+        items:
+          example: Ducimus sit odio tenetur consequatur.
+          type: string
+        type: array
+    title: AssetAnnotationDeleteRequest
+    type: object
+  AssetAnnotationRequest:
+    example:
+      annotations:
+        annotation/1: value/1
+        annotation/2: value/2
+    properties:
+      annotations:
+        additionalProperties: true
+        example:
+          annotation/1: value/1
+          annotation/2: value/2
+        type: object
+    title: AssetAnnotationRequest
+    type: object
   AssetCollection:
     description: AssetCollection is the media type for an array of Asset (default
       view)
@@ -187,6 +217,20 @@ definitions:
         example: Hostname
         type: string
     title: AssetUpdatePayload
+    type: object
+  Assetannotations_response_example:
+    description: Asset Annotations (default view)
+    example:
+      annotation/1: value/1
+      annotation/2: value/2
+    properties:
+      annotation/1:
+        example: value/1
+        type: string
+      annotation/2:
+        example: value/2
+        type: string
+    title: 'Mediatype identifier: assetannotations_response_example; view=default'
     type: object
   Assetresponse:
     description: Asset (default view)
@@ -336,6 +380,9 @@ definitions:
     type: object
   CreateAssetPayload:
     example:
+      annotations:
+        annotation/1: value/1
+        annotation/2: value/2
       assets:
       - alias: AnAlias
         environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
@@ -355,6 +402,12 @@ definitions:
       - a14c7c65-66ab-4676-bcf6-0dea9719f5c6
       - 9f7a0c78-b752-4126-aa6d-0f286ada7b8f
     properties:
+      annotations:
+        additionalProperties: true
+        example:
+          annotation/1: value/1
+          annotation/2: value/2
+        type: object
       assets:
         example:
         - alias: AnAlias
@@ -379,7 +432,7 @@ definitions:
         - a14c7c65-66ab-4676-bcf6-0dea9719f5c6
         - 9f7a0c78-b752-4126-aa6d-0f286ada7b8f
         items:
-          example: Sit odio tenetur consequatur quibusdam.
+          example: Est est illo et corrupti rerum deleniti.
           type: string
         type: array
     required:
@@ -749,6 +802,59 @@ definitions:
         tags:
         - team:vulcan
       total_exposure: 4631
+    - attachments:
+      - content_type: application/json
+        data: e30=
+        name: JSON string
+      current_exposure: 4631
+      details: ""
+      id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      impact_details: ""
+      issue:
+        cwe_id: 358
+        description: This domain has at least one MX record
+        id: b0720503-0a84-43fd-9cf4-5bb6c500226f
+        recommendations:
+        - It is recommended to run DMARC
+        reference_links: []
+        summary: MX presence
+      resources:
+      - attributes:
+        - Hostname
+        - Port
+        name: Network Resources
+        resources:
+        - Hostname: test.example.com
+          Port: "443"
+      - attributes:
+        - Hostname
+        - Port
+        name: Network Resources
+        resources:
+        - Hostname: test.example.com
+          Port: "443"
+      - attributes:
+        - Hostname
+        - Port
+        name: Network Resources
+        resources:
+        - Hostname: test.example.com
+          Port: "443"
+      score: 6.9
+      source:
+        component: vulcan-tls
+        id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
+        instance: b3320f03-1284-42fd-9cf4-5bb6c500966f
+        name: vulcan
+        options: '{"timeout":60}'
+        time: "2019-06-08 11:16:40"
+      status: OPEN
+      target:
+        id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
+        identifier: www.test.com
+        tags:
+        - team:vulcan
+      total_exposure: 4631
     items:
       $ref: '#/definitions/Finding'
     title: 'Mediatype identifier: finding; type=collection; view=default'
@@ -807,14 +913,6 @@ definitions:
       max_score: 6.9
       summary: Site Without HTTPS
       targets_count: 14
-    - issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
-      max_score: 6.9
-      summary: Site Without HTTPS
-      targets_count: 14
-    - issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
-      max_score: 6.9
-      summary: Site Without HTTPS
-      targets_count: 14
     items:
       $ref: '#/definitions/Findings_issue'
     title: 'Mediatype identifier: findings_issue; type=collection; view=default'
@@ -823,6 +921,10 @@ definitions:
     description: Findings by Issue list (default view)
     example:
       issues:
+      - issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
+        max_score: 6.9
+        summary: Site Without HTTPS
+        targets_count: 14
       - issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
         max_score: 6.9
         summary: Site Without HTTPS
@@ -847,59 +949,6 @@ definitions:
     description: Findings list (default view)
     example:
       findings:
-      - attachments:
-        - content_type: application/json
-          data: e30=
-          name: JSON string
-        current_exposure: 4631
-        details: ""
-        id: a8720503-0284-45fd-9cf4-5bb6c500966f
-        impact_details: ""
-        issue:
-          cwe_id: 358
-          description: This domain has at least one MX record
-          id: b0720503-0a84-43fd-9cf4-5bb6c500226f
-          recommendations:
-          - It is recommended to run DMARC
-          reference_links: []
-          summary: MX presence
-        resources:
-        - attributes:
-          - Hostname
-          - Port
-          name: Network Resources
-          resources:
-          - Hostname: test.example.com
-            Port: "443"
-        - attributes:
-          - Hostname
-          - Port
-          name: Network Resources
-          resources:
-          - Hostname: test.example.com
-            Port: "443"
-        - attributes:
-          - Hostname
-          - Port
-          name: Network Resources
-          resources:
-          - Hostname: test.example.com
-            Port: "443"
-        score: 6.9
-        source:
-          component: vulcan-tls
-          id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
-          instance: b3320f03-1284-42fd-9cf4-5bb6c500966f
-          name: vulcan
-          options: '{"timeout":60}'
-          time: "2019-06-08 11:16:40"
-        status: OPEN
-        target:
-          id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
-          identifier: www.test.com
-          tags:
-          - team:vulcan
-        total_exposure: 4631
       - attachments:
         - content_type: application/json
           data: e30=
@@ -1188,10 +1237,6 @@ definitions:
       id: f6360346-77a5-4f97-b919-331363b3af26
       name: Default group
       options: '{"timeout":60}'
-    - description: All newly created assets are added to the Default group
-      id: f6360346-77a5-4f97-b919-331363b3af26
-      name: Default group
-      options: '{"timeout":60}'
     items:
       $ref: '#/definitions/GroupWithoutAssetsCount'
     title: 'Mediatype identifier: group; type=collection; view=default'
@@ -1236,14 +1281,14 @@ definitions:
         example:
         - It is recommended to run DMARC
         items:
-          example: Illo et.
+          example: Placeat omnis perferendis.
           type: string
         type: array
       reference_links:
         description: Documentation reference for the issue
         example: []
         items:
-          example: Rerum deleniti aut sed illo porro.
+          example: Natus esse neque aliquid.
           type: string
         type: array
       summary:
@@ -1452,6 +1497,9 @@ definitions:
     description: PolicyCollection is the media type for an array of Policy (default
       view)
     example:
+    - id: af36818a-0f30-412c-9692-d37716075861
+      name: Sample Policy
+      settings_count: 12
     - id: af36818a-0f30-412c-9692-d37716075861
       name: Sample Policy
       settings_count: 12
@@ -1667,24 +1715,6 @@ definitions:
           settings_count: 12
       schedule:
         cron: 0 7 1 * *
-    - autosend: true
-      disabled: false
-      global: false
-      id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
-      name: Every midnight
-      policy_groups:
-      - group:
-          assets_count: 1
-          description: All newly created assets are added to the Default group
-          id: f6360346-77a5-4f97-b919-331363b3af26
-          name: Default group
-          options: '{"timeout":60}'
-        policy:
-          id: af36818a-0f30-412c-9692-d37716075861
-          name: Sample Policy
-          settings_count: 12
-      schedule:
-        cron: 0 7 1 * *
     items:
       $ref: '#/definitions/Program'
     title: 'Mediatype identifier: program; type=collection; view=default'
@@ -1814,7 +1844,7 @@ definitions:
         - john.doe@vulcan.example.com
         - jane.doe@vulcan.example.com
         items:
-          example: Repellat eum.
+          example: Velit magni.
           type: string
         type: array
     required:
@@ -1885,7 +1915,7 @@ definitions:
         - Hostname
         - Port
         items:
-          example: Corrupti sed qui.
+          example: Velit quis.
           type: string
         type: array
       name:
@@ -1900,8 +1930,7 @@ definitions:
         items:
           additionalProperties: true
           example:
-            Esse neque aliquid molestias velit quis.: Quas voluptatum sit eos illum
-              ipsum tempora.
+            Voluptatum sit eos illum.: Tempora nemo corrupti sed qui.
           type: object
         type: array
     title: 'Mediatype identifier: resource; view=default'
@@ -2307,7 +2336,7 @@ definitions:
         example:
         - team:vulcan
         items:
-          example: Omnis perferendis.
+          example: Ratione perferendis.
           type: string
         type: array
     title: 'Mediatype identifier: target; view=default'
@@ -2558,6 +2587,22 @@ definitions:
   UserCollection:
     description: UserCollection is the media type for an array of User (default view)
     example:
+    - active: true
+      admin: true
+      email: john.doe@vulcan.example.com
+      firstname: John
+      id: 967d9966-b561-4233-bd6f-cac603fd8320
+      last_login: "2018-09-07T10:40:52Z"
+      lastname: Doe
+      observer: true
+    - active: true
+      admin: true
+      email: john.doe@vulcan.example.com
+      firstname: John
+      id: 967d9966-b561-4233-bd6f-cac603fd8320
+      last_login: "2018-09-07T10:40:52Z"
+      lastname: Doe
+      observer: true
     - active: true
       admin: true
       email: john.doe@vulcan.example.com
@@ -2862,6 +2907,11 @@ paths:
       description: List all assets from a team.
       operationId: assets#list
       parameters:
+      - description: Identifier
+        in: query
+        name: identifier
+        required: false
+        type: string
       - description: Team ID
         in: path
         name: team_id
@@ -2883,13 +2933,13 @@ paths:
       - assets
     post:
       description: "Creates assets in bulk mode.\n\t\t\tThis operation accepts an
-        array of assets and an optional array of group identifiers, and returns an
-        array of successfully created assets.\n\t\t\tIf no groups are specified, assets
-        will be added to the team's Default group.\n\t\t\tIf one of the specified
-        assets already exists for the team but is currently not associated with the
-        requested groups, the association is created.\n\t\t\tIf for any reason, the
-        creation of an asset fails, an error message will be returned referencing
-        the failed asset and the entire operation will be rolled back.\n\t\t\t---\n\t\t\tValid
+        array of assets, an optional array of group identifiers, an optional map of
+        annotations, and returns an array of successfully created assets.\n\t\t\tIf
+        no groups are specified, assets will be added to the team's Default group.\n\t\t\tIf
+        one of the specified assets already exists for the team but is currently not
+        associated with the requested groups, the association is created.\n\t\t\tIf
+        for any reason, the creation of an asset fails, an error message will be returned
+        referencing the failed asset and the entire operation will be rolled back.\n\t\t\t---\n\t\t\tValid
         asset types:\n\t\t\t- AWSAccount\n\t\t\t- DomainName\n\t\t\t- Hostname\n\t\t\t-
         IP\n\t\t\t- IPRange\n\t\t\t- DockerImage\n\t\t\t- WebAddress\n\t\t\t- GitRepository\n\t\t\t---\n\t\t\tIf
         the asset type is informed, then Vulcan will use that value to create the
@@ -3010,6 +3060,134 @@ paths:
       summary: update assets
       tags:
       - assets
+  /teams/{team_id}/assets/{asset_id}/annotations:
+    delete:
+      description: Delete one or more annotation for a given asset.
+      operationId: asset-annotations#delete
+      parameters:
+      - description: Asset ID
+        in: path
+        name: asset_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/AssetAnnotationDeleteRequest'
+      produces:
+      - assetannotations_response_example
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Assetannotations_response_example'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: delete asset-annotations
+      tags:
+      - asset-annotations
+    get:
+      description: List annotations of a given asset.
+      operationId: asset-annotations#list
+      parameters:
+      - description: Asset ID
+        in: path
+        name: asset_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      produces:
+      - assetannotations_response_example
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Assetannotations_response_example'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: list asset-annotations
+      tags:
+      - asset-annotations
+    patch:
+      description: Update one or more annotation for a given asset.
+      operationId: asset-annotations#update
+      parameters:
+      - description: Asset ID
+        in: path
+        name: asset_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/AssetAnnotationRequest'
+      produces:
+      - assetannotations_response_example
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Assetannotations_response_example'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: update asset-annotations
+      tags:
+      - asset-annotations
+    post:
+      description: Create one or more annotation for a given asset.
+      operationId: asset-annotations#create
+      parameters:
+      - description: Asset ID
+        in: path
+        name: asset_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/AssetAnnotationRequest'
+      produces:
+      - assetannotations_response_example
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/Assetannotations_response_example'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: create asset-annotations
+      tags:
+      - asset-annotations
   /teams/{team_id}/assets/multistatus:
     post:
       description: "Creates assets in bulk mode (MultiStatus).\n\t\t\tThis operation
