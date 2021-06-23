@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "ac57977f-5191-4828-90d8-4c2fffda138c",
+		"_postman_id": "f436074b-86ce-4ab7-b69f-66b2e29a61e5",
 		"name": "vulcan",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -588,8 +588,8 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
 											"});",
 											"",
 											"pm.test(\"Asset annotations data is correct\", function () {",
@@ -1178,8 +1178,8 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
 											"});",
 											"",
 											"pm.test(\"Asset annotations data is correct\", function () {",
@@ -1724,8 +1724,8 @@
 											"listen": "test",
 											"script": {
 												"exec": [
-													"pm.test(\"Status code is 200\", function () {",
-													"    pm.response.to.have.status(200);",
+													"pm.test(\"Status code is 201\", function () {",
+													"    pm.response.to.have.status(201);",
 													"});",
 													"",
 													"pm.test(\"Asset annotations data is correct\", function () {",

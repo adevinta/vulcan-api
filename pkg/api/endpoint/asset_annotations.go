@@ -73,7 +73,7 @@ func makeCreateAssetAnnotationsEndpoint(s api.VulcanitoService, logger kitlog.Lo
 			response[annotation.Key] = annotation.Value
 		}
 
-		return Ok{response}, nil
+		return Created{response}, nil
 	}
 }
 
