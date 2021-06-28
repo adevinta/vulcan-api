@@ -43,6 +43,10 @@ var AssetAnnotationsResponseExample = MediaType("assetannotations_response_examp
 var _ = Resource("asset-annotations", func() {
 	Parent("assets")
 	BasePath("annotations")
+	Params(func() {
+		Param("team_id", String, "Team ID")
+		Param("asset_id", String, "Asset ID")
+	})
 	Action("list", func() {
 		Description("List annotations of a given asset.")
 		Routing(GET(""))
