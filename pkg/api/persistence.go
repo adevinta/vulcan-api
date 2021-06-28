@@ -54,7 +54,7 @@ type VulcanitoStore interface {
 	ListAssetAnnotations(teamID string, assetID string) ([]*AssetAnnotation, error)
 	CreateAssetAnnotations(teamID string, assetID string, annotations []*AssetAnnotation) ([]*AssetAnnotation, error)
 	UpdateAssetAnnotations(teamID string, assetID string, annotations []*AssetAnnotation) ([]*AssetAnnotation, error)
-	DeleteAssetAnnotations(teamID string, assetID string, annotations []*AssetAnnotation) ([]*AssetAnnotation, error)
+	DeleteAssetAnnotations(teamID string, assetID string, annotations []*AssetAnnotation) error
 
 	CreateGroup(group Group) (*Group, error)
 	ListGroups(teamID, groupName string) ([]*Group, error)

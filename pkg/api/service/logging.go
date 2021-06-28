@@ -379,7 +379,7 @@ func (middleware loggingMiddleware) UpdateAssetAnnotations(ctx context.Context, 
 	return middleware.next.UpdateAssetAnnotations(ctx, teamID, assetID, annotations)
 }
 
-func (middleware loggingMiddleware) DeleteAssetAnnotations(ctx context.Context, teamID string, assedID string, annotations []*api.AssetAnnotation) ([]*api.AssetAnnotation, error) {
+func (middleware loggingMiddleware) DeleteAssetAnnotations(ctx context.Context, teamID string, assedID string, annotations []*api.AssetAnnotation) error {
 	defer func() {
 		XRequestID := ""
 		if ctx != nil {

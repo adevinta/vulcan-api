@@ -106,14 +106,11 @@ func makeDeleteAssetAnnotationsEndpoint(s api.VulcanitoService, logger kitlog.Lo
 		}
 
 		// Route to service layer
-		deletedAnnotations, err := s.DeleteAssetAnnotations(ctx, req.TeamID, req.AssetID, annotations)
+		err := s.DeleteAssetAnnotations(ctx, req.TeamID, req.AssetID, annotations)
 		if err != nil {
 			return nil, err
 		}
 
-		// Merge annotations into one map
-		response := api.AssetAnnotations(deletedAnnotations).ToResponse()
-
-		return Ok{response}, nil
+		return NoContent{nil}, nil
 	}
 }

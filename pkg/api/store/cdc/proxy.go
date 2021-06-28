@@ -305,7 +305,7 @@ func (b *BrokerProxy) UpdateAssetAnnotations(teamID string, assetID string, anno
 	return b.store.UpdateAssetAnnotations(teamID, assetID, annotations)
 }
 
-func (b *BrokerProxy) DeleteAssetAnnotations(teamID string, assetID string, annotations []*api.AssetAnnotation) ([]*api.AssetAnnotation, error) {
+func (b *BrokerProxy) DeleteAssetAnnotations(teamID string, assetID string, annotations []*api.AssetAnnotation) error {
 	return b.store.DeleteAssetAnnotations(teamID, assetID, annotations)
 }
 

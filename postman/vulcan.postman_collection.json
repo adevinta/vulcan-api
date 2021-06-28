@@ -1084,18 +1084,9 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});",
-											"",
-											"pm.test(\"Asset annotations data is correct\", function () {",
-											"    var jsonData = pm.response.json();",
-											"",
-											"    pm.expect(jsonData).to.have.property(\"annotations\")",
-											"    pm.expect(jsonData[\"annotations\"][\"test/1\"]).to.eql(\"patched1\");",
-											"    pm.expect(Object.keys(jsonData[\"annotations\"]).length).to.eql(1);",
-											"});",
-											""
+											"pm.test(\"Status code is 204\", function () {",
+											"    pm.response.to.have.status(204);",
+											"});"
 										],
 										"type": "text/javascript"
 									}
@@ -1251,20 +1242,9 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});",
-											"",
-											"pm.test(\"Asset annotations data is correct\", function () {",
-											"    var jsonData = pm.response.json();",
-											"",
-											"    pm.expect(jsonData).to.have.property(\"annotations\")",
-											"    pm.expect(jsonData[\"annotations\"][\"test/2\"]).to.eql(\"patched2\");",
-											"    pm.expect(jsonData[\"annotations\"][\"test/3\"]).to.eql(\"new3\");",
-											"    pm.expect(jsonData[\"annotations\"][\"test/4\"]).to.eql(\"new4\");",
-											"    pm.expect(Object.keys(jsonData[\"annotations\"]).length).to.eql(3);",
-											"});",
-											""
+											"pm.test(\"Status code is 204\", function () {",
+											"    pm.response.to.have.status(204);",
+											"});"
 										],
 										"type": "text/javascript"
 									}
@@ -1364,18 +1344,9 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});",
-											"",
-											"pm.test(\"Asset annotations data is correct\", function () {",
-											"    var jsonData = pm.response.json();",
-											"",
-											"    pm.expect(jsonData).to.have.property(\"annotations\")",
-											"    pm.expect(jsonData[\"annotations\"][\"test/5\"]).to.eql(\"new5\");",
-											"    pm.expect(Object.keys(jsonData[\"annotations\"]).length).to.eql(1);",
-											"});",
-											""
+											"pm.test(\"Status code is 204\", function () {",
+											"    pm.response.to.have.status(204);",
+											"});"
 										],
 										"type": "text/javascript"
 									}
@@ -1673,11 +1644,8 @@
 									}
 								}
 							],
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
 							"request": {
-								"method": "GET",
+								"method": "DELETE",
 								"header": [
 									{
 										"key": "Content-Type",
@@ -1689,7 +1657,7 @@
 									"raw": "{\n    \"annotations\": [\n        \"invalid\"\n    ]\n}"
 								},
 								"url": {
-									"raw": "{{host}}/api/v1/teams/{{an_team2_id}}/assets/{{an_team1_asset1_id}}",
+									"raw": "{{host}}/api/v1/teams/{{an_team2_id}}/assets/{{an_team1_asset1_id}}/annotations",
 									"host": [
 										"{{host}}"
 									],
@@ -1699,7 +1667,8 @@
 										"teams",
 										"{{an_team2_id}}",
 										"assets",
-										"{{an_team1_asset1_id}}"
+										"{{an_team1_asset1_id}}",
+										"annotations"
 									]
 								}
 							},
