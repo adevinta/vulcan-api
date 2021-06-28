@@ -379,6 +379,17 @@ func (middleware loggingMiddleware) UpdateAssetAnnotations(ctx context.Context, 
 	return middleware.next.UpdateAssetAnnotations(ctx, teamID, assetID, annotations)
 }
 
+func (middleware loggingMiddleware) PutAssetAnnotations(ctx context.Context, teamID string, assetID string, annotations []*api.AssetAnnotation) ([]*api.AssetAnnotation, error) {
+	defer func() {
+		XRequestID := ""
+		if ctx != nil {
+			XRequestID, _ = ctx.Value(kithttp.ContextKeyRequestXRequestID).(string)
+		}
+		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "PutAssetAnnotations", "teamID", mySprintf(teamID), "assetID", mySprintf(assetID), "annotations", mySprintf(annotations))
+	}()
+	return middleware.next.PutAssetAnnotations(ctx, teamID, assetID, annotations)
+}
+
 func (middleware loggingMiddleware) DeleteAssetAnnotations(ctx context.Context, teamID string, assedID string, annotations []*api.AssetAnnotation) error {
 	defer func() {
 		XRequestID := ""

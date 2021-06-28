@@ -84,6 +84,28 @@ func makeUpdateAssetAnnotationsEndpoint(s api.VulcanitoService, logger kitlog.Lo
 	}
 }
 
+func makePutAssetAnnotationsEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		// Handle input
+		req, ok := request.(*AssetAnnotationRequest)
+		if !ok {
+			return nil, errors.Assertion("Type assertion failed")
+		}
+
+		// Route to service layer
+		annotations := req.Annotations.ToModel()
+		newAnnotations, err := s.PutAssetAnnotations(ctx, req.TeamID, req.AssetID, annotations)
+		if err != nil {
+			return nil, err
+		}
+
+		// Merge annotations into one map
+		response := api.AssetAnnotations(newAnnotations).ToResponse()
+
+		return Ok{response}, nil
+	}
+}
+
 type AssetAnnotationDeleteRequest struct {
 	TeamID      string   `json:"team_id" urlvar:"team_id"`
 	AssetID     string   `json:"asset_id" urlvar:"asset_id"`

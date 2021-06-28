@@ -172,6 +172,53 @@ func (db vulcanitoStore) UpdateAssetAnnotations(teamID string, assetID string, a
 	return updatedAnnotations, nil
 }
 
+// PutAssetAnnotations overrides all annotations of a given asset with new content.
+// Previous annotations will not ne preserved.
+func (db vulcanitoStore) PutAssetAnnotations(teamID string, assetID string, annotations []*api.AssetAnnotation) ([]*api.AssetAnnotation, error) {
+	// Find asset
+	a := api.Asset{}
+	result := db.Conn.Where("team_id = ?", teamID).Where("id = ?", assetID).Find(&a)
+	if result.Error != nil {
+		if db.NotFoundError(result.Error) {
+			return nil, db.logError(errors.NotFound(result.Error))
+		}
+		return nil, db.logError(result.Error)
+	}
+
+	// Start transaction
+	tx := db.Conn.Begin()
+	if tx.Error != nil {
+		return nil, db.logError(errors.Database(tx.Error))
+	}
+
+	// Clean up all annotations for given asset
+	result = tx.Delete(api.AssetAnnotation{}, "asset_id = ?", assetID)
+	if result.Error != nil {
+		tx.Rollback()
+		return nil, db.logError(errors.Delete(result.Error))
+	}
+
+	newAnnotations := []*api.AssetAnnotation{}
+	for _, annotation := range annotations {
+		// Ensure consistent Asset ID
+		annotation.AssetID = assetID
+
+		// Create Annotation
+		result := tx.Create(&annotation)
+		if result.Error != nil {
+			tx.Rollback()
+			return nil, db.logError(errors.Create(result.Error))
+		}
+		newAnnotations = append(newAnnotations, annotation)
+	}
+
+	if tx.Commit().Error != nil {
+		return nil, db.logError(errors.Database(tx.Error))
+	}
+
+	return newAnnotations, nil
+}
+
 // DeleteAssetAnnotations deletes annotations "keys" from a given asset
 func (db vulcanitoStore) DeleteAssetAnnotations(teamID string, assetID string, annotations []*api.AssetAnnotation) error {
 	// Find asset

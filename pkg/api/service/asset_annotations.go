@@ -66,6 +66,22 @@ func (s vulcanitoService) UpdateAssetAnnotations(ctx context.Context, teamID str
 	return result, err
 }
 
+func (s vulcanitoService) PutAssetAnnotations(ctx context.Context, teamID string, assetID string, annotations []*api.AssetAnnotation) ([]*api.AssetAnnotation, error) {
+	if teamID == "" {
+		return nil, errors.NotFound(`Team ID is empty`)
+	}
+	if assetID == "" {
+		return nil, errors.NotFound(`Asset ID is empty`)
+	}
+
+	// Route to store layer
+	result, err := s.db.PutAssetAnnotations(teamID, assetID, annotations)
+	if err != nil {
+		_ = s.logger.Log("database error", err.Error())
+	}
+	return result, err
+}
+
 func (s vulcanitoService) DeleteAssetAnnotations(ctx context.Context, teamID string, assetID string, annotations []*api.AssetAnnotation) error {
 	if teamID == "" {
 		return errors.NotFound(`Team ID is empty`)

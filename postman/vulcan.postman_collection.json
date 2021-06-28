@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "f436074b-86ce-4ab7-b69f-66b2e29a61e5",
+		"_postman_id": "10d226f7-bbcc-416e-9a91-5a7e4ce580cf",
 		"name": "vulcan",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -529,912 +529,1377 @@
 					"name": "CRUD Operations",
 					"item": [
 						{
-							"name": "Team1 - Asset1 - List Annotations - Empty",
-							"event": [
+							"name": "List & Create",
+							"item": [
 								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});",
-											"",
-											"pm.test(\"Asset annotation data is correct\", function () {",
-											"    var jsonData = pm.response.json();",
-											"    pm.expect(jsonData).to.have.property(\"annotations\")",
-											"    pm.expect(jsonData[\"annotations\"]).to.eql({})",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": ""
-								},
-								"url": {
-									"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
-									"host": [
-										"{{host}}"
+									"name": "Team1 - Asset1 - List Annotations - Empty",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"Asset annotation data is correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData).to.have.property(\"annotations\")",
+													"    pm.expect(jsonData[\"annotations\"]).to.eql({})",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
 									],
-									"path": [
-										"api",
-										"v1",
-										"teams",
-										"{{an_team1_id}}",
-										"assets",
-										"{{an_team1_asset1_id}}",
-										"annotations"
-									]
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"teams",
+												"{{an_team1_id}}",
+												"assets",
+												"{{an_team1_asset1_id}}",
+												"annotations"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Team1 - Asset1 - Add Annotations",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 201\", function () {",
+													"    pm.response.to.have.status(201);",
+													"});",
+													"",
+													"pm.test(\"Asset annotations data is correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"",
+													"    pm.expect(jsonData).to.have.property(\"annotations\")",
+													"    pm.expect(jsonData[\"annotations\"][\"test/1\"]).to.eql(\"new1\");",
+													"    pm.expect(jsonData[\"annotations\"][\"test/2\"]).to.eql(\"new2\");",
+													"    pm.expect(Object.keys(jsonData[\"annotations\"]).length).to.eql(2);",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"annotations\": {\n        \"test/1\": \"new1\",\n        \"test/2\": \"new2\"\n    }\n}"
+										},
+										"url": {
+											"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"teams",
+												"{{an_team1_id}}",
+												"assets",
+												"{{an_team1_asset1_id}}",
+												"annotations"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Team1 - Asset1 - List Annotations",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"Asset annotations data is correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"",
+													"    pm.expect(jsonData).to.have.property(\"annotations\")",
+													"    pm.expect(jsonData[\"annotations\"][\"test/1\"]).to.eql(\"new1\");",
+													"    pm.expect(jsonData[\"annotations\"][\"test/2\"]).to.eql(\"new2\");",
+													"    pm.expect(Object.keys(jsonData[\"annotations\"]).length).to.eql(2);",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"teams",
+												"{{an_team1_id}}",
+												"assets",
+												"{{an_team1_asset1_id}}",
+												"annotations"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Team1 - Asset1 - Add Annotations again (fail)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 500\", function () {",
+													"    pm.response.to.have.status(500);",
+													"});",
+													"",
+													"pm.test(\"Asset annotations data is correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.type).to.eql(\"Cannot create record\");",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"annotations\": {\n        \"test/1\": \"failednew1\",\n        \"test/2\": \"failednew2\"\n    }\n}"
+										},
+										"url": {
+											"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"teams",
+												"{{an_team1_id}}",
+												"assets",
+												"{{an_team1_asset1_id}}",
+												"annotations"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Team1 - Asset1 - Add non-unique Annotations (fail)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 500\", function () {",
+													"    pm.response.to.have.status(500);",
+													"});",
+													"",
+													"pm.test(\"Asset annotations data is correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.type).to.eql(\"Cannot create record\");",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"annotations\": {\n        \"test/3\": \"new3\",\n        \"test/1\": \"overlapping1\"\n    }\n}"
+										},
+										"url": {
+											"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"teams",
+												"{{an_team1_id}}",
+												"assets",
+												"{{an_team1_asset1_id}}",
+												"annotations"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Team1 - Asset1 - List Annotations - No changes",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"Asset annotations data is correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"",
+													"    pm.expect(jsonData).to.have.property(\"annotations\")",
+													"    pm.expect(jsonData[\"annotations\"][\"test/1\"]).to.eql(\"new1\");",
+													"    pm.expect(jsonData[\"annotations\"][\"test/2\"]).to.eql(\"new2\");",
+													"    pm.expect(Object.keys(jsonData[\"annotations\"]).length).to.eql(2);",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"teams",
+												"{{an_team1_id}}",
+												"assets",
+												"{{an_team1_asset1_id}}",
+												"annotations"
+											]
+										}
+									},
+									"response": []
 								}
-							},
-							"response": []
+							]
 						},
 						{
-							"name": "Team1 - Asset1 - Add Annotations",
-							"event": [
+							"name": "Update",
+							"item": [
 								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 201\", function () {",
-											"    pm.response.to.have.status(201);",
-											"});",
-											"",
-											"pm.test(\"Asset annotations data is correct\", function () {",
-											"    var jsonData = pm.response.json();",
-											"",
-											"    pm.expect(jsonData).to.have.property(\"annotations\")",
-											"    pm.expect(jsonData[\"annotations\"][\"test/1\"]).to.eql(\"new1\");",
-											"    pm.expect(jsonData[\"annotations\"][\"test/2\"]).to.eql(\"new2\");",
-											"    pm.expect(Object.keys(jsonData[\"annotations\"]).length).to.eql(2);",
-											"});",
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"annotations\": {\n        \"test/1\": \"new1\",\n        \"test/2\": \"new2\"\n    }\n}"
-								},
-								"url": {
-									"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
-									"host": [
-										"{{host}}"
+									"name": "Team1 - Asset1 - Update Annotations",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"Asset annotations data is correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"",
+													"    pm.expect(jsonData).to.have.property(\"annotations\")",
+													"    pm.expect(jsonData[\"annotations\"][\"test/1\"]).to.eql(\"patched1\");",
+													"    pm.expect(jsonData[\"annotations\"][\"test/2\"]).to.eql(\"patched2\");",
+													"    pm.expect(Object.keys(jsonData[\"annotations\"]).length).to.eql(2);",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
 									],
-									"path": [
-										"api",
-										"v1",
-										"teams",
-										"{{an_team1_id}}",
-										"assets",
-										"{{an_team1_asset1_id}}",
-										"annotations"
-									]
+									"request": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"annotations\": {\n        \"test/1\": \"patched1\",\n        \"test/2\": \"patched2\"\n    }\n}"
+										},
+										"url": {
+											"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"teams",
+												"{{an_team1_id}}",
+												"assets",
+												"{{an_team1_asset1_id}}",
+												"annotations"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Team1 - Asset1 - List Annotations after Patch Copy",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"Asset annotations data is correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"",
+													"    pm.expect(jsonData).to.have.property(\"annotations\")",
+													"    pm.expect(jsonData[\"annotations\"][\"test/1\"]).to.eql(\"patched1\");",
+													"    pm.expect(jsonData[\"annotations\"][\"test/2\"]).to.eql(\"patched2\");",
+													"    pm.expect(Object.keys(jsonData[\"annotations\"]).length).to.eql(2);",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"teams",
+												"{{an_team1_id}}",
+												"assets",
+												"{{an_team1_asset1_id}}",
+												"annotations"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Team1 - Asset1 - Update non-existing annotation (fail)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 404\", function () {",
+													"    pm.response.to.have.status(404);",
+													"});",
+													"",
+													"pm.test(\"Return error msg is correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.type).to.eql(\"Record not found\");",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"annotations\": {\n        \"test/1\": \"patched_failed_1\",\n        \"test/3\": \"patched_failed_3\"\n    }\n}"
+										},
+										"url": {
+											"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"teams",
+												"{{an_team1_id}}",
+												"assets",
+												"{{an_team1_asset1_id}}",
+												"annotations"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Team1 - Asset1 - List Annotations - Failed patch did not update model",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"Asset annotations data is correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"",
+													"    pm.expect(jsonData).to.have.property(\"annotations\")",
+													"    pm.expect(jsonData[\"annotations\"][\"test/1\"]).to.eql(\"patched1\");",
+													"    pm.expect(jsonData[\"annotations\"][\"test/2\"]).to.eql(\"patched2\");",
+													"    pm.expect(Object.keys(jsonData[\"annotations\"]).length).to.eql(2);",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"teams",
+												"{{an_team1_id}}",
+												"assets",
+												"{{an_team1_asset1_id}}",
+												"annotations"
+											]
+										}
+									},
+									"response": []
 								}
-							},
-							"response": []
+							]
 						},
 						{
-							"name": "Team1 - Asset1 - List Annotations",
-							"event": [
+							"name": "Delete",
+							"item": [
 								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});",
-											"",
-											"pm.test(\"Asset annotations data is correct\", function () {",
-											"    var jsonData = pm.response.json();",
-											"",
-											"    pm.expect(jsonData).to.have.property(\"annotations\")",
-											"    pm.expect(jsonData[\"annotations\"][\"test/1\"]).to.eql(\"new1\");",
-											"    pm.expect(jsonData[\"annotations\"][\"test/2\"]).to.eql(\"new2\");",
-											"    pm.expect(Object.keys(jsonData[\"annotations\"]).length).to.eql(2);",
-											"});",
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": ""
-								},
-								"url": {
-									"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
-									"host": [
-										"{{host}}"
+									"name": "Team1 - Asset1 - Delete one annotation",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 204\", function () {",
+													"    pm.response.to.have.status(204);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
 									],
-									"path": [
-										"api",
-										"v1",
-										"teams",
-										"{{an_team1_id}}",
-										"assets",
-										"{{an_team1_asset1_id}}",
-										"annotations"
-									]
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"annotations\": [ \n        \"test/1\"\n    ]\n}"
+										},
+										"url": {
+											"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"teams",
+												"{{an_team1_id}}",
+												"assets",
+												"{{an_team1_asset1_id}}",
+												"annotations"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Team1 - Asset1 - List Annotations after delete",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"Asset annotations data is correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"",
+													"    pm.expect(jsonData).to.have.property(\"annotations\")",
+													"    pm.expect(jsonData[\"annotations\"][\"test/2\"]).to.eql(\"patched2\");",
+													"    pm.expect(Object.keys(jsonData[\"annotations\"]).length).to.eql(1);",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"teams",
+												"{{an_team1_id}}",
+												"assets",
+												"{{an_team1_asset1_id}}",
+												"annotations"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Team1 - Asset1 - Re-add multiple annotations",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 201\", function () {",
+													"    pm.response.to.have.status(201);",
+													"});",
+													"",
+													"pm.test(\"Asset annotations data is correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"",
+													"    pm.expect(jsonData).to.have.property(\"annotations\")",
+													"    pm.expect(jsonData[\"annotations\"][\"test/3\"]).to.eql(\"new3\");",
+													"    pm.expect(jsonData[\"annotations\"][\"test/4\"]).to.eql(\"new4\");",
+													"    pm.expect(jsonData[\"annotations\"][\"test/5\"]).to.eql(\"new5\");",
+													"    pm.expect(Object.keys(jsonData[\"annotations\"]).length).to.eql(3);",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"annotations\": {\n        \"test/3\": \"new3\",\n        \"test/4\": \"new4\",\n        \"test/5\": \"new5\"\n    }\n}"
+										},
+										"url": {
+											"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"teams",
+												"{{an_team1_id}}",
+												"assets",
+												"{{an_team1_asset1_id}}",
+												"annotations"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Team1 - Asset1 - Delete multiple annotations",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 204\", function () {",
+													"    pm.response.to.have.status(204);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"annotations\": [ \n        \"test/2\",\n        \"test/3\",\n        \"test/4\"\n    ]\n}"
+										},
+										"url": {
+											"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"teams",
+												"{{an_team1_id}}",
+												"assets",
+												"{{an_team1_asset1_id}}",
+												"annotations"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Team1 - Asset1 - List Annotations after multiple delete",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"Asset annotations data is correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"",
+													"    pm.expect(jsonData).to.have.property(\"annotations\")",
+													"    pm.expect(jsonData[\"annotations\"][\"test/5\"]).to.eql(\"new5\");",
+													"    pm.expect(Object.keys(jsonData[\"annotations\"]).length).to.eql(1);",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"teams",
+												"{{an_team1_id}}",
+												"assets",
+												"{{an_team1_asset1_id}}",
+												"annotations"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Team1 - Asset1 - Delete last remaining",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 204\", function () {",
+													"    pm.response.to.have.status(204);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"annotations\": [ \n        \"test/5\"\n    ]\n}"
+										},
+										"url": {
+											"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"teams",
+												"{{an_team1_id}}",
+												"assets",
+												"{{an_team1_asset1_id}}",
+												"annotations"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Team1 - Asset1 - List Annotations - Empty after delete",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"Asset annotation data is correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData).to.have.property(\"annotations\")",
+													"    pm.expect(jsonData[\"annotations\"]).to.eql({})",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"teams",
+												"{{an_team1_id}}",
+												"assets",
+												"{{an_team1_asset1_id}}",
+												"annotations"
+											]
+										}
+									},
+									"response": []
 								}
-							},
-							"response": []
+							]
 						},
 						{
-							"name": "Team1 - Asset1 - Add Annotations again (fail)",
-							"event": [
+							"name": "Put",
+							"item": [
 								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 500\", function () {",
-											"    pm.response.to.have.status(500);",
-											"});",
-											"",
-											"pm.test(\"Asset annotations data is correct\", function () {",
-											"    var jsonData = pm.response.json();",
-											"    pm.expect(jsonData.type).to.eql(\"Cannot create record\");",
-											"});",
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"annotations\": {\n        \"test/1\": \"failednew1\",\n        \"test/2\": \"failednew2\"\n    }\n}"
-								},
-								"url": {
-									"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
-									"host": [
-										"{{host}}"
+									"name": "Team1 - Asset1 - Re-add multiple annotations",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 201\", function () {",
+													"    pm.response.to.have.status(201);",
+													"});",
+													"",
+													"pm.test(\"Asset annotations data is correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"",
+													"    pm.expect(jsonData).to.have.property(\"annotations\")",
+													"    pm.expect(jsonData[\"annotations\"][\"test/1\"]).to.eql(\"new1\");",
+													"    pm.expect(jsonData[\"annotations\"][\"test/2\"]).to.eql(\"new2\");",
+													"    pm.expect(jsonData[\"annotations\"][\"test/3\"]).to.eql(\"new3\");",
+													"    pm.expect(Object.keys(jsonData[\"annotations\"]).length).to.eql(3);",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
 									],
-									"path": [
-										"api",
-										"v1",
-										"teams",
-										"{{an_team1_id}}",
-										"assets",
-										"{{an_team1_asset1_id}}",
-										"annotations"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Team1 - Asset1 - Add non-unique Annotations (fail)",
-							"event": [
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"annotations\": {\n        \"test/1\": \"new1\",\n        \"test/2\": \"new2\",\n        \"test/3\": \"new3\"\n    }\n}"
+										},
+										"url": {
+											"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"teams",
+												"{{an_team1_id}}",
+												"assets",
+												"{{an_team1_asset1_id}}",
+												"annotations"
+											]
+										}
+									},
+									"response": []
+								},
 								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 500\", function () {",
-											"    pm.response.to.have.status(500);",
-											"});",
-											"",
-											"pm.test(\"Asset annotations data is correct\", function () {",
-											"    var jsonData = pm.response.json();",
-											"    pm.expect(jsonData.type).to.eql(\"Cannot create record\");",
-											"});",
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"annotations\": {\n        \"test/3\": \"new3\",\n        \"test/1\": \"overlapping1\"\n    }\n}"
-								},
-								"url": {
-									"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
-									"host": [
-										"{{host}}"
+									"name": "Team1 - Asset1 - Put",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"Asset annotations data is correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"",
+													"    pm.expect(jsonData).to.have.property(\"annotations\")",
+													"    pm.expect(jsonData[\"annotations\"][\"test/1\"]).to.eql(\"put1\");",
+													"    pm.expect(jsonData[\"annotations\"][\"test/3\"]).to.eql(\"put3\");",
+													"    pm.expect(jsonData[\"annotations\"][\"test/4\"]).to.eql(\"put4\");",
+													"    pm.expect(Object.keys(jsonData[\"annotations\"]).length).to.eql(3);",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
 									],
-									"path": [
-										"api",
-										"v1",
-										"teams",
-										"{{an_team1_id}}",
-										"assets",
-										"{{an_team1_asset1_id}}",
-										"annotations"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Team1 - Asset1 - List Annotations - No changes",
-							"event": [
+									"request": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"annotations\": {\n        \"test/1\": \"put1\",\n        \"test/3\": \"put3\",\n        \"test/4\": \"put4\"\n    }\n}"
+										},
+										"url": {
+											"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"teams",
+												"{{an_team1_id}}",
+												"assets",
+												"{{an_team1_asset1_id}}",
+												"annotations"
+											]
+										}
+									},
+									"response": []
+								},
 								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});",
-											"",
-											"pm.test(\"Asset annotations data is correct\", function () {",
-											"    var jsonData = pm.response.json();",
-											"",
-											"    pm.expect(jsonData).to.have.property(\"annotations\")",
-											"    pm.expect(jsonData[\"annotations\"][\"test/1\"]).to.eql(\"new1\");",
-											"    pm.expect(jsonData[\"annotations\"][\"test/2\"]).to.eql(\"new2\");",
-											"    pm.expect(Object.keys(jsonData[\"annotations\"]).length).to.eql(2);",
-											"});",
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": ""
-								},
-								"url": {
-									"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
-									"host": [
-										"{{host}}"
+									"name": "Team1 - Asset1 - List Annotations after Put",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"Asset annotations data is correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"",
+													"    pm.expect(jsonData).to.have.property(\"annotations\")",
+													"    pm.expect(jsonData[\"annotations\"][\"test/1\"]).to.eql(\"put1\");",
+													"    pm.expect(jsonData[\"annotations\"][\"test/3\"]).to.eql(\"put3\");",
+													"    pm.expect(jsonData[\"annotations\"][\"test/4\"]).to.eql(\"put4\");",
+													"    pm.expect(Object.keys(jsonData[\"annotations\"]).length).to.eql(3);",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
 									],
-									"path": [
-										"api",
-										"v1",
-										"teams",
-										"{{an_team1_id}}",
-										"assets",
-										"{{an_team1_asset1_id}}",
-										"annotations"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Team1 - Asset1 - Update Annotations",
-							"event": [
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"teams",
+												"{{an_team1_id}}",
+												"assets",
+												"{{an_team1_asset1_id}}",
+												"annotations"
+											]
+										}
+									},
+									"response": []
+								},
 								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});",
-											"",
-											"pm.test(\"Asset annotations data is correct\", function () {",
-											"    var jsonData = pm.response.json();",
-											"",
-											"    pm.expect(jsonData).to.have.property(\"annotations\")",
-											"    pm.expect(jsonData[\"annotations\"][\"test/1\"]).to.eql(\"patched1\");",
-											"    pm.expect(jsonData[\"annotations\"][\"test/2\"]).to.eql(\"patched2\");",
-											"    pm.expect(Object.keys(jsonData[\"annotations\"]).length).to.eql(2);",
-											"});",
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "PATCH",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"annotations\": {\n        \"test/1\": \"patched1\",\n        \"test/2\": \"patched2\"\n    }\n}"
-								},
-								"url": {
-									"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
-									"host": [
-										"{{host}}"
+									"name": "Team1 - Asset1 - Put - Clean all - empty body",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"Asset annotations data is correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"",
+													"    pm.expect(jsonData).to.have.property(\"annotations\")",
+													"    pm.expect(Object.keys(jsonData[\"annotations\"]).length).to.eql(0);",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
 									],
-									"path": [
-										"api",
-										"v1",
-										"teams",
-										"{{an_team1_id}}",
-										"assets",
-										"{{an_team1_asset1_id}}",
-										"annotations"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Team1 - Asset1 - List Annotations after Patch Copy",
-							"event": [
+									"request": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"teams",
+												"{{an_team1_id}}",
+												"assets",
+												"{{an_team1_asset1_id}}",
+												"annotations"
+											]
+										}
+									},
+									"response": []
+								},
 								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});",
-											"",
-											"pm.test(\"Asset annotations data is correct\", function () {",
-											"    var jsonData = pm.response.json();",
-											"",
-											"    pm.expect(jsonData).to.have.property(\"annotations\")",
-											"    pm.expect(jsonData[\"annotations\"][\"test/1\"]).to.eql(\"patched1\");",
-											"    pm.expect(jsonData[\"annotations\"][\"test/2\"]).to.eql(\"patched2\");",
-											"    pm.expect(Object.keys(jsonData[\"annotations\"]).length).to.eql(2);",
-											"});",
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": ""
-								},
-								"url": {
-									"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
-									"host": [
-										"{{host}}"
+									"name": "Team1 - Asset1 - List Annotations after Put - empty",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"Asset annotations data is correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"",
+													"    pm.expect(jsonData).to.have.property(\"annotations\")",
+													"    pm.expect(Object.keys(jsonData[\"annotations\"]).length).to.eql(0);",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
 									],
-									"path": [
-										"api",
-										"v1",
-										"teams",
-										"{{an_team1_id}}",
-										"assets",
-										"{{an_team1_asset1_id}}",
-										"annotations"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Team1 - Asset1 - Update non-existing annotation (fail)",
-							"event": [
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"teams",
+												"{{an_team1_id}}",
+												"assets",
+												"{{an_team1_asset1_id}}",
+												"annotations"
+											]
+										}
+									},
+									"response": []
+								},
 								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 404\", function () {",
-											"    pm.response.to.have.status(404);",
-											"});",
-											"",
-											"pm.test(\"Return error msg is correct\", function () {",
-											"    var jsonData = pm.response.json();",
-											"    pm.expect(jsonData.type).to.eql(\"Record not found\");",
-											"});",
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "PATCH",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"annotations\": {\n        \"test/1\": \"patched_failed_1\",\n        \"test/3\": \"patched_failed_3\"\n    }\n}"
-								},
-								"url": {
-									"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
-									"host": [
-										"{{host}}"
+									"name": "Team1 - Asset1 - Re-add multiple annotations",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 201\", function () {",
+													"    pm.response.to.have.status(201);",
+													"});",
+													"",
+													"pm.test(\"Asset annotations data is correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"",
+													"    pm.expect(jsonData).to.have.property(\"annotations\")",
+													"    pm.expect(jsonData[\"annotations\"][\"test/1\"]).to.eql(\"new1\");",
+													"    pm.expect(jsonData[\"annotations\"][\"test/2\"]).to.eql(\"new2\");",
+													"    pm.expect(jsonData[\"annotations\"][\"test/3\"]).to.eql(\"new3\");",
+													"    pm.expect(Object.keys(jsonData[\"annotations\"]).length).to.eql(3);",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
 									],
-									"path": [
-										"api",
-										"v1",
-										"teams",
-										"{{an_team1_id}}",
-										"assets",
-										"{{an_team1_asset1_id}}",
-										"annotations"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Team1 - Asset1 - List Annotations - Failed patch did not update model",
-							"event": [
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"annotations\": {\n        \"test/1\": \"new1\",\n        \"test/2\": \"new2\",\n        \"test/3\": \"new3\"\n    }\n}"
+										},
+										"url": {
+											"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"teams",
+												"{{an_team1_id}}",
+												"assets",
+												"{{an_team1_asset1_id}}",
+												"annotations"
+											]
+										}
+									},
+									"response": []
+								},
 								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});",
-											"",
-											"pm.test(\"Asset annotations data is correct\", function () {",
-											"    var jsonData = pm.response.json();",
-											"",
-											"    pm.expect(jsonData).to.have.property(\"annotations\")",
-											"    pm.expect(jsonData[\"annotations\"][\"test/1\"]).to.eql(\"patched1\");",
-											"    pm.expect(jsonData[\"annotations\"][\"test/2\"]).to.eql(\"patched2\");",
-											"    pm.expect(Object.keys(jsonData[\"annotations\"]).length).to.eql(2);",
-											"});",
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": ""
-								},
-								"url": {
-									"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
-									"host": [
-										"{{host}}"
+									"name": "Team1 - Asset1 - Put - Clean all - empty parameter",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"Asset annotations data is correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"",
+													"    pm.expect(jsonData).to.have.property(\"annotations\")",
+													"    pm.expect(Object.keys(jsonData[\"annotations\"]).length).to.eql(0);",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
 									],
-									"path": [
-										"api",
-										"v1",
-										"teams",
-										"{{an_team1_id}}",
-										"assets",
-										"{{an_team1_asset1_id}}",
-										"annotations"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Team1 - Asset1 - Delete one annotation",
-							"event": [
+									"request": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"annotations\": {}\n}"
+										},
+										"url": {
+											"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"teams",
+												"{{an_team1_id}}",
+												"assets",
+												"{{an_team1_asset1_id}}",
+												"annotations"
+											]
+										}
+									},
+									"response": []
+								},
 								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 204\", function () {",
-											"    pm.response.to.have.status(204);",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "DELETE",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"annotations\": [ \n        \"test/1\"\n    ]\n}"
-								},
-								"url": {
-									"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
-									"host": [
-										"{{host}}"
+									"name": "Team1 - Asset1 - List Annotations after Put - empty",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"Asset annotations data is correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"",
+													"    pm.expect(jsonData).to.have.property(\"annotations\")",
+													"    pm.expect(Object.keys(jsonData[\"annotations\"]).length).to.eql(0);",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
 									],
-									"path": [
-										"api",
-										"v1",
-										"teams",
-										"{{an_team1_id}}",
-										"assets",
-										"{{an_team1_asset1_id}}",
-										"annotations"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Team1 - Asset1 - List Annotations after delete",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});",
-											"",
-											"pm.test(\"Asset annotations data is correct\", function () {",
-											"    var jsonData = pm.response.json();",
-											"",
-											"    pm.expect(jsonData).to.have.property(\"annotations\")",
-											"    pm.expect(jsonData[\"annotations\"][\"test/2\"]).to.eql(\"patched2\");",
-											"    pm.expect(Object.keys(jsonData[\"annotations\"]).length).to.eql(1);",
-											"});",
-											""
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
 										],
-										"type": "text/javascript"
-									}
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"teams",
+												"{{an_team1_id}}",
+												"assets",
+												"{{an_team1_asset1_id}}",
+												"annotations"
+											]
+										}
+									},
+									"response": []
 								}
-							],
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": ""
-								},
-								"url": {
-									"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"api",
-										"v1",
-										"teams",
-										"{{an_team1_id}}",
-										"assets",
-										"{{an_team1_asset1_id}}",
-										"annotations"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Team1 - Asset1 - Re-add multiple annotations",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 201\", function () {",
-											"    pm.response.to.have.status(201);",
-											"});",
-											"",
-											"pm.test(\"Asset annotations data is correct\", function () {",
-											"    var jsonData = pm.response.json();",
-											"",
-											"    pm.expect(jsonData).to.have.property(\"annotations\")",
-											"    pm.expect(jsonData[\"annotations\"][\"test/3\"]).to.eql(\"new3\");",
-											"    pm.expect(jsonData[\"annotations\"][\"test/4\"]).to.eql(\"new4\");",
-											"    pm.expect(jsonData[\"annotations\"][\"test/5\"]).to.eql(\"new5\");",
-											"    pm.expect(Object.keys(jsonData[\"annotations\"]).length).to.eql(3);",
-											"});",
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"annotations\": {\n        \"test/3\": \"new3\",\n        \"test/4\": \"new4\",\n        \"test/5\": \"new5\"\n    }\n}"
-								},
-								"url": {
-									"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"api",
-										"v1",
-										"teams",
-										"{{an_team1_id}}",
-										"assets",
-										"{{an_team1_asset1_id}}",
-										"annotations"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Team1 - Asset1 - Delete multiple annotations",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 204\", function () {",
-											"    pm.response.to.have.status(204);",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "DELETE",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"annotations\": [ \n        \"test/2\",\n        \"test/3\",\n        \"test/4\"\n    ]\n}"
-								},
-								"url": {
-									"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"api",
-										"v1",
-										"teams",
-										"{{an_team1_id}}",
-										"assets",
-										"{{an_team1_asset1_id}}",
-										"annotations"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Team1 - Asset1 - List Annotations after multiple delete",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});",
-											"",
-											"pm.test(\"Asset annotations data is correct\", function () {",
-											"    var jsonData = pm.response.json();",
-											"",
-											"    pm.expect(jsonData).to.have.property(\"annotations\")",
-											"    pm.expect(jsonData[\"annotations\"][\"test/5\"]).to.eql(\"new5\");",
-											"    pm.expect(Object.keys(jsonData[\"annotations\"]).length).to.eql(1);",
-											"});",
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": ""
-								},
-								"url": {
-									"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"api",
-										"v1",
-										"teams",
-										"{{an_team1_id}}",
-										"assets",
-										"{{an_team1_asset1_id}}",
-										"annotations"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Team1 - Asset1 - Delete last remaining",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 204\", function () {",
-											"    pm.response.to.have.status(204);",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "DELETE",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"annotations\": [ \n        \"test/5\"\n    ]\n}"
-								},
-								"url": {
-									"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"api",
-										"v1",
-										"teams",
-										"{{an_team1_id}}",
-										"assets",
-										"{{an_team1_asset1_id}}",
-										"annotations"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Team1 - Asset1 - List Annotations - Empty after delete",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});",
-											"",
-											"pm.test(\"Asset annotation data is correct\", function () {",
-											"    var jsonData = pm.response.json();",
-											"    pm.expect(jsonData).to.have.property(\"annotations\")",
-											"    pm.expect(jsonData[\"annotations\"]).to.eql({})",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": ""
-								},
-								"url": {
-									"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/{{an_team1_asset1_id}}/annotations",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"api",
-										"v1",
-										"teams",
-										"{{an_team1_id}}",
-										"assets",
-										"{{an_team1_asset1_id}}",
-										"annotations"
-									]
-								}
-							},
-							"response": []
+							]
 						}
 					],
 					"auth": {

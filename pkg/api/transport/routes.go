@@ -71,6 +71,7 @@ func AttachRoutes(e endpoint.Endpoints, logger kitlog.Logger) http.Handler {
 	r.Methods("GET").Path("/api/v1/teams/{team_id}/assets/{asset_id}/annotations").Handler(newServer(e[endpoint.ListAssetAnnotations], endpoint.AssetAnnotationRequest{}, logger, endpoint.ListAssetAnnotations))
 	r.Methods("POST").Path("/api/v1/teams/{team_id}/assets/{asset_id}/annotations").Handler(newServer(e[endpoint.CreateAssetAnnotations], endpoint.AssetAnnotationRequest{}, logger, endpoint.CreateAssetAnnotations))
 	r.Methods("PATCH").Path("/api/v1/teams/{team_id}/assets/{asset_id}/annotations").Handler(newServer(e[endpoint.UpdateAssetAnnotations], endpoint.AssetAnnotationRequest{}, logger, endpoint.UpdateAssetAnnotations))
+	r.Methods("PUT").Path("/api/v1/teams/{team_id}/assets/{asset_id}/annotations").Handler(newServer(e[endpoint.PutAssetAnnotations], endpoint.AssetAnnotationRequest{}, logger, endpoint.PutAssetAnnotations))
 	r.Methods("DELETE").Path("/api/v1/teams/{team_id}/assets/{asset_id}/annotations").Handler(newServer(e[endpoint.DeleteAssetAnnotations], endpoint.AssetAnnotationDeleteRequest{}, logger, endpoint.DeleteAssetAnnotations))
 
 	// Groups

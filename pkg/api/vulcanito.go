@@ -55,6 +55,7 @@ type VulcanitoService interface {
 	ListAssetAnnotations(ctx context.Context, teamID string, assetID string) ([]*AssetAnnotation, error)
 	CreateAssetAnnotations(ctx context.Context, teamID string, assetID string, annotations []*AssetAnnotation) ([]*AssetAnnotation, error)
 	UpdateAssetAnnotations(ctx context.Context, teamID string, assetID string, annotations []*AssetAnnotation) ([]*AssetAnnotation, error)
+	PutAssetAnnotations(ctx context.Context, teamID string, assetID string, annotations []*AssetAnnotation) ([]*AssetAnnotation, error)
 	DeleteAssetAnnotations(ctx context.Context, teamID string, assedID string, annotations []*AssetAnnotation) error
 
 	ListGroups(ctx context.Context, teamID, groupName string) ([]*Group, error)
