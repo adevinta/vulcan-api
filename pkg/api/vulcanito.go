@@ -43,8 +43,8 @@ type VulcanitoService interface {
 
 	// Assets
 	ListAssets(ctx context.Context, teamID string, asset Asset) ([]*Asset, error)
-	CreateAssets(ctx context.Context, assets []Asset, groups []Group, annotations []AssetAnnotation) ([]Asset, error)
-	CreateAssetsMultiStatus(ctx context.Context, assets []Asset, groups []Group, annotations []AssetAnnotation) ([]AssetCreationResponse, error)
+	CreateAssets(ctx context.Context, assets []Asset, groups []Group, annotations []*AssetAnnotation) ([]Asset, error)
+	CreateAssetsMultiStatus(ctx context.Context, assets []Asset, groups []Group, annotations []*AssetAnnotation) ([]AssetCreationResponse, error)
 	FindAsset(ctx context.Context, asset Asset) (*Asset, error)
 	UpdateAsset(ctx context.Context, asset Asset) (*Asset, error)
 	DeleteAsset(ctx context.Context, asset Asset) error

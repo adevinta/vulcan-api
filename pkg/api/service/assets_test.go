@@ -483,7 +483,7 @@ func TestVulcanitoService_CreateAssets(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			testService := tt.srvBuilder.BuildSrv(testStore)
 
-			got, err := testService.CreateAssets(context.Background(), tt.assets, tt.groups, []api.AssetAnnotation{})
+			got, err := testService.CreateAssets(context.Background(), tt.assets, tt.groups, []*api.AssetAnnotation{})
 			if errToStr(err) != errToStr(tt.wantErr) {
 				t.Fatal(err)
 			}
@@ -912,7 +912,7 @@ func TestVulcanitoService_CreateAssetsMultiStatus(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			testService := tt.srvBuilder.BuildSrv(testStore)
 
-			got, err := testService.CreateAssetsMultiStatus(context.Background(), tt.assets, tt.groups, []api.AssetAnnotation{})
+			got, err := testService.CreateAssetsMultiStatus(context.Background(), tt.assets, tt.groups, []*api.AssetAnnotation{})
 			if errToStr(err) != errToStr(tt.wantErr) {
 				t.Fatal(err)
 			}

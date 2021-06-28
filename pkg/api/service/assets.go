@@ -40,7 +40,7 @@ func (s vulcanitoService) ListAssets(ctx context.Context, teamID string, asset a
 }
 
 // CreateAssets receives an array of assets and creates them on store layer.
-func (s vulcanitoService) CreateAssets(ctx context.Context, assets []api.Asset, groups []api.Group, annotations []api.AssetAnnotation) ([]api.Asset, error) {
+func (s vulcanitoService) CreateAssets(ctx context.Context, assets []api.Asset, groups []api.Group, annotations []*api.AssetAnnotation) ([]api.Asset, error) {
 	assetsToCreate := []api.Asset{}
 
 	// If no group is specified, add Default group data to groups list.
@@ -129,7 +129,7 @@ func (s vulcanitoService) getAccountName(identifier string) string {
 // CreateAssetsMultiStatus receives an array of assets and request their creation to the store layer.
 // Also, this method will associate the assets with the specified groups.
 // It returns an array containing one response per request, in the same order as in the original request.
-func (s vulcanitoService) CreateAssetsMultiStatus(ctx context.Context, assets []api.Asset, groups []api.Group, annotations []api.AssetAnnotation) ([]api.AssetCreationResponse, error) {
+func (s vulcanitoService) CreateAssetsMultiStatus(ctx context.Context, assets []api.Asset, groups []api.Group, annotations []*api.AssetAnnotation) ([]api.AssetCreationResponse, error) {
 	responses := []api.AssetCreationResponse{}
 
 	// If no group is specified, add Default group data to groups list.

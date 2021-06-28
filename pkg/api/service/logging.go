@@ -269,7 +269,7 @@ func (middleware loggingMiddleware) ListAssets(ctx context.Context, teamID strin
 	return middleware.next.ListAssets(ctx, teamID, asset)
 }
 
-func (middleware loggingMiddleware) CreateAssets(ctx context.Context, assets []api.Asset, groups []api.Group, annotations []api.AssetAnnotation) ([]api.Asset, error) {
+func (middleware loggingMiddleware) CreateAssets(ctx context.Context, assets []api.Asset, groups []api.Group, annotations []*api.AssetAnnotation) ([]api.Asset, error) {
 	defer func() {
 		XRequestID := ""
 		if ctx != nil {
@@ -280,7 +280,7 @@ func (middleware loggingMiddleware) CreateAssets(ctx context.Context, assets []a
 	return middleware.next.CreateAssets(ctx, assets, groups, annotations)
 }
 
-func (middleware loggingMiddleware) CreateAssetsMultiStatus(ctx context.Context, assets []api.Asset, groups []api.Group, annotations []api.AssetAnnotation) ([]api.AssetCreationResponse, error) {
+func (middleware loggingMiddleware) CreateAssetsMultiStatus(ctx context.Context, assets []api.Asset, groups []api.Group, annotations []*api.AssetAnnotation) ([]api.AssetCreationResponse, error) {
 	defer func() {
 		XRequestID := ""
 		if ctx != nil {

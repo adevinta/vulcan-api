@@ -20,12 +20,41 @@ type AssetAnnotation struct {
 	UpdatedAt time.Time `json:"-"`
 }
 
-type AssetAnnotationResponse map[string]string
-
 func (an AssetAnnotation) Validate() error {
 	err := validator.New().Struct(an)
 	if err != nil {
 		return errors.Validation(err)
 	}
 	return nil
+}
+
+type AssetAnnotations []*AssetAnnotation
+
+type AssetAnnotationsMap map[string]string
+
+type AssetAnnotationsResponse struct {
+	Annotations AssetAnnotationsMap `json:"annotations"`
+}
+
+func (ans AssetAnnotations) ToMap() AssetAnnotationsMap {
+	m := AssetAnnotationsMap{}
+	for _, an := range ans {
+		m[an.Key] = an.Value
+	}
+	return m
+}
+
+func (anm AssetAnnotationsMap) ToModel() AssetAnnotations {
+	annotations := AssetAnnotations{}
+	for k, v := range anm {
+		annotations = append(annotations, &AssetAnnotation{
+			Key:   k,
+			Value: v,
+		})
+	}
+	return annotations
+}
+
+func (ans AssetAnnotations) ToResponse() AssetAnnotationsResponse {
+	return AssetAnnotationsResponse{Annotations: ans.ToMap()}
 }

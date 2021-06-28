@@ -117,10 +117,8 @@ func (a Asset) ToResponse() AssetResponse {
 	}
 
 	if len(a.AssetAnnotations) > 0 {
-		assetReponse.Annotations = make(AssetAnnotationResponse)
-		for _, an := range a.AssetAnnotations {
-			assetReponse.Annotations[an.Key] = an.Value
-		}
+		var ans AssetAnnotations = a.AssetAnnotations
+		assetReponse.Annotations = ans.ToMap()
 	}
 
 	return assetReponse
@@ -191,17 +189,17 @@ var DefaultROLFP = &ROLFP{
 }
 
 type AssetResponse struct {
-	ID                string                  `json:"id"`
-	AssetType         AssetTypeResponse       `json:"type"` // This line is infered from column name "asset_type_id".
-	Identifier        string                  `json:"identifier"`
-	Alias             string                  `json:"alias"`
-	Options           *string                 `json:"options"`
-	EnvironmentalCVSS *string                 `json:"environmental_cvss"`
-	ROLFP             *ROLFP                  `json:"rolfp"`
-	Scannable         *bool                   `json:"scannable"`
-	ClassifiedAt      *time.Time              `json:"classified_at"`
-	Groups            []*GroupResponse        `json:"groups"`
-	Annotations       AssetAnnotationResponse `json:"annotations"`
+	ID                string              `json:"id"`
+	AssetType         AssetTypeResponse   `json:"type"` // This line is infered from column name "asset_type_id".
+	Identifier        string              `json:"identifier"`
+	Alias             string              `json:"alias"`
+	Options           *string             `json:"options"`
+	EnvironmentalCVSS *string             `json:"environmental_cvss"`
+	ROLFP             *ROLFP              `json:"rolfp"`
+	Scannable         *bool               `json:"scannable"`
+	ClassifiedAt      *time.Time          `json:"classified_at"`
+	Groups            []*GroupResponse    `json:"groups"`
+	Annotations       AssetAnnotationsMap `json:"annotations"`
 }
 
 type AssetCreationResponse struct {

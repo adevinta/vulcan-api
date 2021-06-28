@@ -14,9 +14,9 @@ import (
 )
 
 type AssetAnnotationRequest struct {
-	TeamID      string            `json:"team_id" urlvar:"team_id"`
-	AssetID     string            `json:"asset_id" urlvar:"asset_id"`
-	Annotations map[string]string `json:"annotations"`
+	TeamID      string                  `json:"team_id" urlvar:"team_id"`
+	AssetID     string                  `json:"asset_id" urlvar:"asset_id"`
+	Annotations api.AssetAnnotationsMap `json:"annotations"`
 }
 
 func makeListAssetAnnotationsEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
@@ -33,11 +33,8 @@ func makeListAssetAnnotationsEndpoint(s api.VulcanitoService, logger kitlog.Logg
 			return nil, err
 		}
 
-		// Merge annotations into one map
-		response := api.AssetAnnotationResponse{}
-		for _, annotation := range annotations {
-			response[annotation.Key] = annotation.Value
-		}
+		// Transform to response format
+		response := api.AssetAnnotations(annotations).ToResponse()
 
 		return Ok{response}, nil
 	}
@@ -51,27 +48,15 @@ func makeCreateAssetAnnotationsEndpoint(s api.VulcanitoService, logger kitlog.Lo
 			return nil, errors.Assertion("Type assertion failed")
 		}
 
-		// Transform input from standardized "map[string]string" format to the
-		// internal AssetAnnotation model
-		annotations := []*api.AssetAnnotation{}
-		for k, v := range req.Annotations {
-			annotations = append(annotations, &api.AssetAnnotation{
-				Key:   k,
-				Value: v,
-			})
-		}
-
 		// Route to service layer
+		annotations := req.Annotations.ToModel()
 		newAnnotations, err := s.CreateAssetAnnotations(ctx, req.TeamID, req.AssetID, annotations)
 		if err != nil {
 			return nil, err
 		}
 
 		// Format response
-		response := api.AssetAnnotationResponse{}
-		for _, annotation := range newAnnotations {
-			response[annotation.Key] = annotation.Value
-		}
+		response := api.AssetAnnotations(newAnnotations).ToResponse()
 
 		return Created{response}, nil
 	}
@@ -85,27 +70,15 @@ func makeUpdateAssetAnnotationsEndpoint(s api.VulcanitoService, logger kitlog.Lo
 			return nil, errors.Assertion("Type assertion failed")
 		}
 
-		// Transform input from standardized "map[string]string" format to the
-		// internal AssetAnnotation model
-		annotations := []*api.AssetAnnotation{}
-		for k, v := range req.Annotations {
-			annotations = append(annotations, &api.AssetAnnotation{
-				Key:   k,
-				Value: v,
-			})
-		}
-
 		// Route to service layer
-		newAnnotations, err := s.UpdateAssetAnnotations(ctx, req.TeamID, req.AssetID, annotations)
+		annotations := req.Annotations.ToModel()
+		updatedAnnotations, err := s.UpdateAssetAnnotations(ctx, req.TeamID, req.AssetID, annotations)
 		if err != nil {
 			return nil, err
 		}
 
 		// Merge annotations into one map
-		response := api.AssetAnnotationResponse{}
-		for _, annotation := range newAnnotations {
-			response[annotation.Key] = annotation.Value
-		}
+		response := api.AssetAnnotations(updatedAnnotations).ToResponse()
 
 		return Ok{response}, nil
 	}
@@ -126,23 +99,20 @@ func makeDeleteAssetAnnotationsEndpoint(s api.VulcanitoService, logger kitlog.Lo
 		}
 
 		// Transform input from standardized map[string]string to AssetAnnotation
-		// model
+		// model, and transposing only keys
 		annotations := []*api.AssetAnnotation{}
 		for _, k := range req.Annotations {
 			annotations = append(annotations, &api.AssetAnnotation{Key: k})
 		}
 
 		// Route to service layer
-		newAnnotations, err := s.DeleteAssetAnnotations(ctx, req.TeamID, req.AssetID, annotations)
+		deletedAnnotations, err := s.DeleteAssetAnnotations(ctx, req.TeamID, req.AssetID, annotations)
 		if err != nil {
 			return nil, err
 		}
 
 		// Merge annotations into one map
-		response := api.AssetAnnotationResponse{}
-		for _, annotation := range newAnnotations {
-			response[annotation.Key] = annotation.Value
-		}
+		response := api.AssetAnnotations(deletedAnnotations).ToResponse()
 
 		return Ok{response}, nil
 	}

@@ -216,7 +216,7 @@ func TestStoreCreateAssets(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := testStoreLocal.CreateAssets(tt.assets, tt.groups, []api.AssetAnnotation{})
+			got, err := testStoreLocal.CreateAssets(tt.assets, tt.groups, []*api.AssetAnnotation{})
 			if errToStr(err) != errToStr(tt.wantErr) {
 				t.Fatal(err)
 			}
