@@ -282,7 +282,6 @@ func (db vulcanitoStore) UpdateAsset(asset api.Asset) (*api.Asset, error) {
 	findAsset := api.Asset{ID: asset.ID}
 	if db.Conn.
 		Preload("Team").
-		Preload("AssetAnnotations").
 		Where("team_id = ? and id = ?", asset.TeamID, asset.ID).
 		First(&findAsset).
 		RecordNotFound() {
@@ -327,7 +326,6 @@ func (db vulcanitoStore) DeleteAsset(asset api.Asset) error {
 	if db.Conn.
 		Where("team_id = ? and id = ?", asset.TeamID, asset.ID).
 		Preload("Team").
-		Preload("AssetAnnotations").
 		First(&findAsset).RecordNotFound() {
 		return db.logError(errors.Forbidden("asset does not belong to team"))
 	}
