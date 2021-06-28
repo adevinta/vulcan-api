@@ -58,15 +58,14 @@ func (c *Client) DecodeAssetCollection(resp *http.Response) (AssetCollection, er
 
 // Asset Annotations (default view)
 //
-// Identifier: assetannotations_response_example; view=default
-type AssetannotationsResponseExample struct {
-	Annotation1 *string `form:"annotation/1,omitempty" json:"annotation/1,omitempty" yaml:"annotation/1,omitempty" xml:"annotation/1,omitempty"`
-	Annotation2 *string `form:"annotation/2,omitempty" json:"annotation/2,omitempty" yaml:"annotation/2,omitempty" xml:"annotation/2,omitempty"`
+// Identifier: assetannotations_response; view=default
+type AssetannotationsResponse struct {
+	Annotations map[string]string `form:"annotations,omitempty" json:"annotations,omitempty" yaml:"annotations,omitempty" xml:"annotations,omitempty"`
 }
 
-// DecodeAssetannotationsResponseExample decodes the AssetannotationsResponseExample instance encoded in resp body.
-func (c *Client) DecodeAssetannotationsResponseExample(resp *http.Response) (*AssetannotationsResponseExample, error) {
-	var decoded AssetannotationsResponseExample
+// DecodeAssetannotationsResponse decodes the AssetannotationsResponse instance encoded in resp body.
+func (c *Client) DecodeAssetannotationsResponse(resp *http.Response) (*AssetannotationsResponse, error) {
+	var decoded AssetannotationsResponse
 	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
 	return &decoded, err
 }

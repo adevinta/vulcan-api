@@ -137,6 +137,49 @@ func (c *Client) NewListAssetAnnotationsRequest(ctx context.Context, path string
 	return req, nil
 }
 
+// PutAssetAnnotationsPath computes a request path to the put action of asset-annotations.
+func PutAssetAnnotationsPath(teamID string, assetID string) string {
+	param0 := teamID
+	param1 := assetID
+
+	return fmt.Sprintf("/api/v1/teams/%s/assets/%s/annotations", param0, param1)
+}
+
+// Override all annotations with a new list
+func (c *Client) PutAssetAnnotations(ctx context.Context, path string, payload *AssetAnnotationRequest) (*http.Response, error) {
+	req, err := c.NewPutAssetAnnotationsRequest(ctx, path, payload)
+	if err != nil {
+		return nil, err
+	}
+	return c.Client.Do(ctx, req)
+}
+
+// NewPutAssetAnnotationsRequest create the request corresponding to the put action endpoint of the asset-annotations resource.
+func (c *Client) NewPutAssetAnnotationsRequest(ctx context.Context, path string, payload *AssetAnnotationRequest) (*http.Request, error) {
+	var body bytes.Buffer
+	err := c.Encoder.Encode(payload, &body, "*/*")
+	if err != nil {
+		return nil, fmt.Errorf("failed to encode body: %s", err)
+	}
+	scheme := c.Scheme
+	if scheme == "" {
+		scheme = "https"
+	}
+	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
+	req, err := http.NewRequestWithContext(ctx, "PUT", u.String(), &body)
+	if err != nil {
+		return nil, err
+	}
+	header := req.Header
+	header.Set("Content-Type", "application/json")
+	if c.BearerSigner != nil {
+		if err := c.BearerSigner.Sign(req); err != nil {
+			return nil, err
+		}
+	}
+	return req, nil
+}
+
 // UpdateAssetAnnotationsPath computes a request path to the update action of asset-annotations.
 func UpdateAssetAnnotationsPath(teamID string, assetID string) string {
 	param0 := teamID
