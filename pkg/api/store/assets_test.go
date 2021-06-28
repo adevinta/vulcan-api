@@ -20,7 +20,7 @@ import (
 )
 
 var (
-	ignoreFieldsAsset   = cmpopts.IgnoreFields(api.Asset{}, append(baseModelFieldNames, "Team", "AssetType", "AssetTypeID", "ClassifiedAt", "AssetAnnotations")...)
+	ignoreFieldsAsset   = cmpopts.IgnoreFields(api.Asset{}, append(baseModelFieldNames, "Team", "AssetType", "AssetTypeID", "ClassifiedAt")...)
 	ignoreFieldsDisjoin = cmpopts.IgnoreFields(api.Asset{}, "CreatedAt", "UpdatedAt", "Team", "AssetType")
 	ignoreFieldsGroup   = cmpopts.IgnoreFields(api.Group{}, []string{"ID", "CreatedAt", "UpdatedAt", "Team", "AssetGroup"}...)
 )
@@ -75,6 +75,7 @@ func TestStoreListAssets(t *testing.T) {
 							},
 						},
 					},
+					AssetAnnotations: []*api.AssetAnnotation{},
 				},
 				&api.Asset{
 					TeamID:      "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
@@ -94,6 +95,7 @@ func TestStoreListAssets(t *testing.T) {
 							},
 						},
 					},
+					AssetAnnotations: []*api.AssetAnnotation{},
 				},
 				&api.Asset{
 					TeamID:      "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
@@ -113,6 +115,7 @@ func TestStoreListAssets(t *testing.T) {
 							},
 						},
 					},
+					AssetAnnotations: []*api.AssetAnnotation{},
 				},
 				&api.Asset{
 					TeamID:            "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
@@ -123,6 +126,7 @@ func TestStoreListAssets(t *testing.T) {
 					EnvironmentalCVSS: common.String("5"),
 					ROLFP:             api.DefaultROLFP,
 					AssetGroups:       []*api.AssetGroup{},
+					AssetAnnotations:  []*api.AssetAnnotation{},
 				},
 			},
 			wantErr: nil,
@@ -473,8 +477,8 @@ func TestStoreUpdateAsset(t *testing.T) {
 
 			if tt.wantErr == nil {
 				ignoreFieldsOutbox := map[string][]string{
-					"old_asset": {"alias", "asset_type", "asset_type_id", "environmental_cvss", "rolfp", "scannable", "classified_at", "options", "annotations"},
-					"new_asset": {"alias", "asset_type", "asset_type_id", "environmental_cvss", "rolfp", "scannable", "classified_at", "options", "annotations"},
+					"old_asset": {"alias", "asset_type", "asset_type_id", "environmental_cvss", "rolfp", "scannable", "classified_at", "options"},
+					"new_asset": {"alias", "asset_type", "asset_type_id", "environmental_cvss", "rolfp", "scannable", "classified_at", "options"},
 				}
 				verifyOutbox(t, testStoreLocal, tt.expOutbox.action, tt.expOutbox.dto, ignoreFieldsOutbox)
 			}
@@ -742,8 +746,7 @@ func TestStoreDeleteAsset(t *testing.T) {
 				t.Fatalf("Asset %v was not deleted", tt.asset)
 			}
 
-			ignoreFieldsOutbox := map[string][]string{"asset": {"annotations"}}
-			verifyOutbox(t, testStoreLocal, tt.expOutbox.action, tt.expOutbox.dto, ignoreFieldsOutbox)
+			verifyOutbox(t, testStoreLocal, tt.expOutbox.action, tt.expOutbox.dto, nil)
 		})
 	}
 }

@@ -113,6 +113,7 @@ func TestServiceListAssets(t *testing.T) {
 							},
 						},
 					},
+					AssetAnnotations: []*api.AssetAnnotation{},
 				},
 				&api.Asset{
 					TeamID:      "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
@@ -132,6 +133,7 @@ func TestServiceListAssets(t *testing.T) {
 							},
 						},
 					},
+					AssetAnnotations: []*api.AssetAnnotation{},
 				},
 				&api.Asset{
 					TeamID:      "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
@@ -151,6 +153,7 @@ func TestServiceListAssets(t *testing.T) {
 							},
 						},
 					},
+					AssetAnnotations: []*api.AssetAnnotation{},
 				},
 				&api.Asset{
 					TeamID:            "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
@@ -161,6 +164,7 @@ func TestServiceListAssets(t *testing.T) {
 					EnvironmentalCVSS: common.String("5"),
 					ROLFP:             api.DefaultROLFP,
 					AssetGroups:       []*api.AssetGroup{},
+					AssetAnnotations:  []*api.AssetAnnotation{},
 				},
 			},
 			wantErr: nil,
@@ -177,7 +181,7 @@ func TestServiceListAssets(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			diff := cmp.Diff(tt.want, got, cmpopts.IgnoreFields(api.Asset{}, "ID", "Team", "AssetType", "CreatedAt", "AssetAnnotations"))
+			diff := cmp.Diff(tt.want, got, cmpopts.IgnoreFields(api.Asset{}, "ID", "Team", "AssetType", "CreatedAt"))
 			if diff != "" {
 				t.Errorf("%v\n", diff)
 			}
