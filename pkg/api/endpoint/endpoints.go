@@ -49,6 +49,12 @@ const (
 	UpdateAsset            = "UpdateAsset"
 	DeleteAsset            = "DeleteAsset"
 
+	ListAssetAnnotations   = "ListAssetAnnotations"
+	CreateAssetAnnotations = "CreateAssetAnnotations"
+	UpdateAssetAnnotations = "UpdateAssetAnnotations"
+	PutAssetAnnotations    = "PutAssetAnnotations"
+	DeleteAssetAnnotations = "DeleteAssetAnnotations"
+
 	CreateGroup = "CreateGroup"
 	ListGroups  = "ListGroups"
 	UpdateGroup = "UpdateGroup"
@@ -149,6 +155,12 @@ func MakeEndpoints(s api.VulcanitoService, logger log.Logger) Endpoints {
 	endpoints[FindAsset] = makeFindAssetEndpoint(s, logger)
 	endpoints[UpdateAsset] = makeUpdateAssetEndpoint(s, logger)
 	endpoints[DeleteAsset] = makeDeleteAssetEndpoint(s, logger)
+
+	endpoints[ListAssetAnnotations] = makeListAssetAnnotationsEndpoint(s, logger)
+	endpoints[CreateAssetAnnotations] = makeCreateAssetAnnotationsEndpoint(s, logger)
+	endpoints[UpdateAssetAnnotations] = makeUpdateAssetAnnotationsEndpoint(s, logger)
+	endpoints[PutAssetAnnotations] = makePutAssetAnnotationsEndpoint(s, logger)
+	endpoints[DeleteAssetAnnotations] = makeDeleteAssetAnnotationsEndpoint(s, logger)
 
 	endpoints[CreateGroup] = makeCreateGroupEndpoint(s, logger)
 	endpoints[ListGroups] = makeListGroupsEndpoint(s, logger)
