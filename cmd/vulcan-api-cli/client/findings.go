@@ -61,8 +61,8 @@ func FindFindingsFromAIssueFindingsPath(teamID string, issueID string) string {
 }
 
 // Find all findings from a team and issue.
-func (c *Client) FindFindingsFromAIssueFindings(ctx context.Context, path string, atDate *string, maxDate *string, maxScore *float64, minDate *string, minScore *float64, page *float64, size *float64, sortBy *string, status *string) (*http.Response, error) {
-	req, err := c.NewFindFindingsFromAIssueFindingsRequest(ctx, path, atDate, maxDate, maxScore, minDate, minScore, page, size, sortBy, status)
+func (c *Client) FindFindingsFromAIssueFindings(ctx context.Context, path string, atDate *string, identifiers *string, maxDate *string, maxScore *float64, minDate *string, minScore *float64, page *float64, size *float64, sortBy *string, status *string) (*http.Response, error) {
+	req, err := c.NewFindFindingsFromAIssueFindingsRequest(ctx, path, atDate, identifiers, maxDate, maxScore, minDate, minScore, page, size, sortBy, status)
 	if err != nil {
 		return nil, err
 	}
@@ -70,7 +70,7 @@ func (c *Client) FindFindingsFromAIssueFindings(ctx context.Context, path string
 }
 
 // NewFindFindingsFromAIssueFindingsRequest create the request corresponding to the Find findings from a Issue action endpoint of the findings resource.
-func (c *Client) NewFindFindingsFromAIssueFindingsRequest(ctx context.Context, path string, atDate *string, maxDate *string, maxScore *float64, minDate *string, minScore *float64, page *float64, size *float64, sortBy *string, status *string) (*http.Request, error) {
+func (c *Client) NewFindFindingsFromAIssueFindingsRequest(ctx context.Context, path string, atDate *string, identifiers *string, maxDate *string, maxScore *float64, minDate *string, minScore *float64, page *float64, size *float64, sortBy *string, status *string) (*http.Request, error) {
 	scheme := c.Scheme
 	if scheme == "" {
 		scheme = "https"
@@ -80,27 +80,30 @@ func (c *Client) NewFindFindingsFromAIssueFindingsRequest(ctx context.Context, p
 	if atDate != nil {
 		values.Set("atDate", *atDate)
 	}
+	if identifiers != nil {
+		values.Set("identifiers", *identifiers)
+	}
 	if maxDate != nil {
 		values.Set("maxDate", *maxDate)
 	}
 	if maxScore != nil {
-		tmp97 := strconv.FormatFloat(*maxScore, 'f', -1, 64)
-		values.Set("maxScore", tmp97)
+		tmp102 := strconv.FormatFloat(*maxScore, 'f', -1, 64)
+		values.Set("maxScore", tmp102)
 	}
 	if minDate != nil {
 		values.Set("minDate", *minDate)
 	}
 	if minScore != nil {
-		tmp98 := strconv.FormatFloat(*minScore, 'f', -1, 64)
-		values.Set("minScore", tmp98)
+		tmp103 := strconv.FormatFloat(*minScore, 'f', -1, 64)
+		values.Set("minScore", tmp103)
 	}
 	if page != nil {
-		tmp99 := strconv.FormatFloat(*page, 'f', -1, 64)
-		values.Set("page", tmp99)
+		tmp104 := strconv.FormatFloat(*page, 'f', -1, 64)
+		values.Set("page", tmp104)
 	}
 	if size != nil {
-		tmp100 := strconv.FormatFloat(*size, 'f', -1, 64)
-		values.Set("size", tmp100)
+		tmp105 := strconv.FormatFloat(*size, 'f', -1, 64)
+		values.Set("size", tmp105)
 	}
 	if sortBy != nil {
 		values.Set("sortBy", *sortBy)
@@ -130,8 +133,8 @@ func FindFindingsFromATargetFindingsPath(teamID string, targetID string) string 
 }
 
 // Find all findings from a team and target.
-func (c *Client) FindFindingsFromATargetFindings(ctx context.Context, path string, atDate *string, maxDate *string, maxScore *float64, minDate *string, minScore *float64, page *float64, size *float64, sortBy *string, status *string) (*http.Response, error) {
-	req, err := c.NewFindFindingsFromATargetFindingsRequest(ctx, path, atDate, maxDate, maxScore, minDate, minScore, page, size, sortBy, status)
+func (c *Client) FindFindingsFromATargetFindings(ctx context.Context, path string, atDate *string, identifiers *string, maxDate *string, maxScore *float64, minDate *string, minScore *float64, page *float64, size *float64, sortBy *string, status *string) (*http.Response, error) {
+	req, err := c.NewFindFindingsFromATargetFindingsRequest(ctx, path, atDate, identifiers, maxDate, maxScore, minDate, minScore, page, size, sortBy, status)
 	if err != nil {
 		return nil, err
 	}
@@ -139,7 +142,7 @@ func (c *Client) FindFindingsFromATargetFindings(ctx context.Context, path strin
 }
 
 // NewFindFindingsFromATargetFindingsRequest create the request corresponding to the Find findings from a Target action endpoint of the findings resource.
-func (c *Client) NewFindFindingsFromATargetFindingsRequest(ctx context.Context, path string, atDate *string, maxDate *string, maxScore *float64, minDate *string, minScore *float64, page *float64, size *float64, sortBy *string, status *string) (*http.Request, error) {
+func (c *Client) NewFindFindingsFromATargetFindingsRequest(ctx context.Context, path string, atDate *string, identifiers *string, maxDate *string, maxScore *float64, minDate *string, minScore *float64, page *float64, size *float64, sortBy *string, status *string) (*http.Request, error) {
 	scheme := c.Scheme
 	if scheme == "" {
 		scheme = "https"
@@ -149,27 +152,30 @@ func (c *Client) NewFindFindingsFromATargetFindingsRequest(ctx context.Context, 
 	if atDate != nil {
 		values.Set("atDate", *atDate)
 	}
+	if identifiers != nil {
+		values.Set("identifiers", *identifiers)
+	}
 	if maxDate != nil {
 		values.Set("maxDate", *maxDate)
 	}
 	if maxScore != nil {
-		tmp101 := strconv.FormatFloat(*maxScore, 'f', -1, 64)
-		values.Set("maxScore", tmp101)
+		tmp106 := strconv.FormatFloat(*maxScore, 'f', -1, 64)
+		values.Set("maxScore", tmp106)
 	}
 	if minDate != nil {
 		values.Set("minDate", *minDate)
 	}
 	if minScore != nil {
-		tmp102 := strconv.FormatFloat(*minScore, 'f', -1, 64)
-		values.Set("minScore", tmp102)
+		tmp107 := strconv.FormatFloat(*minScore, 'f', -1, 64)
+		values.Set("minScore", tmp107)
 	}
 	if page != nil {
-		tmp103 := strconv.FormatFloat(*page, 'f', -1, 64)
-		values.Set("page", tmp103)
+		tmp108 := strconv.FormatFloat(*page, 'f', -1, 64)
+		values.Set("page", tmp108)
 	}
 	if size != nil {
-		tmp104 := strconv.FormatFloat(*size, 'f', -1, 64)
-		values.Set("size", tmp104)
+		tmp109 := strconv.FormatFloat(*size, 'f', -1, 64)
+		values.Set("size", tmp109)
 	}
 	if sortBy != nil {
 		values.Set("sortBy", *sortBy)
@@ -277,8 +283,8 @@ func ListFindingsFindingsPath(teamID string) string {
 }
 
 // List all findings from a team.
-func (c *Client) ListFindingsFindings(ctx context.Context, path string, atDate *string, identifier *string, maxDate *string, maxScore *float64, minDate *string, minScore *float64, page *float64, size *float64, sortBy *string, status *string) (*http.Response, error) {
-	req, err := c.NewListFindingsFindingsRequest(ctx, path, atDate, identifier, maxDate, maxScore, minDate, minScore, page, size, sortBy, status)
+func (c *Client) ListFindingsFindings(ctx context.Context, path string, atDate *string, identifier *string, identifiers *string, maxDate *string, maxScore *float64, minDate *string, minScore *float64, page *float64, size *float64, sortBy *string, status *string) (*http.Response, error) {
+	req, err := c.NewListFindingsFindingsRequest(ctx, path, atDate, identifier, identifiers, maxDate, maxScore, minDate, minScore, page, size, sortBy, status)
 	if err != nil {
 		return nil, err
 	}
@@ -286,7 +292,7 @@ func (c *Client) ListFindingsFindings(ctx context.Context, path string, atDate *
 }
 
 // NewListFindingsFindingsRequest create the request corresponding to the list findings action endpoint of the findings resource.
-func (c *Client) NewListFindingsFindingsRequest(ctx context.Context, path string, atDate *string, identifier *string, maxDate *string, maxScore *float64, minDate *string, minScore *float64, page *float64, size *float64, sortBy *string, status *string) (*http.Request, error) {
+func (c *Client) NewListFindingsFindingsRequest(ctx context.Context, path string, atDate *string, identifier *string, identifiers *string, maxDate *string, maxScore *float64, minDate *string, minScore *float64, page *float64, size *float64, sortBy *string, status *string) (*http.Request, error) {
 	scheme := c.Scheme
 	if scheme == "" {
 		scheme = "https"
@@ -299,27 +305,30 @@ func (c *Client) NewListFindingsFindingsRequest(ctx context.Context, path string
 	if identifier != nil {
 		values.Set("identifier", *identifier)
 	}
+	if identifiers != nil {
+		values.Set("identifiers", *identifiers)
+	}
 	if maxDate != nil {
 		values.Set("maxDate", *maxDate)
 	}
 	if maxScore != nil {
-		tmp105 := strconv.FormatFloat(*maxScore, 'f', -1, 64)
-		values.Set("maxScore", tmp105)
+		tmp110 := strconv.FormatFloat(*maxScore, 'f', -1, 64)
+		values.Set("maxScore", tmp110)
 	}
 	if minDate != nil {
 		values.Set("minDate", *minDate)
 	}
 	if minScore != nil {
-		tmp106 := strconv.FormatFloat(*minScore, 'f', -1, 64)
-		values.Set("minScore", tmp106)
+		tmp111 := strconv.FormatFloat(*minScore, 'f', -1, 64)
+		values.Set("minScore", tmp111)
 	}
 	if page != nil {
-		tmp107 := strconv.FormatFloat(*page, 'f', -1, 64)
-		values.Set("page", tmp107)
+		tmp112 := strconv.FormatFloat(*page, 'f', -1, 64)
+		values.Set("page", tmp112)
 	}
 	if size != nil {
-		tmp108 := strconv.FormatFloat(*size, 'f', -1, 64)
-		values.Set("size", tmp108)
+		tmp113 := strconv.FormatFloat(*size, 'f', -1, 64)
+		values.Set("size", tmp113)
 	}
 	if sortBy != nil {
 		values.Set("sortBy", *sortBy)
@@ -348,8 +357,8 @@ func ListFindingsIssuesFindingsPath(teamID string) string {
 }
 
 // List number of findings and max score per issue.
-func (c *Client) ListFindingsIssuesFindings(ctx context.Context, path string, atDate *string, maxDate *string, minDate *string, page *float64, size *float64, sortBy *string, status *string) (*http.Response, error) {
-	req, err := c.NewListFindingsIssuesFindingsRequest(ctx, path, atDate, maxDate, minDate, page, size, sortBy, status)
+func (c *Client) ListFindingsIssuesFindings(ctx context.Context, path string, atDate *string, identifiers *string, maxDate *string, minDate *string, page *float64, size *float64, sortBy *string, status *string) (*http.Response, error) {
+	req, err := c.NewListFindingsIssuesFindingsRequest(ctx, path, atDate, identifiers, maxDate, minDate, page, size, sortBy, status)
 	if err != nil {
 		return nil, err
 	}
@@ -357,7 +366,7 @@ func (c *Client) ListFindingsIssuesFindings(ctx context.Context, path string, at
 }
 
 // NewListFindingsIssuesFindingsRequest create the request corresponding to the list findings issues action endpoint of the findings resource.
-func (c *Client) NewListFindingsIssuesFindingsRequest(ctx context.Context, path string, atDate *string, maxDate *string, minDate *string, page *float64, size *float64, sortBy *string, status *string) (*http.Request, error) {
+func (c *Client) NewListFindingsIssuesFindingsRequest(ctx context.Context, path string, atDate *string, identifiers *string, maxDate *string, minDate *string, page *float64, size *float64, sortBy *string, status *string) (*http.Request, error) {
 	scheme := c.Scheme
 	if scheme == "" {
 		scheme = "https"
@@ -367,6 +376,9 @@ func (c *Client) NewListFindingsIssuesFindingsRequest(ctx context.Context, path 
 	if atDate != nil {
 		values.Set("atDate", *atDate)
 	}
+	if identifiers != nil {
+		values.Set("identifiers", *identifiers)
+	}
 	if maxDate != nil {
 		values.Set("maxDate", *maxDate)
 	}
@@ -374,12 +386,12 @@ func (c *Client) NewListFindingsIssuesFindingsRequest(ctx context.Context, path 
 		values.Set("minDate", *minDate)
 	}
 	if page != nil {
-		tmp109 := strconv.FormatFloat(*page, 'f', -1, 64)
-		values.Set("page", tmp109)
+		tmp114 := strconv.FormatFloat(*page, 'f', -1, 64)
+		values.Set("page", tmp114)
 	}
 	if size != nil {
-		tmp110 := strconv.FormatFloat(*size, 'f', -1, 64)
-		values.Set("size", tmp110)
+		tmp115 := strconv.FormatFloat(*size, 'f', -1, 64)
+		values.Set("size", tmp115)
 	}
 	if sortBy != nil {
 		values.Set("sortBy", *sortBy)
@@ -408,8 +420,8 @@ func ListFindingsTargetsFindingsPath(teamID string) string {
 }
 
 // List number of findings and max score per target.
-func (c *Client) ListFindingsTargetsFindings(ctx context.Context, path string, atDate *string, maxDate *string, minDate *string, page *float64, size *float64, sortBy *string, status *string) (*http.Response, error) {
-	req, err := c.NewListFindingsTargetsFindingsRequest(ctx, path, atDate, maxDate, minDate, page, size, sortBy, status)
+func (c *Client) ListFindingsTargetsFindings(ctx context.Context, path string, atDate *string, identifiers *string, maxDate *string, minDate *string, page *float64, size *float64, sortBy *string, status *string) (*http.Response, error) {
+	req, err := c.NewListFindingsTargetsFindingsRequest(ctx, path, atDate, identifiers, maxDate, minDate, page, size, sortBy, status)
 	if err != nil {
 		return nil, err
 	}
@@ -417,7 +429,7 @@ func (c *Client) ListFindingsTargetsFindings(ctx context.Context, path string, a
 }
 
 // NewListFindingsTargetsFindingsRequest create the request corresponding to the list findings targets action endpoint of the findings resource.
-func (c *Client) NewListFindingsTargetsFindingsRequest(ctx context.Context, path string, atDate *string, maxDate *string, minDate *string, page *float64, size *float64, sortBy *string, status *string) (*http.Request, error) {
+func (c *Client) NewListFindingsTargetsFindingsRequest(ctx context.Context, path string, atDate *string, identifiers *string, maxDate *string, minDate *string, page *float64, size *float64, sortBy *string, status *string) (*http.Request, error) {
 	scheme := c.Scheme
 	if scheme == "" {
 		scheme = "https"
@@ -427,6 +439,9 @@ func (c *Client) NewListFindingsTargetsFindingsRequest(ctx context.Context, path
 	if atDate != nil {
 		values.Set("atDate", *atDate)
 	}
+	if identifiers != nil {
+		values.Set("identifiers", *identifiers)
+	}
 	if maxDate != nil {
 		values.Set("maxDate", *maxDate)
 	}
@@ -434,12 +449,12 @@ func (c *Client) NewListFindingsTargetsFindingsRequest(ctx context.Context, path
 		values.Set("minDate", *minDate)
 	}
 	if page != nil {
-		tmp111 := strconv.FormatFloat(*page, 'f', -1, 64)
-		values.Set("page", tmp111)
+		tmp116 := strconv.FormatFloat(*page, 'f', -1, 64)
+		values.Set("page", tmp116)
 	}
 	if size != nil {
-		tmp112 := strconv.FormatFloat(*size, 'f', -1, 64)
-		values.Set("size", tmp112)
+		tmp117 := strconv.FormatFloat(*size, 'f', -1, 64)
+		values.Set("size", tmp117)
 	}
 	if sortBy != nil {
 		values.Set("sortBy", *sortBy)

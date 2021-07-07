@@ -42,12 +42,12 @@ func (c *Client) NewExposureGlobalStatsRequest(ctx context.Context, path string,
 		values.Set("atDate", *atDate)
 	}
 	if maxScore != nil {
-		tmp113 := strconv.FormatFloat(*maxScore, 'f', -1, 64)
-		values.Set("maxScore", tmp113)
+		tmp118 := strconv.FormatFloat(*maxScore, 'f', -1, 64)
+		values.Set("maxScore", tmp118)
 	}
 	if minScore != nil {
-		tmp114 := strconv.FormatFloat(*minScore, 'f', -1, 64)
-		values.Set("minScore", tmp114)
+		tmp119 := strconv.FormatFloat(*minScore, 'f', -1, 64)
+		values.Set("minScore", tmp119)
 	}
 	u.RawQuery = values.Encode()
 	req, err := http.NewRequestWithContext(ctx, "GET", u.String(), nil)

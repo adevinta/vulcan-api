@@ -159,6 +159,7 @@ var _ = Resource("stats", func() {
 			Param("minDate", String, "Minimum date to filter statistics by")
 			Param("maxDate", String, "Maximum date to filter statistics by")
 			Param("atDate", String, "Specific date to get statistics at (incompatible and preferential to min and max date params)")
+			Param("identifiers", String, "A list of identifiers")
 		})
 		Security("Bearer")
 		Response(OK, StatsOpenMedia)
