@@ -20,12 +20,13 @@ const (
 )
 
 type StatsRequest struct {
-	TeamID   string  `json:"team_id" urlvar:"team_id"`
-	MinDate  string  `urlquery:"minDate"`
-	MaxDate  string  `urlquery:"maxDate"`
-	AtDate   string  `urlquery:"atDate"`
-	MinScore float64 `urlquery:"minScore"`
-	MaxScore float64 `urlquery:"maxScore"`
+	TeamID      string  `json:"team_id" urlvar:"team_id"`
+	MinDate     string  `urlquery:"minDate"`
+	MaxDate     string  `urlquery:"maxDate"`
+	AtDate      string  `urlquery:"atDate"`
+	MinScore    float64 `urlquery:"minScore"`
+	MaxScore    float64 `urlquery:"maxScore"`
+	Identifiers string  `urlquery:"identifiers"`
 }
 
 func makeStatsMTTREndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
@@ -230,12 +231,13 @@ func isValidExposureRequest(r *StatsRequest) bool {
 
 func buildStatsParams(tag string, r *StatsRequest) api.StatsParams {
 	return api.StatsParams{
-		Tag:      tag,
-		MinDate:  r.MinDate,
-		MaxDate:  r.MaxDate,
-		AtDate:   r.AtDate,
-		MinScore: r.MinScore,
-		MaxScore: r.MaxScore,
+		Tag:         tag,
+		MinDate:     r.MinDate,
+		MaxDate:     r.MaxDate,
+		AtDate:      r.AtDate,
+		MinScore:    r.MinScore,
+		MaxScore:    r.MaxScore,
+		Identifiers: r.Identifiers,
 	}
 }
 

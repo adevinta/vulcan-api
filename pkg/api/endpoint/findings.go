@@ -15,46 +15,49 @@ import (
 )
 
 type FindingsRequest struct {
-	ID         string  `json:"id" urlvar:"finding_id"`
-	TeamID     string  `json:"team_id" urlvar:"team_id"`
-	Status     string  `urlquery:"status"`
-	MinScore   float64 `urlquery:"minScore"`
-	MaxScore   float64 `urlquery:"maxScore"`
-	AtDate     string  `urlquery:"atDate"`
-	MinDate    string  `urlquery:"minDate"`
-	MaxDate    string  `urlquery:"maxDate"`
-	SortBy     string  `urlquery:"sortBy"`
-	Page       int     `urlquery:"page"`
-	Size       int     `urlquery:"size"`
-	Identifier string  `urlquery:"identifier"`
+	ID          string  `json:"id" urlvar:"finding_id"`
+	TeamID      string  `json:"team_id" urlvar:"team_id"`
+	Status      string  `urlquery:"status"`
+	MinScore    float64 `urlquery:"minScore"`
+	MaxScore    float64 `urlquery:"maxScore"`
+	AtDate      string  `urlquery:"atDate"`
+	MinDate     string  `urlquery:"minDate"`
+	MaxDate     string  `urlquery:"maxDate"`
+	SortBy      string  `urlquery:"sortBy"`
+	Page        int     `urlquery:"page"`
+	Size        int     `urlquery:"size"`
+	Identifier  string  `urlquery:"identifier"`
+	Identifiers string  `urlquery:"identifiers"`
 }
 
 type FindingsByIssueRequest struct {
-	TeamID   string  `json:"team_id" urlvar:"team_id"`
-	Status   string  `urlquery:"status"`
-	MinScore float64 `urlquery:"minScore"`
-	MaxScore float64 `urlquery:"maxScore"`
-	AtDate   string  `urlquery:"atDate"`
-	MinDate  string  `urlquery:"minDate"`
-	MaxDate  string  `urlquery:"maxDate"`
-	SortBy   string  `urlquery:"sortBy"`
-	Page     int     `urlquery:"page"`
-	Size     int     `urlquery:"size"`
-	IssueID  string  `json:"issue_id" urlvar:"issue_id"`
+	TeamID      string  `json:"team_id" urlvar:"team_id"`
+	Status      string  `urlquery:"status"`
+	MinScore    float64 `urlquery:"minScore"`
+	MaxScore    float64 `urlquery:"maxScore"`
+	AtDate      string  `urlquery:"atDate"`
+	MinDate     string  `urlquery:"minDate"`
+	MaxDate     string  `urlquery:"maxDate"`
+	SortBy      string  `urlquery:"sortBy"`
+	Page        int     `urlquery:"page"`
+	Size        int     `urlquery:"size"`
+	IssueID     string  `json:"issue_id" urlvar:"issue_id"`
+	Identifiers string  `urlquery:"identifiers"`
 }
 
 type FindingsByTargetRequest struct {
-	TeamID   string  `json:"team_id" urlvar:"team_id"`
-	Status   string  `urlquery:"status"`
-	MinScore float64 `urlquery:"minScore"`
-	MaxScore float64 `urlquery:"maxScore"`
-	AtDate   string  `urlquery:"atDate"`
-	MinDate  string  `urlquery:"minDate"`
-	MaxDate  string  `urlquery:"maxDate"`
-	SortBy   string  `urlquery:"sortBy"`
-	Page     int     `urlquery:"page"`
-	Size     int     `urlquery:"size"`
-	TargetID string  `json:"target_id" urlvar:"target_id"`
+	TeamID      string  `json:"team_id" urlvar:"team_id"`
+	Status      string  `urlquery:"status"`
+	MinScore    float64 `urlquery:"minScore"`
+	MaxScore    float64 `urlquery:"maxScore"`
+	AtDate      string  `urlquery:"atDate"`
+	MinDate     string  `urlquery:"minDate"`
+	MaxDate     string  `urlquery:"maxDate"`
+	SortBy      string  `urlquery:"sortBy"`
+	Page        int     `urlquery:"page"`
+	Size        int     `urlquery:"size"`
+	TargetID    string  `json:"target_id" urlvar:"target_id"`
+	Identifiers string  `urlquery:"identifiers"`
 }
 
 func makeListFindingsEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
@@ -325,34 +328,37 @@ func buildFindingsParams(tag string, r *FindingsRequest) api.FindingsParams {
 		SortBy:          r.SortBy,
 		Identifier:      r.Identifier,
 		IdentifierMatch: true,
+		Identifiers:     r.Identifiers,
 	}
 }
 
 func buildFindingsByIssueParams(tag string, r *FindingsByIssueRequest) api.FindingsParams {
 	return api.FindingsParams{
-		Tag:      tag,
-		Status:   r.Status,
-		MinScore: r.MinScore,
-		MaxScore: r.MaxScore,
-		AtDate:   r.AtDate,
-		MinDate:  r.MinDate,
-		MaxDate:  r.MaxDate,
-		SortBy:   r.SortBy,
-		IssueID:  r.IssueID,
+		Tag:         tag,
+		Status:      r.Status,
+		MinScore:    r.MinScore,
+		MaxScore:    r.MaxScore,
+		AtDate:      r.AtDate,
+		MinDate:     r.MinDate,
+		MaxDate:     r.MaxDate,
+		SortBy:      r.SortBy,
+		IssueID:     r.IssueID,
+		Identifiers: r.Identifiers,
 	}
 }
 
 func buildFindingsByTargetParams(tag string, r *FindingsByTargetRequest) api.FindingsParams {
 	return api.FindingsParams{
-		Tag:      tag,
-		Status:   r.Status,
-		MinScore: r.MinScore,
-		MaxScore: r.MaxScore,
-		AtDate:   r.AtDate,
-		MinDate:  r.MinDate,
-		MaxDate:  r.MaxDate,
-		SortBy:   r.SortBy,
-		TargetID: r.TargetID,
+		Tag:         tag,
+		Status:      r.Status,
+		MinScore:    r.MinScore,
+		MaxScore:    r.MaxScore,
+		AtDate:      r.AtDate,
+		MinDate:     r.MinDate,
+		MaxDate:     r.MaxDate,
+		SortBy:      r.SortBy,
+		TargetID:    r.TargetID,
+		Identifiers: r.Identifiers,
 	}
 }
 

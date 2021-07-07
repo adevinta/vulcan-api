@@ -974,7 +974,7 @@ func (cli *CLI) Findings(teamID string, minScore float64, status *string) ([]*Fi
 	more := true
 	page := 0.0
 	for more {
-		resp, err := c.ListFindingsFindings(ctx, client.ListFindingsFindingsPath(teamID), nil, nil, nil, nil, nil, &minScore, &page, nil, nil, status)
+		resp, err := c.ListFindingsFindings(ctx, client.ListFindingsFindingsPath(teamID), nil, nil, nil, nil, nil, nil, &minScore, &page, nil, nil, status)
 		if err != nil {
 			return nil, err
 		}
