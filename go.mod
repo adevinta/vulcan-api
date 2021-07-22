@@ -7,10 +7,10 @@ require (
 	github.com/adevinta/vulcan-core-cli v0.0.0-20210118133236-eaf613140792
 	github.com/adevinta/vulcan-groupie v0.0.0-20200831130152-6edaf8517386
 	github.com/adevinta/vulcan-metrics-client v0.0.0-20200617105830-6078a0e12ebd
-	github.com/adevinta/vulcan-report v0.0.0-20190503133936-d8a2d4cb18ff
+	github.com/adevinta/vulcan-report v0.0.0-20210608141555-94465cb70da6
 	github.com/adevinta/vulcan-scan-engine v0.0.0-20210309065523-a3893a5e2469
 	github.com/adevinta/vulcan-types v0.0.0-20200922093209-437fd6d5ab11
-	github.com/adevinta/vulnerability-db-api v0.0.0-20210707105145-d12b38921967
+	github.com/adevinta/vulnerability-db-api v0.0.0-20210722010812-f280ae05141c
 	github.com/aws/aws-sdk-go v1.34.28
 	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
