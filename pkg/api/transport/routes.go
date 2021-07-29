@@ -67,6 +67,13 @@ func AttachRoutes(e endpoint.Endpoints, logger kitlog.Logger) http.Handler {
 	r.Methods("PATCH").Path("/api/v1/teams/{team_id}/assets/{asset_id}").Handler(newServer(e[endpoint.UpdateAsset], endpoint.AssetRequest{}, logger, endpoint.UpdateAsset))
 	r.Methods("DELETE").Path("/api/v1/teams/{team_id}/assets/{asset_id}").Handler(newServer(e[endpoint.DeleteAsset], endpoint.AssetRequest{}, logger, endpoint.DeleteAsset))
 
+	// Asset Annotations
+	r.Methods("GET").Path("/api/v1/teams/{team_id}/assets/{asset_id}/annotations").Handler(newServer(e[endpoint.ListAssetAnnotations], endpoint.AssetAnnotationRequest{}, logger, endpoint.ListAssetAnnotations))
+	r.Methods("POST").Path("/api/v1/teams/{team_id}/assets/{asset_id}/annotations").Handler(newServer(e[endpoint.CreateAssetAnnotations], endpoint.AssetAnnotationRequest{}, logger, endpoint.CreateAssetAnnotations))
+	r.Methods("PATCH").Path("/api/v1/teams/{team_id}/assets/{asset_id}/annotations").Handler(newServer(e[endpoint.UpdateAssetAnnotations], endpoint.AssetAnnotationRequest{}, logger, endpoint.UpdateAssetAnnotations))
+	r.Methods("PUT").Path("/api/v1/teams/{team_id}/assets/{asset_id}/annotations").Handler(newServer(e[endpoint.PutAssetAnnotations], endpoint.AssetAnnotationRequest{}, logger, endpoint.PutAssetAnnotations))
+	r.Methods("DELETE").Path("/api/v1/teams/{team_id}/assets/{asset_id}/annotations").Handler(newServer(e[endpoint.DeleteAssetAnnotations], endpoint.AssetAnnotationDeleteRequest{}, logger, endpoint.DeleteAssetAnnotations))
+
 	// Groups
 	r.Methods("POST").Path("/api/v1/teams/{team_id}/groups").Handler(newServer(e[endpoint.CreateGroup], endpoint.AssetsGroupRequest{}, logger, endpoint.CreateGroup))
 	r.Methods("GET").Path("/api/v1/teams/{team_id}/groups").Handler(newServer(e[endpoint.ListGroups], endpoint.ListGroupsRequest{}, logger, endpoint.ListGroups))
@@ -133,9 +140,11 @@ func AttachRoutes(e endpoint.Endpoints, logger kitlog.Logger) http.Handler {
 	r.Methods("GET").Path("/api/v1/teams/{team_id}/findings/{finding_id}/overwrites").Handler(newServer(e[endpoint.ListFindingOverwrites], endpoint.FindingsRequest{}, logger, endpoint.ListFindingOverwrites))
 	r.Methods("POST").Path("/api/v1/teams/{team_id}/findings/{finding_id}/overwrites").Handler(newServer(e[endpoint.CreateFindingOverwrite], endpoint.FindingOverwriteRequest{}, logger, endpoint.CreateFindingOverwrite))
 	r.Methods("GET").Path("/api/v1/teams/{team_id}/stats/mttr").Handler(newServer(e[endpoint.StatsMTTR], endpoint.StatsRequest{}, logger, endpoint.StatsMTTR))
+	r.Methods("GET").Path("/api/v1/teams/{team_id}/stats/exposure").Handler(newServer(e[endpoint.StatsExposure], endpoint.StatsRequest{}, logger, endpoint.StatsExposure))
 	r.Methods("GET").Path("/api/v1/teams/{team_id}/stats/open").Handler(newServer(e[endpoint.StatsOpen], endpoint.StatsRequest{}, logger, endpoint.StatsOpen))
 	r.Methods("GET").Path("/api/v1/teams/{team_id}/stats/fixed").Handler(newServer(e[endpoint.StatsFixed], endpoint.StatsRequest{}, logger, endpoint.StatsFixed))
 	r.Methods("GET").Path("/api/v1/stats/mttr").Handler(newServer(e[endpoint.GlobalStatsMTTR], endpoint.StatsRequest{}, logger, endpoint.GlobalStatsMTTR))
+	r.Methods("GET").Path("/api/v1/stats/exposure").Handler(newServer(e[endpoint.GlobalStatsExposure], endpoint.StatsRequest{}, logger, endpoint.GlobalStatsExposure))
 
 	return r
 }

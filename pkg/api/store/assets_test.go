@@ -75,6 +75,7 @@ func TestStoreListAssets(t *testing.T) {
 							},
 						},
 					},
+					AssetAnnotations: []*api.AssetAnnotation{},
 				},
 				&api.Asset{
 					TeamID:      "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
@@ -94,6 +95,7 @@ func TestStoreListAssets(t *testing.T) {
 							},
 						},
 					},
+					AssetAnnotations: []*api.AssetAnnotation{},
 				},
 				&api.Asset{
 					TeamID:      "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
@@ -113,6 +115,7 @@ func TestStoreListAssets(t *testing.T) {
 							},
 						},
 					},
+					AssetAnnotations: []*api.AssetAnnotation{},
 				},
 				&api.Asset{
 					TeamID:            "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
@@ -123,6 +126,7 @@ func TestStoreListAssets(t *testing.T) {
 					EnvironmentalCVSS: common.String("5"),
 					ROLFP:             api.DefaultROLFP,
 					AssetGroups:       []*api.AssetGroup{},
+					AssetAnnotations:  []*api.AssetAnnotation{},
 				},
 			},
 			wantErr: nil,
@@ -132,7 +136,7 @@ func TestStoreListAssets(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := testStoreLocal.ListAssets(tt.teamID)
+			got, err := testStoreLocal.ListAssets(tt.teamID, api.Asset{})
 			if errToStr(err) != errToStr(tt.wantErr) {
 				t.Fatal(err)
 			}
@@ -216,7 +220,7 @@ func TestStoreCreateAssets(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := testStoreLocal.CreateAssets(tt.assets, tt.groups)
+			got, err := testStoreLocal.CreateAssets(tt.assets, tt.groups, []*api.AssetAnnotation{})
 			if errToStr(err) != errToStr(tt.wantErr) {
 				t.Fatal(err)
 			}

@@ -370,7 +370,7 @@ func (cli *CLI) Assets(teamID string) (Assets, error) {
 	ctx := cli.ctx
 	c := cli.c
 
-	resp, err := c.ListAssets(ctx, client.ListAssetsPath(teamID))
+	resp, err := c.ListAssets(ctx, client.ListAssetsPath(teamID), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -979,6 +979,7 @@ func (cli *CLI) Findings(teamID string, minScore float64, status *string) ([]*Fi
 			client.ListFindingsFindingsPath(teamID), // path
 			nil,                                     // atDate
 			nil,                                     // identifier
+			nil,                                     // identifiers
 			nil,                                     // issueID
 			nil,                                     // maxDate
 			nil,                                     // maxScore

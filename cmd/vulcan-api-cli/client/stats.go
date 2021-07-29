@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strconv"
 )
 
 // CoverageStatsPath computes a request path to the coverage action of stats.
@@ -37,6 +38,54 @@ func (c *Client) NewCoverageStatsRequest(ctx context.Context, path string) (*htt
 		scheme = "https"
 	}
 	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
+	req, err := http.NewRequestWithContext(ctx, "GET", u.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+	if c.BearerSigner != nil {
+		if err := c.BearerSigner.Sign(req); err != nil {
+			return nil, err
+		}
+	}
+	return req, nil
+}
+
+// ExposureStatsPath computes a request path to the exposure action of stats.
+func ExposureStatsPath(teamID string) string {
+	param0 := teamID
+
+	return fmt.Sprintf("/api/v1/teams/%s/stats/exposure", param0)
+}
+
+// Get exposure statistics for a team.
+func (c *Client) ExposureStats(ctx context.Context, path string, atDate *string, maxScore *float64, minScore *float64) (*http.Response, error) {
+	req, err := c.NewExposureStatsRequest(ctx, path, atDate, maxScore, minScore)
+	if err != nil {
+		return nil, err
+	}
+	return c.Client.Do(ctx, req)
+}
+
+// NewExposureStatsRequest create the request corresponding to the exposure action endpoint of the stats resource.
+func (c *Client) NewExposureStatsRequest(ctx context.Context, path string, atDate *string, maxScore *float64, minScore *float64) (*http.Request, error) {
+	scheme := c.Scheme
+	if scheme == "" {
+		scheme = "https"
+	}
+	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
+	values := u.Query()
+	if atDate != nil {
+		values.Set("atDate", *atDate)
+	}
+	if maxScore != nil {
+		tmp120 := strconv.FormatFloat(*maxScore, 'f', -1, 64)
+		values.Set("maxScore", tmp120)
+	}
+	if minScore != nil {
+		tmp121 := strconv.FormatFloat(*minScore, 'f', -1, 64)
+		values.Set("minScore", tmp121)
+	}
+	u.RawQuery = values.Encode()
 	req, err := http.NewRequestWithContext(ctx, "GET", u.String(), nil)
 	if err != nil {
 		return nil, err
@@ -146,8 +195,8 @@ func OpenStatsPath(teamID string) string {
 }
 
 // Get open issues statistics for a team.
-func (c *Client) OpenStats(ctx context.Context, path string, atDate *string, maxDate *string, minDate *string) (*http.Response, error) {
-	req, err := c.NewOpenStatsRequest(ctx, path, atDate, maxDate, minDate)
+func (c *Client) OpenStats(ctx context.Context, path string, atDate *string, identifiers *string, maxDate *string, minDate *string) (*http.Response, error) {
+	req, err := c.NewOpenStatsRequest(ctx, path, atDate, identifiers, maxDate, minDate)
 	if err != nil {
 		return nil, err
 	}
@@ -155,7 +204,7 @@ func (c *Client) OpenStats(ctx context.Context, path string, atDate *string, max
 }
 
 // NewOpenStatsRequest create the request corresponding to the open action endpoint of the stats resource.
-func (c *Client) NewOpenStatsRequest(ctx context.Context, path string, atDate *string, maxDate *string, minDate *string) (*http.Request, error) {
+func (c *Client) NewOpenStatsRequest(ctx context.Context, path string, atDate *string, identifiers *string, maxDate *string, minDate *string) (*http.Request, error) {
 	scheme := c.Scheme
 	if scheme == "" {
 		scheme = "https"
@@ -164,6 +213,9 @@ func (c *Client) NewOpenStatsRequest(ctx context.Context, path string, atDate *s
 	values := u.Query()
 	if atDate != nil {
 		values.Set("atDate", *atDate)
+	}
+	if identifiers != nil {
+		values.Set("identifiers", *identifiers)
 	}
 	if maxDate != nil {
 		values.Set("maxDate", *maxDate)

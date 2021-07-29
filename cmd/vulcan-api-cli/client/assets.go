@@ -23,7 +23,7 @@ func CreateAssetsPath(teamID string) string {
 }
 
 // Creates assets in bulk mode.
-// This operation accepts an array of assets and an optional array of group identifiers, and returns an array of successfully created assets.
+// This operation accepts an array of assets, an optional array of group identifiers, an optional map of annotations, and returns an array of successfully created assets.
 // If no groups are specified, assets will be added to the team's Default group.
 // If one of the specified assets already exists for the team but is currently not associated with the requested groups, the association is created.
 // If for any reason, the creation of an asset fails, an error message will be returned referencing the failed asset and the entire operation will be rolled back.
@@ -173,8 +173,8 @@ func ListAssetsPath(teamID string) string {
 }
 
 // List all assets from a team.
-func (c *Client) ListAssets(ctx context.Context, path string) (*http.Response, error) {
-	req, err := c.NewListAssetsRequest(ctx, path)
+func (c *Client) ListAssets(ctx context.Context, path string, identifier *string) (*http.Response, error) {
+	req, err := c.NewListAssetsRequest(ctx, path, identifier)
 	if err != nil {
 		return nil, err
 	}
@@ -182,12 +182,17 @@ func (c *Client) ListAssets(ctx context.Context, path string) (*http.Response, e
 }
 
 // NewListAssetsRequest create the request corresponding to the list action endpoint of the assets resource.
-func (c *Client) NewListAssetsRequest(ctx context.Context, path string) (*http.Request, error) {
+func (c *Client) NewListAssetsRequest(ctx context.Context, path string, identifier *string) (*http.Request, error) {
 	scheme := c.Scheme
 	if scheme == "" {
 		scheme = "https"
 	}
 	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
+	values := u.Query()
+	if identifier != nil {
+		values.Set("identifier", *identifier)
+	}
+	u.RawQuery = values.Encode()
 	req, err := http.NewRequestWithContext(ctx, "GET", u.String(), nil)
 	if err != nil {
 		return nil, err

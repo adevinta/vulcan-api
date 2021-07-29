@@ -9,17 +9,17 @@ import (
 	"fmt"
 
 	"github.com/adevinta/errors"
-	"github.com/go-kit/kit/endpoint"
-	kitlog "github.com/go-kit/kit/log"
 	"github.com/adevinta/vulcan-api/pkg/api"
 	"github.com/adevinta/vulcan-api/pkg/common"
+	"github.com/go-kit/kit/endpoint"
+	kitlog "github.com/go-kit/kit/log"
 )
 
 type AssetRequest struct {
 	ID                string     `json:"id" urlvar:"asset_id"`
 	TeamID            string     `json:"team_id" urlvar:"team_id"`
 	Type              string     `json:"type" validate:"required"`
-	Identifier        string     `json:"identifier" validate:"required"`
+	Identifier        string     `json:"identifier" validate:"required" urlquery:"identifier"`
 	Options           *string    `json:"options,omitempty"`
 	EnvironmentalCVSS *string    `json:"environmental_cvss,omitempty"`
 	ROLFP             *api.ROLFP `json:"rolfp"`
@@ -43,9 +43,10 @@ func (ar AssetRequest) NewAsset() *api.Asset {
 }
 
 type AssetsListRequest struct {
-	TeamID string         `json:"team_id" urlvar:"team_id"`
-	Assets []AssetRequest `json:"assets"`
-	Groups []string       `json:"groups"`
+	TeamID      string                  `json:"team_id" urlvar:"team_id"`
+	Assets      []AssetRequest          `json:"assets"`
+	Groups      []string                `json:"groups"`
+	Annotations api.AssetAnnotationsMap `json:"annotations"`
 }
 
 func makeListAssetsEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
@@ -54,7 +55,8 @@ func makeListAssetsEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoi
 		if !ok {
 			return nil, errors.Assertion("Type assertion failed")
 		}
-		teamAssets, err := s.ListAssets(ctx, req.TeamID)
+		filterAsset := api.Asset{Identifier: req.Identifier}
+		teamAssets, err := s.ListAssets(ctx, req.TeamID, filterAsset)
 		if err != nil {
 			return nil, err
 		}
@@ -96,8 +98,11 @@ func makeCreateAssetEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpo
 			groups = append(groups, group)
 		}
 
+		// Transform annotations from request to its API model format
+		annotations := requestBody.Annotations.ToModel()
+
 		// Ask for the service layer to create the assets.
-		createdAssets, err := s.CreateAssets(ctx, assets, groups)
+		createdAssets, err := s.CreateAssets(ctx, assets, groups, annotations)
 		if err != nil {
 			return nil, err
 		}
@@ -140,8 +145,11 @@ func makeCreateAssetMultiStatusEndpoint(s api.VulcanitoService, logger kitlog.Lo
 			groups = append(groups, group)
 		}
 
+		// Transform annotations from request to its API model format
+		annotations := requestBody.Annotations.ToModel()
+
 		// Ask for the service layer to create the assets.
-		responses, err := s.CreateAssetsMultiStatus(ctx, assets, groups)
+		responses, err := s.CreateAssetsMultiStatus(ctx, assets, groups, annotations)
 		if err != nil {
 			return nil, err
 		}

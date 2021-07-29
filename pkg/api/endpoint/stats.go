@@ -9,9 +9,9 @@ import (
 	"regexp"
 
 	"github.com/adevinta/errors"
+	"github.com/adevinta/vulcan-api/pkg/api"
 	"github.com/go-kit/kit/endpoint"
 	kitlog "github.com/go-kit/kit/log"
-	"github.com/adevinta/vulcan-api/pkg/api"
 )
 
 const (
@@ -20,10 +20,13 @@ const (
 )
 
 type StatsRequest struct {
-	TeamID  string `json:"team_id" urlvar:"team_id"`
-	MinDate string `urlquery:"minDate"`
-	MaxDate string `urlquery:"maxDate"`
-	AtDate  string `urlquery:"atDate"`
+	TeamID      string  `json:"team_id" urlvar:"team_id"`
+	MinDate     string  `urlquery:"minDate"`
+	MaxDate     string  `urlquery:"maxDate"`
+	AtDate      string  `urlquery:"atDate"`
+	MinScore    float64 `urlquery:"minScore"`
+	MaxScore    float64 `urlquery:"maxScore"`
+	Identifiers string  `urlquery:"identifiers"`
 }
 
 func makeStatsMTTREndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
@@ -48,6 +51,35 @@ func makeStatsMTTREndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoin
 		params := buildStatsParams(team.Tag, r)
 
 		response, err = s.StatsMTTR(ctx, params)
+		if err != nil {
+			return nil, err
+		}
+		return Ok{response}, nil
+	}
+}
+
+func makeStatsExposureEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		r, ok := request.(*StatsRequest)
+		if !ok {
+			return nil, errors.Assertion("Type assertion failed")
+		}
+
+		if !isValidExposureRequest(r) {
+			return nil, errors.Validation("Invalid query params")
+		}
+
+		team, err := s.FindTeam(ctx, r.TeamID)
+		if err != nil {
+			return nil, err
+		}
+		if team.Tag == "" {
+			return nil, errors.Validation("no tag defined for the team")
+		}
+
+		params := buildStatsParams(team.Tag, r)
+
+		response, err = s.StatsExposure(ctx, params)
 		if err != nil {
 			return nil, err
 		}
@@ -137,6 +169,30 @@ func makeGlobalStatsMTTREndpoint(s api.VulcanitoService, logger kitlog.Logger) e
 	}
 }
 
+func makeGlobalStatsExposureEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		r, ok := request.(*StatsRequest)
+		if !ok {
+			return nil, errors.Assertion("Type assertion failed")
+		}
+
+		if !isValidExposureRequest(r) {
+			return nil, errors.Validation("Invalid query params")
+		}
+
+		// Build stats param with void tag
+		// so we get global metrics instead
+		// of specific team metrics.
+		params := buildStatsParams("", r)
+
+		response, err = s.StatsExposure(ctx, params)
+		if err != nil {
+			return nil, err
+		}
+		return Ok{response}, nil
+	}
+}
+
 type StatsCoverageRequest struct {
 	TeamID string `json:"team_id" urlvar:"team_id"`
 }
@@ -169,12 +225,19 @@ func isValidMTTRRequest(r *StatsRequest) bool {
 		r.AtDate == ""
 }
 
+func isValidExposureRequest(r *StatsRequest) bool {
+	return r.AtDate == "" || isValidDate(r.AtDate)
+}
+
 func buildStatsParams(tag string, r *StatsRequest) api.StatsParams {
 	return api.StatsParams{
-		Tag:     tag,
-		MinDate: r.MinDate,
-		MaxDate: r.MaxDate,
-		AtDate:  r.AtDate,
+		Tag:         tag,
+		MinDate:     r.MinDate,
+		MaxDate:     r.MaxDate,
+		AtDate:      r.AtDate,
+		MinScore:    r.MinScore,
+		MaxScore:    r.MaxScore,
+		Identifiers: r.Identifiers,
 	}
 }
 

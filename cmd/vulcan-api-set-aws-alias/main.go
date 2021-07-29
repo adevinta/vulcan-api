@@ -80,7 +80,7 @@ func main() {
 	var noAliasAccounts, totalAccouts int
 	for _, t := range teams {
 		t := t
-		assets, err := db.ListAssets(t.ID)
+		assets, err := db.ListAssets(t.ID, api.Asset{})
 		if err != nil {
 			err = fmt.Errorf("opening DB connection: %v", err)
 			l.Log("error", err)

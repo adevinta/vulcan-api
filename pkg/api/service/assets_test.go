@@ -113,6 +113,7 @@ func TestServiceListAssets(t *testing.T) {
 							},
 						},
 					},
+					AssetAnnotations: []*api.AssetAnnotation{},
 				},
 				&api.Asset{
 					TeamID:      "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
@@ -132,6 +133,7 @@ func TestServiceListAssets(t *testing.T) {
 							},
 						},
 					},
+					AssetAnnotations: []*api.AssetAnnotation{},
 				},
 				&api.Asset{
 					TeamID:      "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
@@ -151,6 +153,7 @@ func TestServiceListAssets(t *testing.T) {
 							},
 						},
 					},
+					AssetAnnotations: []*api.AssetAnnotation{},
 				},
 				&api.Asset{
 					TeamID:            "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
@@ -161,6 +164,7 @@ func TestServiceListAssets(t *testing.T) {
 					EnvironmentalCVSS: common.String("5"),
 					ROLFP:             api.DefaultROLFP,
 					AssetGroups:       []*api.AssetGroup{},
+					AssetAnnotations:  []*api.AssetAnnotation{},
 				},
 			},
 			wantErr: nil,
@@ -172,7 +176,7 @@ func TestServiceListAssets(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			testService := tt.srvBuilder.BuildSrv(testStore)
 
-			got, err := testService.ListAssets(context.Background(), tt.teamID)
+			got, err := testService.ListAssets(context.Background(), tt.teamID, api.Asset{})
 			if errToStr(err) != errToStr(tt.wantErr) {
 				t.Fatal(err)
 			}
@@ -483,7 +487,7 @@ func TestVulcanitoService_CreateAssets(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			testService := tt.srvBuilder.BuildSrv(testStore)
 
-			got, err := testService.CreateAssets(context.Background(), tt.assets, tt.groups)
+			got, err := testService.CreateAssets(context.Background(), tt.assets, tt.groups, []*api.AssetAnnotation{})
 			if errToStr(err) != errToStr(tt.wantErr) {
 				t.Fatal(err)
 			}
@@ -912,7 +916,7 @@ func TestVulcanitoService_CreateAssetsMultiStatus(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			testService := tt.srvBuilder.BuildSrv(testStore)
 
-			got, err := testService.CreateAssetsMultiStatus(context.Background(), tt.assets, tt.groups)
+			got, err := testService.CreateAssetsMultiStatus(context.Background(), tt.assets, tt.groups, []*api.AssetAnnotation{})
 			if errToStr(err) != errToStr(tt.wantErr) {
 				t.Fatal(err)
 			}

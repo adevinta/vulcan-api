@@ -56,6 +56,20 @@ func (c *Client) DecodeAssetCollection(resp *http.Response) (AssetCollection, er
 	return decoded, err
 }
 
+// Asset Annotations (default view)
+//
+// Identifier: assetannotations_response; view=default
+type AssetannotationsResponse struct {
+	Annotations map[string]string `form:"annotations,omitempty" json:"annotations,omitempty" yaml:"annotations,omitempty" xml:"annotations,omitempty"`
+}
+
+// DecodeAssetannotationsResponse decodes the AssetannotationsResponse instance encoded in resp body.
+func (c *Client) DecodeAssetannotationsResponse(resp *http.Response) (*AssetannotationsResponse, error) {
+	var decoded AssetannotationsResponse
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return &decoded, err
+}
+
 // Create Assets Errors (default view)
 //
 // Identifier: asseterror; view=default
@@ -249,6 +263,21 @@ func (mt *Error) Validate() (err error) {
 // DecodeError decodes the Error instance encoded in resp body.
 func (c *Client) DecodeError(resp *http.Response) (*Error, error) {
 	var decoded Error
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return &decoded, err
+}
+
+// Exposure stats (default view)
+//
+// Identifier: exposure; view=default
+type Exposure struct {
+	// Stats for exposure by different averages
+	Exposure *Statsaverages `form:"exposure,omitempty" json:"exposure,omitempty" yaml:"exposure,omitempty" xml:"exposure,omitempty"`
+}
+
+// DecodeExposure decodes the Exposure instance encoded in resp body.
+func (c *Client) DecodeExposure(resp *http.Response) (*Exposure, error) {
+	var decoded Exposure
 	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
 	return &decoded, err
 }
@@ -1026,6 +1055,31 @@ type Stats struct {
 // DecodeStats decodes the Stats instance encoded in resp body.
 func (c *Client) DecodeStats(resp *http.Response) (*Stats, error) {
 	var decoded Stats
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return &decoded, err
+}
+
+// Stats by different averages (default view)
+//
+// Identifier: statsaverages; view=default
+type Statsaverages struct {
+	// Mean of the stats
+	Mean *float64 `form:"mean,omitempty" json:"mean,omitempty" yaml:"mean,omitempty" xml:"mean,omitempty"`
+	// Percentile 10 of the stats
+	Percentile10 *float64 `form:"percentile_10,omitempty" json:"percentile_10,omitempty" yaml:"percentile_10,omitempty" xml:"percentile_10,omitempty"`
+	// Percentile 25 of the stats
+	Percentile25 *float64 `form:"percentile_25,omitempty" json:"percentile_25,omitempty" yaml:"percentile_25,omitempty" xml:"percentile_25,omitempty"`
+	// Percentile 50 or median of the stats
+	Percentile50 *float64 `form:"percentile_50,omitempty" json:"percentile_50,omitempty" yaml:"percentile_50,omitempty" xml:"percentile_50,omitempty"`
+	// Percentile 75 or third quartile of the stats
+	Percentile75 *float64 `form:"percentile_75,omitempty" json:"percentile_75,omitempty" yaml:"percentile_75,omitempty" xml:"percentile_75,omitempty"`
+	// Percentile 90 of the stats
+	Percentile90 *float64 `form:"percentile_90,omitempty" json:"percentile_90,omitempty" yaml:"percentile_90,omitempty" xml:"percentile_90,omitempty"`
+}
+
+// DecodeStatsaverages decodes the Statsaverages instance encoded in resp body.
+func (c *Client) DecodeStatsaverages(resp *http.Response) (*Statsaverages, error) {
+	var decoded Statsaverages
 	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
 	return &decoded, err
 }

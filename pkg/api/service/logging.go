@@ -258,37 +258,37 @@ func (middleware loggingMiddleware) ListRecipients(ctx context.Context, teamID s
 	return middleware.next.ListRecipients(ctx, teamID)
 }
 
-func (middleware loggingMiddleware) ListAssets(ctx context.Context, teamID string) ([]*api.Asset, error) {
+func (middleware loggingMiddleware) ListAssets(ctx context.Context, teamID string, asset api.Asset) ([]*api.Asset, error) {
 	defer func() {
 		XRequestID := ""
 		if ctx != nil {
 			XRequestID, _ = ctx.Value(kithttp.ContextKeyRequestXRequestID).(string)
 		}
-		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "ListAssets", "teamID", mySprintf(teamID))
+		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "ListAssets", "teamID", mySprintf(teamID), "asset", mySprintf(asset))
 	}()
-	return middleware.next.ListAssets(ctx, teamID)
+	return middleware.next.ListAssets(ctx, teamID, asset)
 }
 
-func (middleware loggingMiddleware) CreateAssets(ctx context.Context, assets []api.Asset, groups []api.Group) ([]api.Asset, error) {
+func (middleware loggingMiddleware) CreateAssets(ctx context.Context, assets []api.Asset, groups []api.Group, annotations []*api.AssetAnnotation) ([]api.Asset, error) {
 	defer func() {
 		XRequestID := ""
 		if ctx != nil {
 			XRequestID, _ = ctx.Value(kithttp.ContextKeyRequestXRequestID).(string)
 		}
-		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "CreateAssets", "assets", mySprintf(assets), "groups", mySprintf(groups))
+		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "CreateAssets", "assets", mySprintf(assets), "groups", mySprintf(groups), "annotations", mySprintf(annotations))
 	}()
-	return middleware.next.CreateAssets(ctx, assets, groups)
+	return middleware.next.CreateAssets(ctx, assets, groups, annotations)
 }
 
-func (middleware loggingMiddleware) CreateAssetsMultiStatus(ctx context.Context, assets []api.Asset, groups []api.Group) ([]api.AssetCreationResponse, error) {
+func (middleware loggingMiddleware) CreateAssetsMultiStatus(ctx context.Context, assets []api.Asset, groups []api.Group, annotations []*api.AssetAnnotation) ([]api.AssetCreationResponse, error) {
 	defer func() {
 		XRequestID := ""
 		if ctx != nil {
 			XRequestID, _ = ctx.Value(kithttp.ContextKeyRequestXRequestID).(string)
 		}
-		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "CreateAssetsMultiStatus", "assets", mySprintf(assets), "groups", mySprintf(groups))
+		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "CreateAssetsMultiStatus", "assets", mySprintf(assets), "groups", mySprintf(groups), "annotations", mySprintf(annotations))
 	}()
-	return middleware.next.CreateAssetsMultiStatus(ctx, assets, groups)
+	return middleware.next.CreateAssetsMultiStatus(ctx, assets, groups, annotations)
 }
 
 func (middleware loggingMiddleware) FindAsset(ctx context.Context, asset api.Asset) (*api.Asset, error) {
@@ -344,6 +344,61 @@ func (middleware loggingMiddleware) GetAssetType(ctx context.Context, assetTypeN
 		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "GetAssetType", "assetTypeName", mySprintf(assetTypeName))
 	}()
 	return middleware.next.GetAssetType(ctx, assetTypeName)
+}
+
+func (middleware loggingMiddleware) ListAssetAnnotations(ctx context.Context, teamID string, assetID string) ([]*api.AssetAnnotation, error) {
+	defer func() {
+		XRequestID := ""
+		if ctx != nil {
+			XRequestID, _ = ctx.Value(kithttp.ContextKeyRequestXRequestID).(string)
+		}
+		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "ListAssetAnnotations", "teamID", mySprintf(teamID), "assetID", mySprintf(assetID))
+	}()
+	return middleware.next.ListAssetAnnotations(ctx, teamID, assetID)
+}
+
+func (middleware loggingMiddleware) CreateAssetAnnotations(ctx context.Context, teamID string, assetID string, annotations []*api.AssetAnnotation) ([]*api.AssetAnnotation, error) {
+	defer func() {
+		XRequestID := ""
+		if ctx != nil {
+			XRequestID, _ = ctx.Value(kithttp.ContextKeyRequestXRequestID).(string)
+		}
+		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "CreateAssetAnnotations", "teamID", mySprintf(teamID), "assetID", mySprintf(assetID), "annotations", mySprintf(annotations))
+	}()
+	return middleware.next.CreateAssetAnnotations(ctx, teamID, assetID, annotations)
+}
+
+func (middleware loggingMiddleware) UpdateAssetAnnotations(ctx context.Context, teamID string, assetID string, annotations []*api.AssetAnnotation) ([]*api.AssetAnnotation, error) {
+	defer func() {
+		XRequestID := ""
+		if ctx != nil {
+			XRequestID, _ = ctx.Value(kithttp.ContextKeyRequestXRequestID).(string)
+		}
+		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "UpdateAssetAnnotations", "teamID", mySprintf(teamID), "assetID", mySprintf(assetID), "annotations", mySprintf(annotations))
+	}()
+	return middleware.next.UpdateAssetAnnotations(ctx, teamID, assetID, annotations)
+}
+
+func (middleware loggingMiddleware) PutAssetAnnotations(ctx context.Context, teamID string, assetID string, annotations []*api.AssetAnnotation) ([]*api.AssetAnnotation, error) {
+	defer func() {
+		XRequestID := ""
+		if ctx != nil {
+			XRequestID, _ = ctx.Value(kithttp.ContextKeyRequestXRequestID).(string)
+		}
+		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "PutAssetAnnotations", "teamID", mySprintf(teamID), "assetID", mySprintf(assetID), "annotations", mySprintf(annotations))
+	}()
+	return middleware.next.PutAssetAnnotations(ctx, teamID, assetID, annotations)
+}
+
+func (middleware loggingMiddleware) DeleteAssetAnnotations(ctx context.Context, teamID string, assedID string, annotations []*api.AssetAnnotation) error {
+	defer func() {
+		XRequestID := ""
+		if ctx != nil {
+			XRequestID, _ = ctx.Value(kithttp.ContextKeyRequestXRequestID).(string)
+		}
+		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "DeleteAssetAnnotations", "teamID", mySprintf(teamID), "assedID", mySprintf(assedID), "annotations", mySprintf(annotations))
+	}()
+	return middleware.next.DeleteAssetAnnotations(ctx, teamID, assedID, annotations)
 }
 
 func (middleware loggingMiddleware) ListGroups(ctx context.Context, teamID string, groupName string) ([]*api.Group, error) {
@@ -872,6 +927,17 @@ func (middleware loggingMiddleware) StatsMTTR(ctx context.Context, params api.St
 		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "StatsMTTR", "params", mySprintf(params))
 	}()
 	return middleware.next.StatsMTTR(ctx, params)
+}
+
+func (middleware loggingMiddleware) StatsExposure(ctx context.Context, params api.StatsParams) (*api.StatsExposure, error) {
+	defer func() {
+		XRequestID := ""
+		if ctx != nil {
+			XRequestID, _ = ctx.Value(kithttp.ContextKeyRequestXRequestID).(string)
+		}
+		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "StatsExposure", "params", mySprintf(params))
+	}()
+	return middleware.next.StatsExposure(ctx, params)
 }
 
 func (middleware loggingMiddleware) StatsOpen(ctx context.Context, params api.StatsParams) (*api.StatsOpen, error) {
