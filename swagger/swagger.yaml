@@ -64,7 +64,7 @@ definitions:
         - annotation/1
         - annotation/2
         items:
-          example: Omnis perferendis.
+          example: Sit odio tenetur consequatur quibusdam.
           type: string
         type: array
     title: AssetAnnotationDeleteRequest
@@ -324,6 +324,21 @@ definitions:
       type:
         id: 29f83d16-09c4-4be5-8cae-e232d41f388a
         name: Hostname
+    - alias: AnAlias
+      classified_at: "2020-09-03T15:00:42.112975Z"
+      environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+      id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      identifier: vulcan.example.com
+      options: '{"timeout":60}'
+      rolfp: R:1/O:1/L:0/F:0/P:0+S:1
+      scannable: true
+      status:
+        code: 3944598920153519998
+        error: Quo placeat magni harum ea.
+        type: Voluptatum mollitia consequuntur dignissimos.
+      type:
+        id: 29f83d16-09c4-4be5-8cae-e232d41f388a
+        name: Hostname
     items:
       $ref: '#/definitions/Assetresponse'
     title: 'Mediatype identifier: assetresponse; type=collection; view=default'
@@ -418,7 +433,7 @@ definitions:
         - a14c7c65-66ab-4676-bcf6-0dea9719f5c6
         - 9f7a0c78-b752-4126-aa6d-0f286ada7b8f
         items:
-          example: Est illo et corrupti rerum deleniti aut.
+          example: Est est illo et corrupti rerum deleniti.
           type: string
         type: array
     required:
@@ -819,6 +834,10 @@ definitions:
         max_score: 6.9
         summary: Site Without HTTPS
         targets_count: 14
+      - issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
+        max_score: 6.9
+        summary: Site Without HTTPS
+        targets_count: 14
       pagination:
         limit: 0.9276149316039823
         more: false
@@ -835,6 +854,60 @@ definitions:
     description: Findings list (default view)
     example:
       findings:
+      - affected_resource: ""
+        attachments:
+        - content_type: application/json
+          data: e30=
+          name: JSON string
+        current_exposure: 4631
+        details: ""
+        id: a8720503-0284-45fd-9cf4-5bb6c500966f
+        impact_details: ""
+        issue:
+          cwe_id: 358
+          description: This domain has at least one MX record
+          id: b0720503-0a84-43fd-9cf4-5bb6c500226f
+          recommendations:
+          - It is recommended to run DMARC
+          reference_links: []
+          summary: MX presence
+        resources:
+        - attributes:
+          - Hostname
+          - Port
+          name: Network Resources
+          resources:
+          - Hostname: test.example.com
+            Port: "443"
+        - attributes:
+          - Hostname
+          - Port
+          name: Network Resources
+          resources:
+          - Hostname: test.example.com
+            Port: "443"
+        - attributes:
+          - Hostname
+          - Port
+          name: Network Resources
+          resources:
+          - Hostname: test.example.com
+            Port: "443"
+        score: 6.9
+        source:
+          component: vulcan-tls
+          id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
+          instance: b3320f03-1284-42fd-9cf4-5bb6c500966f
+          name: vulcan
+          options: '{"timeout":60}'
+          time: "2019-06-08 11:16:40"
+        status: OPEN
+        target:
+          id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
+          identifier: www.test.com
+          tags:
+          - team:vulcan
+        total_exposure: 4631
       - affected_resource: ""
         attachments:
         - content_type: application/json
@@ -995,10 +1068,6 @@ definitions:
       identifier: vulcan.example.com
       max_score: 6.9
       target_id: a8720503-0284-45fd-9cf4-5bb6c500966f
-    - findings_count: 5
-      identifier: vulcan.example.com
-      max_score: 6.9
-      target_id: a8720503-0284-45fd-9cf4-5bb6c500966f
     items:
       $ref: '#/definitions/Findings_target'
     title: 'Mediatype identifier: findings_target; type=collection; view=default'
@@ -1064,16 +1133,6 @@ definitions:
       id: f6360346-77a5-4f97-b919-331363b3af26
       name: Default group
       options: '{"timeout":60}'
-    - assets_count: 1
-      description: All newly created assets are added to the Default group
-      id: f6360346-77a5-4f97-b919-331363b3af26
-      name: Default group
-      options: '{"timeout":60}'
-    - assets_count: 1
-      description: All newly created assets are added to the Default group
-      id: f6360346-77a5-4f97-b919-331363b3af26
-      name: Default group
-      options: '{"timeout":60}'
     items:
       $ref: '#/definitions/Group'
     title: 'Mediatype identifier: group; type=collection; view=default'
@@ -1133,10 +1192,6 @@ definitions:
       id: f6360346-77a5-4f97-b919-331363b3af26
       name: Default group
       options: '{"timeout":60}'
-    - description: All newly created assets are added to the Default group
-      id: f6360346-77a5-4f97-b919-331363b3af26
-      name: Default group
-      options: '{"timeout":60}'
     items:
       $ref: '#/definitions/GroupWithoutAssetsCount'
     title: 'Mediatype identifier: group; type=collection; view=default'
@@ -1181,14 +1236,14 @@ definitions:
         example:
         - It is recommended to run DMARC
         items:
-          example: Natus esse neque aliquid.
+          example: Ratione perferendis.
           type: string
         type: array
       reference_links:
         description: Documentation reference for the issue
         example: []
         items:
-          example: Velit quis.
+          example: Corrupti sed qui.
           type: string
         type: array
       summary:
@@ -1749,8 +1804,6 @@ definitions:
       view)
     example:
     - email: john.doe@vulcan.example.com
-    - email: john.doe@vulcan.example.com
-    - email: john.doe@vulcan.example.com
     items:
       $ref: '#/definitions/Recipient'
     title: 'Mediatype identifier: recipient; type=collection; view=default'
@@ -1767,7 +1820,7 @@ definitions:
         - john.doe@vulcan.example.com
         - jane.doe@vulcan.example.com
         items:
-          example: Sit odio tenetur consequatur quibusdam.
+          example: Architecto sapiente voluptatum deserunt at ut ea.
           type: string
         type: array
     required:
@@ -1838,7 +1891,7 @@ definitions:
         - Hostname
         - Port
         items:
-          example: Quas voluptatum sit eos illum ipsum tempora.
+          example: Placeat omnis perferendis.
           type: string
         type: array
       name:
@@ -1853,7 +1906,8 @@ definitions:
         items:
           additionalProperties: true
           example:
-            Sed qui sint ratione perferendis cumque.: Totam ut perspiciatis.
+            Esse neque aliquid molestias velit quis.: Quas voluptatum sit eos illum
+              ipsum tempora.
           type: object
         type: array
     title: 'Mediatype identifier: resource; view=default'
@@ -2286,7 +2340,7 @@ definitions:
         example:
         - team:vulcan
         items:
-          example: Sequi et sed.
+          example: Enim totam ut perspiciatis quia.
           type: string
         type: array
     title: 'Mediatype identifier: target; view=default'
@@ -2445,6 +2499,16 @@ definitions:
         last_login: "2018-09-07T10:40:52Z"
         lastname: Doe
         observer: true
+    - role: owner
+      user:
+        active: true
+        admin: true
+        email: john.doe@vulcan.example.com
+        firstname: John
+        id: 967d9966-b561-4233-bd6f-cac603fd8320
+        last_login: "2018-09-07T10:40:52Z"
+        lastname: Doe
+        observer: true
     items:
       $ref: '#/definitions/Teammember'
     title: 'Mediatype identifier: teammember; type=collection; view=default'
@@ -2525,6 +2589,22 @@ definitions:
   UserCollection:
     description: UserCollection is the media type for an array of User (default view)
     example:
+    - active: true
+      admin: true
+      email: john.doe@vulcan.example.com
+      firstname: John
+      id: 967d9966-b561-4233-bd6f-cac603fd8320
+      last_login: "2018-09-07T10:40:52Z"
+      lastname: Doe
+      observer: true
+    - active: true
+      admin: true
+      email: john.doe@vulcan.example.com
+      firstname: John
+      id: 967d9966-b561-4233-bd6f-cac603fd8320
+      last_login: "2018-09-07T10:40:52Z"
+      lastname: Doe
+      observer: true
     - active: true
       admin: true
       email: john.doe@vulcan.example.com
@@ -4889,6 +4969,11 @@ paths:
         name: atDate
         required: false
         type: string
+      - description: A comma separated list of asset identifiers
+        in: query
+        name: identifiers
+        required: false
+        type: string
       - description: Maximum date to filter statistics by
         in: query
         name: maxDate
@@ -4963,7 +5048,7 @@ paths:
         name: atDate
         required: false
         type: string
-      - description: A list of identifiers
+      - description: A comma separated list of asset identifiers
         in: query
         name: identifiers
         required: false

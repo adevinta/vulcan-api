@@ -106,8 +106,8 @@ func FixedStatsPath(teamID string) string {
 }
 
 // Get fixed issues statistics for a team.
-func (c *Client) FixedStats(ctx context.Context, path string, atDate *string, maxDate *string, minDate *string) (*http.Response, error) {
-	req, err := c.NewFixedStatsRequest(ctx, path, atDate, maxDate, minDate)
+func (c *Client) FixedStats(ctx context.Context, path string, atDate *string, identifiers *string, maxDate *string, minDate *string) (*http.Response, error) {
+	req, err := c.NewFixedStatsRequest(ctx, path, atDate, identifiers, maxDate, minDate)
 	if err != nil {
 		return nil, err
 	}
@@ -115,7 +115,7 @@ func (c *Client) FixedStats(ctx context.Context, path string, atDate *string, ma
 }
 
 // NewFixedStatsRequest create the request corresponding to the fixed action endpoint of the stats resource.
-func (c *Client) NewFixedStatsRequest(ctx context.Context, path string, atDate *string, maxDate *string, minDate *string) (*http.Request, error) {
+func (c *Client) NewFixedStatsRequest(ctx context.Context, path string, atDate *string, identifiers *string, maxDate *string, minDate *string) (*http.Request, error) {
 	scheme := c.Scheme
 	if scheme == "" {
 		scheme = "https"
@@ -124,6 +124,9 @@ func (c *Client) NewFixedStatsRequest(ctx context.Context, path string, atDate *
 	values := u.Query()
 	if atDate != nil {
 		values.Set("atDate", *atDate)
+	}
+	if identifiers != nil {
+		values.Set("identifiers", *identifiers)
 	}
 	if maxDate != nil {
 		values.Set("maxDate", *maxDate)
