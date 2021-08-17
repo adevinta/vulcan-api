@@ -424,6 +424,21 @@ func (c *Client) DecodeFindingsIssuesList(resp *http.Response) (*FindingsIssuesL
 	return &decoded, err
 }
 
+// Findings Labels (default view)
+//
+// Identifier: findings_labels; view=default
+type FindingsLabels struct {
+	// associated labels
+	Labels []string `form:"labels,omitempty" json:"labels,omitempty" yaml:"labels,omitempty" xml:"labels,omitempty"`
+}
+
+// DecodeFindingsLabels decodes the FindingsLabels instance encoded in resp body.
+func (c *Client) DecodeFindingsLabels(resp *http.Response) (*FindingsLabels, error) {
+	var decoded FindingsLabels
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return &decoded, err
+}
+
 // Findings list (default view)
 //
 // Identifier: findings_list; view=default
@@ -584,6 +599,8 @@ type Issue struct {
 	Description *string `form:"description,omitempty" json:"description,omitempty" yaml:"description,omitempty" xml:"description,omitempty"`
 	// Issue ID
 	ID *string `form:"id,omitempty" json:"id,omitempty" yaml:"id,omitempty" xml:"id,omitempty"`
+	// Associated labels
+	Labels []string `form:"labels,omitempty" json:"labels,omitempty" yaml:"labels,omitempty" xml:"labels,omitempty"`
 	// Recommendations to fix the issue
 	Recommendations []string `form:"recommendations,omitempty" json:"recommendations,omitempty" yaml:"recommendations,omitempty" xml:"recommendations,omitempty"`
 	// Documentation reference for the issue
