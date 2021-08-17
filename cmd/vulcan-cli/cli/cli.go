@@ -981,6 +981,7 @@ func (cli *CLI) Findings(teamID string, minScore float64, status *string) ([]*Fi
 			nil,                                     // identifier
 			nil,                                     // identifiers
 			nil,                                     // issueID
+			nil,                                     // labels
 			nil,                                     // maxDate
 			nil,                                     // maxScore
 			nil,                                     // minDate
