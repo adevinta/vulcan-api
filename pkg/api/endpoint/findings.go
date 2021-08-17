@@ -30,6 +30,7 @@ type FindingsRequest struct {
 	IssueID     string  `urlquery:"issueID"`
 	TargetID    string  `urlquery:"targetID"`
 	Identifiers string  `urlquery:"identifiers"`
+	Labels      string  `urlquery:"labels"`
 }
 
 type FindingsByIssueRequest struct {
@@ -45,6 +46,7 @@ type FindingsByIssueRequest struct {
 	Size        int     `urlquery:"size"`
 	IssueID     string  `json:"issue_id" urlvar:"issue_id"`
 	Identifiers string  `urlquery:"identifiers"`
+	Labels      string  `urlquery:"labels"`
 }
 
 type FindingsByTargetRequest struct {
@@ -60,6 +62,7 @@ type FindingsByTargetRequest struct {
 	Size        int     `urlquery:"size"`
 	TargetID    string  `json:"target_id" urlvar:"target_id"`
 	Identifiers string  `urlquery:"identifiers"`
+	Labels      string  `urlquery:"labels"`
 }
 
 func makeListFindingsEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
@@ -305,6 +308,35 @@ func makeListFindingOverwritesEndpoint(s api.VulcanitoService, logger kitlog.Log
 	}
 }
 
+func makeListFindingsLabelsEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		r, ok := request.(*FindingsRequest)
+		if !ok {
+			return nil, errors.Assertion("Type assertion failed")
+		}
+
+		if !isValidListFindingsRequest(r) {
+			return nil, errors.Validation("Invalid date format")
+		}
+
+		team, err := s.FindTeam(ctx, r.TeamID)
+		if err != nil {
+			return nil, err
+		}
+		if team.Tag == "" {
+			return nil, errors.Validation("no tag defined for the team")
+		}
+
+		params := buildFindingsParams(team.Tag, r)
+
+		response, err = s.ListFindingsLabels(ctx, params)
+		if err != nil {
+			return nil, err
+		}
+		return Ok{response}, nil
+	}
+}
+
 func isValidListFindingsRequest(r *FindingsRequest) bool {
 	return (r.MinDate == "" || isValidDate(r.MinDate)) &&
 		(r.MaxDate == "" || isValidDate(r.MaxDate)) &&
@@ -333,6 +365,7 @@ func buildFindingsParams(tag string, r *FindingsRequest) api.FindingsParams {
 		IssueID:         r.IssueID,
 		TargetID:        r.TargetID,
 		Identifiers:     r.Identifiers,
+		Labels:          r.Labels,
 	}
 }
 
@@ -348,6 +381,7 @@ func buildFindingsByIssueParams(tag string, r *FindingsByIssueRequest) api.Findi
 		SortBy:      r.SortBy,
 		IssueID:     r.IssueID,
 		Identifiers: r.Identifiers,
+		Labels:      r.Labels,
 	}
 }
 
@@ -363,6 +397,7 @@ func buildFindingsByTargetParams(tag string, r *FindingsByTargetRequest) api.Fin
 		SortBy:      r.SortBy,
 		TargetID:    r.TargetID,
 		Identifiers: r.Identifiers,
+		Labels:      r.Labels,
 	}
 }
 

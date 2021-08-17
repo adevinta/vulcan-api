@@ -139,6 +139,7 @@ func AttachRoutes(e endpoint.Endpoints, logger kitlog.Logger) http.Handler {
 	r.Methods("GET").Path("/api/v1/teams/{team_id}/findings/{finding_id}").Handler(newServer(e[endpoint.FindFinding], endpoint.FindingsRequest{}, logger, endpoint.FindFinding))
 	r.Methods("GET").Path("/api/v1/teams/{team_id}/findings/{finding_id}/overwrites").Handler(newServer(e[endpoint.ListFindingOverwrites], endpoint.FindingsRequest{}, logger, endpoint.ListFindingOverwrites))
 	r.Methods("POST").Path("/api/v1/teams/{team_id}/findings/{finding_id}/overwrites").Handler(newServer(e[endpoint.CreateFindingOverwrite], endpoint.FindingOverwriteRequest{}, logger, endpoint.CreateFindingOverwrite))
+	r.Methods("GET").Path("/api/v1/teams/{team_id}/findings/labels").Handler(newServer(e[endpoint.ListFindingsLabels], endpoint.FindingsRequest{}, logger, endpoint.ListFindingsLabels))
 	r.Methods("GET").Path("/api/v1/teams/{team_id}/stats/mttr").Handler(newServer(e[endpoint.StatsMTTR], endpoint.StatsRequest{}, logger, endpoint.StatsMTTR))
 	r.Methods("GET").Path("/api/v1/teams/{team_id}/stats/exposure").Handler(newServer(e[endpoint.StatsExposure], endpoint.StatsRequest{}, logger, endpoint.StatsExposure))
 	r.Methods("GET").Path("/api/v1/teams/{team_id}/stats/open").Handler(newServer(e[endpoint.StatsOpen], endpoint.StatsRequest{}, logger, endpoint.StatsOpen))
