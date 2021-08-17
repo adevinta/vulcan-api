@@ -106,6 +106,7 @@ type StatsParams struct {
 	MinScore    float64
 	MaxScore    float64
 	Identifiers string
+	Labels      string
 }
 
 // StatsMTTR represents the mean time to remediation stats by issue severity.

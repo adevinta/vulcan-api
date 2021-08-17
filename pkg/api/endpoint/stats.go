@@ -27,6 +27,7 @@ type StatsRequest struct {
 	MinScore    float64 `urlquery:"minScore"`
 	MaxScore    float64 `urlquery:"maxScore"`
 	Identifiers string  `urlquery:"identifiers"`
+	Labels      string  `urlquery:"identifiers"`
 }
 
 func makeStatsMTTREndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
@@ -238,6 +239,7 @@ func buildStatsParams(tag string, r *StatsRequest) api.StatsParams {
 		MinScore:    r.MinScore,
 		MaxScore:    r.MaxScore,
 		Identifiers: r.Identifiers,
+		Labels:      r.Labels,
 	}
 }
 
