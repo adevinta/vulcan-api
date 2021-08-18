@@ -382,6 +382,8 @@ type FindingsIssue struct {
 	IssueID *string `form:"issue_id,omitempty" json:"issue_id,omitempty" yaml:"issue_id,omitempty" xml:"issue_id,omitempty"`
 	// Max score for the issue among the affected assets
 	MaxScore *float64 `form:"max_score,omitempty" json:"max_score,omitempty" yaml:"max_score,omitempty" xml:"max_score,omitempty"`
+	// Number of affected resources by the issue
+	ResourcesCount *float64 `form:"resources_count,omitempty" json:"resources_count,omitempty" yaml:"resources_count,omitempty" xml:"resources_count,omitempty"`
 	// Issue summary
 	Summary *string `form:"summary,omitempty" json:"summary,omitempty" yaml:"summary,omitempty" xml:"summary,omitempty"`
 	// Number of targets affected by the issue
@@ -464,6 +466,8 @@ type FindingsTarget struct {
 	FindingsCount *float64 `form:"findings_count,omitempty" json:"findings_count,omitempty" yaml:"findings_count,omitempty" xml:"findings_count,omitempty"`
 	// Target Identifier
 	Identifier *string `form:"identifier,omitempty" json:"identifier,omitempty" yaml:"identifier,omitempty" xml:"identifier,omitempty"`
+	// Number of issues for the target
+	IssuesCount *float64 `form:"issues_count,omitempty" json:"issues_count,omitempty" yaml:"issues_count,omitempty" xml:"issues_count,omitempty"`
 	// Max score for the issue among the affected assets
 	MaxScore *float64 `form:"max_score,omitempty" json:"max_score,omitempty" yaml:"max_score,omitempty" xml:"max_score,omitempty"`
 	// Target ID

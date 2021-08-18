@@ -64,7 +64,7 @@ definitions:
         - annotation/1
         - annotation/2
         items:
-          example: Sit odio tenetur consequatur quibusdam.
+          example: Corrupti rerum deleniti aut sed illo.
           type: string
         type: array
     title: AssetAnnotationDeleteRequest
@@ -433,7 +433,7 @@ definitions:
         - a14c7c65-66ab-4676-bcf6-0dea9719f5c6
         - 9f7a0c78-b752-4126-aa6d-0f286ada7b8f
         items:
-          example: Est est illo et corrupti rerum deleniti.
+          example: Odio tenetur consequatur quibusdam et voluptate.
           type: string
         type: array
     required:
@@ -797,6 +797,7 @@ definitions:
     example:
       issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
       max_score: 6.9
+      resources_count: 28
       summary: Site Without HTTPS
       targets_count: 14
     properties:
@@ -807,6 +808,11 @@ definitions:
       max_score:
         description: Max score for the issue among the affected assets
         example: 6.9
+        format: double
+        type: number
+      resources_count:
+        description: Number of affected resources by the issue
+        example: 28
         format: double
         type: number
       summary:
@@ -826,14 +832,17 @@ definitions:
     example:
     - issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
       max_score: 6.9
+      resources_count: 28
       summary: Site Without HTTPS
       targets_count: 14
     - issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
       max_score: 6.9
+      resources_count: 28
       summary: Site Without HTTPS
       targets_count: 14
     - issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
       max_score: 6.9
+      resources_count: 28
       summary: Site Without HTTPS
       targets_count: 14
     items:
@@ -846,6 +855,7 @@ definitions:
       issues:
       - issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
         max_score: 6.9
+        resources_count: 28
         summary: Site Without HTTPS
         targets_count: 14
       pagination:
@@ -873,7 +883,7 @@ definitions:
         - Web
         - HTTP
         items:
-          example: Laboriosam repellat eum nihil velit magni id.
+          example: Nihil velit magni id et vero in.
           type: string
         type: array
     title: 'Mediatype identifier: findings_labels; view=default'
@@ -882,63 +892,6 @@ definitions:
     description: Findings list (default view)
     example:
       findings:
-      - affected_resource: ""
-        attachments:
-        - content_type: application/json
-          data: e30=
-          name: JSON string
-        current_exposure: 4631
-        details: ""
-        id: a8720503-0284-45fd-9cf4-5bb6c500966f
-        impact_details: ""
-        issue:
-          cwe_id: 358
-          description: This domain has at least one MX record
-          id: b0720503-0a84-43fd-9cf4-5bb6c500226f
-          labels:
-          - Web
-          - HTTP
-          recommendations:
-          - It is recommended to run DMARC
-          reference_links: []
-          summary: MX presence
-        resources:
-        - attributes:
-          - Hostname
-          - Port
-          name: Network Resources
-          resources:
-          - Hostname: test.example.com
-            Port: "443"
-        - attributes:
-          - Hostname
-          - Port
-          name: Network Resources
-          resources:
-          - Hostname: test.example.com
-            Port: "443"
-        - attributes:
-          - Hostname
-          - Port
-          name: Network Resources
-          resources:
-          - Hostname: test.example.com
-            Port: "443"
-        score: 6.9
-        source:
-          component: vulcan-tls
-          id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
-          instance: b3320f03-1284-42fd-9cf4-5bb6c500966f
-          name: vulcan
-          options: '{"timeout":60}'
-          time: "2019-06-08 11:16:40"
-        status: OPEN
-        target:
-          id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
-          identifier: www.test.com
-          tags:
-          - team:vulcan
-        total_exposure: 4631
       - affected_resource: ""
         attachments:
         - content_type: application/json
@@ -1070,6 +1023,7 @@ definitions:
     example:
       findings_count: 5
       identifier: vulcan.example.com
+      issues_count: 2
       max_score: 6.9
       target_id: a8720503-0284-45fd-9cf4-5bb6c500966f
     properties:
@@ -1082,6 +1036,11 @@ definitions:
         description: Target Identifier
         example: vulcan.example.com
         type: string
+      issues_count:
+        description: Number of issues for the target
+        example: 2
+        format: double
+        type: number
       max_score:
         description: Max score for the issue among the affected assets
         example: 6.9
@@ -1099,14 +1058,7 @@ definitions:
     example:
     - findings_count: 5
       identifier: vulcan.example.com
-      max_score: 6.9
-      target_id: a8720503-0284-45fd-9cf4-5bb6c500966f
-    - findings_count: 5
-      identifier: vulcan.example.com
-      max_score: 6.9
-      target_id: a8720503-0284-45fd-9cf4-5bb6c500966f
-    - findings_count: 5
-      identifier: vulcan.example.com
+      issues_count: 2
       max_score: 6.9
       target_id: a8720503-0284-45fd-9cf4-5bb6c500966f
     items:
@@ -1124,14 +1076,7 @@ definitions:
       targets:
       - findings_count: 5
         identifier: vulcan.example.com
-        max_score: 6.9
-        target_id: a8720503-0284-45fd-9cf4-5bb6c500966f
-      - findings_count: 5
-        identifier: vulcan.example.com
-        max_score: 6.9
-        target_id: a8720503-0284-45fd-9cf4-5bb6c500966f
-      - findings_count: 5
-        identifier: vulcan.example.com
+        issues_count: 2
         max_score: 6.9
         target_id: a8720503-0284-45fd-9cf4-5bb6c500966f
     properties:
@@ -1289,7 +1234,7 @@ definitions:
         - Web
         - HTTP
         items:
-          example: Quas voluptatum sit eos illum ipsum tempora.
+          example: Sequi et sed.
           type: string
         type: array
       recommendations:
@@ -1297,14 +1242,14 @@ definitions:
         example:
         - It is recommended to run DMARC
         items:
-          example: Corrupti sed qui.
+          example: Sint ratione.
           type: string
         type: array
       reference_links:
         description: Documentation reference for the issue
         example: []
         items:
-          example: Ratione perferendis.
+          example: Cumque enim totam ut perspiciatis.
           type: string
         type: array
       summary:
@@ -1516,6 +1461,9 @@ definitions:
     - id: af36818a-0f30-412c-9692-d37716075861
       name: Sample Policy
       settings_count: 12
+    - id: af36818a-0f30-412c-9692-d37716075861
+      name: Sample Policy
+      settings_count: 12
     items:
       $ref: '#/definitions/Policy'
     title: 'Mediatype identifier: policy; type=collection; view=default'
@@ -1710,6 +1658,24 @@ definitions:
           settings_count: 12
       schedule:
         cron: 0 7 1 * *
+    - autosend: true
+      disabled: false
+      global: false
+      id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
+      name: Every midnight
+      policy_groups:
+      - group:
+          assets_count: 1
+          description: All newly created assets are added to the Default group
+          id: f6360346-77a5-4f97-b919-331363b3af26
+          name: Default group
+          options: '{"timeout":60}'
+        policy:
+          id: af36818a-0f30-412c-9692-d37716075861
+          name: Sample Policy
+          settings_count: 12
+      schedule:
+        cron: 0 7 1 * *
     items:
       $ref: '#/definitions/Program'
     title: 'Mediatype identifier: program; type=collection; view=default'
@@ -1823,6 +1789,8 @@ definitions:
       view)
     example:
     - email: john.doe@vulcan.example.com
+    - email: john.doe@vulcan.example.com
+    - email: john.doe@vulcan.example.com
     items:
       $ref: '#/definitions/Recipient'
     title: 'Mediatype identifier: recipient; type=collection; view=default'
@@ -1839,7 +1807,7 @@ definitions:
         - john.doe@vulcan.example.com
         - jane.doe@vulcan.example.com
         items:
-          example: Autem doloribus placeat voluptatem ratione corrupti soluta.
+          example: Voluptatem ratione corrupti soluta vel.
           type: string
         type: array
     required:
@@ -1910,7 +1878,7 @@ definitions:
         - Hostname
         - Port
         items:
-          example: Velit quis.
+          example: Natus esse neque aliquid.
           type: string
         type: array
       name:
@@ -1925,7 +1893,7 @@ definitions:
         items:
           additionalProperties: true
           example:
-            Omnis perferendis.: Natus esse neque aliquid.
+            Quis laborum quas voluptatum sit.: Illum ipsum tempora nemo corrupti sed.
           type: object
         type: array
     title: 'Mediatype identifier: resource; view=default'
@@ -2005,6 +1973,33 @@ definitions:
   ScanCollection:
     description: ScanCollection is the media type for an array of Scan (default view)
     example:
+    - checks_count: 20
+      end_time: "2018-09-07T10:40:52Z"
+      id: 23e7034f-8180-4895-8e7f-73f2f7d90631
+      program:
+        autosend: true
+        disabled: false
+        global: false
+        id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
+        name: Every midnight
+        policy_groups:
+        - group:
+            assets_count: 1
+            description: All newly created assets are added to the Default group
+            id: f6360346-77a5-4f97-b919-331363b3af26
+            name: Default group
+            options: '{"timeout":60}'
+          policy:
+            id: af36818a-0f30-412c-9692-d37716075861
+            name: Sample Policy
+            settings_count: 12
+        schedule:
+          cron: 0 7 1 * *
+      progress: 1
+      requested_by: john.doe@vulcan.example.com
+      scheduled_time: "2018-09-07T10:40:52Z"
+      start_time: "2018-09-07T10:40:52Z"
+      status: FINISHED
     - checks_count: 20
       end_time: "2018-09-07T10:40:52Z"
       id: 23e7034f-8180-4895-8e7f-73f2f7d90631
@@ -2331,7 +2326,7 @@ definitions:
         example:
         - team:vulcan
         items:
-          example: Enim totam ut perspiciatis quia.
+          example: Placeat omnis perferendis.
           type: string
         type: array
     title: 'Mediatype identifier: target; view=default'
@@ -2580,14 +2575,6 @@ definitions:
   UserCollection:
     description: UserCollection is the media type for an array of User (default view)
     example:
-    - active: true
-      admin: true
-      email: john.doe@vulcan.example.com
-      firstname: John
-      id: 967d9966-b561-4233-bd6f-cac603fd8320
-      last_login: "2018-09-07T10:40:52Z"
-      lastname: Doe
-      observer: true
     - active: true
       admin: true
       email: john.doe@vulcan.example.com
