@@ -52,6 +52,7 @@ var IssueMedia = MediaType("issue", func() {
 		Attribute("description", String, "Issue description", func() { Example("This domain has at least one MX record") })
 		Attribute("recommendations", ArrayOf(String), "Recommendations to fix the issue", func() { Example([]string{"It is recommended to run DMARC"}) })
 		Attribute("reference_links", ArrayOf(String), "Documentation reference for the issue", func() { Example([]string{}) })
+		Attribute("labels", ArrayOf(String), "Associated labels", func() { Example([]string{"Web", "HTTP"}) })
 	})
 	View("default", func() {
 		Attribute("id")
@@ -60,6 +61,7 @@ var IssueMedia = MediaType("issue", func() {
 		Attribute("description")
 		Attribute("recommendations")
 		Attribute("reference_links")
+		Attribute("labels")
 	})
 })
 
@@ -168,12 +170,14 @@ var FindingsIssueMedia = MediaType("findings_issue", func() {
 		Attribute("issue_id", String, "Issue ID", func() { Example("a8720503-0284-45fd-9cf4-5bb6c500966f") })
 		Attribute("summary", String, "Issue summary", func() { Example("Site Without HTTPS") })
 		Attribute("targets_count", Number, "Number of targets affected by the issue", func() { Example(14) })
+		Attribute("resources_count", Number, "Number of affected resources by the issue", func() { Example(28) })
 		Attribute("max_score", Number, "Max score for the issue among the affected assets", func() { Example(6.9) })
 	})
 	View("default", func() {
 		Attribute("issue_id")
 		Attribute("summary")
 		Attribute("targets_count")
+		Attribute("resources_count")
 		Attribute("max_score")
 	})
 })
@@ -197,12 +201,14 @@ var FindingsTargetMedia = MediaType("findings_target", func() {
 		Attribute("target_id", String, "Target ID", func() { Example("a8720503-0284-45fd-9cf4-5bb6c500966f") })
 		Attribute("identifier", String, "Target Identifier", func() { Example("vulcan.example.com") })
 		Attribute("findings_count", Number, "Number of findings for the target", func() { Example(5) })
+		Attribute("issues_count", Number, "Number of issues for the target", func() { Example(2) })
 		Attribute("max_score", Number, "Max score for the issue among the affected assets", func() { Example(6.9) })
 	})
 	View("default", func() {
 		Attribute("target_id")
 		Attribute("identifier")
 		Attribute("findings_count")
+		Attribute("issues_count")
 		Attribute("max_score")
 	})
 })
@@ -216,6 +222,17 @@ var FindingsTargetsListMedia = MediaType("findings_targets_list", func() {
 	View("default", func() {
 		Attribute("targets")
 		Attribute("pagination")
+	})
+})
+
+// FindingsLabels
+var FindingsLabelsMedia = MediaType("findings_labels", func() {
+	Description("Findings Labels")
+	Attributes(func() {
+		Attribute("labels", ArrayOf(String), "associated labels", func() { Example([]string{"Web", "HTTP"}) })
+	})
+	View("default", func() {
+		Attribute("labels")
 	})
 })
 
@@ -242,7 +259,8 @@ var _ = Resource("findings", func() {
 			Param("identifier", String, "Allows to get findings list for a specific asset identifier")
 			Param("targetID", String, "Target ID (Vulnerability DB)")
 			Param("issueID", String, "Issue ID (Vulnerability DB)")
-			Param("identifiers", String, "A list of identifiers")
+			Param("identifiers", String, "A comma separated list of identifiers")
+			Param("labels", String, "A comma separated list of associated labels")
 		})
 		Security("Bearer")
 		Response(OK, FindingsListMedia)
@@ -261,7 +279,8 @@ var _ = Resource("findings", func() {
 			Param("page", Number, "Requested page")
 			Param("size", Number, "Requested page size")
 			Param("targetID", String, "Target ID (Vulnerability DB)")
-			Param("identifiers", String, "A list of identifiers")
+			Param("identifiers", String, "A comma separated list of identifiers")
+			Param("labels", String, "A comma separated list of associated labels")
 		})
 		Security("Bearer")
 		Response(OK, FindingsIssuesListMedia)
@@ -282,7 +301,8 @@ var _ = Resource("findings", func() {
 			Param("sortBy", String, "Sorting criteria. Supported fields: score, -score (for descending order)")
 			Param("page", Number, "Requested page")
 			Param("size", Number, "Requested page size")
-			Param("identifiers", String, "A list of identifiers")
+			Param("identifiers", String, "A comma separated list of identifiers")
+			Param("labels", String, "A comma separated list of associated labels")
 		})
 		Security("Bearer")
 		Response(OK, FindingsListMedia)
@@ -301,7 +321,8 @@ var _ = Resource("findings", func() {
 			Param("page", Number, "Requested page")
 			Param("size", Number, "Requested page size")
 			Param("issueID", String, "Issue ID (Vulnerability DB)")
-			Param("identifiers", String, "A list of identifiers")
+			Param("identifiers", String, "A comma separated list of identifiers")
+			Param("labels", String, "A comma separated list of associated labels")
 		})
 		Security("Bearer")
 		Response(OK, FindingsTargetsListMedia)
@@ -322,10 +343,26 @@ var _ = Resource("findings", func() {
 			Param("sortBy", String, "Sorting criteria. Supported fields: score, -score (for descending order)")
 			Param("page", Number, "Requested page")
 			Param("size", Number, "Requested page size")
-			Param("identifiers", String, "A list of identifiers")
+			Param("identifiers", String, "A comma separated list of identifiers")
+			Param("labels", String, "A comma separated list of associated labels")
 		})
 		Security("Bearer")
 		Response(OK, FindingsListMedia)
+	})
+
+	Action("List findings labels", func() {
+		Description("List all findings labels.")
+		Routing(GET("/labels"))
+		Params(func() {
+			Param("team_id", String, "Team ID")
+			Param("status", String, "Findings status")
+			Param("atDate", String, "Allows to get findings list at a specific date (incompatible and preferential to min and max date params)")
+			Param("minDate", String, "Allows to get findings list from a specific date")
+			Param("maxDate", String, "Allows to get findings list until a specific date")
+			Param("identifiers", String, "A comma separated list of identifiers")
+		})
+		Security("Bearer")
+		Response(OK, FindingsLabelsMedia)
 	})
 
 	Action("Find finding", func() {

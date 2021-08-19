@@ -382,6 +382,8 @@ type FindingsIssue struct {
 	IssueID *string `form:"issue_id,omitempty" json:"issue_id,omitempty" yaml:"issue_id,omitempty" xml:"issue_id,omitempty"`
 	// Max score for the issue among the affected assets
 	MaxScore *float64 `form:"max_score,omitempty" json:"max_score,omitempty" yaml:"max_score,omitempty" xml:"max_score,omitempty"`
+	// Number of affected resources by the issue
+	ResourcesCount *float64 `form:"resources_count,omitempty" json:"resources_count,omitempty" yaml:"resources_count,omitempty" xml:"resources_count,omitempty"`
 	// Issue summary
 	Summary *string `form:"summary,omitempty" json:"summary,omitempty" yaml:"summary,omitempty" xml:"summary,omitempty"`
 	// Number of targets affected by the issue
@@ -424,6 +426,21 @@ func (c *Client) DecodeFindingsIssuesList(resp *http.Response) (*FindingsIssuesL
 	return &decoded, err
 }
 
+// Findings Labels (default view)
+//
+// Identifier: findings_labels; view=default
+type FindingsLabels struct {
+	// associated labels
+	Labels []string `form:"labels,omitempty" json:"labels,omitempty" yaml:"labels,omitempty" xml:"labels,omitempty"`
+}
+
+// DecodeFindingsLabels decodes the FindingsLabels instance encoded in resp body.
+func (c *Client) DecodeFindingsLabels(resp *http.Response) (*FindingsLabels, error) {
+	var decoded FindingsLabels
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return &decoded, err
+}
+
 // Findings list (default view)
 //
 // Identifier: findings_list; view=default
@@ -449,6 +466,8 @@ type FindingsTarget struct {
 	FindingsCount *float64 `form:"findings_count,omitempty" json:"findings_count,omitempty" yaml:"findings_count,omitempty" xml:"findings_count,omitempty"`
 	// Target Identifier
 	Identifier *string `form:"identifier,omitempty" json:"identifier,omitempty" yaml:"identifier,omitempty" xml:"identifier,omitempty"`
+	// Number of issues for the target
+	IssuesCount *float64 `form:"issues_count,omitempty" json:"issues_count,omitempty" yaml:"issues_count,omitempty" xml:"issues_count,omitempty"`
 	// Max score for the issue among the affected assets
 	MaxScore *float64 `form:"max_score,omitempty" json:"max_score,omitempty" yaml:"max_score,omitempty" xml:"max_score,omitempty"`
 	// Target ID
@@ -584,6 +603,8 @@ type Issue struct {
 	Description *string `form:"description,omitempty" json:"description,omitempty" yaml:"description,omitempty" xml:"description,omitempty"`
 	// Issue ID
 	ID *string `form:"id,omitempty" json:"id,omitempty" yaml:"id,omitempty" xml:"id,omitempty"`
+	// Associated labels
+	Labels []string `form:"labels,omitempty" json:"labels,omitempty" yaml:"labels,omitempty" xml:"labels,omitempty"`
 	// Recommendations to fix the issue
 	Recommendations []string `form:"recommendations,omitempty" json:"recommendations,omitempty" yaml:"recommendations,omitempty" xml:"recommendations,omitempty"`
 	// Documentation reference for the issue

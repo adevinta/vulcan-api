@@ -64,7 +64,7 @@ definitions:
         - annotation/1
         - annotation/2
         items:
-          example: Sit odio tenetur consequatur quibusdam.
+          example: Corrupti rerum deleniti aut sed illo.
           type: string
         type: array
     title: AssetAnnotationDeleteRequest
@@ -433,7 +433,7 @@ definitions:
         - a14c7c65-66ab-4676-bcf6-0dea9719f5c6
         - 9f7a0c78-b752-4126-aa6d-0f286ada7b8f
         items:
-          example: Est est illo et corrupti rerum deleniti.
+          example: Odio tenetur consequatur quibusdam et voluptate.
           type: string
         type: array
     required:
@@ -512,6 +512,9 @@ definitions:
         cwe_id: 358
         description: This domain has at least one MX record
         id: b0720503-0a84-43fd-9cf4-5bb6c500226f
+        labels:
+        - Web
+        - HTTP
         recommendations:
         - It is recommended to run DMARC
         reference_links: []
@@ -723,6 +726,9 @@ definitions:
         cwe_id: 358
         description: This domain has at least one MX record
         id: b0720503-0a84-43fd-9cf4-5bb6c500226f
+        labels:
+        - Web
+        - HTTP
         recommendations:
         - It is recommended to run DMARC
         reference_links: []
@@ -791,6 +797,7 @@ definitions:
     example:
       issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
       max_score: 6.9
+      resources_count: 28
       summary: Site Without HTTPS
       targets_count: 14
     properties:
@@ -801,6 +808,11 @@ definitions:
       max_score:
         description: Max score for the issue among the affected assets
         example: 6.9
+        format: double
+        type: number
+      resources_count:
+        description: Number of affected resources by the issue
+        example: 28
         format: double
         type: number
       summary:
@@ -820,6 +832,17 @@ definitions:
     example:
     - issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
       max_score: 6.9
+      resources_count: 28
+      summary: Site Without HTTPS
+      targets_count: 14
+    - issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      max_score: 6.9
+      resources_count: 28
+      summary: Site Without HTTPS
+      targets_count: 14
+    - issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      max_score: 6.9
+      resources_count: 28
       summary: Site Without HTTPS
       targets_count: 14
     items:
@@ -832,10 +855,7 @@ definitions:
       issues:
       - issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
         max_score: 6.9
-        summary: Site Without HTTPS
-        targets_count: 14
-      - issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
-        max_score: 6.9
+        resources_count: 28
         summary: Site Without HTTPS
         targets_count: 14
       pagination:
@@ -849,6 +869,24 @@ definitions:
       pagination:
         $ref: '#/definitions/Pagination'
     title: 'Mediatype identifier: findings_issues_list; view=default'
+    type: object
+  Findings_labels:
+    description: Findings Labels (default view)
+    example:
+      labels:
+      - Web
+      - HTTP
+    properties:
+      labels:
+        description: associated labels
+        example:
+        - Web
+        - HTTP
+        items:
+          example: Nihil velit magni id et vero in.
+          type: string
+        type: array
+    title: 'Mediatype identifier: findings_labels; view=default'
     type: object
   Findings_list:
     description: Findings list (default view)
@@ -867,6 +905,9 @@ definitions:
           cwe_id: 358
           description: This domain has at least one MX record
           id: b0720503-0a84-43fd-9cf4-5bb6c500226f
+          labels:
+          - Web
+          - HTTP
           recommendations:
           - It is recommended to run DMARC
           reference_links: []
@@ -921,60 +962,9 @@ definitions:
           cwe_id: 358
           description: This domain has at least one MX record
           id: b0720503-0a84-43fd-9cf4-5bb6c500226f
-          recommendations:
-          - It is recommended to run DMARC
-          reference_links: []
-          summary: MX presence
-        resources:
-        - attributes:
-          - Hostname
-          - Port
-          name: Network Resources
-          resources:
-          - Hostname: test.example.com
-            Port: "443"
-        - attributes:
-          - Hostname
-          - Port
-          name: Network Resources
-          resources:
-          - Hostname: test.example.com
-            Port: "443"
-        - attributes:
-          - Hostname
-          - Port
-          name: Network Resources
-          resources:
-          - Hostname: test.example.com
-            Port: "443"
-        score: 6.9
-        source:
-          component: vulcan-tls
-          id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
-          instance: b3320f03-1284-42fd-9cf4-5bb6c500966f
-          name: vulcan
-          options: '{"timeout":60}'
-          time: "2019-06-08 11:16:40"
-        status: OPEN
-        target:
-          id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
-          identifier: www.test.com
-          tags:
-          - team:vulcan
-        total_exposure: 4631
-      - affected_resource: ""
-        attachments:
-        - content_type: application/json
-          data: e30=
-          name: JSON string
-        current_exposure: 4631
-        details: ""
-        id: a8720503-0284-45fd-9cf4-5bb6c500966f
-        impact_details: ""
-        issue:
-          cwe_id: 358
-          description: This domain has at least one MX record
-          id: b0720503-0a84-43fd-9cf4-5bb6c500226f
+          labels:
+          - Web
+          - HTTP
           recommendations:
           - It is recommended to run DMARC
           reference_links: []
@@ -1033,6 +1023,7 @@ definitions:
     example:
       findings_count: 5
       identifier: vulcan.example.com
+      issues_count: 2
       max_score: 6.9
       target_id: a8720503-0284-45fd-9cf4-5bb6c500966f
     properties:
@@ -1045,6 +1036,11 @@ definitions:
         description: Target Identifier
         example: vulcan.example.com
         type: string
+      issues_count:
+        description: Number of issues for the target
+        example: 2
+        format: double
+        type: number
       max_score:
         description: Max score for the issue among the affected assets
         example: 6.9
@@ -1062,10 +1058,7 @@ definitions:
     example:
     - findings_count: 5
       identifier: vulcan.example.com
-      max_score: 6.9
-      target_id: a8720503-0284-45fd-9cf4-5bb6c500966f
-    - findings_count: 5
-      identifier: vulcan.example.com
+      issues_count: 2
       max_score: 6.9
       target_id: a8720503-0284-45fd-9cf4-5bb6c500966f
     items:
@@ -1083,6 +1076,7 @@ definitions:
       targets:
       - findings_count: 5
         identifier: vulcan.example.com
+        issues_count: 2
         max_score: 6.9
         target_id: a8720503-0284-45fd-9cf4-5bb6c500966f
     properties:
@@ -1213,6 +1207,9 @@ definitions:
       cwe_id: 358
       description: This domain has at least one MX record
       id: b0720503-0a84-43fd-9cf4-5bb6c500226f
+      labels:
+      - Web
+      - HTTP
       recommendations:
       - It is recommended to run DMARC
       reference_links: []
@@ -1231,19 +1228,28 @@ definitions:
         description: Issue ID
         example: b0720503-0a84-43fd-9cf4-5bb6c500226f
         type: string
+      labels:
+        description: Associated labels
+        example:
+        - Web
+        - HTTP
+        items:
+          example: Sequi et sed.
+          type: string
+        type: array
       recommendations:
         description: Recommendations to fix the issue
         example:
         - It is recommended to run DMARC
         items:
-          example: Ratione perferendis.
+          example: Sint ratione.
           type: string
         type: array
       reference_links:
         description: Documentation reference for the issue
         example: []
         items:
-          example: Corrupti sed qui.
+          example: Cumque enim totam ut perspiciatis.
           type: string
         type: array
       summary:
@@ -1452,9 +1458,6 @@ definitions:
     description: PolicyCollection is the media type for an array of Policy (default
       view)
     example:
-    - id: af36818a-0f30-412c-9692-d37716075861
-      name: Sample Policy
-      settings_count: 12
     - id: af36818a-0f30-412c-9692-d37716075861
       name: Sample Policy
       settings_count: 12
@@ -1673,24 +1676,6 @@ definitions:
           settings_count: 12
       schedule:
         cron: 0 7 1 * *
-    - autosend: true
-      disabled: false
-      global: false
-      id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
-      name: Every midnight
-      policy_groups:
-      - group:
-          assets_count: 1
-          description: All newly created assets are added to the Default group
-          id: f6360346-77a5-4f97-b919-331363b3af26
-          name: Default group
-          options: '{"timeout":60}'
-        policy:
-          id: af36818a-0f30-412c-9692-d37716075861
-          name: Sample Policy
-          settings_count: 12
-      schedule:
-        cron: 0 7 1 * *
     items:
       $ref: '#/definitions/Program'
     title: 'Mediatype identifier: program; type=collection; view=default'
@@ -1804,6 +1789,8 @@ definitions:
       view)
     example:
     - email: john.doe@vulcan.example.com
+    - email: john.doe@vulcan.example.com
+    - email: john.doe@vulcan.example.com
     items:
       $ref: '#/definitions/Recipient'
     title: 'Mediatype identifier: recipient; type=collection; view=default'
@@ -1820,7 +1807,7 @@ definitions:
         - john.doe@vulcan.example.com
         - jane.doe@vulcan.example.com
         items:
-          example: Architecto sapiente voluptatum deserunt at ut ea.
+          example: Voluptatem ratione corrupti soluta vel.
           type: string
         type: array
     required:
@@ -1891,7 +1878,7 @@ definitions:
         - Hostname
         - Port
         items:
-          example: Placeat omnis perferendis.
+          example: Natus esse neque aliquid.
           type: string
         type: array
       name:
@@ -1906,8 +1893,7 @@ definitions:
         items:
           additionalProperties: true
           example:
-            Esse neque aliquid molestias velit quis.: Quas voluptatum sit eos illum
-              ipsum tempora.
+            Quis laborum quas voluptatum sit.: Illum ipsum tempora nemo corrupti sed.
           type: object
         type: array
     title: 'Mediatype identifier: resource; view=default'
@@ -2340,7 +2326,7 @@ definitions:
         example:
         - team:vulcan
         items:
-          example: Enim totam ut perspiciatis quia.
+          example: Placeat omnis perferendis.
           type: string
         type: array
     title: 'Mediatype identifier: target; view=default'
@@ -2589,22 +2575,6 @@ definitions:
   UserCollection:
     description: UserCollection is the media type for an array of User (default view)
     example:
-    - active: true
-      admin: true
-      email: john.doe@vulcan.example.com
-      firstname: John
-      id: 967d9966-b561-4233-bd6f-cac603fd8320
-      last_login: "2018-09-07T10:40:52Z"
-      lastname: Doe
-      observer: true
-    - active: true
-      admin: true
-      email: john.doe@vulcan.example.com
-      firstname: John
-      id: 967d9966-b561-4233-bd6f-cac603fd8320
-      last_login: "2018-09-07T10:40:52Z"
-      lastname: Doe
-      observer: true
     - active: true
       admin: true
       email: john.doe@vulcan.example.com
@@ -3281,7 +3251,7 @@ paths:
         name: identifier
         required: false
         type: string
-      - description: A list of identifiers
+      - description: A comma separated list of identifiers
         in: query
         name: identifiers
         required: false
@@ -3289,6 +3259,11 @@ paths:
       - description: Issue ID (Vulnerability DB)
         in: query
         name: issueID
+        required: false
+        type: string
+      - description: A comma separated list of associated labels
+        in: query
+        name: labels
         required: false
         type: string
       - description: Allows to get findings list until a specific date
@@ -3455,9 +3430,14 @@ paths:
         name: atDate
         required: false
         type: string
-      - description: A list of identifiers
+      - description: A comma separated list of identifiers
         in: query
         name: identifiers
+        required: false
+        type: string
+      - description: A comma separated list of associated labels
+        in: query
+        name: labels
         required: false
         type: string
       - description: Allows to get findings list until a specific date
@@ -3526,7 +3506,7 @@ paths:
         name: atDate
         required: false
         type: string
-      - description: A list of identifiers
+      - description: A comma separated list of identifiers
         in: query
         name: identifiers
         required: false
@@ -3535,6 +3515,11 @@ paths:
         in: path
         name: issue_id
         required: true
+        type: string
+      - description: A comma separated list of associated labels
+        in: query
+        name: labels
+        required: false
         type: string
       - description: Allows to get findings list until a specific date
         in: query
@@ -3596,6 +3581,56 @@ paths:
       summary: Find findings from a Issue findings
       tags:
       - findings
+  /teams/{team_id}/findings/labels:
+    get:
+      description: List all findings labels.
+      operationId: findings#List findings labels
+      parameters:
+      - description: Allows to get findings list at a specific date (incompatible
+          and preferential to min and max date params)
+        in: query
+        name: atDate
+        required: false
+        type: string
+      - description: A comma separated list of identifiers
+        in: query
+        name: identifiers
+        required: false
+        type: string
+      - description: Allows to get findings list until a specific date
+        in: query
+        name: maxDate
+        required: false
+        type: string
+      - description: Allows to get findings list from a specific date
+        in: query
+        name: minDate
+        required: false
+        type: string
+      - description: Findings status
+        in: query
+        name: status
+        required: false
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      produces:
+      - findings_labels
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Findings_labels'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: List findings labels findings
+      tags:
+      - findings
   /teams/{team_id}/findings/targets:
     get:
       description: List number of findings and max score per target.
@@ -3606,7 +3641,7 @@ paths:
         name: atDate
         required: false
         type: string
-      - description: A list of identifiers
+      - description: A comma separated list of identifiers
         in: query
         name: identifiers
         required: false
@@ -3614,6 +3649,11 @@ paths:
       - description: Issue ID (Vulnerability DB)
         in: query
         name: issueID
+        required: false
+        type: string
+      - description: A comma separated list of associated labels
+        in: query
+        name: labels
         required: false
         type: string
       - description: Allows to get findings list until a specific date
@@ -3677,9 +3717,14 @@ paths:
         name: atDate
         required: false
         type: string
-      - description: A list of identifiers
+      - description: A comma separated list of identifiers
         in: query
         name: identifiers
+        required: false
+        type: string
+      - description: A comma separated list of associated labels
+        in: query
+        name: labels
         required: false
         type: string
       - description: Allows to get findings list until a specific date
@@ -4974,6 +5019,11 @@ paths:
         name: identifiers
         required: false
         type: string
+      - description: A comma separated list of associated labels
+        in: query
+        name: labels
+        required: false
+        type: string
       - description: Maximum date to filter statistics by
         in: query
         name: maxDate
@@ -5051,6 +5101,11 @@ paths:
       - description: A comma separated list of asset identifiers
         in: query
         name: identifiers
+        required: false
+        type: string
+      - description: A comma separated list of associated labels
+        in: query
+        name: labels
         required: false
         type: string
       - description: Maximum date to filter statistics by
