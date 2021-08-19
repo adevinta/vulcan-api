@@ -33,6 +33,10 @@ func (s vulcanitoService) ListFindingsByTarget(ctx context.Context, params api.F
 	return s.vulndbClient.FindingsByTarget(ctx, params, pagination)
 }
 
+func (s vulcanitoService) ListFindingsLabels(ctx context.Context, params api.FindingsParams) (*api.FindingsLabels, error) {
+	return s.vulndbClient.Labels(ctx, params)
+}
+
 func (s vulcanitoService) FindFinding(ctx context.Context, findingID string) (*api.Finding, error) {
 	return s.vulndbClient.Finding(ctx, findingID)
 }

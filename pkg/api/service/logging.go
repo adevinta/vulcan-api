@@ -885,6 +885,17 @@ func (middleware loggingMiddleware) ListFindingsByTarget(ctx context.Context, pa
 	return middleware.next.ListFindingsByTarget(ctx, params, pagination)
 }
 
+func (middleware loggingMiddleware) ListFindingsLabels(ctx context.Context, params api.FindingsParams) (*api.FindingsLabels, error) {
+	defer func() {
+		XRequestID := ""
+		if ctx != nil {
+			XRequestID, _ = ctx.Value(kithttp.ContextKeyRequestXRequestID).(string)
+		}
+		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "ListFindingsLabels", "params", mySprintf(params))
+	}()
+	return middleware.next.ListFindingsLabels(ctx, params)
+}
+
 func (middleware loggingMiddleware) FindFinding(ctx context.Context, findingID string) (*api.Finding, error) {
 	defer func() {
 		XRequestID := ""
