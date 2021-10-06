@@ -14,7 +14,7 @@ import (
 	"github.com/adevinta/vulcan-api/pkg/api"
 )
 
-func (db vulcanitoStore) ListAssets(teamID string) ([]*api.Asset, error) {
+func (db vulcanitoStore) ListAssets(teamID string, asset api.Asset) ([]*api.Asset, error) {
 	findTeam := &api.Team{ID: teamID}
 	res := db.Conn.Find(&findTeam)
 	if res.Error != nil {
@@ -25,7 +25,14 @@ func (db vulcanitoStore) ListAssets(teamID string) ([]*api.Asset, error) {
 	}
 
 	assets := []*api.Asset{}
-	result := db.Conn.Preload("Team").Preload("AssetType").Preload("AssetGroups.Group").Find(&assets, "team_id = ?", teamID)
+	result := db.Conn.
+		Preload("Team").
+		Preload("AssetType").
+		Preload("AssetGroups.Group").
+		Preload("AssetAnnotations").
+		Where("team_id = ?", teamID).
+		Where(&asset).
+		Find(&assets)
 	if result.Error != nil {
 		if db.NotFoundError(result.Error) {
 			return nil, db.logError(errors.NotFound(result.Error))
@@ -36,7 +43,7 @@ func (db vulcanitoStore) ListAssets(teamID string) ([]*api.Asset, error) {
 	return assets, nil
 }
 
-func (db vulcanitoStore) CreateAssets(assets []api.Asset, groups []api.Group) ([]api.Asset, error) {
+func (db vulcanitoStore) CreateAssets(assets []api.Asset, groups []api.Group, annotations []*api.AssetAnnotation) ([]api.Asset, error) {
 	tx := db.Conn.Begin()
 	if tx.Error != nil {
 		return nil, db.logError(errors.Database(tx.Error))
@@ -79,6 +86,17 @@ func (db vulcanitoStore) CreateAssets(assets []api.Asset, groups []api.Group) ([
 					err = errors.Create(err.Error(), "assetGroup", asset.ID, g.ID)
 				}
 				return nil, err
+			}
+		}
+
+		// Associate asset with input annotations
+		for _, an := range annotations {
+			an.AssetID = asset.ID
+
+			result := tx.Create(&an)
+			if result.Error != nil {
+				tx.Rollback()
+				return nil, errors.Create(result.Error, "assetAnnotation", asset.ID, an.Key)
 			}
 		}
 
@@ -209,6 +227,7 @@ func (db vulcanitoStore) FindAsset(teamID, assetID string) (*api.Asset, error) {
 		Preload("AssetGroups.Asset").
 		Preload("AssetGroups.Group").
 		Preload("AssetGroups.Group.AssetGroup").
+		Preload("AssetAnnotations").
 		Preload("AssetType").Where("team_id = ?", teamID).Find(&asset)
 
 	if res.Error != nil {
@@ -228,6 +247,7 @@ func (db vulcanitoStore) findAsset(tx *gorm.DB, teamID, identifier, assetTypeID 
 		Preload("AssetGroups.Group").
 		Preload("AssetGroups.Group.AssetGroup").
 		Preload("AssetType").
+		Preload("AssetAnnotations").
 		Find(&asset, "team_id = ? and identifier = ? and asset_type_id = ?", teamID, identifier, assetTypeID)
 
 	if res.Error != nil {
@@ -283,10 +303,10 @@ func (db vulcanitoStore) UpdateAsset(asset api.Asset) (*api.Asset, error) {
 		return nil, db.logError(errors.Update("Asset was not updated"))
 	}
 
-	// If asset identifier is changed, we have to propagate the action
+	// If asset identifier has changed, we have to propagate the action
 	// to the vulnerability DB so ownership from previous identifier is
 	// removed for this team if necessary, and also the new one is created.
-	if findAsset.Identifier != asset.Identifier {
+	if asset.Identifier != "" && asset.Identifier != findAsset.Identifier {
 		err := db.pushToOutbox(tx, opUpdateAsset, findAsset, asset)
 		if err != nil {
 			tx.Rollback()
@@ -305,7 +325,8 @@ func (db vulcanitoStore) DeleteAsset(asset api.Asset) error {
 	findAsset := api.Asset{ID: asset.ID}
 	if db.Conn.
 		Where("team_id = ? and id = ?", asset.TeamID, asset.ID).
-		Preload("Team").First(&findAsset).RecordNotFound() {
+		Preload("Team").
+		First(&findAsset).RecordNotFound() {
 		return db.logError(errors.Forbidden("asset does not belong to team"))
 	}
 

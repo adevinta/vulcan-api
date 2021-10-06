@@ -56,6 +56,20 @@ func (c *Client) DecodeAssetCollection(resp *http.Response) (AssetCollection, er
 	return decoded, err
 }
 
+// Asset Annotations (default view)
+//
+// Identifier: assetannotations_response; view=default
+type AssetannotationsResponse struct {
+	Annotations map[string]string `form:"annotations,omitempty" json:"annotations,omitempty" yaml:"annotations,omitempty" xml:"annotations,omitempty"`
+}
+
+// DecodeAssetannotationsResponse decodes the AssetannotationsResponse instance encoded in resp body.
+func (c *Client) DecodeAssetannotationsResponse(resp *http.Response) (*AssetannotationsResponse, error) {
+	var decoded AssetannotationsResponse
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return &decoded, err
+}
+
 // Create Assets Errors (default view)
 //
 // Identifier: asseterror; view=default
@@ -253,10 +267,27 @@ func (c *Client) DecodeError(resp *http.Response) (*Error, error) {
 	return &decoded, err
 }
 
+// Exposure stats (default view)
+//
+// Identifier: exposure; view=default
+type Exposure struct {
+	// Stats for exposure by different averages
+	Exposure *Statsaverages `form:"exposure,omitempty" json:"exposure,omitempty" yaml:"exposure,omitempty" xml:"exposure,omitempty"`
+}
+
+// DecodeExposure decodes the Exposure instance encoded in resp body.
+func (c *Client) DecodeExposure(resp *http.Response) (*Exposure, error) {
+	var decoded Exposure
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return &decoded, err
+}
+
 // Finding (default view)
 //
 // Identifier: finding; view=default
 type Finding struct {
+	// Affected Resource
+	AffectedResource *string `form:"affected_resource,omitempty" json:"affected_resource,omitempty" yaml:"affected_resource,omitempty" xml:"affected_resource,omitempty"`
 	// Attachments
 	Attachments []*Attachment `form:"attachments,omitempty" json:"attachments,omitempty" yaml:"attachments,omitempty" xml:"attachments,omitempty"`
 	// Current exposure (hours). Only for OPEN findings
@@ -351,6 +382,8 @@ type FindingsIssue struct {
 	IssueID *string `form:"issue_id,omitempty" json:"issue_id,omitempty" yaml:"issue_id,omitempty" xml:"issue_id,omitempty"`
 	// Max score for the issue among the affected assets
 	MaxScore *float64 `form:"max_score,omitempty" json:"max_score,omitempty" yaml:"max_score,omitempty" xml:"max_score,omitempty"`
+	// Number of affected resources by the issue
+	ResourcesCount *float64 `form:"resources_count,omitempty" json:"resources_count,omitempty" yaml:"resources_count,omitempty" xml:"resources_count,omitempty"`
 	// Issue summary
 	Summary *string `form:"summary,omitempty" json:"summary,omitempty" yaml:"summary,omitempty" xml:"summary,omitempty"`
 	// Number of targets affected by the issue
@@ -393,6 +426,21 @@ func (c *Client) DecodeFindingsIssuesList(resp *http.Response) (*FindingsIssuesL
 	return &decoded, err
 }
 
+// Findings Labels (default view)
+//
+// Identifier: findings_labels; view=default
+type FindingsLabels struct {
+	// associated labels
+	Labels []string `form:"labels,omitempty" json:"labels,omitempty" yaml:"labels,omitempty" xml:"labels,omitempty"`
+}
+
+// DecodeFindingsLabels decodes the FindingsLabels instance encoded in resp body.
+func (c *Client) DecodeFindingsLabels(resp *http.Response) (*FindingsLabels, error) {
+	var decoded FindingsLabels
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return &decoded, err
+}
+
 // Findings list (default view)
 //
 // Identifier: findings_list; view=default
@@ -418,6 +466,8 @@ type FindingsTarget struct {
 	FindingsCount *float64 `form:"findings_count,omitempty" json:"findings_count,omitempty" yaml:"findings_count,omitempty" xml:"findings_count,omitempty"`
 	// Target Identifier
 	Identifier *string `form:"identifier,omitempty" json:"identifier,omitempty" yaml:"identifier,omitempty" xml:"identifier,omitempty"`
+	// Number of issues for the target
+	IssuesCount *float64 `form:"issues_count,omitempty" json:"issues_count,omitempty" yaml:"issues_count,omitempty" xml:"issues_count,omitempty"`
 	// Max score for the issue among the affected assets
 	MaxScore *float64 `form:"max_score,omitempty" json:"max_score,omitempty" yaml:"max_score,omitempty" xml:"max_score,omitempty"`
 	// Target ID
@@ -553,6 +603,8 @@ type Issue struct {
 	Description *string `form:"description,omitempty" json:"description,omitempty" yaml:"description,omitempty" xml:"description,omitempty"`
 	// Issue ID
 	ID *string `form:"id,omitempty" json:"id,omitempty" yaml:"id,omitempty" xml:"id,omitempty"`
+	// Associated labels
+	Labels []string `form:"labels,omitempty" json:"labels,omitempty" yaml:"labels,omitempty" xml:"labels,omitempty"`
 	// Recommendations to fix the issue
 	Recommendations []string `form:"recommendations,omitempty" json:"recommendations,omitempty" yaml:"recommendations,omitempty" xml:"recommendations,omitempty"`
 	// Documentation reference for the issue
@@ -1024,6 +1076,31 @@ type Stats struct {
 // DecodeStats decodes the Stats instance encoded in resp body.
 func (c *Client) DecodeStats(resp *http.Response) (*Stats, error) {
 	var decoded Stats
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return &decoded, err
+}
+
+// Stats by different averages (default view)
+//
+// Identifier: statsaverages; view=default
+type Statsaverages struct {
+	// Mean of the stats
+	Mean *float64 `form:"mean,omitempty" json:"mean,omitempty" yaml:"mean,omitempty" xml:"mean,omitempty"`
+	// Percentile 10 of the stats
+	Percentile10 *float64 `form:"percentile_10,omitempty" json:"percentile_10,omitempty" yaml:"percentile_10,omitempty" xml:"percentile_10,omitempty"`
+	// Percentile 25 of the stats
+	Percentile25 *float64 `form:"percentile_25,omitempty" json:"percentile_25,omitempty" yaml:"percentile_25,omitempty" xml:"percentile_25,omitempty"`
+	// Percentile 50 or median of the stats
+	Percentile50 *float64 `form:"percentile_50,omitempty" json:"percentile_50,omitempty" yaml:"percentile_50,omitempty" xml:"percentile_50,omitempty"`
+	// Percentile 75 or third quartile of the stats
+	Percentile75 *float64 `form:"percentile_75,omitempty" json:"percentile_75,omitempty" yaml:"percentile_75,omitempty" xml:"percentile_75,omitempty"`
+	// Percentile 90 of the stats
+	Percentile90 *float64 `form:"percentile_90,omitempty" json:"percentile_90,omitempty" yaml:"percentile_90,omitempty" xml:"percentile_90,omitempty"`
+}
+
+// DecodeStatsaverages decodes the Statsaverages instance encoded in resp body.
+func (c *Client) DecodeStatsaverages(resp *http.Response) (*Statsaverages, error) {
+	var decoded Statsaverages
 	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
 	return &decoded, err
 }

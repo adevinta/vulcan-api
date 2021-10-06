@@ -41,14 +41,22 @@ type VulcanitoService interface {
 	UpdateRecipients(ctx context.Context, teamID string, emails []string) error
 	ListRecipients(ctx context.Context, teamID string) ([]*Recipient, error)
 
-	ListAssets(ctx context.Context, teamID string) ([]*Asset, error)
-	CreateAssets(ctx context.Context, assets []Asset, groups []Group) ([]Asset, error)
-	CreateAssetsMultiStatus(ctx context.Context, assets []Asset, groups []Group) ([]AssetCreationResponse, error)
+	// Assets
+	ListAssets(ctx context.Context, teamID string, asset Asset) ([]*Asset, error)
+	CreateAssets(ctx context.Context, assets []Asset, groups []Group, annotations []*AssetAnnotation) ([]Asset, error)
+	CreateAssetsMultiStatus(ctx context.Context, assets []Asset, groups []Group, annotations []*AssetAnnotation) ([]AssetCreationResponse, error)
 	FindAsset(ctx context.Context, asset Asset) (*Asset, error)
 	UpdateAsset(ctx context.Context, asset Asset) (*Asset, error)
 	DeleteAsset(ctx context.Context, asset Asset) error
 	DeleteAllAssets(ctx context.Context, teamID string) error
 	GetAssetType(ctx context.Context, assetTypeName string) (*AssetType, error)
+
+	// Asset Annotations
+	ListAssetAnnotations(ctx context.Context, teamID string, assetID string) ([]*AssetAnnotation, error)
+	CreateAssetAnnotations(ctx context.Context, teamID string, assetID string, annotations []*AssetAnnotation) ([]*AssetAnnotation, error)
+	UpdateAssetAnnotations(ctx context.Context, teamID string, assetID string, annotations []*AssetAnnotation) ([]*AssetAnnotation, error)
+	PutAssetAnnotations(ctx context.Context, teamID string, assetID string, annotations []*AssetAnnotation) ([]*AssetAnnotation, error)
+	DeleteAssetAnnotations(ctx context.Context, teamID string, assedID string, annotations []*AssetAnnotation) error
 
 	ListGroups(ctx context.Context, teamID, groupName string) ([]*Group, error)
 	CreateGroup(ctx context.Context, group Group) (*Group, error)
@@ -107,10 +115,12 @@ type VulcanitoService interface {
 	ListFindingsByIssue(ctx context.Context, params FindingsParams, pagination Pagination) (*FindingsList, error)
 	ListFindingsTargets(ctx context.Context, params FindingsParams, pagination Pagination) (*FindingsTargetsList, error)
 	ListFindingsByTarget(ctx context.Context, params FindingsParams, pagination Pagination) (*FindingsList, error)
+	ListFindingsLabels(ctx context.Context, params FindingsParams) (*FindingsLabels, error)
 	FindFinding(ctx context.Context, findingID string) (*Finding, error)
 	CreateFindingOverwrite(ctx context.Context, findingOverwrite FindingOverwrite) error
 	ListFindingOverwrites(ctx context.Context, findingID string) ([]*FindingOverwrite, error)
 	StatsMTTR(ctx context.Context, params StatsParams) (*StatsMTTR, error)
+	StatsExposure(ctx context.Context, params StatsParams) (*StatsExposure, error)
 	StatsOpen(ctx context.Context, params StatsParams) (*StatsOpen, error)
 	StatsFixed(ctx context.Context, params StatsParams) (*StatsFixed, error)
 }

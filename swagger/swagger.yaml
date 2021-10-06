@@ -53,10 +53,62 @@ definitions:
         $ref: '#/definitions/Assettype'
     title: 'Mediatype identifier: asset; view=default'
     type: object
+  AssetAnnotationDeleteRequest:
+    example:
+      annotations:
+      - annotation/1
+      - annotation/2
+    properties:
+      annotations:
+        example:
+        - annotation/1
+        - annotation/2
+        items:
+          example: Corrupti rerum deleniti aut sed illo.
+          type: string
+        type: array
+    title: AssetAnnotationDeleteRequest
+    type: object
+  AssetAnnotationRequest:
+    example:
+      annotations:
+        annotation/1: value/1
+        annotation/2: value/2
+    properties:
+      annotations:
+        additionalProperties: true
+        example:
+          annotation/1: value/1
+          annotation/2: value/2
+        type: object
+    title: AssetAnnotationRequest
+    type: object
   AssetCollection:
     description: AssetCollection is the media type for an array of Asset (default
       view)
     example:
+    - alias: AnAlias
+      classified_at: "2020-09-03T15:00:42.112975Z"
+      environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+      id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      identifier: vulcan.example.com
+      options: '{"timeout":60}'
+      rolfp: R:1/O:1/L:0/F:0/P:0+S:1
+      scannable: true
+      type:
+        id: 29f83d16-09c4-4be5-8cae-e232d41f388a
+        name: Hostname
+    - alias: AnAlias
+      classified_at: "2020-09-03T15:00:42.112975Z"
+      environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+      id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      identifier: vulcan.example.com
+      options: '{"timeout":60}'
+      rolfp: R:1/O:1/L:0/F:0/P:0+S:1
+      scannable: true
+      type:
+        id: 29f83d16-09c4-4be5-8cae-e232d41f388a
+        name: Hostname
     - alias: AnAlias
       classified_at: "2020-09-03T15:00:42.112975Z"
       environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
@@ -166,6 +218,21 @@ definitions:
         type: string
     title: AssetUpdatePayload
     type: object
+  Assetannotations_response:
+    description: Asset Annotations (default view)
+    example:
+      annotations:
+        annotation/1: value/1
+        annotation/2: value/2
+    properties:
+      annotations:
+        additionalProperties: true
+        example:
+          annotation/1: value/1
+          annotation/2: value/2
+        type: object
+    title: 'Mediatype identifier: assetannotations_response; view=default'
+    type: object
   Assetresponse:
     description: Asset (default view)
     example:
@@ -242,6 +309,36 @@ definitions:
       type:
         id: 29f83d16-09c4-4be5-8cae-e232d41f388a
         name: Hostname
+    - alias: AnAlias
+      classified_at: "2020-09-03T15:00:42.112975Z"
+      environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+      id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      identifier: vulcan.example.com
+      options: '{"timeout":60}'
+      rolfp: R:1/O:1/L:0/F:0/P:0+S:1
+      scannable: true
+      status:
+        code: 3944598920153519998
+        error: Quo placeat magni harum ea.
+        type: Voluptatum mollitia consequuntur dignissimos.
+      type:
+        id: 29f83d16-09c4-4be5-8cae-e232d41f388a
+        name: Hostname
+    - alias: AnAlias
+      classified_at: "2020-09-03T15:00:42.112975Z"
+      environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+      id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      identifier: vulcan.example.com
+      options: '{"timeout":60}'
+      rolfp: R:1/O:1/L:0/F:0/P:0+S:1
+      scannable: true
+      status:
+        code: 3944598920153519998
+        error: Quo placeat magni harum ea.
+        type: Voluptatum mollitia consequuntur dignissimos.
+      type:
+        id: 29f83d16-09c4-4be5-8cae-e232d41f388a
+        name: Hostname
     items:
       $ref: '#/definitions/Assetresponse'
     title: 'Mediatype identifier: assetresponse; type=collection; view=default'
@@ -284,14 +381,10 @@ definitions:
     type: object
   CreateAssetPayload:
     example:
+      annotations:
+        annotation/1: value/1
+        annotation/2: value/2
       assets:
-      - alias: AnAlias
-        environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
-        identifier: vulcan.example.com
-        options: '{"timeout":60}'
-        rolfp: R:1/O:1/L:0/F:0/P:0+S:1
-        scannable: true
-        type: Hostname
       - alias: AnAlias
         environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
         identifier: vulcan.example.com
@@ -310,15 +403,14 @@ definitions:
       - a14c7c65-66ab-4676-bcf6-0dea9719f5c6
       - 9f7a0c78-b752-4126-aa6d-0f286ada7b8f
     properties:
+      annotations:
+        additionalProperties: true
+        example:
+          annotation/1: value/1
+          annotation/2: value/2
+        type: object
       assets:
         example:
-        - alias: AnAlias
-          environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
-          identifier: vulcan.example.com
-          options: '{"timeout":60}'
-          rolfp: R:1/O:1/L:0/F:0/P:0+S:1
-          scannable: true
-          type: Hostname
         - alias: AnAlias
           environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
           identifier: vulcan.example.com
@@ -341,7 +433,7 @@ definitions:
         - a14c7c65-66ab-4676-bcf6-0dea9719f5c6
         - 9f7a0c78-b752-4126-aa6d-0f286ada7b8f
         items:
-          example: Quis ipsam ducimus sit odio tenetur consequatur.
+          example: Odio tenetur consequatur quibusdam et voluptate.
           type: string
         type: array
     required:
@@ -389,9 +481,25 @@ definitions:
     - type
     title: 'Mediatype identifier: error; view=default'
     type: object
+  Exposure:
+    description: Exposure stats (default view)
+    example:
+      exposure:
+        mean: 0.5763289526227959
+        percentile_10: 0.8906963890969017
+        percentile_25: 0.362880998872939
+        percentile_50: 0.9206384098045786
+        percentile_75: 0.3939227905544213
+        percentile_90: 0.11867421993190391
+    properties:
+      exposure:
+        $ref: '#/definitions/Statsaverages'
+    title: 'Mediatype identifier: exposure; view=default'
+    type: object
   Finding:
     description: Finding (default view)
     example:
+      affected_resource: ""
       attachments:
       - content_type: application/json
         data: e30=
@@ -404,6 +512,9 @@ definitions:
         cwe_id: 358
         description: This domain has at least one MX record
         id: b0720503-0a84-43fd-9cf4-5bb6c500226f
+        labels:
+        - Web
+        - HTTP
         recommendations:
         - It is recommended to run DMARC
         reference_links: []
@@ -446,6 +557,10 @@ definitions:
         - team:vulcan
       total_exposure: 4631
     properties:
+      affected_resource:
+        description: Affected Resource
+        example: ""
+        type: string
       attachments:
         description: Attachments
         example:
@@ -582,6 +697,14 @@ definitions:
       status_previous: OPEN
       tag: team:security
       user: user@adevinta.com
+    - created_at: "2021-03-27T00:26:43.211506Z"
+      finding_id: 3c7d7003-c53d-4ccc-80e7-f21da241b2d4
+      id: b0720503-0a84-43fd-9cf4-5bb6c500226f
+      notes: This finding is a false positive because...
+      status: FALSE_POSITIVE
+      status_previous: OPEN
+      tag: team:security
+      user: user@adevinta.com
     items:
       $ref: '#/definitions/Finding_overwrite'
     title: 'Mediatype identifier: finding_overwrite; type=collection; view=default'
@@ -590,7 +713,8 @@ definitions:
     description: FindingCollection is the media type for an array of Finding (default
       view)
     example:
-    - attachments:
+    - affected_resource: ""
+      attachments:
       - content_type: application/json
         data: e30=
         name: JSON string
@@ -602,112 +726,9 @@ definitions:
         cwe_id: 358
         description: This domain has at least one MX record
         id: b0720503-0a84-43fd-9cf4-5bb6c500226f
-        recommendations:
-        - It is recommended to run DMARC
-        reference_links: []
-        summary: MX presence
-      resources:
-      - attributes:
-        - Hostname
-        - Port
-        name: Network Resources
-        resources:
-        - Hostname: test.example.com
-          Port: "443"
-      - attributes:
-        - Hostname
-        - Port
-        name: Network Resources
-        resources:
-        - Hostname: test.example.com
-          Port: "443"
-      - attributes:
-        - Hostname
-        - Port
-        name: Network Resources
-        resources:
-        - Hostname: test.example.com
-          Port: "443"
-      score: 6.9
-      source:
-        component: vulcan-tls
-        id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
-        instance: b3320f03-1284-42fd-9cf4-5bb6c500966f
-        name: vulcan
-        options: '{"timeout":60}'
-        time: "2019-06-08 11:16:40"
-      status: OPEN
-      target:
-        id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
-        identifier: www.test.com
-        tags:
-        - team:vulcan
-      total_exposure: 4631
-    - attachments:
-      - content_type: application/json
-        data: e30=
-        name: JSON string
-      current_exposure: 4631
-      details: ""
-      id: a8720503-0284-45fd-9cf4-5bb6c500966f
-      impact_details: ""
-      issue:
-        cwe_id: 358
-        description: This domain has at least one MX record
-        id: b0720503-0a84-43fd-9cf4-5bb6c500226f
-        recommendations:
-        - It is recommended to run DMARC
-        reference_links: []
-        summary: MX presence
-      resources:
-      - attributes:
-        - Hostname
-        - Port
-        name: Network Resources
-        resources:
-        - Hostname: test.example.com
-          Port: "443"
-      - attributes:
-        - Hostname
-        - Port
-        name: Network Resources
-        resources:
-        - Hostname: test.example.com
-          Port: "443"
-      - attributes:
-        - Hostname
-        - Port
-        name: Network Resources
-        resources:
-        - Hostname: test.example.com
-          Port: "443"
-      score: 6.9
-      source:
-        component: vulcan-tls
-        id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
-        instance: b3320f03-1284-42fd-9cf4-5bb6c500966f
-        name: vulcan
-        options: '{"timeout":60}'
-        time: "2019-06-08 11:16:40"
-      status: OPEN
-      target:
-        id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
-        identifier: www.test.com
-        tags:
-        - team:vulcan
-      total_exposure: 4631
-    - attachments:
-      - content_type: application/json
-        data: e30=
-        name: JSON string
-      current_exposure: 4631
-      details: ""
-      id: a8720503-0284-45fd-9cf4-5bb6c500966f
-      impact_details: ""
-      issue:
-        cwe_id: 358
-        description: This domain has at least one MX record
-        id: b0720503-0a84-43fd-9cf4-5bb6c500226f
+        labels:
+        - Web
+        - HTTP
         recommendations:
         - It is recommended to run DMARC
         reference_links: []
@@ -776,6 +797,7 @@ definitions:
     example:
       issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
       max_score: 6.9
+      resources_count: 28
       summary: Site Without HTTPS
       targets_count: 14
     properties:
@@ -786,6 +808,11 @@ definitions:
       max_score:
         description: Max score for the issue among the affected assets
         example: 6.9
+        format: double
+        type: number
+      resources_count:
+        description: Number of affected resources by the issue
+        example: 28
         format: double
         type: number
       summary:
@@ -805,6 +832,17 @@ definitions:
     example:
     - issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
       max_score: 6.9
+      resources_count: 28
+      summary: Site Without HTTPS
+      targets_count: 14
+    - issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      max_score: 6.9
+      resources_count: 28
+      summary: Site Without HTTPS
+      targets_count: 14
+    - issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      max_score: 6.9
+      resources_count: 28
       summary: Site Without HTTPS
       targets_count: 14
     items:
@@ -817,21 +855,14 @@ definitions:
       issues:
       - issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
         max_score: 6.9
-        summary: Site Without HTTPS
-        targets_count: 14
-      - issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
-        max_score: 6.9
-        summary: Site Without HTTPS
-        targets_count: 14
-      - issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
-        max_score: 6.9
+        resources_count: 28
         summary: Site Without HTTPS
         targets_count: 14
       pagination:
-        limit: 0.8451506497515555
+        limit: 0.9276149316039823
         more: false
-        offset: 0.11075891542163877
-        total: 0.733137232779022
+        offset: 0.7144421259000474
+        total: 0.9837483587621623
     properties:
       issues:
         $ref: '#/definitions/Findings_issueCollection'
@@ -839,11 +870,30 @@ definitions:
         $ref: '#/definitions/Pagination'
     title: 'Mediatype identifier: findings_issues_list; view=default'
     type: object
+  Findings_labels:
+    description: Findings Labels (default view)
+    example:
+      labels:
+      - Web
+      - HTTP
+    properties:
+      labels:
+        description: associated labels
+        example:
+        - Web
+        - HTTP
+        items:
+          example: Nihil velit magni id et vero in.
+          type: string
+        type: array
+    title: 'Mediatype identifier: findings_labels; view=default'
+    type: object
   Findings_list:
     description: Findings list (default view)
     example:
       findings:
-      - attachments:
+      - affected_resource: ""
+        attachments:
         - content_type: application/json
           data: e30=
           name: JSON string
@@ -855,6 +905,9 @@ definitions:
           cwe_id: 358
           description: This domain has at least one MX record
           id: b0720503-0a84-43fd-9cf4-5bb6c500226f
+          labels:
+          - Web
+          - HTTP
           recommendations:
           - It is recommended to run DMARC
           reference_links: []
@@ -896,7 +949,8 @@ definitions:
           tags:
           - team:vulcan
         total_exposure: 4631
-      - attachments:
+      - affected_resource: ""
+        attachments:
         - content_type: application/json
           data: e30=
           name: JSON string
@@ -908,6 +962,9 @@ definitions:
           cwe_id: 358
           description: This domain has at least one MX record
           id: b0720503-0a84-43fd-9cf4-5bb6c500226f
+          labels:
+          - Web
+          - HTTP
           recommendations:
           - It is recommended to run DMARC
           reference_links: []
@@ -950,10 +1007,10 @@ definitions:
           - team:vulcan
         total_exposure: 4631
       pagination:
-        limit: 0.8451506497515555
+        limit: 0.9276149316039823
         more: false
-        offset: 0.11075891542163877
-        total: 0.733137232779022
+        offset: 0.7144421259000474
+        total: 0.9837483587621623
     properties:
       findings:
         $ref: '#/definitions/FindingCollection'
@@ -966,6 +1023,7 @@ definitions:
     example:
       findings_count: 5
       identifier: vulcan.example.com
+      issues_count: 2
       max_score: 6.9
       target_id: a8720503-0284-45fd-9cf4-5bb6c500966f
     properties:
@@ -978,6 +1036,11 @@ definitions:
         description: Target Identifier
         example: vulcan.example.com
         type: string
+      issues_count:
+        description: Number of issues for the target
+        example: 2
+        format: double
+        type: number
       max_score:
         description: Max score for the issue among the affected assets
         example: 6.9
@@ -995,6 +1058,7 @@ definitions:
     example:
     - findings_count: 5
       identifier: vulcan.example.com
+      issues_count: 2
       max_score: 6.9
       target_id: a8720503-0284-45fd-9cf4-5bb6c500966f
     items:
@@ -1005,13 +1069,14 @@ definitions:
     description: Findings by Target list (default view)
     example:
       pagination:
-        limit: 0.8451506497515555
+        limit: 0.9276149316039823
         more: false
-        offset: 0.11075891542163877
-        total: 0.733137232779022
+        offset: 0.7144421259000474
+        total: 0.9837483587621623
       targets:
       - findings_count: 5
         identifier: vulcan.example.com
+        issues_count: 2
         max_score: 6.9
         target_id: a8720503-0284-45fd-9cf4-5bb6c500966f
     properties:
@@ -1057,16 +1122,6 @@ definitions:
     description: GroupCollection is the media type for an array of Group (default
       view)
     example:
-    - assets_count: 1
-      description: All newly created assets are added to the Default group
-      id: f6360346-77a5-4f97-b919-331363b3af26
-      name: Default group
-      options: '{"timeout":60}'
-    - assets_count: 1
-      description: All newly created assets are added to the Default group
-      id: f6360346-77a5-4f97-b919-331363b3af26
-      name: Default group
-      options: '{"timeout":60}'
     - assets_count: 1
       description: All newly created assets are added to the Default group
       id: f6360346-77a5-4f97-b919-331363b3af26
@@ -1131,10 +1186,6 @@ definitions:
       id: f6360346-77a5-4f97-b919-331363b3af26
       name: Default group
       options: '{"timeout":60}'
-    - description: All newly created assets are added to the Default group
-      id: f6360346-77a5-4f97-b919-331363b3af26
-      name: Default group
-      options: '{"timeout":60}'
     items:
       $ref: '#/definitions/GroupWithoutAssetsCount'
     title: 'Mediatype identifier: group; type=collection; view=default'
@@ -1156,6 +1207,9 @@ definitions:
       cwe_id: 358
       description: This domain has at least one MX record
       id: b0720503-0a84-43fd-9cf4-5bb6c500226f
+      labels:
+      - Web
+      - HTTP
       recommendations:
       - It is recommended to run DMARC
       reference_links: []
@@ -1174,19 +1228,28 @@ definitions:
         description: Issue ID
         example: b0720503-0a84-43fd-9cf4-5bb6c500226f
         type: string
+      labels:
+        description: Associated labels
+        example:
+        - Web
+        - HTTP
+        items:
+          example: Sequi et sed.
+          type: string
+        type: array
       recommendations:
         description: Recommendations to fix the issue
         example:
         - It is recommended to run DMARC
         items:
-          example: Voluptatum sit eos illum.
+          example: Sint ratione.
           type: string
         type: array
       reference_links:
         description: Documentation reference for the issue
         example: []
         items:
-          example: Tempora nemo corrupti sed qui.
+          example: Cumque enim totam ut perspiciatis.
           type: string
         type: array
       summary:
@@ -1202,10 +1265,6 @@ definitions:
       classified_at: "2020-09-03T15:00:42.112975Z"
       environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
       groups:
-      - description: All newly created assets are added to the Default group
-        id: f6360346-77a5-4f97-b919-331363b3af26
-        name: Default group
-        options: '{"timeout":60}'
       - description: All newly created assets are added to the Default group
         id: f6360346-77a5-4f97-b919-331363b3af26
         name: Default group
@@ -1277,10 +1336,6 @@ definitions:
         id: f6360346-77a5-4f97-b919-331363b3af26
         name: Default group
         options: '{"timeout":60}'
-      - description: All newly created assets are added to the Default group
-        id: f6360346-77a5-4f97-b919-331363b3af26
-        name: Default group
-        options: '{"timeout":60}'
       id: a8720503-0284-45fd-9cf4-5bb6c500966f
       identifier: vulcan.example.com
       options: '{"timeout":60}'
@@ -1301,10 +1356,6 @@ definitions:
         id: f6360346-77a5-4f97-b919-331363b3af26
         name: Default group
         options: '{"timeout":60}'
-      - description: All newly created assets are added to the Default group
-        id: f6360346-77a5-4f97-b919-331363b3af26
-        name: Default group
-        options: '{"timeout":60}'
       id: a8720503-0284-45fd-9cf4-5bb6c500966f
       identifier: vulcan.example.com
       options: '{"timeout":60}'
@@ -1317,10 +1368,6 @@ definitions:
       classified_at: "2020-09-03T15:00:42.112975Z"
       environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
       groups:
-      - description: All newly created assets are added to the Default group
-        id: f6360346-77a5-4f97-b919-331363b3af26
-        name: Default group
-        options: '{"timeout":60}'
       - description: All newly created assets are added to the Default group
         id: f6360346-77a5-4f97-b919-331363b3af26
         name: Default group
@@ -1345,12 +1392,12 @@ definitions:
     description: MTTR stats (default view)
     example:
       mttr:
-        critical: 0.4834744722342159
-        high: 0.5205844348643661
-        informational: 0.8413557035664904
-        low: 0.21762696584450403
-        medium: 0.8619749137392434
-        total: 0.5958828347687471
+        critical: 0.9729347716970894
+        high: 0.3291856414183523
+        informational: 0.8243581388518908
+        low: 0.3602830379559806
+        medium: 0.6517825863008089
+        total: 0.4039820739887437
     properties:
       mttr:
         $ref: '#/definitions/Statstotal'
@@ -1359,14 +1406,14 @@ definitions:
   Pagination:
     description: Pagination info (default view)
     example:
-      limit: 0.8451506497515555
+      limit: 0.9276149316039823
       more: false
-      offset: 0.11075891542163877
-      total: 0.733137232779022
+      offset: 0.7144421259000474
+      total: 0.9837483587621623
     properties:
       limit:
         description: Limit of results for the list
-        example: 0.8451506497515555
+        example: 0.9276149316039823
         format: double
         type: number
       more:
@@ -1375,12 +1422,12 @@ definitions:
         type: boolean
       offset:
         description: Results list offset
-        example: 0.11075891542163877
+        example: 0.7144421259000474
         format: double
         type: number
       total:
         description: Total number of results for the list
-        example: 0.733137232779022
+        example: 0.9837483587621623
         format: double
         type: number
     title: 'Mediatype identifier: pagination; view=default'
@@ -1510,8 +1557,8 @@ definitions:
   Program:
     description: Program (default view)
     example:
-      autosend: false
-      disabled: true
+      autosend: true
+      disabled: false
       global: false
       id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
       name: Every midnight
@@ -1531,11 +1578,11 @@ definitions:
     properties:
       autosend:
         description: Autosend
-        example: false
+        example: true
         type: boolean
       disabled:
         description: Disabled
-        example: true
+        example: false
         type: boolean
       global:
         description: Global
@@ -1593,8 +1640,8 @@ definitions:
     description: ProgramCollection is the media type for an array of Program (default
       view)
     example:
-    - autosend: false
-      disabled: true
+    - autosend: true
+      disabled: false
       global: false
       id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
       name: Every midnight
@@ -1611,8 +1658,8 @@ definitions:
           settings_count: 12
       schedule:
         cron: 0 7 1 * *
-    - autosend: false
-      disabled: true
+    - autosend: true
+      disabled: false
       global: false
       id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
       name: Every midnight
@@ -1635,20 +1682,20 @@ definitions:
     type: array
   ProgramPayload:
     example:
-      autosend: true
+      autosend: false
       disabled: false
       name: Every midnight
       policy_groups:
-      - group_id: Sit sed.
-        policy_id: Aut et voluptatum suscipit ea.
-      - group_id: Sit sed.
-        policy_id: Aut et voluptatum suscipit ea.
-      - group_id: Sit sed.
-        policy_id: Aut et voluptatum suscipit ea.
+      - group_id: Hic est iure provident non consequatur.
+        policy_id: Dolor laboriosam.
+      - group_id: Hic est iure provident non consequatur.
+        policy_id: Dolor laboriosam.
+      - group_id: Hic est iure provident non consequatur.
+        policy_id: Dolor laboriosam.
     properties:
       autosend:
         description: Autosend
-        example: true
+        example: false
         type: boolean
       disabled:
         description: Disabled
@@ -1661,12 +1708,12 @@ definitions:
       policy_groups:
         description: PolicyGroups
         example:
-        - group_id: Sit sed.
-          policy_id: Aut et voluptatum suscipit ea.
-        - group_id: Sit sed.
-          policy_id: Aut et voluptatum suscipit ea.
-        - group_id: Sit sed.
-          policy_id: Aut et voluptatum suscipit ea.
+        - group_id: Hic est iure provident non consequatur.
+          policy_id: Dolor laboriosam.
+        - group_id: Hic est iure provident non consequatur.
+          policy_id: Dolor laboriosam.
+        - group_id: Hic est iure provident non consequatur.
+          policy_id: Dolor laboriosam.
         items:
           $ref: '#/definitions/ProgramPolicyGroupPayload'
         type: array
@@ -1674,31 +1721,31 @@ definitions:
     type: object
   ProgramPolicyGroupPayload:
     example:
-      group_id: Sit sed.
-      policy_id: Aut et voluptatum suscipit ea.
+      group_id: Hic est iure provident non consequatur.
+      policy_id: Dolor laboriosam.
     properties:
       group_id:
         description: group
-        example: Sit sed.
+        example: Hic est iure provident non consequatur.
         type: string
       policy_id:
         description: policy
-        example: Aut et voluptatum suscipit ea.
+        example: Dolor laboriosam.
         type: string
     title: ProgramPolicyGroupPayload
     type: object
   ProgramUpdatePayload:
     example:
       autosend: false
-      disabled: false
+      disabled: true
       name: Every midnight
       policy_groups:
-      - group_id: Sit sed.
-        policy_id: Aut et voluptatum suscipit ea.
-      - group_id: Sit sed.
-        policy_id: Aut et voluptatum suscipit ea.
-      - group_id: Sit sed.
-        policy_id: Aut et voluptatum suscipit ea.
+      - group_id: Hic est iure provident non consequatur.
+        policy_id: Dolor laboriosam.
+      - group_id: Hic est iure provident non consequatur.
+        policy_id: Dolor laboriosam.
+      - group_id: Hic est iure provident non consequatur.
+        policy_id: Dolor laboriosam.
     properties:
       autosend:
         description: Autosend
@@ -1706,7 +1753,7 @@ definitions:
         type: boolean
       disabled:
         description: Disabled
-        example: false
+        example: true
         type: boolean
       name:
         description: name
@@ -1715,12 +1762,12 @@ definitions:
       policy_groups:
         description: PolicyGroups
         example:
-        - group_id: Sit sed.
-          policy_id: Aut et voluptatum suscipit ea.
-        - group_id: Sit sed.
-          policy_id: Aut et voluptatum suscipit ea.
-        - group_id: Sit sed.
-          policy_id: Aut et voluptatum suscipit ea.
+        - group_id: Hic est iure provident non consequatur.
+          policy_id: Dolor laboriosam.
+        - group_id: Hic est iure provident non consequatur.
+          policy_id: Dolor laboriosam.
+        - group_id: Hic est iure provident non consequatur.
+          policy_id: Dolor laboriosam.
         items:
           $ref: '#/definitions/ProgramPolicyGroupPayload'
         type: array
@@ -1760,7 +1807,7 @@ definitions:
         - john.doe@vulcan.example.com
         - jane.doe@vulcan.example.com
         items:
-          example: Est iure provident non consequatur perferendis dolor.
+          example: Voluptatem ratione corrupti soluta vel.
           type: string
         type: array
     required:
@@ -1831,7 +1878,7 @@ definitions:
         - Hostname
         - Port
         items:
-          example: Est illo et corrupti rerum deleniti aut.
+          example: Natus esse neque aliquid.
           type: string
         type: array
       name:
@@ -1846,8 +1893,7 @@ definitions:
         items:
           additionalProperties: true
           example:
-            Porro placeat omnis perferendis maxime natus.: Neque aliquid molestias
-              velit quis laborum.
+            Quis laborum quas voluptatum sit.: Illum ipsum tempora nemo corrupti sed.
           type: object
         type: array
     title: 'Mediatype identifier: resource; view=default'
@@ -1859,8 +1905,8 @@ definitions:
       end_time: "2018-09-07T10:40:52Z"
       id: 23e7034f-8180-4895-8e7f-73f2f7d90631
       program:
-        autosend: false
-        disabled: true
+        autosend: true
+        disabled: false
         global: false
         id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
         name: Every midnight
@@ -1931,8 +1977,8 @@ definitions:
       end_time: "2018-09-07T10:40:52Z"
       id: 23e7034f-8180-4895-8e7f-73f2f7d90631
       program:
-        autosend: false
-        disabled: true
+        autosend: true
+        disabled: false
         global: false
         id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
         name: Every midnight
@@ -1958,8 +2004,35 @@ definitions:
       end_time: "2018-09-07T10:40:52Z"
       id: 23e7034f-8180-4895-8e7f-73f2f7d90631
       program:
-        autosend: false
-        disabled: true
+        autosend: true
+        disabled: false
+        global: false
+        id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
+        name: Every midnight
+        policy_groups:
+        - group:
+            assets_count: 1
+            description: All newly created assets are added to the Default group
+            id: f6360346-77a5-4f97-b919-331363b3af26
+            name: Default group
+            options: '{"timeout":60}'
+          policy:
+            id: af36818a-0f30-412c-9692-d37716075861
+            name: Sample Policy
+            settings_count: 12
+        schedule:
+          cron: 0 7 1 * *
+      progress: 1
+      requested_by: john.doe@vulcan.example.com
+      scheduled_time: "2018-09-07T10:40:52Z"
+      start_time: "2018-09-07T10:40:52Z"
+      status: FINISHED
+    - checks_count: 20
+      end_time: "2018-09-07T10:40:52Z"
+      id: 23e7034f-8180-4895-8e7f-73f2f7d90631
+      program:
+        autosend: true
+        disabled: false
         global: false
         id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
         name: Every midnight
@@ -2075,47 +2148,89 @@ definitions:
   Stats:
     description: Stats by severity (default view)
     example:
-      critical: 0.19639983058229388
-      high: 0.06491961493419728
-      informational: 0.14622255544569557
-      low: 0.18441607619283212
-      medium: 0.9474707029546127
+      critical: 0.6271422644500942
+      high: 0.8147084592281026
+      informational: 0.0942444272316253
+      low: 0.2903626580923911
+      medium: 0.12127770670881338
     properties:
       critical:
         description: Stats for critical vulnerabilities
-        example: 0.19639983058229388
+        example: 0.6271422644500942
         format: double
         type: number
       high:
         description: Stats for high vulnerabilities
-        example: 0.06491961493419728
+        example: 0.8147084592281026
         format: double
         type: number
       informational:
         description: Stats for informational vulnerabilities
-        example: 0.14622255544569557
+        example: 0.0942444272316253
         format: double
         type: number
       low:
         description: Stats for low vulnerabilities
-        example: 0.18441607619283212
+        example: 0.2903626580923911
         format: double
         type: number
       medium:
         description: Stats for medium vulnerabilities
-        example: 0.9474707029546127
+        example: 0.12127770670881338
         format: double
         type: number
     title: 'Mediatype identifier: stats; view=default'
     type: object
+  Statsaverages:
+    description: Stats by different averages (default view)
+    example:
+      mean: 0.5763289526227959
+      percentile_10: 0.8906963890969017
+      percentile_25: 0.362880998872939
+      percentile_50: 0.9206384098045786
+      percentile_75: 0.3939227905544213
+      percentile_90: 0.11867421993190391
+    properties:
+      mean:
+        description: Mean of the stats
+        example: 0.5763289526227959
+        format: double
+        type: number
+      percentile_10:
+        description: Percentile 10 of the stats
+        example: 0.8906963890969017
+        format: double
+        type: number
+      percentile_25:
+        description: Percentile 25 of the stats
+        example: 0.362880998872939
+        format: double
+        type: number
+      percentile_50:
+        description: Percentile 50 or median of the stats
+        example: 0.9206384098045786
+        format: double
+        type: number
+      percentile_75:
+        description: Percentile 75 or third quartile of the stats
+        example: 0.3939227905544213
+        format: double
+        type: number
+      percentile_90:
+        description: Percentile 90 of the stats
+        example: 0.11867421993190391
+        format: double
+        type: number
+    title: 'Mediatype identifier: statsaverages; view=default'
+    type: object
   Statscoverage:
     description: 'Asset Coverage: discovered vs. confirmed (default view)'
     example:
-      coverage: 0.829278688095066
+      coverage: 0.4952103921512922
     properties:
       coverage:
         description: Percentage of assets confirmed respect to discovered
-        example: 0.829278688095066
+        example: 0.4952103921512922
         format: double
         type: number
     title: 'Mediatype identifier: statscoverage; view=default'
@@ -2124,11 +2239,11 @@ definitions:
     description: Fixed issues stats (default view)
     example:
       fixed_issues:
-        critical: 0.19639983058229388
-        high: 0.06491961493419728
-        informational: 0.14622255544569557
-        low: 0.18441607619283212
-        medium: 0.9474707029546127
+        critical: 0.6271422644500942
+        high: 0.8147084592281026
+        informational: 0.0942444272316253
+        low: 0.2903626580923911
+        medium: 0.12127770670881338
     properties:
       fixed_issues:
         $ref: '#/definitions/Stats'
@@ -2138,11 +2253,11 @@ definitions:
     description: Open issues stats (default view)
     example:
       open_issues:
-        critical: 0.19639983058229388
-        high: 0.06491961493419728
-        informational: 0.14622255544569557
-        low: 0.18441607619283212
-        medium: 0.9474707029546127
+        critical: 0.6271422644500942
+        high: 0.8147084592281026
+        informational: 0.0942444272316253
+        low: 0.2903626580923911
+        medium: 0.12127770670881338
     properties:
       open_issues:
         $ref: '#/definitions/Stats'
@@ -2151,41 +2266,41 @@ definitions:
   Statstotal:
     description: Stats by severity (default view)
     example:
-      critical: 0.4834744722342159
-      high: 0.5205844348643661
-      informational: 0.8413557035664904
-      low: 0.21762696584450403
-      medium: 0.8619749137392434
-      total: 0.5958828347687471
+      critical: 0.9729347716970894
+      high: 0.3291856414183523
+      informational: 0.8243581388518908
+      low: 0.3602830379559806
+      medium: 0.6517825863008089
+      total: 0.4039820739887437
     properties:
       critical:
         description: Stats for critical vulnerabilities
-        example: 0.4834744722342159
+        example: 0.9729347716970894
         format: double
         type: number
       high:
         description: Stats for high vulnerabilities
-        example: 0.5205844348643661
+        example: 0.3291856414183523
         format: double
         type: number
       informational:
         description: Stats for informational vulnerabilities
-        example: 0.8413557035664904
+        example: 0.8243581388518908
         format: double
         type: number
       low:
         description: Stats for low vulnerabilities
-        example: 0.21762696584450403
+        example: 0.3602830379559806
         format: double
         type: number
       medium:
         description: Stats for medium vulnerabilities
-        example: 0.8619749137392434
+        example: 0.6517825863008089
         format: double
         type: number
       total:
         description: Stats for all vulnerabilities
-        example: 0.5958828347687471
+        example: 0.4039820739887437
         format: double
         type: number
     title: 'Mediatype identifier: statstotal; view=default'
@@ -2211,7 +2326,7 @@ definitions:
         example:
         - team:vulcan
         items:
-          example: Ratione perferendis.
+          example: Placeat omnis perferendis.
           type: string
         type: array
     title: 'Mediatype identifier: target; view=default'
@@ -2360,6 +2475,16 @@ definitions:
     description: TeammemberCollection is the media type for an array of Teammember
       (default view)
     example:
+    - role: owner
+      user:
+        active: true
+        admin: true
+        email: john.doe@vulcan.example.com
+        firstname: John
+        id: 967d9966-b561-4233-bd6f-cac603fd8320
+        last_login: "2018-09-07T10:40:52Z"
+        lastname: Doe
+        observer: true
     - role: owner
       user:
         active: true
@@ -2568,9 +2693,43 @@ paths:
       summary: profile user
       tags:
       - user
+  /stats/exposure:
+    get:
+      description: Get global exposure statistics.
+      operationId: global-stats#exposure
+      parameters:
+      - description: Specific date to get statistics at
+        in: query
+        name: atDate
+        required: false
+        type: string
+      - description: Maximum issues score filter
+        in: query
+        name: maxScore
+        required: false
+        type: number
+      - description: Minimum issues score filter
+        in: query
+        name: minScore
+        required: false
+        type: number
+      produces:
+      - exposure
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Exposure'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: exposure global-stats
+      tags:
+      - global-stats
   /stats/mttr:
     get:
-      description: Get global MTR statistics.
+      description: Get global MTTR statistics.
       operationId: global-stats#mttr
       parameters:
       - description: Maximum date to filter statistics by
@@ -2720,6 +2879,11 @@ paths:
       description: List all assets from a team.
       operationId: assets#list
       parameters:
+      - description: Identifier
+        in: query
+        name: identifier
+        required: false
+        type: string
       - description: Team ID
         in: path
         name: team_id
@@ -2741,13 +2905,13 @@ paths:
       - assets
     post:
       description: "Creates assets in bulk mode.\n\t\t\tThis operation accepts an
-        array of assets and an optional array of group identifiers, and returns an
-        array of successfully created assets.\n\t\t\tIf no groups are specified, assets
-        will be added to the team's Default group.\n\t\t\tIf one of the specified
-        assets already exists for the team but is currently not associated with the
-        requested groups, the association is created.\n\t\t\tIf for any reason, the
-        creation of an asset fails, an error message will be returned referencing
-        the failed asset and the entire operation will be rolled back.\n\t\t\t---\n\t\t\tValid
+        array of assets, an optional array of group identifiers, an optional map of
+        annotations, and returns an array of successfully created assets.\n\t\t\tIf
+        no groups are specified, assets will be added to the team's Default group.\n\t\t\tIf
+        one of the specified assets already exists for the team but is currently not
+        associated with the requested groups, the association is created.\n\t\t\tIf
+        for any reason, the creation of an asset fails, an error message will be returned
+        referencing the failed asset and the entire operation will be rolled back.\n\t\t\t---\n\t\t\tValid
         asset types:\n\t\t\t- AWSAccount\n\t\t\t- DomainName\n\t\t\t- Hostname\n\t\t\t-
         IP\n\t\t\t- IPRange\n\t\t\t- DockerImage\n\t\t\t- WebAddress\n\t\t\t- GitRepository\n\t\t\t---\n\t\t\tIf
         the asset type is informed, then Vulcan will use that value to create the
@@ -2868,6 +3032,163 @@ paths:
       summary: update assets
       tags:
       - assets
+  /teams/{team_id}/assets/{asset_id}/annotations:
+    delete:
+      description: Delete one or more annotation for a given asset.
+      operationId: asset-annotations#delete
+      parameters:
+      - description: Asset ID
+        in: path
+        name: asset_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/AssetAnnotationDeleteRequest'
+      responses:
+        "204":
+          description: No Content
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: delete asset-annotations
+      tags:
+      - asset-annotations
+    get:
+      description: List annotations of a given asset.
+      operationId: asset-annotations#list
+      parameters:
+      - description: Asset ID
+        in: path
+        name: asset_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      produces:
+      - assetannotations_response
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Assetannotations_response'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: list asset-annotations
+      tags:
+      - asset-annotations
+    patch:
+      description: Update one or more annotation for a given asset.
+      operationId: asset-annotations#update
+      parameters:
+      - description: Asset ID
+        in: path
+        name: asset_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/AssetAnnotationRequest'
+      produces:
+      - assetannotations_response
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Assetannotations_response'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: update asset-annotations
+      tags:
+      - asset-annotations
+    post:
+      description: Create one or more annotation for a given asset.
+      operationId: asset-annotations#create
+      parameters:
+      - description: Asset ID
+        in: path
+        name: asset_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/AssetAnnotationRequest'
+      produces:
+      - assetannotations_response
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/Assetannotations_response'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: create asset-annotations
+      tags:
+      - asset-annotations
+    put:
+      description: Override all annotations with a new list
+      operationId: asset-annotations#put
+      parameters:
+      - description: Asset ID
+        in: path
+        name: asset_id
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/AssetAnnotationRequest'
+      produces:
+      - assetannotations_response
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Assetannotations_response'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: put asset-annotations
+      tags:
+      - asset-annotations
   /teams/{team_id}/assets/multistatus:
     post:
       description: "Creates assets in bulk mode (MultiStatus).\n\t\t\tThis operation
@@ -2930,6 +3251,21 @@ paths:
         name: identifier
         required: false
         type: string
+      - description: A comma separated list of identifiers
+        in: query
+        name: identifiers
+        required: false
+        type: string
+      - description: Issue ID (Vulnerability DB)
+        in: query
+        name: issueID
+        required: false
+        type: string
+      - description: A comma separated list of associated labels
+        in: query
+        name: labels
+        required: false
+        type: string
       - description: Allows to get findings list until a specific date
         in: query
         name: maxDate
@@ -2969,6 +3305,11 @@ paths:
       - description: Findings Status
         in: query
         name: status
+        required: false
+        type: string
+      - description: Target ID (Vulnerability DB)
+        in: query
+        name: targetID
         required: false
         type: string
       - description: Team ID
@@ -3089,6 +3430,16 @@ paths:
         name: atDate
         required: false
         type: string
+      - description: A comma separated list of identifiers
+        in: query
+        name: identifiers
+        required: false
+        type: string
+      - description: A comma separated list of associated labels
+        in: query
+        name: labels
+        required: false
+        type: string
       - description: Allows to get findings list until a specific date
         in: query
         name: maxDate
@@ -3118,6 +3469,11 @@ paths:
       - description: Findings Status
         in: query
         name: status
+        required: false
+        type: string
+      - description: Target ID (Vulnerability DB)
+        in: query
+        name: targetID
         required: false
         type: string
       - description: Team ID
@@ -3150,10 +3506,20 @@ paths:
         name: atDate
         required: false
         type: string
+      - description: A comma separated list of identifiers
+        in: query
+        name: identifiers
+        required: false
+        type: string
       - description: Issue ID
         in: path
         name: issue_id
         required: true
+        type: string
+      - description: A comma separated list of associated labels
+        in: query
+        name: labels
+        required: false
         type: string
       - description: Allows to get findings list until a specific date
         in: query
@@ -3215,6 +3581,56 @@ paths:
       summary: Find findings from a Issue findings
       tags:
       - findings
+  /teams/{team_id}/findings/labels:
+    get:
+      description: List all findings labels.
+      operationId: findings#List findings labels
+      parameters:
+      - description: Allows to get findings list at a specific date (incompatible
+          and preferential to min and max date params)
+        in: query
+        name: atDate
+        required: false
+        type: string
+      - description: A comma separated list of identifiers
+        in: query
+        name: identifiers
+        required: false
+        type: string
+      - description: Allows to get findings list until a specific date
+        in: query
+        name: maxDate
+        required: false
+        type: string
+      - description: Allows to get findings list from a specific date
+        in: query
+        name: minDate
+        required: false
+        type: string
+      - description: Findings status
+        in: query
+        name: status
+        required: false
+        type: string
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      produces:
+      - findings_labels
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Findings_labels'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: List findings labels findings
+      tags:
+      - findings
   /teams/{team_id}/findings/targets:
     get:
       description: List number of findings and max score per target.
@@ -3223,6 +3639,21 @@ paths:
       - description: Allows to get targets list at a specific date
         in: query
         name: atDate
+        required: false
+        type: string
+      - description: A comma separated list of identifiers
+        in: query
+        name: identifiers
+        required: false
+        type: string
+      - description: Issue ID (Vulnerability DB)
+        in: query
+        name: issueID
+        required: false
+        type: string
+      - description: A comma separated list of associated labels
+        in: query
+        name: labels
         required: false
         type: string
       - description: Allows to get findings list until a specific date
@@ -3284,6 +3715,16 @@ paths:
           and preferential to min and max date params)
         in: query
         name: atDate
+        required: false
+        type: string
+      - description: A comma separated list of identifiers
+        in: query
+        name: identifiers
+        required: false
+        type: string
+      - description: A comma separated list of associated labels
+        in: query
+        name: labels
         required: false
         type: string
       - description: Allows to get findings list until a specific date
@@ -4523,6 +4964,45 @@ paths:
       summary: coverage stats
       tags:
       - stats
+  /teams/{team_id}/stats/exposure:
+    get:
+      description: Get exposure statistics for a team.
+      operationId: stats#exposure
+      parameters:
+      - description: Specific date to get statistics at
+        in: query
+        name: atDate
+        required: false
+        type: string
+      - description: Maximum issues score filter
+        in: query
+        name: maxScore
+        required: false
+        type: number
+      - description: Minimum issues score filter
+        in: query
+        name: minScore
+        required: false
+        type: number
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      produces:
+      - exposure
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Exposure'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: exposure stats
+      tags:
+      - stats
   /teams/{team_id}/stats/fixed:
     get:
       description: Get fixed issues statistics for a team.
@@ -4532,6 +5012,16 @@ paths:
           to min and max date params)
         in: query
         name: atDate
+        required: false
+        type: string
+      - description: A comma separated list of asset identifiers
+        in: query
+        name: identifiers
+        required: false
+        type: string
+      - description: A comma separated list of associated labels
+        in: query
+        name: labels
         required: false
         type: string
       - description: Maximum date to filter statistics by
@@ -4606,6 +5096,16 @@ paths:
           to min and max date params)
         in: query
         name: atDate
+        required: false
+        type: string
+      - description: A comma separated list of asset identifiers
+        in: query
+        name: identifiers
+        required: false
+        type: string
+      - description: A comma separated list of associated labels
+        in: query
+        name: labels
         required: false
         type: string
       - description: Maximum date to filter statistics by

@@ -49,6 +49,12 @@ const (
 	UpdateAsset            = "UpdateAsset"
 	DeleteAsset            = "DeleteAsset"
 
+	ListAssetAnnotations   = "ListAssetAnnotations"
+	CreateAssetAnnotations = "CreateAssetAnnotations"
+	UpdateAssetAnnotations = "UpdateAssetAnnotations"
+	PutAssetAnnotations    = "PutAssetAnnotations"
+	DeleteAssetAnnotations = "DeleteAssetAnnotations"
+
 	CreateGroup = "CreateGroup"
 	ListGroups  = "ListGroups"
 	UpdateGroup = "UpdateGroup"
@@ -102,10 +108,13 @@ const (
 	FindFinding            = "FindFinding"
 	CreateFindingOverwrite = "CreateFindingOverwrite"
 	ListFindingOverwrites  = "ListFindingOverwrites"
+	ListFindingsLabels     = "ListFindingsLabels"
 	StatsMTTR              = "StatsMTTR"
+	StatsExposure          = "StatsExposure"
 	StatsOpen              = "StatsOpen"
 	StatsFixed             = "StatsFixed"
 	GlobalStatsMTTR        = "GlobalStatsMTTR"
+	GlobalStatsExposure    = "GlobalStatsExposure"
 )
 
 // Endpoints contains all available endpoints for this api
@@ -147,6 +156,12 @@ func MakeEndpoints(s api.VulcanitoService, logger log.Logger) Endpoints {
 	endpoints[FindAsset] = makeFindAssetEndpoint(s, logger)
 	endpoints[UpdateAsset] = makeUpdateAssetEndpoint(s, logger)
 	endpoints[DeleteAsset] = makeDeleteAssetEndpoint(s, logger)
+
+	endpoints[ListAssetAnnotations] = makeListAssetAnnotationsEndpoint(s, logger)
+	endpoints[CreateAssetAnnotations] = makeCreateAssetAnnotationsEndpoint(s, logger)
+	endpoints[UpdateAssetAnnotations] = makeUpdateAssetAnnotationsEndpoint(s, logger)
+	endpoints[PutAssetAnnotations] = makePutAssetAnnotationsEndpoint(s, logger)
+	endpoints[DeleteAssetAnnotations] = makeDeleteAssetAnnotationsEndpoint(s, logger)
 
 	endpoints[CreateGroup] = makeCreateGroupEndpoint(s, logger)
 	endpoints[ListGroups] = makeListGroupsEndpoint(s, logger)
@@ -201,10 +216,13 @@ func MakeEndpoints(s api.VulcanitoService, logger log.Logger) Endpoints {
 	endpoints[FindFinding] = makeFindFindingEndpoint(s, logger)
 	endpoints[CreateFindingOverwrite] = makeCreateFindingOverwriteEndpoint(s, logger)
 	endpoints[ListFindingOverwrites] = makeListFindingOverwritesEndpoint(s, logger)
+	endpoints[ListFindingsLabels] = makeListFindingsLabelsEndpoint(s, logger)
 	endpoints[StatsMTTR] = makeStatsMTTREndpoint(s, logger)
+	endpoints[StatsExposure] = makeStatsExposureEndpoint(s, logger)
 	endpoints[StatsOpen] = makeStatsOpenEndpoint(s, logger)
 	endpoints[StatsFixed] = makeStatsFixedEndpoint(s, logger)
 	endpoints[GlobalStatsMTTR] = makeGlobalStatsMTTREndpoint(s, logger)
+	endpoints[GlobalStatsExposure] = makeGlobalStatsExposureEndpoint(s, logger)
 
 	return endpoints
 }

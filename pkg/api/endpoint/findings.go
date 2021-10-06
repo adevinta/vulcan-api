@@ -15,46 +15,54 @@ import (
 )
 
 type FindingsRequest struct {
-	ID         string  `json:"id" urlvar:"finding_id"`
-	TeamID     string  `json:"team_id" urlvar:"team_id"`
-	Status     string  `urlquery:"status"`
-	MinScore   float64 `urlquery:"minScore"`
-	MaxScore   float64 `urlquery:"maxScore"`
-	AtDate     string  `urlquery:"atDate"`
-	MinDate    string  `urlquery:"minDate"`
-	MaxDate    string  `urlquery:"maxDate"`
-	SortBy     string  `urlquery:"sortBy"`
-	Page       int     `urlquery:"page"`
-	Size       int     `urlquery:"size"`
-	Identifier string  `urlquery:"identifier"`
+	ID          string  `json:"id" urlvar:"finding_id"`
+	TeamID      string  `json:"team_id" urlvar:"team_id"`
+	Status      string  `urlquery:"status"`
+	MinScore    float64 `urlquery:"minScore"`
+	MaxScore    float64 `urlquery:"maxScore"`
+	AtDate      string  `urlquery:"atDate"`
+	MinDate     string  `urlquery:"minDate"`
+	MaxDate     string  `urlquery:"maxDate"`
+	SortBy      string  `urlquery:"sortBy"`
+	Page        int     `urlquery:"page"`
+	Size        int     `urlquery:"size"`
+	Identifier  string  `urlquery:"identifier"`
+	IssueID     string  `urlquery:"issueID"`
+	TargetID    string  `urlquery:"targetID"`
+	Identifiers string  `urlquery:"identifiers"`
+	Labels      string  `urlquery:"labels"`
 }
 
 type FindingsByIssueRequest struct {
-	TeamID   string  `json:"team_id" urlvar:"team_id"`
-	Status   string  `urlquery:"status"`
-	MinScore float64 `urlquery:"minScore"`
-	MaxScore float64 `urlquery:"maxScore"`
-	AtDate   string  `urlquery:"atDate"`
-	MinDate  string  `urlquery:"minDate"`
-	MaxDate  string  `urlquery:"maxDate"`
-	SortBy   string  `urlquery:"sortBy"`
-	Page     int     `urlquery:"page"`
-	Size     int     `urlquery:"size"`
-	IssueID  string  `json:"issue_id" urlvar:"issue_id"`
+	TeamID      string  `json:"team_id" urlvar:"team_id"`
+	Status      string  `urlquery:"status"`
+	MinScore    float64 `urlquery:"minScore"`
+	MaxScore    float64 `urlquery:"maxScore"`
+	AtDate      string  `urlquery:"atDate"`
+	MinDate     string  `urlquery:"minDate"`
+	MaxDate     string  `urlquery:"maxDate"`
+	SortBy      string  `urlquery:"sortBy"`
+	Page        int     `urlquery:"page"`
+	Size        int     `urlquery:"size"`
+	IssueID     string  `json:"issue_id" urlvar:"issue_id"`
+	Identifiers string  `urlquery:"identifiers"`
+	Labels      string  `urlquery:"labels"`
 }
 
 type FindingsByTargetRequest struct {
-	TeamID   string  `json:"team_id" urlvar:"team_id"`
-	Status   string  `urlquery:"status"`
-	MinScore float64 `urlquery:"minScore"`
-	MaxScore float64 `urlquery:"maxScore"`
-	AtDate   string  `urlquery:"atDate"`
-	MinDate  string  `urlquery:"minDate"`
-	MaxDate  string  `urlquery:"maxDate"`
-	SortBy   string  `urlquery:"sortBy"`
-	Page     int     `urlquery:"page"`
-	Size     int     `urlquery:"size"`
-	TargetID string  `json:"target_id" urlvar:"target_id"`
+	TeamID      string  `json:"team_id" urlvar:"team_id"`
+	Status      string  `urlquery:"status"`
+	MinScore    float64 `urlquery:"minScore"`
+	MaxScore    float64 `urlquery:"maxScore"`
+	AtDate      string  `urlquery:"atDate"`
+	MinDate     string  `urlquery:"minDate"`
+	MaxDate     string  `urlquery:"maxDate"`
+	SortBy      string  `urlquery:"sortBy"`
+	Page        int     `urlquery:"page"`
+	Size        int     `urlquery:"size"`
+	TargetID    string  `json:"target_id" urlvar:"target_id"`
+	Identifiers string  `urlquery:"identifiers"`
+	Labels      string  `urlquery:"labels"`
 }
 
 func makeListFindingsEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
@@ -300,6 +308,35 @@ func makeListFindingOverwritesEndpoint(s api.VulcanitoService, logger kitlog.Log
 	}
 }
 
+func makeListFindingsLabelsEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		r, ok := request.(*FindingsRequest)
+		if !ok {
+			return nil, errors.Assertion("Type assertion failed")
+		}
+
+		if !isValidListFindingsRequest(r) {
+			return nil, errors.Validation("Invalid date format")
+		}
+
+		team, err := s.FindTeam(ctx, r.TeamID)
+		if err != nil {
+			return nil, err
+		}
+		if team.Tag == "" {
+			return nil, errors.Validation("no tag defined for the team")
+		}
+
+		params := buildFindingsParams(team.Tag, r)
+
+		response, err = s.ListFindingsLabels(ctx, params)
+		if err != nil {
+			return nil, err
+		}
+		return Ok{response}, nil
+	}
+}
+
 func isValidListFindingsRequest(r *FindingsRequest) bool {
 	return (r.MinDate == "" || isValidDate(r.MinDate)) &&
 		(r.MaxDate == "" || isValidDate(r.MaxDate)) &&
@@ -325,34 +362,42 @@ func buildFindingsParams(tag string, r *FindingsRequest) api.FindingsParams {
 		SortBy:          r.SortBy,
 		Identifier:      r.Identifier,
 		IdentifierMatch: true,
+		IssueID:         r.IssueID,
+		TargetID:        r.TargetID,
+		Identifiers:     r.Identifiers,
+		Labels:          r.Labels,
 	}
 }
 
 func buildFindingsByIssueParams(tag string, r *FindingsByIssueRequest) api.FindingsParams {
 	return api.FindingsParams{
-		Tag:      tag,
-		Status:   r.Status,
-		MinScore: r.MinScore,
-		MaxScore: r.MaxScore,
-		AtDate:   r.AtDate,
-		MinDate:  r.MinDate,
-		MaxDate:  r.MaxDate,
-		SortBy:   r.SortBy,
-		IssueID:  r.IssueID,
+		Tag:         tag,
+		Status:      r.Status,
+		MinScore:    r.MinScore,
+		MaxScore:    r.MaxScore,
+		AtDate:      r.AtDate,
+		MinDate:     r.MinDate,
+		MaxDate:     r.MaxDate,
+		SortBy:      r.SortBy,
+		IssueID:     r.IssueID,
+		Identifiers: r.Identifiers,
+		Labels:      r.Labels,
 	}
 }
 
 func buildFindingsByTargetParams(tag string, r *FindingsByTargetRequest) api.FindingsParams {
 	return api.FindingsParams{
-		Tag:      tag,
-		Status:   r.Status,
-		MinScore: r.MinScore,
-		MaxScore: r.MaxScore,
-		AtDate:   r.AtDate,
-		MinDate:  r.MinDate,
-		MaxDate:  r.MaxDate,
-		SortBy:   r.SortBy,
-		TargetID: r.TargetID,
+		Tag:         tag,
+		Status:      r.Status,
+		MinScore:    r.MinScore,
+		MaxScore:    r.MaxScore,
+		AtDate:      r.AtDate,
+		MinDate:     r.MinDate,
+		MaxDate:     r.MaxDate,
+		SortBy:      r.SortBy,
+		TargetID:    r.TargetID,
+		Identifiers: r.Identifiers,
+		Labels:      r.Labels,
 	}
 }
 

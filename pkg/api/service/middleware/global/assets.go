@@ -11,7 +11,7 @@ import (
 	"github.com/adevinta/vulcan-api/pkg/api"
 )
 
-func (e *globalEntities) ListAssets(ctx context.Context, teamID string) ([]*api.Asset, error) {
+func (e *globalEntities) ListAssets(ctx context.Context, teamID string, asset api.Asset) ([]*api.Asset, error) {
 	// Map to store the relationship between asset ID and a slice of Global Group IDs.
 	// ex: {"bcebfb2e-efad-4ffb-93a0-cae231fb473d":["default-global","sensitive-global"]}
 	assetGlobalGroups := make(map[string][]string)
@@ -43,7 +43,7 @@ func (e *globalEntities) ListAssets(ctx context.Context, teamID string) ([]*api.
 	}
 
 	// Retrieve the actual list of assets for the current team.
-	assets, err := e.VulcanitoService.ListAssets(ctx, teamID)
+	assets, err := e.VulcanitoService.ListAssets(ctx, teamID, asset)
 	if err != nil {
 		return nil, errors.Default(err)
 	}

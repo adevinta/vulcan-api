@@ -475,18 +475,19 @@ func addAuthorizationMiddleware(endpoints endpoint.Endpoints, db api.VulcanitoSt
 	authMiddleware := middleware.NewAuthorizationMiddleware(authSrv, logger)
 
 	exceptions := map[string]bool{
-		endpoint.Healthcheck:      true,
-		endpoint.CreateUser:       true,
-		endpoint.UpdateUser:       true,
-		endpoint.DeleteUser:       true,
-		endpoint.FindUser:         true,
-		endpoint.FindProfile:      true,
-		endpoint.ListTeams:        true,
-		endpoint.CreateTeam:       true,
-		endpoint.ListUsers:        true,
-		endpoint.GenerateAPIToken: true,
-		endpoint.FindTeamsByUser:  true,
-		endpoint.GlobalStatsMTTR:  true,
+		endpoint.Healthcheck:         true,
+		endpoint.CreateUser:          true,
+		endpoint.UpdateUser:          true,
+		endpoint.DeleteUser:          true,
+		endpoint.FindUser:            true,
+		endpoint.FindProfile:         true,
+		endpoint.ListTeams:           true,
+		endpoint.CreateTeam:          true,
+		endpoint.ListUsers:           true,
+		endpoint.GenerateAPIToken:    true,
+		endpoint.FindTeamsByUser:     true,
+		endpoint.GlobalStatsMTTR:     true,
+		endpoint.GlobalStatsExposure: true,
 	}
 
 	for name := range endpoints {
@@ -533,6 +534,12 @@ func addWhitelistingMiddleware(endpoints endpoint.Endpoints, logger log.Logger) 
 		endpoint.FindAsset:              true,
 		endpoint.UpdateAsset:            true,
 		endpoint.DeleteAsset:            true,
+		// Asset Annotations management.
+		endpoint.ListAssetAnnotations:   true,
+		endpoint.CreateAssetAnnotations: true,
+		endpoint.UpdateAssetAnnotations: true,
+		endpoint.PutAssetAnnotations:    true,
+		endpoint.DeleteAssetAnnotations: true,
 		// Group management.
 		endpoint.CreateGroup:    true,
 		endpoint.ListGroups:     true,
@@ -558,10 +565,12 @@ func addWhitelistingMiddleware(endpoints endpoint.Endpoints, logger log.Logger) 
 		endpoint.CreateFindingOverwrite: true,
 		endpoint.ListFindingOverwrites:  true,
 		// Metrics access.
-		endpoint.StatsMTTR:       true,
-		endpoint.StatsOpen:       true,
-		endpoint.StatsFixed:      true,
-		endpoint.GlobalStatsMTTR: true,
+		endpoint.StatsMTTR:           true,
+		endpoint.StatsExposure:       true,
+		endpoint.StatsOpen:           true,
+		endpoint.StatsFixed:          true,
+		endpoint.GlobalStatsMTTR:     true,
+		endpoint.GlobalStatsExposure: true,
 	}
 
 	for name := range endpoints {

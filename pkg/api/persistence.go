@@ -41,15 +41,21 @@ type VulcanitoStore interface {
 	UpdateRecipients(teamID string, emails []string) error
 	ListRecipients(teamID string) ([]*Recipient, error)
 
-	ListAssets(teamID string) ([]*Asset, error)
+	ListAssets(teamID string, asset Asset) ([]*Asset, error)
 	FindAsset(teamID, assetID string) (*Asset, error)
 	CreateAsset(asset Asset, groups []Group) (*Asset, error)
-	CreateAssets(assets []Asset, groups []Group) ([]Asset, error)
+	CreateAssets(assets []Asset, groups []Group, annotations []*AssetAnnotation) ([]Asset, error)
 	DeleteAsset(asset Asset) error
 	DeleteAllAssets(teamID string) error
 	UpdateAsset(asset Asset) (*Asset, error)
 
 	GetAssetType(assetTypeName string) (*AssetType, error)
+
+	ListAssetAnnotations(teamID string, assetID string) ([]*AssetAnnotation, error)
+	CreateAssetAnnotations(teamID string, assetID string, annotations []*AssetAnnotation) ([]*AssetAnnotation, error)
+	UpdateAssetAnnotations(teamID string, assetID string, annotations []*AssetAnnotation) ([]*AssetAnnotation, error)
+	PutAssetAnnotations(teamID string, assetID string, annotations []*AssetAnnotation) ([]*AssetAnnotation, error)
+	DeleteAssetAnnotations(teamID string, assetID string, annotations []*AssetAnnotation) error
 
 	CreateGroup(group Group) (*Group, error)
 	ListGroups(teamID, groupName string) ([]*Group, error)
