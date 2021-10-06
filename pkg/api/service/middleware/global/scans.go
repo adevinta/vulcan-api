@@ -12,9 +12,9 @@ import (
 	"strings"
 
 	"github.com/adevinta/errors"
-	metrics "github.com/adevinta/vulcan-metrics-client"
 	"github.com/adevinta/vulcan-api/pkg/api"
 	"github.com/adevinta/vulcan-api/pkg/scanengine"
+	metrics "github.com/adevinta/vulcan-metrics-client"
 	scanengineApi "github.com/adevinta/vulcan-scan-engine/pkg/api"
 	scanengineData "github.com/adevinta/vulcan-scan-engine/pkg/api/endpoint"
 )
@@ -178,6 +178,7 @@ func (e *globalEntities) ListScans(ctx context.Context, teamID string, programID
 		return nil, err
 	}
 	for _, scan := range response.Scans {
+		scan := scan
 		s := e.buildScanWithProgram(&scan, program)
 		scans = append(scans, s)
 	}
