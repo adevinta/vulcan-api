@@ -564,6 +564,7 @@ func addWhitelistingMiddleware(endpoints endpoint.Endpoints, logger log.Logger) 
 		endpoint.FindFinding:            true,
 		endpoint.CreateFindingOverwrite: true,
 		endpoint.ListFindingOverwrites:  true,
+		endpoint.ListFindingsLabels:     true,
 		// Metrics access.
 		endpoint.StatsMTTR:           true,
 		endpoint.StatsExposure:       true,
