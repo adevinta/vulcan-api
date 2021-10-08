@@ -32,43 +32,6 @@ type (
 		PrettyPrint bool
 	}
 
-	// CreateTeamsCommand is the command line data structure for the create action of teams
-	CreateTeamsCommand struct {
-		Payload     string
-		ContentType string
-		PrettyPrint bool
-	}
-
-	// DeleteTeamsCommand is the command line data structure for the delete action of teams
-	DeleteTeamsCommand struct {
-		// Team ID
-		TeamID      string
-		PrettyPrint bool
-	}
-
-	// ListTeamsCommand is the command line data structure for the list action of teams
-	ListTeamsCommand struct {
-		// Team tag
-		Tag         string
-		PrettyPrint bool
-	}
-
-	// ShowTeamsCommand is the command line data structure for the show action of teams
-	ShowTeamsCommand struct {
-		// Team ID
-		TeamID      string
-		PrettyPrint bool
-	}
-
-	// UpdateTeamsCommand is the command line data structure for the update action of teams
-	UpdateTeamsCommand struct {
-		Payload     string
-		ContentType string
-		// team ID
-		TeamID      string
-		PrettyPrint bool
-	}
-
 	// CreateAssetsCommand is the command line data structure for the create action of assets
 	CreateAssetsCommand struct {
 		Payload     string
@@ -471,6 +434,43 @@ type (
 
 	// ShowHealthcheckCommand is the command line data structure for the show action of healthcheck
 	ShowHealthcheckCommand struct {
+		PrettyPrint bool
+	}
+
+	// CreateTeamsCommand is the command line data structure for the create action of teams
+	CreateTeamsCommand struct {
+		Payload     string
+		ContentType string
+		PrettyPrint bool
+	}
+
+	// DeleteTeamsCommand is the command line data structure for the delete action of teams
+	DeleteTeamsCommand struct {
+		// Team ID
+		TeamID      string
+		PrettyPrint bool
+	}
+
+	// ListTeamsCommand is the command line data structure for the list action of teams
+	ListTeamsCommand struct {
+		// Team tag
+		Tag         string
+		PrettyPrint bool
+	}
+
+	// ShowTeamsCommand is the command line data structure for the show action of teams
+	ShowTeamsCommand struct {
+		// Team ID
+		TeamID      string
+		PrettyPrint bool
+	}
+
+	// UpdateTeamsCommand is the command line data structure for the update action of teams
+	UpdateTeamsCommand struct {
+		Payload     string
+		ContentType string
+		// team ID
+		TeamID      string
 		PrettyPrint bool
 	}
 
@@ -2261,41 +2261,15 @@ func boolArray(ins []string) ([]bool, error) {
 	return vals, nil
 }
 
-// Run makes the HTTP request corresponding to the CreateAPITokenCommand command.
-func (cmd *CreateAPITokenCommand) Run(c *client.Client, args []string) error {
+// Run makes the HTTP request corresponding to the CreateAssetGroupCommand command.
+func (cmd *CreateAssetGroupCommand) Run(c *client.Client, args []string) error {
 	var path string
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		path = fmt.Sprintf("/api/v1/users/%v/token", url.QueryEscape(cmd.UserID))
+		path = fmt.Sprintf("/api/v1/teams/%v/groups/%v/assets", url.QueryEscape(cmd.TeamID), url.QueryEscape(cmd.GroupID))
 	}
-	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.CreateAPIToken(ctx, path)
-	if err != nil {
-		goa.LogError(ctx, "failed", "err", err)
-		return err
-	}
-
-	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
-	return nil
-}
-
-// RegisterFlags registers the command flags with the command line.
-func (cmd *CreateAPITokenCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
-	var userID string
-	cc.Flags().StringVar(&cmd.UserID, "user_id", userID, `User ID`)
-}
-
-// Run makes the HTTP request corresponding to the CreateTeamsCommand command.
-func (cmd *CreateTeamsCommand) Run(c *client.Client, args []string) error {
-	var path string
-	if len(args) > 0 {
-		path = args[0]
-	} else {
-		path = "/api/v1/teams"
-	}
-	var payload client.TeamPayload
+	var payload client.AssetGroupPayload
 	if cmd.Payload != "" {
 		err := json.Unmarshal([]byte(cmd.Payload), &payload)
 		if err != nil {
@@ -2304,7 +2278,7 @@ func (cmd *CreateTeamsCommand) Run(c *client.Client, args []string) error {
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.CreateTeams(ctx, path, &payload)
+	resp, err := c.CreateAssetGroup(ctx, path, &payload)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
 		return err
@@ -2315,48 +2289,26 @@ func (cmd *CreateTeamsCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *CreateTeamsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+func (cmd *CreateAssetGroupCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request body encoded in JSON")
 	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
-}
-
-// Run makes the HTTP request corresponding to the DeleteTeamsCommand command.
-func (cmd *DeleteTeamsCommand) Run(c *client.Client, args []string) error {
-	var path string
-	if len(args) > 0 {
-		path = args[0]
-	} else {
-		path = fmt.Sprintf("/api/v1/teams/%v", url.QueryEscape(cmd.TeamID))
-	}
-	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.DeleteTeams(ctx, path)
-	if err != nil {
-		goa.LogError(ctx, "failed", "err", err)
-		return err
-	}
-
-	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
-	return nil
-}
-
-// RegisterFlags registers the command flags with the command line.
-func (cmd *DeleteTeamsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var groupID string
+	cc.Flags().StringVar(&cmd.GroupID, "group_id", groupID, `Group ID`)
 	var teamID string
 	cc.Flags().StringVar(&cmd.TeamID, "team_id", teamID, `Team ID`)
 }
 
-// Run makes the HTTP request corresponding to the ListTeamsCommand command.
-func (cmd *ListTeamsCommand) Run(c *client.Client, args []string) error {
+// Run makes the HTTP request corresponding to the DeleteAssetGroupCommand command.
+func (cmd *DeleteAssetGroupCommand) Run(c *client.Client, args []string) error {
 	var path string
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		path = "/api/v1/teams"
+		path = fmt.Sprintf("/api/v1/teams/%v/groups/%v/assets/%v", url.QueryEscape(cmd.TeamID), url.QueryEscape(cmd.GroupID), url.QueryEscape(cmd.AssetID))
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.ListTeams(ctx, path, stringFlagVal("tag", cmd.Tag))
+	resp, err := c.DeleteAssetGroup(ctx, path)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
 		return err
@@ -2367,55 +2319,26 @@ func (cmd *ListTeamsCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *ListTeamsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
-	var tag string
-	cc.Flags().StringVar(&cmd.Tag, "tag", tag, `Team tag`)
-}
-
-// Run makes the HTTP request corresponding to the ShowTeamsCommand command.
-func (cmd *ShowTeamsCommand) Run(c *client.Client, args []string) error {
-	var path string
-	if len(args) > 0 {
-		path = args[0]
-	} else {
-		path = fmt.Sprintf("/api/v1/teams/%v", url.QueryEscape(cmd.TeamID))
-	}
-	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.ShowTeams(ctx, path)
-	if err != nil {
-		goa.LogError(ctx, "failed", "err", err)
-		return err
-	}
-
-	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
-	return nil
-}
-
-// RegisterFlags registers the command flags with the command line.
-func (cmd *ShowTeamsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+func (cmd *DeleteAssetGroupCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var assetID string
+	cc.Flags().StringVar(&cmd.AssetID, "asset_id", assetID, `Asset ID`)
+	var groupID string
+	cc.Flags().StringVar(&cmd.GroupID, "group_id", groupID, `Group ID`)
 	var teamID string
 	cc.Flags().StringVar(&cmd.TeamID, "team_id", teamID, `Team ID`)
 }
 
-// Run makes the HTTP request corresponding to the UpdateTeamsCommand command.
-func (cmd *UpdateTeamsCommand) Run(c *client.Client, args []string) error {
+// Run makes the HTTP request corresponding to the ListAssetGroupCommand command.
+func (cmd *ListAssetGroupCommand) Run(c *client.Client, args []string) error {
 	var path string
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		path = fmt.Sprintf("/api/v1/teams/%v", url.QueryEscape(cmd.TeamID))
-	}
-	var payload client.TeamUpdatePayload
-	if cmd.Payload != "" {
-		err := json.Unmarshal([]byte(cmd.Payload), &payload)
-		if err != nil {
-			return fmt.Errorf("failed to deserialize payload: %s", err)
-		}
+		path = fmt.Sprintf("/api/v1/teams/%v/groups/%v/assets", url.QueryEscape(cmd.TeamID), url.QueryEscape(cmd.GroupID))
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.UpdateTeams(ctx, path, &payload)
+	resp, err := c.ListAssetGroup(ctx, path)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
 		return err
@@ -2426,11 +2349,11 @@ func (cmd *UpdateTeamsCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *UpdateTeamsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
-	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request body encoded in JSON")
-	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
+func (cmd *ListAssetGroupCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var groupID string
+	cc.Flags().StringVar(&cmd.GroupID, "group_id", groupID, `Group ID`)
 	var teamID string
-	cc.Flags().StringVar(&cmd.TeamID, "team_id", teamID, `team ID`)
+	cc.Flags().StringVar(&cmd.TeamID, "team_id", teamID, `Team ID`)
 }
 
 // Run makes the HTTP request corresponding to the CreateAssetsCommand command.
@@ -2800,15 +2723,91 @@ func (cmd *UpdateAssetAnnotationsCommand) RegisterFlags(cc *cobra.Command, c *cl
 	cc.Flags().StringVar(&cmd.TeamID, "team_id", teamID, `Team ID`)
 }
 
-// Run makes the HTTP request corresponding to the CreateAssetGroupCommand command.
-func (cmd *CreateAssetGroupCommand) Run(c *client.Client, args []string) error {
+// Run makes the HTTP request corresponding to the ExposureGlobalStatsCommand command.
+func (cmd *ExposureGlobalStatsCommand) Run(c *client.Client, args []string) error {
 	var path string
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		path = fmt.Sprintf("/api/v1/teams/%v/groups/%v/assets", url.QueryEscape(cmd.TeamID), url.QueryEscape(cmd.GroupID))
+		path = "/api/v1/stats/exposure"
 	}
-	var payload client.AssetGroupPayload
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	var tmp83 *float64
+	if cmd.MaxScore != "" {
+		var err error
+		tmp83, err = float64Val(cmd.MaxScore)
+		if err != nil {
+			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--maxScore", "err", err)
+			return err
+		}
+	}
+	var tmp84 *float64
+	if cmd.MinScore != "" {
+		var err error
+		tmp84, err = float64Val(cmd.MinScore)
+		if err != nil {
+			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--minScore", "err", err)
+			return err
+		}
+	}
+	resp, err := c.ExposureGlobalStats(ctx, path, stringFlagVal("atDate", cmd.AtDate), tmp83, tmp84)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ExposureGlobalStatsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var atDate string
+	cc.Flags().StringVar(&cmd.AtDate, "atDate", atDate, `Specific date to get statistics at`)
+	var maxScore string
+	cc.Flags().StringVar(&cmd.MaxScore, "maxScore", maxScore, `Maximum issues score filter`)
+	var minScore string
+	cc.Flags().StringVar(&cmd.MinScore, "minScore", minScore, `Minimum issues score filter`)
+}
+
+// Run makes the HTTP request corresponding to the MttrGlobalStatsCommand command.
+func (cmd *MttrGlobalStatsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = "/api/v1/stats/mttr"
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.MttrGlobalStats(ctx, path, stringFlagVal("maxDate", cmd.MaxDate), stringFlagVal("minDate", cmd.MinDate))
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *MttrGlobalStatsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var maxDate string
+	cc.Flags().StringVar(&cmd.MaxDate, "maxDate", maxDate, `Maximum date to filter statistics by`)
+	var minDate string
+	cc.Flags().StringVar(&cmd.MinDate, "minDate", minDate, `Minimum date to filter statistics by`)
+}
+
+// Run makes the HTTP request corresponding to the CreateTeamsCommand command.
+func (cmd *CreateTeamsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = "/api/v1/teams"
+	}
+	var payload client.TeamPayload
 	if cmd.Payload != "" {
 		err := json.Unmarshal([]byte(cmd.Payload), &payload)
 		if err != nil {
@@ -2817,7 +2816,7 @@ func (cmd *CreateAssetGroupCommand) Run(c *client.Client, args []string) error {
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.CreateAssetGroup(ctx, path, &payload)
+	resp, err := c.CreateTeams(ctx, path, &payload)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
 		return err
@@ -2828,26 +2827,22 @@ func (cmd *CreateAssetGroupCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *CreateAssetGroupCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+func (cmd *CreateTeamsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request body encoded in JSON")
 	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
-	var groupID string
-	cc.Flags().StringVar(&cmd.GroupID, "group_id", groupID, `Group ID`)
-	var teamID string
-	cc.Flags().StringVar(&cmd.TeamID, "team_id", teamID, `Team ID`)
 }
 
-// Run makes the HTTP request corresponding to the DeleteAssetGroupCommand command.
-func (cmd *DeleteAssetGroupCommand) Run(c *client.Client, args []string) error {
+// Run makes the HTTP request corresponding to the DeleteTeamsCommand command.
+func (cmd *DeleteTeamsCommand) Run(c *client.Client, args []string) error {
 	var path string
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		path = fmt.Sprintf("/api/v1/teams/%v/groups/%v/assets/%v", url.QueryEscape(cmd.TeamID), url.QueryEscape(cmd.GroupID), url.QueryEscape(cmd.AssetID))
+		path = fmt.Sprintf("/api/v1/teams/%v", url.QueryEscape(cmd.TeamID))
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.DeleteAssetGroup(ctx, path)
+	resp, err := c.DeleteTeams(ctx, path)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
 		return err
@@ -2858,26 +2853,22 @@ func (cmd *DeleteAssetGroupCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *DeleteAssetGroupCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
-	var assetID string
-	cc.Flags().StringVar(&cmd.AssetID, "asset_id", assetID, `Asset ID`)
-	var groupID string
-	cc.Flags().StringVar(&cmd.GroupID, "group_id", groupID, `Group ID`)
+func (cmd *DeleteTeamsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	var teamID string
 	cc.Flags().StringVar(&cmd.TeamID, "team_id", teamID, `Team ID`)
 }
 
-// Run makes the HTTP request corresponding to the ListAssetGroupCommand command.
-func (cmd *ListAssetGroupCommand) Run(c *client.Client, args []string) error {
+// Run makes the HTTP request corresponding to the ListTeamsCommand command.
+func (cmd *ListTeamsCommand) Run(c *client.Client, args []string) error {
 	var path string
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		path = fmt.Sprintf("/api/v1/teams/%v/groups/%v/assets", url.QueryEscape(cmd.TeamID), url.QueryEscape(cmd.GroupID))
+		path = "/api/v1/teams"
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.ListAssetGroup(ctx, path)
+	resp, err := c.ListTeams(ctx, path, stringFlagVal("tag", cmd.Tag))
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
 		return err
@@ -2888,11 +2879,70 @@ func (cmd *ListAssetGroupCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *ListAssetGroupCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
-	var groupID string
-	cc.Flags().StringVar(&cmd.GroupID, "group_id", groupID, `Group ID`)
+func (cmd *ListTeamsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var tag string
+	cc.Flags().StringVar(&cmd.Tag, "tag", tag, `Team tag`)
+}
+
+// Run makes the HTTP request corresponding to the ShowTeamsCommand command.
+func (cmd *ShowTeamsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/api/v1/teams/%v", url.QueryEscape(cmd.TeamID))
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ShowTeams(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ShowTeamsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	var teamID string
 	cc.Flags().StringVar(&cmd.TeamID, "team_id", teamID, `Team ID`)
+}
+
+// Run makes the HTTP request corresponding to the UpdateTeamsCommand command.
+func (cmd *UpdateTeamsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/api/v1/teams/%v", url.QueryEscape(cmd.TeamID))
+	}
+	var payload client.TeamUpdatePayload
+	if cmd.Payload != "" {
+		err := json.Unmarshal([]byte(cmd.Payload), &payload)
+		if err != nil {
+			return fmt.Errorf("failed to deserialize payload: %s", err)
+		}
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.UpdateTeams(ctx, path, &payload)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *UpdateTeamsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request body encoded in JSON")
+	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
+	var teamID string
+	cc.Flags().StringVar(&cmd.TeamID, "team_id", teamID, `team ID`)
 }
 
 // Run makes the HTTP request corresponding to the FindFindingFindingsCommand command.
@@ -2933,43 +2983,43 @@ func (cmd *FindFindingsFromAIssueFindingsCommand) Run(c *client.Client, args []s
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
-	var tmp83 *float64
+	var tmp85 *float64
 	if cmd.MaxScore != "" {
 		var err error
-		tmp83, err = float64Val(cmd.MaxScore)
+		tmp85, err = float64Val(cmd.MaxScore)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--maxScore", "err", err)
 			return err
 		}
 	}
-	var tmp84 *float64
+	var tmp86 *float64
 	if cmd.MinScore != "" {
 		var err error
-		tmp84, err = float64Val(cmd.MinScore)
+		tmp86, err = float64Val(cmd.MinScore)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--minScore", "err", err)
 			return err
 		}
 	}
-	var tmp85 *float64
+	var tmp87 *float64
 	if cmd.Page != "" {
 		var err error
-		tmp85, err = float64Val(cmd.Page)
+		tmp87, err = float64Val(cmd.Page)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--page", "err", err)
 			return err
 		}
 	}
-	var tmp86 *float64
+	var tmp88 *float64
 	if cmd.Size != "" {
 		var err error
-		tmp86, err = float64Val(cmd.Size)
+		tmp88, err = float64Val(cmd.Size)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--size", "err", err)
 			return err
 		}
 	}
-	resp, err := c.FindFindingsFromAIssueFindings(ctx, path, stringFlagVal("atDate", cmd.AtDate), stringFlagVal("identifiers", cmd.Identifiers), stringFlagVal("labels", cmd.Labels), stringFlagVal("maxDate", cmd.MaxDate), tmp83, stringFlagVal("minDate", cmd.MinDate), tmp84, tmp85, tmp86, stringFlagVal("sortBy", cmd.SortBy), stringFlagVal("status", cmd.Status))
+	resp, err := c.FindFindingsFromAIssueFindings(ctx, path, stringFlagVal("atDate", cmd.AtDate), stringFlagVal("identifiers", cmd.Identifiers), stringFlagVal("labels", cmd.Labels), stringFlagVal("maxDate", cmd.MaxDate), tmp85, stringFlagVal("minDate", cmd.MinDate), tmp86, tmp87, tmp88, stringFlagVal("sortBy", cmd.SortBy), stringFlagVal("status", cmd.Status))
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
 		return err
@@ -3019,43 +3069,43 @@ func (cmd *FindFindingsFromATargetFindingsCommand) Run(c *client.Client, args []
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
-	var tmp87 *float64
+	var tmp89 *float64
 	if cmd.MaxScore != "" {
 		var err error
-		tmp87, err = float64Val(cmd.MaxScore)
+		tmp89, err = float64Val(cmd.MaxScore)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--maxScore", "err", err)
 			return err
 		}
 	}
-	var tmp88 *float64
+	var tmp90 *float64
 	if cmd.MinScore != "" {
 		var err error
-		tmp88, err = float64Val(cmd.MinScore)
+		tmp90, err = float64Val(cmd.MinScore)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--minScore", "err", err)
 			return err
 		}
 	}
-	var tmp89 *float64
+	var tmp91 *float64
 	if cmd.Page != "" {
 		var err error
-		tmp89, err = float64Val(cmd.Page)
+		tmp91, err = float64Val(cmd.Page)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--page", "err", err)
 			return err
 		}
 	}
-	var tmp90 *float64
+	var tmp92 *float64
 	if cmd.Size != "" {
 		var err error
-		tmp90, err = float64Val(cmd.Size)
+		tmp92, err = float64Val(cmd.Size)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--size", "err", err)
 			return err
 		}
 	}
-	resp, err := c.FindFindingsFromATargetFindings(ctx, path, stringFlagVal("atDate", cmd.AtDate), stringFlagVal("identifiers", cmd.Identifiers), stringFlagVal("labels", cmd.Labels), stringFlagVal("maxDate", cmd.MaxDate), tmp87, stringFlagVal("minDate", cmd.MinDate), tmp88, tmp89, tmp90, stringFlagVal("sortBy", cmd.SortBy), stringFlagVal("status", cmd.Status))
+	resp, err := c.FindFindingsFromATargetFindings(ctx, path, stringFlagVal("atDate", cmd.AtDate), stringFlagVal("identifiers", cmd.Identifiers), stringFlagVal("labels", cmd.Labels), stringFlagVal("maxDate", cmd.MaxDate), tmp89, stringFlagVal("minDate", cmd.MinDate), tmp90, tmp91, tmp92, stringFlagVal("sortBy", cmd.SortBy), stringFlagVal("status", cmd.Status))
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
 		return err
@@ -3206,43 +3256,43 @@ func (cmd *ListFindingsFindingsCommand) Run(c *client.Client, args []string) err
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
-	var tmp91 *float64
+	var tmp93 *float64
 	if cmd.MaxScore != "" {
 		var err error
-		tmp91, err = float64Val(cmd.MaxScore)
+		tmp93, err = float64Val(cmd.MaxScore)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--maxScore", "err", err)
 			return err
 		}
 	}
-	var tmp92 *float64
+	var tmp94 *float64
 	if cmd.MinScore != "" {
 		var err error
-		tmp92, err = float64Val(cmd.MinScore)
+		tmp94, err = float64Val(cmd.MinScore)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--minScore", "err", err)
 			return err
 		}
 	}
-	var tmp93 *float64
+	var tmp95 *float64
 	if cmd.Page != "" {
 		var err error
-		tmp93, err = float64Val(cmd.Page)
+		tmp95, err = float64Val(cmd.Page)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--page", "err", err)
 			return err
 		}
 	}
-	var tmp94 *float64
+	var tmp96 *float64
 	if cmd.Size != "" {
 		var err error
-		tmp94, err = float64Val(cmd.Size)
+		tmp96, err = float64Val(cmd.Size)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--size", "err", err)
 			return err
 		}
 	}
-	resp, err := c.ListFindingsFindings(ctx, path, stringFlagVal("atDate", cmd.AtDate), stringFlagVal("identifier", cmd.Identifier), stringFlagVal("identifiers", cmd.Identifiers), stringFlagVal("issueID", cmd.IssueID), stringFlagVal("labels", cmd.Labels), stringFlagVal("maxDate", cmd.MaxDate), tmp91, stringFlagVal("minDate", cmd.MinDate), tmp92, tmp93, tmp94, stringFlagVal("sortBy", cmd.SortBy), stringFlagVal("status", cmd.Status), stringFlagVal("targetID", cmd.TargetID))
+	resp, err := c.ListFindingsFindings(ctx, path, stringFlagVal("atDate", cmd.AtDate), stringFlagVal("identifier", cmd.Identifier), stringFlagVal("identifiers", cmd.Identifiers), stringFlagVal("issueID", cmd.IssueID), stringFlagVal("labels", cmd.Labels), stringFlagVal("maxDate", cmd.MaxDate), tmp93, stringFlagVal("minDate", cmd.MinDate), tmp94, tmp95, tmp96, stringFlagVal("sortBy", cmd.SortBy), stringFlagVal("status", cmd.Status), stringFlagVal("targetID", cmd.TargetID))
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
 		return err
@@ -3296,25 +3346,25 @@ func (cmd *ListFindingsIssuesFindingsCommand) Run(c *client.Client, args []strin
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
-	var tmp95 *float64
+	var tmp97 *float64
 	if cmd.Page != "" {
 		var err error
-		tmp95, err = float64Val(cmd.Page)
+		tmp97, err = float64Val(cmd.Page)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--page", "err", err)
 			return err
 		}
 	}
-	var tmp96 *float64
+	var tmp98 *float64
 	if cmd.Size != "" {
 		var err error
-		tmp96, err = float64Val(cmd.Size)
+		tmp98, err = float64Val(cmd.Size)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--size", "err", err)
 			return err
 		}
 	}
-	resp, err := c.ListFindingsIssuesFindings(ctx, path, stringFlagVal("atDate", cmd.AtDate), stringFlagVal("identifiers", cmd.Identifiers), stringFlagVal("labels", cmd.Labels), stringFlagVal("maxDate", cmd.MaxDate), stringFlagVal("minDate", cmd.MinDate), tmp95, tmp96, stringFlagVal("sortBy", cmd.SortBy), stringFlagVal("status", cmd.Status), stringFlagVal("targetID", cmd.TargetID))
+	resp, err := c.ListFindingsIssuesFindings(ctx, path, stringFlagVal("atDate", cmd.AtDate), stringFlagVal("identifiers", cmd.Identifiers), stringFlagVal("labels", cmd.Labels), stringFlagVal("maxDate", cmd.MaxDate), stringFlagVal("minDate", cmd.MinDate), tmp97, tmp98, stringFlagVal("sortBy", cmd.SortBy), stringFlagVal("status", cmd.Status), stringFlagVal("targetID", cmd.TargetID))
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
 		return err
@@ -3360,25 +3410,25 @@ func (cmd *ListFindingsTargetsFindingsCommand) Run(c *client.Client, args []stri
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
-	var tmp97 *float64
+	var tmp99 *float64
 	if cmd.Page != "" {
 		var err error
-		tmp97, err = float64Val(cmd.Page)
+		tmp99, err = float64Val(cmd.Page)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--page", "err", err)
 			return err
 		}
 	}
-	var tmp98 *float64
+	var tmp100 *float64
 	if cmd.Size != "" {
 		var err error
-		tmp98, err = float64Val(cmd.Size)
+		tmp100, err = float64Val(cmd.Size)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--size", "err", err)
 			return err
 		}
 	}
-	resp, err := c.ListFindingsTargetsFindings(ctx, path, stringFlagVal("atDate", cmd.AtDate), stringFlagVal("identifiers", cmd.Identifiers), stringFlagVal("issueID", cmd.IssueID), stringFlagVal("labels", cmd.Labels), stringFlagVal("maxDate", cmd.MaxDate), stringFlagVal("minDate", cmd.MinDate), tmp97, tmp98, stringFlagVal("sortBy", cmd.SortBy), stringFlagVal("status", cmd.Status))
+	resp, err := c.ListFindingsTargetsFindings(ctx, path, stringFlagVal("atDate", cmd.AtDate), stringFlagVal("identifiers", cmd.Identifiers), stringFlagVal("issueID", cmd.IssueID), stringFlagVal("labels", cmd.Labels), stringFlagVal("maxDate", cmd.MaxDate), stringFlagVal("minDate", cmd.MinDate), tmp99, tmp100, stringFlagVal("sortBy", cmd.SortBy), stringFlagVal("status", cmd.Status))
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
 		return err
@@ -3412,82 +3462,6 @@ func (cmd *ListFindingsTargetsFindingsCommand) RegisterFlags(cc *cobra.Command, 
 	cc.Flags().StringVar(&cmd.SortBy, "sortBy", sortBy, `Sorting criteria. Supported fields: score, findings_count (use - for descending order. E.g.: -score)`)
 	var status string
 	cc.Flags().StringVar(&cmd.Status, "status", status, `Findings Status`)
-}
-
-// Run makes the HTTP request corresponding to the ExposureGlobalStatsCommand command.
-func (cmd *ExposureGlobalStatsCommand) Run(c *client.Client, args []string) error {
-	var path string
-	if len(args) > 0 {
-		path = args[0]
-	} else {
-		path = "/api/v1/stats/exposure"
-	}
-	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.WithLogger(context.Background(), logger)
-	var tmp99 *float64
-	if cmd.MaxScore != "" {
-		var err error
-		tmp99, err = float64Val(cmd.MaxScore)
-		if err != nil {
-			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--maxScore", "err", err)
-			return err
-		}
-	}
-	var tmp100 *float64
-	if cmd.MinScore != "" {
-		var err error
-		tmp100, err = float64Val(cmd.MinScore)
-		if err != nil {
-			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--minScore", "err", err)
-			return err
-		}
-	}
-	resp, err := c.ExposureGlobalStats(ctx, path, stringFlagVal("atDate", cmd.AtDate), tmp99, tmp100)
-	if err != nil {
-		goa.LogError(ctx, "failed", "err", err)
-		return err
-	}
-
-	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
-	return nil
-}
-
-// RegisterFlags registers the command flags with the command line.
-func (cmd *ExposureGlobalStatsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
-	var atDate string
-	cc.Flags().StringVar(&cmd.AtDate, "atDate", atDate, `Specific date to get statistics at`)
-	var maxScore string
-	cc.Flags().StringVar(&cmd.MaxScore, "maxScore", maxScore, `Maximum issues score filter`)
-	var minScore string
-	cc.Flags().StringVar(&cmd.MinScore, "minScore", minScore, `Minimum issues score filter`)
-}
-
-// Run makes the HTTP request corresponding to the MttrGlobalStatsCommand command.
-func (cmd *MttrGlobalStatsCommand) Run(c *client.Client, args []string) error {
-	var path string
-	if len(args) > 0 {
-		path = args[0]
-	} else {
-		path = "/api/v1/stats/mttr"
-	}
-	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.MttrGlobalStats(ctx, path, stringFlagVal("maxDate", cmd.MaxDate), stringFlagVal("minDate", cmd.MinDate))
-	if err != nil {
-		goa.LogError(ctx, "failed", "err", err)
-		return err
-	}
-
-	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
-	return nil
-}
-
-// RegisterFlags registers the command flags with the command line.
-func (cmd *MttrGlobalStatsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
-	var maxDate string
-	cc.Flags().StringVar(&cmd.MaxDate, "maxDate", maxDate, `Maximum date to filter statistics by`)
-	var minDate string
-	cc.Flags().StringVar(&cmd.MinDate, "minDate", minDate, `Minimum date to filter statistics by`)
 }
 
 // Run makes the HTTP request corresponding to the CreateGroupCommand command.
@@ -5063,6 +5037,32 @@ func (cmd *UpdateUserCommand) Run(c *client.Client, args []string) error {
 func (cmd *UpdateUserCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request body encoded in JSON")
 	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
+	var userID string
+	cc.Flags().StringVar(&cmd.UserID, "user_id", userID, `User ID`)
+}
+
+// Run makes the HTTP request corresponding to the CreateAPITokenCommand command.
+func (cmd *CreateAPITokenCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/api/v1/users/%v/token", url.QueryEscape(cmd.UserID))
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.CreateAPIToken(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *CreateAPITokenCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	var userID string
 	cc.Flags().StringVar(&cmd.UserID, "user_id", userID, `User ID`)
 }
