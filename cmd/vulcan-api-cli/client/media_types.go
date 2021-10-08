@@ -18,7 +18,8 @@ import (
 // Identifier: asset; view=default
 type Asset struct {
 	// Alias
-	Alias *string `form:"alias,omitempty" json:"alias,omitempty" yaml:"alias,omitempty" xml:"alias,omitempty"`
+	Alias       *string           `form:"alias,omitempty" json:"alias,omitempty" yaml:"alias,omitempty" xml:"alias,omitempty"`
+	Annotations map[string]string `form:"annotations,omitempty" json:"annotations,omitempty" yaml:"annotations,omitempty" xml:"annotations,omitempty"`
 	// Classified At
 	ClassifiedAt *string `form:"classified_at,omitempty" json:"classified_at,omitempty" yaml:"classified_at,omitempty" xml:"classified_at,omitempty"`
 	// Environmental CVSS
@@ -625,7 +626,8 @@ func (c *Client) DecodeIssue(resp *http.Response) (*Issue, error) {
 // Identifier: listassetentry; view=default
 type Listassetentry struct {
 	// Alias
-	Alias *string `form:"alias,omitempty" json:"alias,omitempty" yaml:"alias,omitempty" xml:"alias,omitempty"`
+	Alias       *string           `form:"alias,omitempty" json:"alias,omitempty" yaml:"alias,omitempty" xml:"alias,omitempty"`
+	Annotations map[string]string `form:"annotations,omitempty" json:"annotations,omitempty" yaml:"annotations,omitempty" xml:"annotations,omitempty"`
 	// Classified At
 	ClassifiedAt *string `form:"classified_at,omitempty" json:"classified_at,omitempty" yaml:"classified_at,omitempty" xml:"classified_at,omitempty"`
 	// Environmental CVSS

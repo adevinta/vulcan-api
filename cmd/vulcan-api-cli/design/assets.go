@@ -22,6 +22,12 @@ var AssetMedia = MediaType("asset", func() {
 		Attribute("scannable", Boolean, "Scannable", func() { Example(true) })
 		Attribute("classified_at", String, "Classified At", func() { Example("2020-09-03T15:00:42.112975Z") })
 		Attribute("alias", String, "Alias", func() { Example("AnAlias") })
+		Attribute("annotations", HashOf(String, String), func() {
+			Example(map[string]string{
+				"annotation/1": "value/1",
+				"annotation/2": "value/2",
+			})
+		})
 	})
 	View("default", func() {
 		Attribute("id")
@@ -33,6 +39,7 @@ var AssetMedia = MediaType("asset", func() {
 		Attribute("alias")
 		Attribute("scannable")
 		Attribute("classified_at")
+		Attribute("annotations")
 	})
 })
 
@@ -49,6 +56,12 @@ var ListAssetMedia = MediaType("ListAssetEntry", func() {
 		Attribute("classified_at", String, "Classified At", func() { Example("2020-09-03T15:00:42.112975Z") })
 		Attribute("alias", String, "Alias", func() { Example("AnAlias") })
 		Attribute("groups", CollectionOf(GroupMedia), "Groups")
+		Attribute("annotations", HashOf(String, String), func() {
+			Example(map[string]string{
+				"annotation/1": "value/1",
+				"annotation/2": "value/2",
+			})
+		})
 	})
 	View("default", func() {
 		Attribute("id")
@@ -63,6 +76,7 @@ var ListAssetMedia = MediaType("ListAssetEntry", func() {
 		Attribute("groups", func() {
 			View("WithoutAssetsCount")
 		})
+		Attribute("annotations")
 	})
 })
 
