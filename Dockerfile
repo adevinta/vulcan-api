@@ -1,6 +1,6 @@
 # Copyright 2021 Adevinta
 
-FROM golang:1.13-alpine3.13 as builder
+FROM golang:1.13-alpine3.11 as builder
 
 WORKDIR /app
 
@@ -8,7 +8,7 @@ COPY . .
 
 RUN cd cmd/vulcan-api && GOOS=linux GOARCH=amd64 go build -mod vendor . && cd -
 
-FROM alpine:3.13
+FROM alpine:3.11
 
 ENV FLYWAY_VERSION 8.0.1
 WORKDIR /flyway

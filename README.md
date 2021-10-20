@@ -2,13 +2,13 @@
 
 ## Requirements
 
-```
+```sh
 go generate ./...
 ```
 
 ## Running
 
-```
+```sh
 cd cmd/vulcan-api
 go install
 vulcan-api -c ../../_resources/config/local.toml
