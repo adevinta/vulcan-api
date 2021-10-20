@@ -1,5 +1,7 @@
 language: go
 dist: bionic
+env:
+  - FLYWAY_VERSION="8.0.2"
 go:
   - 1.13.4
 services:
