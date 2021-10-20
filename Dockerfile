@@ -1,6 +1,6 @@
 # Copyright 2021 Adevinta
 
-FROM golang:1.13-alpine3.11 as builder
+FROM golang:1.13-alpine3.13 as builder
 
 WORKDIR /app
 
@@ -8,16 +8,17 @@ COPY . .
 
 RUN cd cmd/vulcan-api && GOOS=linux GOARCH=amd64 go build -mod vendor . && cd -
 
-FROM alpine:3.11
+FROM alpine:3.13
 
-ENV FLYWAY_VERSION 6.1.4
+ENV FLYWAY_VERSION 8.0.1
 WORKDIR /flyway
 
-RUN apk add --no-cache --update openjdk8-jre bash gettext libc6-compat
+RUN apk add --no-cache --update openjdk8-jre-base bash gettext libc6-compat
 RUN wget https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/${FLYWAY_VERSION}/flyway-commandline-${FLYWAY_VERSION}.tar.gz \
-    && tar -xzf flyway-commandline-${FLYWAY_VERSION}.tar.gz && mv flyway-${FLYWAY_VERSION}/* . \
+    && tar -xzf flyway-commandline-${FLYWAY_VERSION}.tar.gz --strip 1 \
     && rm flyway-commandline-${FLYWAY_VERSION}.tar.gz \
-    && find /flyway/drivers/ -type f -not -name 'postgres*' -delete \
+    && find ./drivers/ -type f -not -name 'postgres*' -delete \
+    && chown -R root:root . \
     && ln -s /flyway/flyway /bin/flyway
 
 ARG BUILD_RFC3339="1970-01-01T00:00:00Z"

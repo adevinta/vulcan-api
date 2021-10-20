@@ -5,5 +5,5 @@ docker exec vulcanito_db psql -c "CREATE USER vulcanito_test WITH PASSWORD 'vulc
 docker exec vulcanito_db psql -c "ALTER USER vulcanito_test WITH SUPERUSER;" -U postgres
 docker exec vulcanito_db psql -c "CREATE DATABASE vulcanito_test;" -U postgres
 
-docker run --net=host --rm -v $(pwd):/flyway/sql flyway/flyway:${FLYWAY_VERSION:-7} -user=vulcanito -password=vulcanito -url=jdbc:postgresql://localhost:5432/vulcanito -baselineOnMigrate=true migrate
-docker run --net=host --rm -v $(pwd):/scripts flyway/flyway:${FLYWAY_VERSION:-7} -user=vulcanito_test -password=vulcanito_test -url=jdbc:postgresql://localhost:5432/vulcanito_test -locations=filesystem:/scripts/sql,filesystem:/scripts/test-sql -baselineOnMigrate=true migrate
+docker run --net=host --rm -v $(pwd):/flyway/sql flyway/flyway:${FLYWAY_VERSION:-8} -user=vulcanito -password=vulcanito -url=jdbc:postgresql://localhost:5432/vulcanito -baselineOnMigrate=true migrate
+docker run --net=host --rm -v $(pwd):/scripts flyway/flyway:${FLYWAY_VERSION:-8} -user=vulcanito_test -password=vulcanito_test -url=jdbc:postgresql://localhost:5432/vulcanito_test -locations=filesystem:/scripts/sql,filesystem:/scripts/test-sql -baselineOnMigrate=true migrate
