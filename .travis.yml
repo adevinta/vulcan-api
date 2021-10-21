@@ -1,14 +1,14 @@
 language: go
-dist: trusty
+dist: bionic
+env:
+  - FLYWAY_VERSION="8.0.2"
 go:
-  - 1.13.3
+  - 1.13.4
 services:
-  - postgresql
   - docker
-addons:
-  postgresql: "9.6"
 go_import_path: github.com/adevinta/vulcan-api
 script:
+  - _script/start-pg
   - _script/cibuild
   - source _script/setup-e2e-tests
   - _script/run-e2e-tests
