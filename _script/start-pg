@@ -6,4 +6,6 @@ set -e
 
 docker run --name postgres -p 5432:5432 -e POSTGRES_HOST_AUTH_METHOD=trust --rm -d postgres:13.3-alpine
 
-while ! docker exec -it vulcan-scan-enginedb pg_isready; do echo "Waiting for postgres" && sleep 2; done;
+sleep 2
+
+while ! docker exec -it postgres pg_isready; do echo "Waiting for postgres" && sleep 2; done;
