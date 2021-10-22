@@ -23,6 +23,6 @@ fi
 
 flyway -user=$PG_USER -password=$PG_PASSWORD \
   -url=jdbc:postgresql://$PG_HOST:$PG_PORT/$PG_NAME?sslmode=$PG_SSLMODE \
-  -baselineOnMigrate=true -locations=filesystem:/app/sql migrate
+  -community -baselineOnMigrate=true -locations=filesystem:/app/sql migrate
 
 ./vulcan-api -c run.toml
