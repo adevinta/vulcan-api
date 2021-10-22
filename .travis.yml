@@ -5,7 +5,7 @@ env:
     - FLYWAY_VERSION=8.0.2
     - INPUT_BUILDARGS=FLYWAY_VERSION=$FLYWAY_VERSION
 go:
-  - 1.13.4
+  - 1.17.2
 services:
   - docker
 go_import_path: github.com/adevinta/vulcan-api
