@@ -5,6 +5,7 @@
 set -e
 
 # install binaries
+go mod vendor
 go install -v $(go list ./... | grep -v /vendor/)
 
 # create test database and apply migrations
