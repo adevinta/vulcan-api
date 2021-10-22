@@ -3,6 +3,7 @@
 ## Requirements
 
 ```sh
+go install github.com/filewalkwithme/impl@latest
 go generate ./...
 ```
 

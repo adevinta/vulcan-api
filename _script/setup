@@ -4,10 +4,7 @@
 
 set -e
 
-# go generate and install binaries
-go mod vendor
-go get github.com/filewalkwithme/impl
-go generate -v ./...
+# install binaries
 go install -v $(go list ./... | grep -v /vendor/)
 
 # create test database and apply migrations
