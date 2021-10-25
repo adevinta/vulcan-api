@@ -3,7 +3,7 @@ version: '2'
 services:
     dev:
         container_name: vulcanito_db
-        image: postgres:9.6.1
+        image: postgres:13.3-alpine
         command: "postgres -c log_connections=true -c log_min_duration_statement=0"
         ports:
             - "5432:5432"

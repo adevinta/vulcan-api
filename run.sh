@@ -13,7 +13,7 @@ export DOGSTATSD_ENABLED=${DOGSTATSD_ENABLED:-false}
 export AWSCATALOGUE_RETRIES=${AWSCATALOGUE_RETRIES:-4}
 export AWSCATALOGUE_RETRY_INTERVAL=${AWSCATALOGUE_RETRY_INTERVAL:-2}
 
-cat config.toml | envsubst > run.toml
+envsubst < config.toml > run.toml
 
 if [ ! -z "$PG_CA_B64" ]; then
   mkdir /root/.postgresql
@@ -21,8 +21,8 @@ if [ ! -z "$PG_CA_B64" ]; then
   echo $PG_CA_B64 | base64 -d > /etc/ssl/certs/pg.crt  # for vulcan-api
 fi
 
-flyway -user=$PG_USER -password=$PG_PASSWORD \
-  -url=jdbc:postgresql://$PG_HOST:$PG_PORT/$PG_NAME?sslmode=$PG_SSLMODE \
-  -baselineOnMigrate=true -locations=filesystem:/app/sql migrate
+flyway -user="$PG_USER" -password="$PG_PASSWORD" \
+  -url="jdbc:postgresql://$PG_HOST:$PG_PORT/$PG_NAME?sslmode=$PG_SSLMODE" \
+  -community -baselineOnMigrate=true -locations=filesystem:/app/sql migrate
 
-./vulcan-api -c run.toml
+exec ./vulcan-api -c run.toml

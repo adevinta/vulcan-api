@@ -4,15 +4,16 @@
 
 set -e
 
-# go generate and install binaries
-go mod vendor
-go get github.com/filewalkwithme/impl
-go generate -v ./...
+# install binaries
 go install -v $(go list ./... | grep -v /vendor/)
 
 # create test database and apply migrations
-psql -c "CREATE DATABASE vulcanito_test;" -U postgres
-psql -c "CREATE USER vulcanito_test WITH PASSWORD 'vulcanito_test';" -U postgres
-psql -c "ALTER USER vulcanito_test WITH SUPERUSER;" -U postgres
-db/flyway/flyway -user=vulcanito_test -password=vulcanito_test -url=jdbc:postgresql://localhost:5432/vulcanito_test -baselineOnMigrate=true -locations=filesystem:db/sql,filesystem:db/test-sql migrate
-psql -c "CREATE DATABASE vulcanito WITH TEMPLATE vulcanito_test OWNER vulcanito_test;" -U postgres
+psql -c "CREATE DATABASE vulcanito_test;" -h localhost -U postgres
+psql -c "CREATE USER vulcanito_test WITH PASSWORD 'vulcanito_test';" -h localhost -U postgres
+psql -c "ALTER USER vulcanito_test WITH SUPERUSER;" -h localhost -U postgres
+
+docker run --net=host -v "$PWD"/db:/scripts flyway/flyway:"${FLYWAY_VERSION:-8}-alpine" \
+    -user=vulcanito_test -password=vulcanito_test -url=jdbc:postgresql://localhost:5432/vulcanito_test \
+    -locations=filesystem:/scripts/sql,filesystem:/scripts/test-sql -baselineOnMigrate=true migrate
+
+psql -c "CREATE DATABASE vulcanito WITH TEMPLATE vulcanito_test OWNER vulcanito_test;" -h localhost -U postgres

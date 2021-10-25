@@ -2,13 +2,14 @@
 
 ## Requirements
 
-```
+```sh
+go install github.com/filewalkwithme/impl@latest
 go generate ./...
 ```
 
 ## Running
 
-```
+```sh
 cd cmd/vulcan-api
 go install
 vulcan-api -c ../../_resources/config/local.toml
