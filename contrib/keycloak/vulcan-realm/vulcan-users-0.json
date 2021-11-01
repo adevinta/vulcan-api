@@ -1,0 +1,26 @@
+{
+  "realm" : "vulcan",
+  "users" : [ {
+    "id" : "617cd572-be84-4067-9abf-be22b9593e0d",
+    "createdTimestamp" : 1635720966555,
+    "username" : "vulcan",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : false,
+    "firstName" : "vulcan",
+    "lastName" : "vulcan",
+    "email" : "vulcan@example.com",
+    "credentials" : [ {
+      "id" : "1497d064-6e78-4ce5-87c8-ca123d13c404",
+      "type" : "password",
+      "createdDate" : 1635720977249,
+      "secretData" : "{\"value\":\"P/iMB7REi+lT+r9Cx5hoUGbgUY+npSAVeLuZ7yGuR9CxgBOkWhnHY5cTdZFs5n/0rLXqgFrcwexPAHPb0EZJNg==\",\"salt\":\"gD79MBxMsSHrY3FwiDPJdQ==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-vulcan" ],
+    "notBefore" : 0,
+    "groups" : [ ]
+  } ]
+}
