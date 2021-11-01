@@ -1,5 +1,8 @@
 # Keycloak as SAML provider
 
+## Demo
+
+<img src="keycloak-vulcan-demo.gif" alt="Keycloak and Vulcan in action" width="600"/>
 
 ## Why ?
 
@@ -42,7 +45,3 @@ saml_issuer = "http://localhost:8080/api/v1/login/callback"
 saml_callback = "http://localhost:8080/api/v1/login/callback"
 saml_trusted_domains = ["localhost"]
 ```
-
-# Demo
-
-See [Keycloak and Vulcan in action](keycloak-vulcan-demo.mp4)
