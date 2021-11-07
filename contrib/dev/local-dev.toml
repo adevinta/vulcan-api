@@ -1,0 +1,59 @@
+[server]
+port = 8080
+secret_key = "SUPERSECRETSIGNKEY"
+cookie_name = "devcon-token"
+cookie_domain = "localhost"
+cookie_secure = false
+
+[db]
+connection_string = "host=localhost port=5432 user=vulcanito dbname=vulcanito password=vulcanito sslmode=disable"
+log_mode = false
+
+[log]
+# Log level: ERROR, WARN, INFO or DEBUG (default INFO)
+level = "DEBUG"
+
+[saml]
+saml_metadata = "http://localhost:8083/auth/realms/vulcan/protocol/saml/descriptor"
+saml_issuer = "http://localhost:8080/api/v1/login/callback"
+saml_callback = "http://localhost:8080/api/v1/login/callback"
+saml_trusted_domains = ["localhost"]
+
+[defaults]
+owners = []
+
+[scanengine]
+url = "http://localhost:8081/v1/"
+
+[scheduler]
+url = "http://localhost:8082/"
+# Minimum period time in minutes that a program can be scheduled to run
+minimum_interval = 0.1
+
+[sqs]
+enabled = false
+log_messages = true
+polling_interval = 10
+wait_time = 20
+timeout = 30
+queue_arn = "arn:aws:sqs:xxx:123456789012:yyy"
+
+[reports]
+sns_arn = "arn:aws:sns:xxx:123456789012:yyy"
+api_base_url = "http://localhost:8084"
+vulcanui_url = "http://localhost:1234"
+
+[vulcancore]
+schema = "https"
+host = "persistence.vulcan.example.com"
+
+[vulnerabilitydb]
+url = "http://localhost:8083"
+insecure_tls = true
+
+[awscatalogue]
+kind = "None"
+url = "https://catalogue.example.com"
+key = "a key"
+retries = 4
+retry_interval = 2 # seconds

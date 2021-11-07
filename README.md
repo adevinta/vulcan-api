@@ -15,6 +15,40 @@ go install
 vulcan-api -c ../../_resources/config/local.toml
 ```
 
+## Running the API in local mode
+
+The Vulcan API needs a Postgres database and an Authentication service (SAML provider).
+Run the commands bellow to launch the Docker containers we need:
+- Keycloak
+- Postgres
+- PgAdmin
+
+```sh
+# navigate to the contri/dev folder
+cd contrib/dev
+
+# launch dependencies
+./setup-dependencies.sh
+```
+
+After having the dependencies ready, start the Vulcan API using the
+`local-dev.toml` file, which is already configured to point to
+dependencies we set in the previous step. Remember to re-run this
+step every time you modify the Vulcan API.
+
+```sh
+# run the API using the local dev config file
+./run.sh local-dev.toml
+```
+
+If you want to clean up your environment, run the following command to
+destroy the Docker containers launched by `setup-dependencies.sh`
+
+```sh
+# destroy all containers created by setup-dependencies.sh
+./teardown.sh
+```
+
 # Docker execute
 
 Those are the variables you have to setup:
