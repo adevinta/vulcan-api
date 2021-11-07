@@ -28,7 +28,7 @@ To start a Keycloar container, navigate to this folder and run the following com
 
 The admin console will be available at:
 ```
-http://localhost:8083/auth/admin/
+http://localhost:8093/auth/admin/
 
 user: admin
 pass: admin
@@ -40,7 +40,7 @@ In order to configure the Vulcan API to connect on Keycloak, configure the `saml
 
 ```
 [saml]
-saml_metadata = "http://localhost:8083/auth/realms/vulcan/protocol/saml/descriptor"
+saml_metadata = "http://localhost:8093/auth/realms/vulcan/protocol/saml/descriptor"
 saml_issuer = "http://localhost:8080/api/v1/login/callback"
 saml_callback = "http://localhost:8080/api/v1/login/callback"
 saml_trusted_domains = ["localhost"]
