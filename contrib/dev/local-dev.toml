@@ -14,7 +14,7 @@ log_mode = false
 level = "DEBUG"
 
 [saml]
-saml_metadata = "http://localhost:8083/auth/realms/vulcan/protocol/saml/descriptor"
+saml_metadata = "http://localhost:8093/auth/realms/vulcan/protocol/saml/descriptor"
 saml_issuer = "http://localhost:8080/api/v1/login/callback"
 saml_callback = "http://localhost:8080/api/v1/login/callback"
 saml_trusted_domains = ["localhost"]
