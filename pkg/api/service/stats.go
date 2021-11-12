@@ -20,7 +20,7 @@ func (s vulcanitoService) StatsExposure(ctx context.Context, params api.StatsPar
 	return s.vulndbClient.StatsExposure(ctx, params)
 }
 
-func (s vulcanitoService) StatsCurrentExposure(ctx context.Context, params api.StatsParams) (*api.StatsExposure, error) {
+func (s vulcanitoService) StatsCurrentExposure(ctx context.Context, params api.StatsParams) (*api.StatsCurrentExposure, error) {
 	return s.vulndbClient.StatsCurrentExposure(ctx, params)
 }
 

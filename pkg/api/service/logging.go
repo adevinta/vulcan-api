@@ -951,7 +951,7 @@ func (middleware loggingMiddleware) StatsExposure(ctx context.Context, params ap
 	return middleware.next.StatsExposure(ctx, params)
 }
 
-func (middleware loggingMiddleware) StatsCurrentExposure(ctx context.Context, params api.StatsParams) (*api.StatsExposure, error) {
+func (middleware loggingMiddleware) StatsCurrentExposure(ctx context.Context, params api.StatsParams) (*api.StatsCurrentExposure, error) {
 	defer func() {
 		XRequestID := ""
 		if ctx != nil {

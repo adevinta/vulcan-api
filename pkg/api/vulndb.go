@@ -119,6 +119,11 @@ type StatsExposure struct {
 	Exposure vulndb.StatsExposure `json:"exposure"`
 }
 
+// StatsCurrentExposure represents the current exposure time stats by different averages.
+type StatsCurrentExposure struct {
+	Exposure vulndb.StatsExposure `json:"current_exposure"`
+}
+
 // StatsOpen represents the stats for open issues grouped by severity.
 type StatsOpen struct {
 	OpenIssues vulndb.StatsIssueSeverity `json:"open_issues"`
