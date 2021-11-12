@@ -221,10 +221,12 @@ func MakeEndpoints(s api.VulcanitoService, logger log.Logger) Endpoints {
 	endpoints[ListFindingsLabels] = makeListFindingsLabelsEndpoint(s, logger)
 	endpoints[StatsMTTR] = makeStatsMTTREndpoint(s, logger)
 	endpoints[StatsExposure] = makeStatsExposureEndpoint(s, logger)
+	endpoints[StatsCurrentExposure] = makeStatsCurrentExposureEndpoint(s, logger)
 	endpoints[StatsOpen] = makeStatsOpenEndpoint(s, logger)
 	endpoints[StatsFixed] = makeStatsFixedEndpoint(s, logger)
 	endpoints[GlobalStatsMTTR] = makeGlobalStatsMTTREndpoint(s, logger)
 	endpoints[GlobalStatsExposure] = makeGlobalStatsExposureEndpoint(s, logger)
+	endpoints[GlobalStatsCurrentExposure] = makeGlobalStatsCurrentExposureEndpoint(s, logger)
 
 	return endpoints
 }
