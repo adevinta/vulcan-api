@@ -11,13 +11,13 @@ import (
 	"encoding/hex"
 	"fmt"
 
-	stdjwt "github.com/dgrijalva/jwt-go"
 	jwtkit "github.com/go-kit/kit/auth/jwt"
 	"github.com/go-kit/kit/endpoint"
 	"github.com/go-kit/kit/log"
+	stdjwt "github.com/golang-jwt/jwt/v4"
 
-	"github.com/adevinta/vulcan-api/pkg/api"
 	"github.com/adevinta/errors"
+	"github.com/adevinta/vulcan-api/pkg/api"
 )
 
 // Helper which returns the private signkey for a Token object
