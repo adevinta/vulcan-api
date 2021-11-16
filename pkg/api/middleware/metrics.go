@@ -136,11 +136,15 @@ var (
 		endpoint.ListFindingOverwrites:  entityFinding,
 		endpoint.ListFindingsLabels:     entityFinding,
 		// Stats
-		endpoint.StatsCoverage:   entityStats,
-		endpoint.StatsMTTR:       entityStats,
-		endpoint.StatsOpen:       entityStats,
-		endpoint.StatsFixed:      entityStats,
-		endpoint.GlobalStatsMTTR: entityStats,
+		endpoint.StatsCoverage:              entityStats,
+		endpoint.StatsMTTR:                  entityStats,
+		endpoint.StatsExposure:              entityStats,
+		endpoint.StatsCurrentExposure:       entityStats,
+		endpoint.StatsOpen:                  entityStats,
+		endpoint.StatsFixed:                 entityStats,
+		endpoint.GlobalStatsMTTR:            entityStats,
+		endpoint.GlobalStatsExposure:        entityStats,
+		endpoint.GlobalStatsCurrentExposure: entityStats,
 	}
 )
 
