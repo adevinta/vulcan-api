@@ -7,13 +7,13 @@ package service
 import (
 	"github.com/go-kit/kit/log"
 
-	metrics "github.com/adevinta/vulcan-metrics-client"
-	"github.com/adevinta/vulcan-api/pkg/jwt"
 	"github.com/adevinta/vulcan-api/pkg/api"
+	"github.com/adevinta/vulcan-api/pkg/jwt"
 	"github.com/adevinta/vulcan-api/pkg/reports"
 	"github.com/adevinta/vulcan-api/pkg/scanengine"
 	"github.com/adevinta/vulcan-api/pkg/schedule"
 	"github.com/adevinta/vulcan-api/pkg/vulnerabilitydb"
+	metrics "github.com/adevinta/vulcan-metrics-client"
 )
 
 // AWSAccounts defines the services realted to AWS Accounts required by the

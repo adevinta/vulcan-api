@@ -10,8 +10,8 @@ import (
 	"github.com/go-kit/kit/endpoint"
 	kitlog "github.com/go-kit/kit/log"
 
-	"github.com/adevinta/vulcan-api/pkg/api"
 	"github.com/adevinta/errors"
+	"github.com/adevinta/vulcan-api/pkg/api"
 )
 
 type RecipientsData struct {

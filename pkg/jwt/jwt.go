@@ -7,7 +7,7 @@ package jwt
 import (
 	"errors"
 
-	libjwt "github.com/dgrijalva/jwt-go"
+	libjwt "github.com/golang-jwt/jwt/v4"
 )
 
 var (

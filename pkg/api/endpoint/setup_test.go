@@ -17,9 +17,9 @@ import (
 	"github.com/google/go-cmp/cmp/cmpopts"
 	_ "github.com/lib/pq"
 
-	"github.com/adevinta/vulcan-api/pkg/jwt"
 	"github.com/adevinta/vulcan-api/pkg/api"
 	"github.com/adevinta/vulcan-api/pkg/api/service"
+	"github.com/adevinta/vulcan-api/pkg/jwt"
 	"github.com/adevinta/vulcan-api/pkg/testutil"
 )
 
