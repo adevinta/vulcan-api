@@ -65,6 +65,7 @@ func AttachRoutes(e endpoint.Endpoints, logger kitlog.Logger) http.Handler {
 	r.Methods("GET").Path("/api/v1/teams/{team_id}/assets").Handler(newServer(e[endpoint.ListAssets], endpoint.AssetRequest{}, logger, endpoint.ListAssets))
 	r.Methods("POST").Path("/api/v1/teams/{team_id}/assets").Handler(newServer(e[endpoint.CreateAsset], endpoint.AssetsListRequest{}, logger, endpoint.CreateAsset))
 	r.Methods("POST").Path("/api/v1/teams/{team_id}/assets/multistatus").Handler(newServer(e[endpoint.CreateAssetMultiStatus], endpoint.AssetsListRequest{}, logger, endpoint.CreateAssetMultiStatus))
+	r.Methods("PUT").Path("/api/v1/teams/{team_id}/assets/discovery").Handler(newServer(e[endpoint.MergeDiscoveredAsset], endpoint.DiscoveredAssetsRequest{}, logger, endpoint.MergeDiscoveredAsset))
 
 	r.Methods("GET").Path("/api/v1/teams/{team_id}/assets/{asset_id}").Handler(newServer(e[endpoint.FindAsset], endpoint.AssetRequest{}, logger, endpoint.FindAsset))
 	r.Methods("PATCH").Path("/api/v1/teams/{team_id}/assets/{asset_id}").Handler(newServer(e[endpoint.UpdateAsset], endpoint.AssetRequest{}, logger, endpoint.UpdateAsset))

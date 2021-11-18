@@ -218,3 +218,15 @@ type AssetCreationResponse struct {
 type Status struct {
 	Code int `json:"code"`
 }
+
+// AssetMergeOperations defines a set of operations to perform when merging a
+// list of assets requested by a discovery service.
+type AssetMergeOperations struct {
+	Create  []Asset
+	Update  []Asset
+	Deassoc []Asset
+	Del     []Asset
+
+	Group       Group
+	Annotations []*AssetAnnotation
+}

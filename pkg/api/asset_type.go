@@ -4,6 +4,8 @@ Copyright 2021 Adevinta
 
 package api
 
+import "strings"
+
 type AssetType struct {
 	ID     string   `gorm:"primary_key;AUTO_INCREMENT" json:"id" sql:"DEFAULT:gen_random_uuid()"`
 	Name   string   `json:"name"`
@@ -20,4 +22,15 @@ func (at AssetType) ToResponse() AssetTypeResponse {
 type AssetTypeResponse struct {
 	ID   string `json:"id"`
 	Name string `json:"name"`
+}
+
+// ValidAssetType indicates if the asset type name exists in Vulcan.
+func ValidAssetType(assetTypeName string) bool {
+	valid := []string{"AWSAccount", "IP", "IPRange", "DomainName", "Hostname", "DockerImage", "WebAddress", "GitRepository"}
+	for _, a := range valid {
+		if strings.EqualFold(a, assetTypeName) {
+			return true
+		}
+	}
+	return false
 }
