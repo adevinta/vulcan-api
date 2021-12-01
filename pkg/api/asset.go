@@ -17,6 +17,8 @@ import (
 	types "github.com/adevinta/vulcan-types"
 )
 
+const DiscoveredAssetsGroupSuffix = "-discovered-assets"
+
 var ErrROLFPInvalidText = "invalid ROLFP representation"
 
 type Asset struct {

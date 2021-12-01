@@ -449,13 +449,19 @@ func (db vulcanitoStore) MergeAssets(mergeOps api.AssetMergeOperations) error {
 		}
 	}
 
-	// De-associate assets not present in the current discovery.
+	// De-associate assets not present in the current discovery and remove the
+	// stale discovery annotations.
 	for _, asset := range mergeOps.Deassoc {
 		assetGroup := api.AssetGroup{
 			AssetID: asset.ID,
 			GroupID: mergeOps.Group.ID,
 		}
 		err := db.ungroupAssetsTX(tx, assetGroup, asset.TeamID)
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+		_, err = db.putAssetAnnotationsTX(tx, asset.TeamID, asset.ID, asset.AssetAnnotations)
 		if err != nil {
 			tx.Rollback()
 			return err

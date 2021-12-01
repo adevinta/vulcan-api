@@ -189,7 +189,7 @@ func makeMergeDiscoveredAssetEndpoint(s api.VulcanitoService, logger kitlog.Logg
 		}
 
 		// Validate that the asset group name is one of the allowed ones.
-		if !strings.HasSuffix(requestBody.GroupName, "discovered-assets") {
+		if !strings.HasSuffix(requestBody.GroupName, api.DiscoveredAssetsGroupSuffix) {
 			return nil, errors.Validation("Asset group not allowed")
 		}
 
