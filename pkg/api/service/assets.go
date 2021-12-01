@@ -268,11 +268,13 @@ func (s vulcanitoService) MergeDiscoveredAsset(ctx context.Context, teamID strin
 	case err != nil:
 		errMssg := fmt.Sprintf("unable to find group %s: %v", groupName, err)
 		return errors.NotFound(errMssg)
+	// No more than one group should be returned. This check is required
+	// because the store layer is implemented using a LIKE filter.
 	case len(groups) > 1:
 		errMsg := fmt.Sprintf("more than one group matches the name %s", groupName)
 		return errors.Validation(errMsg)
+	// The group doesn't exist, create it.
 	case len(groups) == 0:
-		// The group doesn't exist, create it.
 		g := api.Group{
 			TeamID: teamID,
 			Name:   groupName,
@@ -281,12 +283,15 @@ func (s vulcanitoService) MergeDiscoveredAsset(ctx context.Context, teamID strin
 		if err != nil {
 			return errors.Database(err)
 		}
-
 		group = *res
-	case groups[0] == nil:
-		errMsg := fmt.Sprintf("unexpected nil pointer returned for the group %s", groupName)
-		return errors.Database(errMsg)
+	// There is exactly one matching group.
 	default:
+		// It shouldn't happen but checking to avoid possible nil pointer
+		// dereferences.
+		if groups[0] == nil {
+			errMsg := fmt.Sprintf("unexpected nil pointer returned for the group %s", groupName)
+			return errors.Database(errMsg)
+		}
 		group = *groups[0]
 	}
 
