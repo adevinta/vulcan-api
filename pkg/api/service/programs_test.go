@@ -14,9 +14,9 @@ import (
 	"github.com/google/go-cmp/cmp"
 
 	"github.com/adevinta/errors"
-	"github.com/adevinta/vulcan-api/pkg/jwt"
 	"github.com/adevinta/vulcan-api/pkg/api"
 	"github.com/adevinta/vulcan-api/pkg/api/store"
+	"github.com/adevinta/vulcan-api/pkg/jwt"
 	"github.com/adevinta/vulcan-api/pkg/scanengine"
 	"github.com/adevinta/vulcan-api/pkg/schedule"
 	"github.com/adevinta/vulcan-api/pkg/testutil"
@@ -119,8 +119,10 @@ type periodErrMockScheduler struct{}
 func (s *periodErrMockScheduler) CreateScanSchedule(programID, teamID, cronExpr string) error {
 	return schedule.ErrInvalidSchedulePeriod
 }
-func (s *periodErrMockScheduler) GetScanScheduleByID(programID string) (string, error) { return "", nil }
-func (s *periodErrMockScheduler) DeleteScanSchedule(programID string) error            { return nil }
+func (s *periodErrMockScheduler) GetScanScheduleByID(programID string) (string, error) {
+	return "", nil
+}
+func (s *periodErrMockScheduler) DeleteScanSchedule(programID string) error { return nil }
 func (s *periodErrMockScheduler) BulkCreateScanSchedules(schedules []schedule.ScanBulkSchedule) error {
 	return schedule.ErrInvalidSchedulePeriod
 }

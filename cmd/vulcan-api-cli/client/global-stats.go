@@ -15,13 +15,57 @@ import (
 	"strconv"
 )
 
+// CurrentExposureGlobalStatsPath computes a request path to the current exposure action of global-stats.
+func CurrentExposureGlobalStatsPath() string {
+
+	return fmt.Sprintf("/api/v1/stats/exposure/current")
+}
+
+// Get global current exposure statistics. This metric takes into account only the exposure for open vulnerabilities since the last time they were detected.
+func (c *Client) CurrentExposureGlobalStats(ctx context.Context, path string, maxScore *float64, minScore *float64) (*http.Response, error) {
+	req, err := c.NewCurrentExposureGlobalStatsRequest(ctx, path, maxScore, minScore)
+	if err != nil {
+		return nil, err
+	}
+	return c.Client.Do(ctx, req)
+}
+
+// NewCurrentExposureGlobalStatsRequest create the request corresponding to the current exposure action endpoint of the global-stats resource.
+func (c *Client) NewCurrentExposureGlobalStatsRequest(ctx context.Context, path string, maxScore *float64, minScore *float64) (*http.Request, error) {
+	scheme := c.Scheme
+	if scheme == "" {
+		scheme = "https"
+	}
+	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
+	values := u.Query()
+	if maxScore != nil {
+		tmp125 := strconv.FormatFloat(*maxScore, 'f', -1, 64)
+		values.Set("maxScore", tmp125)
+	}
+	if minScore != nil {
+		tmp126 := strconv.FormatFloat(*minScore, 'f', -1, 64)
+		values.Set("minScore", tmp126)
+	}
+	u.RawQuery = values.Encode()
+	req, err := http.NewRequestWithContext(ctx, "GET", u.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+	if c.BearerSigner != nil {
+		if err := c.BearerSigner.Sign(req); err != nil {
+			return nil, err
+		}
+	}
+	return req, nil
+}
+
 // ExposureGlobalStatsPath computes a request path to the exposure action of global-stats.
 func ExposureGlobalStatsPath() string {
 
 	return fmt.Sprintf("/api/v1/stats/exposure")
 }
 
-// Get global exposure statistics.
+// Get global exposure statistics. This metric takes into account the exposure across all lifecycle of vulnerabilities.
 func (c *Client) ExposureGlobalStats(ctx context.Context, path string, atDate *string, maxScore *float64, minScore *float64) (*http.Response, error) {
 	req, err := c.NewExposureGlobalStatsRequest(ctx, path, atDate, maxScore, minScore)
 	if err != nil {
@@ -42,12 +86,12 @@ func (c *Client) NewExposureGlobalStatsRequest(ctx context.Context, path string,
 		values.Set("atDate", *atDate)
 	}
 	if maxScore != nil {
-		tmp119 := strconv.FormatFloat(*maxScore, 'f', -1, 64)
-		values.Set("maxScore", tmp119)
+		tmp127 := strconv.FormatFloat(*maxScore, 'f', -1, 64)
+		values.Set("maxScore", tmp127)
 	}
 	if minScore != nil {
-		tmp120 := strconv.FormatFloat(*minScore, 'f', -1, 64)
-		values.Set("minScore", tmp120)
+		tmp128 := strconv.FormatFloat(*minScore, 'f', -1, 64)
+		values.Set("minScore", tmp128)
 	}
 	u.RawQuery = values.Encode()
 	req, err := http.NewRequestWithContext(ctx, "GET", u.String(), nil)

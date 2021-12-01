@@ -121,6 +121,7 @@ type VulcanitoService interface {
 	ListFindingOverwrites(ctx context.Context, findingID string) ([]*FindingOverwrite, error)
 	StatsMTTR(ctx context.Context, params StatsParams) (*StatsMTTR, error)
 	StatsExposure(ctx context.Context, params StatsParams) (*StatsExposure, error)
+	StatsCurrentExposure(ctx context.Context, params StatsParams) (*StatsCurrentExposure, error)
 	StatsOpen(ctx context.Context, params StatsParams) (*StatsOpen, error)
 	StatsFixed(ctx context.Context, params StatsParams) (*StatsFixed, error)
 }

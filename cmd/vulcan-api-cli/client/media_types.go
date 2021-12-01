@@ -237,6 +237,21 @@ func (c *Client) DecodeCreateAssets(resp *http.Response) (*CreateAssets, error) 
 	return &decoded, err
 }
 
+// Current exposure stats (default view)
+//
+// Identifier: current_exposure; view=default
+type CurrentExposure struct {
+	// Stats for current exposure by different averages
+	CurrentExposure *Statsaverages `form:"current_exposure,omitempty" json:"current_exposure,omitempty" yaml:"current_exposure,omitempty" xml:"current_exposure,omitempty"`
+}
+
+// DecodeCurrentExposure decodes the CurrentExposure instance encoded in resp body.
+func (c *Client) DecodeCurrentExposure(resp *http.Response) (*CurrentExposure, error) {
+	var decoded CurrentExposure
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return &decoded, err
+}
+
 // Error (default view)
 //
 // Identifier: error; view=default

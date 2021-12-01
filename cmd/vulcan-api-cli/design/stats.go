@@ -90,6 +90,16 @@ var StatsExposureMedia = MediaType("exposure", func() {
 	})
 })
 
+var StatsCurrentExposureMedia = MediaType("current_exposure", func() {
+	Description("Current exposure stats")
+	Attributes(func() {
+		Attribute("current_exposure", StatsAveragesMedia, "Stats for current exposure by different averages")
+	})
+	View("default", func() {
+		Attribute("current_exposure")
+	})
+})
+
 var StatsOpenMedia = MediaType("statsOpen", func() {
 	Description("Open issues stats")
 	Attributes(func() {
@@ -139,7 +149,7 @@ var _ = Resource("stats", func() {
 	})
 
 	Action("exposure", func() {
-		Description("Get exposure statistics for a team.")
+		Description("Get exposure statistics for a team. This metric takes into account the exposure across all lifecycle of vulnerabilities.")
 		Routing(GET("/exposure"))
 		Params(func() {
 			Param("team_id", String, "Team ID")
@@ -149,6 +159,18 @@ var _ = Resource("stats", func() {
 		})
 		Security("Bearer")
 		Response(OK, StatsExposureMedia)
+	})
+
+	Action("current exposure", func() {
+		Description("Get current exposure statistics for a team. This metric takes into account only the exposure for open vulnerabilities since the last time they were detected.")
+		Routing(GET("/exposure/current"))
+		Params(func() {
+			Param("team_id", String, "Team ID")
+			Param("minScore", Number, "Minimum issues score filter")
+			Param("maxScore", Number, "Maximum issues score filter")
+		})
+		Security("Bearer")
+		Response(OK, StatsCurrentExposureMedia)
 	})
 
 	Action("open", func() {
@@ -209,7 +231,7 @@ var _ = Resource("global-stats", func() {
 	})
 
 	Action("exposure", func() {
-		Description("Get global exposure statistics.")
+		Description("Get global exposure statistics. This metric takes into account the exposure across all lifecycle of vulnerabilities.")
 		Routing(GET("/exposure"))
 		Params(func() {
 			Param("atDate", String, "Specific date to get statistics at")
@@ -218,5 +240,16 @@ var _ = Resource("global-stats", func() {
 		})
 		Security("Bearer")
 		Response(OK, StatsExposureMedia)
+	})
+
+	Action("current exposure", func() {
+		Description("Get global current exposure statistics. This metric takes into account only the exposure for open vulnerabilities since the last time they were detected.")
+		Routing(GET("/exposure/current"))
+		Params(func() {
+			Param("minScore", Number, "Minimum issues score filter")
+			Param("maxScore", Number, "Maximum issues score filter")
+		})
+		Security("Bearer")
+		Response(OK, StatsCurrentExposureMedia)
 	})
 })

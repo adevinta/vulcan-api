@@ -13,9 +13,9 @@ import (
 	"os"
 
 	apiErrors "github.com/adevinta/errors"
+	"github.com/adevinta/vulcan-api/pkg/api"
 	"github.com/go-kit/kit/log"
 	kithttp "github.com/go-kit/kit/transport/http"
-	"github.com/adevinta/vulcan-api/pkg/api"
 )
 
 var (

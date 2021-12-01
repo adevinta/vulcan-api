@@ -88,6 +88,31 @@ func makeStatsExposureEndpoint(s api.VulcanitoService, logger kitlog.Logger) end
 	}
 }
 
+func makeStatsCurrentExposureEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		r, ok := request.(*StatsRequest)
+		if !ok {
+			return nil, errors.Assertion("Type assertion failed")
+		}
+
+		team, err := s.FindTeam(ctx, r.TeamID)
+		if err != nil {
+			return nil, err
+		}
+		if team.Tag == "" {
+			return nil, errors.Validation("no tag defined for the team")
+		}
+
+		params := buildStatsParams(team.Tag, r)
+
+		response, err = s.StatsCurrentExposure(ctx, params)
+		if err != nil {
+			return nil, err
+		}
+		return Ok{response}, nil
+	}
+}
+
 func makeStatsOpenEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		r, ok := request.(*StatsRequest)
@@ -187,6 +212,26 @@ func makeGlobalStatsExposureEndpoint(s api.VulcanitoService, logger kitlog.Logge
 		params := buildStatsParams("", r)
 
 		response, err = s.StatsExposure(ctx, params)
+		if err != nil {
+			return nil, err
+		}
+		return Ok{response}, nil
+	}
+}
+
+func makeGlobalStatsCurrentExposureEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		r, ok := request.(*StatsRequest)
+		if !ok {
+			return nil, errors.Assertion("Type assertion failed")
+		}
+
+		// Build stats param with void tag
+		// so we get global metrics instead
+		// of specific team metrics.
+		params := buildStatsParams("", r)
+
+		response, err = s.StatsCurrentExposure(ctx, params)
 		if err != nil {
 			return nil, err
 		}

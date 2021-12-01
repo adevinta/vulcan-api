@@ -50,6 +50,51 @@ func (c *Client) NewCoverageStatsRequest(ctx context.Context, path string) (*htt
 	return req, nil
 }
 
+// CurrentExposureStatsPath computes a request path to the current exposure action of stats.
+func CurrentExposureStatsPath(teamID string) string {
+	param0 := teamID
+
+	return fmt.Sprintf("/api/v1/teams/%s/stats/exposure/current", param0)
+}
+
+// Get current exposure statistics for a team. This metric takes into account only the exposure for open vulnerabilities since the last time they were detected.
+func (c *Client) CurrentExposureStats(ctx context.Context, path string, maxScore *float64, minScore *float64) (*http.Response, error) {
+	req, err := c.NewCurrentExposureStatsRequest(ctx, path, maxScore, minScore)
+	if err != nil {
+		return nil, err
+	}
+	return c.Client.Do(ctx, req)
+}
+
+// NewCurrentExposureStatsRequest create the request corresponding to the current exposure action endpoint of the stats resource.
+func (c *Client) NewCurrentExposureStatsRequest(ctx context.Context, path string, maxScore *float64, minScore *float64) (*http.Request, error) {
+	scheme := c.Scheme
+	if scheme == "" {
+		scheme = "https"
+	}
+	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
+	values := u.Query()
+	if maxScore != nil {
+		tmp129 := strconv.FormatFloat(*maxScore, 'f', -1, 64)
+		values.Set("maxScore", tmp129)
+	}
+	if minScore != nil {
+		tmp130 := strconv.FormatFloat(*minScore, 'f', -1, 64)
+		values.Set("minScore", tmp130)
+	}
+	u.RawQuery = values.Encode()
+	req, err := http.NewRequestWithContext(ctx, "GET", u.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+	if c.BearerSigner != nil {
+		if err := c.BearerSigner.Sign(req); err != nil {
+			return nil, err
+		}
+	}
+	return req, nil
+}
+
 // ExposureStatsPath computes a request path to the exposure action of stats.
 func ExposureStatsPath(teamID string) string {
 	param0 := teamID
@@ -57,7 +102,7 @@ func ExposureStatsPath(teamID string) string {
 	return fmt.Sprintf("/api/v1/teams/%s/stats/exposure", param0)
 }
 
-// Get exposure statistics for a team.
+// Get exposure statistics for a team. This metric takes into account the exposure across all lifecycle of vulnerabilities.
 func (c *Client) ExposureStats(ctx context.Context, path string, atDate *string, maxScore *float64, minScore *float64) (*http.Response, error) {
 	req, err := c.NewExposureStatsRequest(ctx, path, atDate, maxScore, minScore)
 	if err != nil {
@@ -78,12 +123,12 @@ func (c *Client) NewExposureStatsRequest(ctx context.Context, path string, atDat
 		values.Set("atDate", *atDate)
 	}
 	if maxScore != nil {
-		tmp121 := strconv.FormatFloat(*maxScore, 'f', -1, 64)
-		values.Set("maxScore", tmp121)
+		tmp131 := strconv.FormatFloat(*maxScore, 'f', -1, 64)
+		values.Set("maxScore", tmp131)
 	}
 	if minScore != nil {
-		tmp122 := strconv.FormatFloat(*minScore, 'f', -1, 64)
-		values.Set("minScore", tmp122)
+		tmp132 := strconv.FormatFloat(*minScore, 'f', -1, 64)
+		values.Set("minScore", tmp132)
 	}
 	u.RawQuery = values.Encode()
 	req, err := http.NewRequestWithContext(ctx, "GET", u.String(), nil)

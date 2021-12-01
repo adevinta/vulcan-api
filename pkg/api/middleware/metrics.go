@@ -13,10 +13,10 @@ import (
 
 	"github.com/adevinta/errors"
 	metrics "github.com/adevinta/vulcan-metrics-client"
-	stdjwt "github.com/dgrijalva/jwt-go"
 	jwtkit "github.com/go-kit/kit/auth/jwt"
 	kitendpoint "github.com/go-kit/kit/endpoint"
 	kithttp "github.com/go-kit/kit/transport/http"
+	stdjwt "github.com/golang-jwt/jwt/v4"
 
 	"github.com/adevinta/vulcan-api/pkg/api/endpoint"
 	"github.com/adevinta/vulcan-api/pkg/api/transport"
@@ -136,11 +136,15 @@ var (
 		endpoint.ListFindingOverwrites:  entityFinding,
 		endpoint.ListFindingsLabels:     entityFinding,
 		// Stats
-		endpoint.StatsCoverage:   entityStats,
-		endpoint.StatsMTTR:       entityStats,
-		endpoint.StatsOpen:       entityStats,
-		endpoint.StatsFixed:      entityStats,
-		endpoint.GlobalStatsMTTR: entityStats,
+		endpoint.StatsCoverage:              entityStats,
+		endpoint.StatsMTTR:                  entityStats,
+		endpoint.StatsExposure:              entityStats,
+		endpoint.StatsCurrentExposure:       entityStats,
+		endpoint.StatsOpen:                  entityStats,
+		endpoint.StatsFixed:                 entityStats,
+		endpoint.GlobalStatsMTTR:            entityStats,
+		endpoint.GlobalStatsExposure:        entityStats,
+		endpoint.GlobalStatsCurrentExposure: entityStats,
 	}
 )
 

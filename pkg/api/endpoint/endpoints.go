@@ -99,22 +99,24 @@ const (
 
 	SendDigestReport = "SendDigestReport"
 
-	StatsCoverage          = "StatsCoverage"
-	ListFindings           = "ListFindings"
-	ListFindingsIssues     = "ListFindingsIssues"
-	ListFindingsByIssue    = "ListFindingsByIssue"
-	ListFindingsTargets    = "ListFindingsTargets"
-	ListFindingsByTarget   = "ListFindingsByTarget"
-	FindFinding            = "FindFinding"
-	CreateFindingOverwrite = "CreateFindingOverwrite"
-	ListFindingOverwrites  = "ListFindingOverwrites"
-	ListFindingsLabels     = "ListFindingsLabels"
-	StatsMTTR              = "StatsMTTR"
-	StatsExposure          = "StatsExposure"
-	StatsOpen              = "StatsOpen"
-	StatsFixed             = "StatsFixed"
-	GlobalStatsMTTR        = "GlobalStatsMTTR"
-	GlobalStatsExposure    = "GlobalStatsExposure"
+	StatsCoverage              = "StatsCoverage"
+	ListFindings               = "ListFindings"
+	ListFindingsIssues         = "ListFindingsIssues"
+	ListFindingsByIssue        = "ListFindingsByIssue"
+	ListFindingsTargets        = "ListFindingsTargets"
+	ListFindingsByTarget       = "ListFindingsByTarget"
+	FindFinding                = "FindFinding"
+	CreateFindingOverwrite     = "CreateFindingOverwrite"
+	ListFindingOverwrites      = "ListFindingOverwrites"
+	ListFindingsLabels         = "ListFindingsLabels"
+	StatsMTTR                  = "StatsMTTR"
+	StatsExposure              = "StatsExposure"
+	StatsCurrentExposure       = "StatsCurrentExposure"
+	StatsOpen                  = "StatsOpen"
+	StatsFixed                 = "StatsFixed"
+	GlobalStatsMTTR            = "GlobalStatsMTTR"
+	GlobalStatsExposure        = "GlobalStatsExposure"
+	GlobalStatsCurrentExposure = "GlobalStatsCurrentExposure"
 )
 
 // Endpoints contains all available endpoints for this api
@@ -219,10 +221,12 @@ func MakeEndpoints(s api.VulcanitoService, logger log.Logger) Endpoints {
 	endpoints[ListFindingsLabels] = makeListFindingsLabelsEndpoint(s, logger)
 	endpoints[StatsMTTR] = makeStatsMTTREndpoint(s, logger)
 	endpoints[StatsExposure] = makeStatsExposureEndpoint(s, logger)
+	endpoints[StatsCurrentExposure] = makeStatsCurrentExposureEndpoint(s, logger)
 	endpoints[StatsOpen] = makeStatsOpenEndpoint(s, logger)
 	endpoints[StatsFixed] = makeStatsFixedEndpoint(s, logger)
 	endpoints[GlobalStatsMTTR] = makeGlobalStatsMTTREndpoint(s, logger)
 	endpoints[GlobalStatsExposure] = makeGlobalStatsExposureEndpoint(s, logger)
+	endpoints[GlobalStatsCurrentExposure] = makeGlobalStatsCurrentExposureEndpoint(s, logger)
 
 	return endpoints
 }

@@ -566,12 +566,14 @@ func addWhitelistingMiddleware(endpoints endpoint.Endpoints, logger log.Logger) 
 		endpoint.ListFindingOverwrites:  true,
 		endpoint.ListFindingsLabels:     true,
 		// Metrics access.
-		endpoint.StatsMTTR:           true,
-		endpoint.StatsExposure:       true,
-		endpoint.StatsOpen:           true,
-		endpoint.StatsFixed:          true,
-		endpoint.GlobalStatsMTTR:     true,
-		endpoint.GlobalStatsExposure: true,
+		endpoint.StatsMTTR:                  true,
+		endpoint.StatsExposure:              true,
+		endpoint.StatsCurrentExposure:       true,
+		endpoint.StatsOpen:                  true,
+		endpoint.StatsFixed:                 true,
+		endpoint.GlobalStatsMTTR:            true,
+		endpoint.GlobalStatsExposure:        true,
+		endpoint.GlobalStatsCurrentExposure: true,
 	}
 
 	for name := range endpoints {
