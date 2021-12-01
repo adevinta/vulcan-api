@@ -411,11 +411,11 @@ func (db vulcanitoStore) DeleteAllAssets(teamID string) error {
 	return nil
 }
 
-func (db vulcanitoStore) MergeAssets(mergeOps api.AssetMergeOperations) ([]api.Asset, error) {
+func (db vulcanitoStore) MergeAssets(mergeOps api.AssetMergeOperations) error {
 	// Begin a new transaction.
 	tx := db.Conn.Begin()
 	if tx.Error != nil {
-		return nil, db.logError(errors.Database(tx.Error))
+		return db.logError(errors.Database(tx.Error))
 	}
 
 	// Create the new assets, its annotations and add them to the provided
@@ -424,7 +424,7 @@ func (db vulcanitoStore) MergeAssets(mergeOps api.AssetMergeOperations) ([]api.A
 		_, err := db.createAssetsTX(tx, mergeOps.Create, []api.Group{mergeOps.Group}, mergeOps.Annotations)
 		if err != nil {
 			tx.Rollback()
-			return nil, err
+			return err
 		}
 	}
 
@@ -435,7 +435,7 @@ func (db vulcanitoStore) MergeAssets(mergeOps api.AssetMergeOperations) ([]api.A
 			_, err := db.putAssetAnnotationsTX(tx, asset.TeamID, asset.ID, asset.AssetAnnotations)
 			if err != nil {
 				tx.Rollback()
-				return nil, err
+				return err
 			}
 			asset.AssetAnnotations = nil
 		}
@@ -444,7 +444,7 @@ func (db vulcanitoStore) MergeAssets(mergeOps api.AssetMergeOperations) ([]api.A
 			_, err := db.updateAssetTX(tx, asset)
 			if err != nil {
 				tx.Rollback()
-				return nil, err
+				return err
 			}
 		}
 	}
@@ -458,7 +458,7 @@ func (db vulcanitoStore) MergeAssets(mergeOps api.AssetMergeOperations) ([]api.A
 		err := db.ungroupAssetsTX(tx, assetGroup, asset.TeamID)
 		if err != nil {
 			tx.Rollback()
-			return nil, err
+			return err
 		}
 	}
 
@@ -467,16 +467,16 @@ func (db vulcanitoStore) MergeAssets(mergeOps api.AssetMergeOperations) ([]api.A
 		err := db.deleteAssetTX(tx, asset)
 		if err != nil {
 			tx.Rollback()
-			return nil, err
+			return err
 		}
 	}
 
 	// Commit the transaction.
 	if tx.Commit().Error != nil {
-		return nil, db.logError(errors.Database(tx.Error))
+		return db.logError(errors.Database(tx.Error))
 	}
 
-	return nil, nil
+	return nil
 }
 
 func (db vulcanitoStore) GetAssetType(name string) (*api.AssetType, error) {

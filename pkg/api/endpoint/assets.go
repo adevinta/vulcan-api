@@ -211,8 +211,7 @@ func makeMergeDiscoveredAssetEndpoint(s api.VulcanitoService, logger kitlog.Logg
 		}
 
 		// Ask for the service layer to merge the discovered assets.
-		_, err := s.MergeDiscoveredAsset(ctx, requestBody.TeamID, assets, requestBody.GroupName, requestBody.Annotations)
-		if err != nil {
+		if err := s.MergeDiscoveredAsset(ctx, requestBody.TeamID, assets, requestBody.GroupName, requestBody.Annotations); err != nil {
 			return nil, err
 		}
 

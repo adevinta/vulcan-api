@@ -50,7 +50,7 @@ type VulcanitoStore interface {
 	DeleteAsset(asset Asset) error
 	DeleteAllAssets(teamID string) error
 	UpdateAsset(asset Asset) (*Asset, error)
-	MergeAssets(mergeOps AssetMergeOperations) ([]Asset, error)
+	MergeAssets(mergeOps AssetMergeOperations) error
 
 	GetAssetType(assetTypeName string) (*AssetType, error)
 

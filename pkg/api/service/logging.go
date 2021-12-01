@@ -340,7 +340,7 @@ func (middleware loggingMiddleware) CreateAssetsMultiStatus(ctx context.Context,
 	return middleware.next.CreateAssetsMultiStatus(ctx, assets, groups, annotations)
 }
 
-func (middleware loggingMiddleware) MergeDiscoveredAsset(ctx context.Context, teamID string, assets []api.Asset, groupName string, annotations api.AssetAnnotationsMap) ([]api.AssetCreationResponse, error) {
+func (middleware loggingMiddleware) MergeDiscoveredAsset(ctx context.Context, teamID string, assets []api.Asset, groupName string, annotations api.AssetAnnotationsMap) error {
 	defer func() {
 		XRequestID := ""
 		if ctx != nil {

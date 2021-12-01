@@ -258,31 +258,44 @@ func (s vulcanitoService) CreateAssetsMultiStatus(ctx context.Context, assets []
 // MergeDiscoveredAsset receives an array of assets and merges the content
 // of the asset with the auto-disvovery group.  It returns an array containing
 // one response per request, in the same order as in the original request.
-func (s vulcanitoService) MergeDiscoveredAsset(ctx context.Context, teamID string, assets []api.Asset, groupName string, annotations api.AssetAnnotationsMap) ([]api.AssetCreationResponse, error) {
-	// Check that the group exists and that there is only one match for the
-	// given group name.
+func (s vulcanitoService) MergeDiscoveredAsset(ctx context.Context, teamID string, assets []api.Asset, groupName string, annotations api.AssetAnnotationsMap) error {
+	// Check if the group exists and otherwise create it. Also check that there
+	// is no more than one match for the given group name.
+	var group api.Group
+
 	groups, err := s.db.ListGroups(teamID, groupName)
-	if err != nil {
+	switch {
+	case err != nil:
 		errMssg := fmt.Sprintf("unable to find group %s: %v", groupName, err)
-		return nil, errors.NotFound(errMssg)
-	}
-	if len(groups) != 1 {
+		return errors.NotFound(errMssg)
+	case len(groups) > 1:
 		errMsg := fmt.Sprintf("more than one group matches the name %s", groupName)
-		return nil, errors.Validation(errMsg)
-	}
-	if groups[0] == nil {
+		return errors.Validation(errMsg)
+	case len(groups) == 0:
+		// The group doesn't exist, create it.
+		g := api.Group{
+			TeamID: teamID,
+			Name:   groupName,
+		}
+		res, err := s.CreateGroup(ctx, g)
+		if err != nil {
+			return errors.Database(err)
+		}
+
+		group = *res
+	case groups[0] == nil:
 		errMsg := fmt.Sprintf("unexpected nil pointer returned for the group %s", groupName)
-		return nil, errors.Database(errMsg)
+		return errors.Database(errMsg)
+	default:
+		group = *groups[0]
 	}
 
-	ops, err := s.calculateMergeOperations(ctx, teamID, assets, *groups[0], annotations)
+	ops, err := s.calculateMergeOperations(ctx, teamID, assets, group, annotations)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	_, err = s.db.MergeAssets(ops)
-
-	return nil, err
+	return s.db.MergeAssets(ops)
 }
 
 func (s vulcanitoService) calculateMergeOperations(ctx context.Context, teamID string, assets []api.Asset, group api.Group, annotations api.AssetAnnotationsMap) (api.AssetMergeOperations, error) {
