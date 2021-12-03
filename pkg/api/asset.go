@@ -229,6 +229,7 @@ type AssetMergeOperations struct {
 	Deassoc []Asset
 	Del     []Asset
 
+	TeamID      string
 	Group       Group
 	Annotations []*AssetAnnotation
 }

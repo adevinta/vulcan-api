@@ -339,6 +339,7 @@ func (s vulcanitoService) calculateMergeOperations(ctx context.Context, teamID s
 		annotationsWithPrefix[newK] = v
 	}
 
+	ops.TeamID = teamID
 	ops.Group = group
 	ops.Annotations = annotationsWithPrefix.ToModel()
 	// Calculate assets to create or update.

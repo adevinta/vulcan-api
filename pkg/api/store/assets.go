@@ -5,6 +5,7 @@ Copyright 2021 Adevinta
 package store
 
 import (
+	"fmt"
 	"strings"
 	"time"
 
@@ -358,12 +359,7 @@ func (db vulcanitoStore) deleteAssetTX(tx *gorm.DB, asset api.Asset) error {
 		return db.logError(errors.Forbidden("asset does not belong to team"))
 	}
 
-	result := tx.Delete(&api.AssetGroup{}, "asset_id = ?", asset.ID)
-	if result.Error != nil {
-		return db.logError(errors.Delete(result.Error))
-	}
-
-	result = tx.Delete(&api.Asset{}, "id = ? and team_id = ?", asset.ID, asset.TeamID)
+	result := tx.Delete(&api.Asset{}, "id = ? and team_id = ?", asset.ID, asset.TeamID)
 	if result.Error != nil {
 		return db.logError(errors.Delete(result.Error))
 	}
@@ -382,15 +378,8 @@ func (db vulcanitoStore) DeleteAllAssets(teamID string) error {
 		return db.logError(errors.Database(tx.Error))
 	}
 
-	// Delete all asset_group associations for this team
-	result := tx.Exec("DELETE from asset_group where asset_id in (select id from assets where team_id = ?)", teamID)
-	if result.Error != nil {
-		tx.Rollback()
-		return db.logError(errors.Delete(result.Error))
-	}
-
 	// Delete all assets from this team
-	result = tx.Delete(&api.Asset{}, "team_id = ?", teamID)
+	result := tx.Delete(&api.Asset{}, "team_id = ?", teamID)
 	if result.Error != nil {
 		tx.Rollback()
 		return db.logError(errors.Delete(result.Error))
@@ -406,6 +395,36 @@ func (db vulcanitoStore) DeleteAllAssets(teamID string) error {
 	// Commit the transaction
 	if tx.Commit().Error != nil {
 		return db.logError(errors.Database(tx.Error))
+	}
+
+	return nil
+}
+
+// deleteAssetsUnsafeTX deletes a list of asset without checking the team the
+// asset belongs to. Ensure that the asset list provided to the method doesn't
+// contain taint data (i.e. the data comes from a trusted source).
+func (db vulcanitoStore) deleteAssetsUnsafeTX(tx *gorm.DB, teamID string, assets []api.Asset) error {
+	var assetIDs []string
+	for _, a := range assets {
+		assetIDs = append(assetIDs, a.ID)
+	}
+	result := tx.Exec(`
+		DELETE FROM assets
+		WHERE team_id = ? AND id IN (?)
+	`, teamID, assetIDs)
+	if result.Error != nil {
+		tx.Rollback()
+		return db.logError(errors.Delete(result.Error))
+	}
+
+	if result.RowsAffected != int64(len(assets)) {
+		return db.logError(errors.Delete(fmt.Sprintf("Not all the assets were deleted: %v/%v", result.RowsAffected, len(assets))))
+	}
+
+	for _, asset := range assets {
+		if err := db.pushToOutbox(tx, opDeleteAsset, asset); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -468,9 +487,8 @@ func (db vulcanitoStore) MergeAssets(mergeOps api.AssetMergeOperations) error {
 		}
 	}
 
-	// Delete the stale assets.
-	for _, asset := range mergeOps.Del {
-		err := db.deleteAssetTX(tx, asset)
+	if len(mergeOps.Del) > 0 {
+		err := db.deleteAssetsUnsafeTX(tx, mergeOps.TeamID, mergeOps.Del)
 		if err != nil {
 			tx.Rollback()
 			return err
