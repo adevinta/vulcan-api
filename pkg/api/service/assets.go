@@ -306,14 +306,28 @@ func (s vulcanitoService) MergeDiscoveredAsset(ctx context.Context, teamID strin
 func (s vulcanitoService) calculateMergeOperations(ctx context.Context, teamID string, assets []api.Asset, group api.Group, annotations api.AssetAnnotationsMap) (api.AssetMergeOperations, error) {
 	ops := api.AssetMergeOperations{}
 
-	// Create an index (identifier, type) for the old assets.
+	allAssets, err := s.ListAssets(ctx, teamID, api.Asset{})
+	if err != nil {
+		return ops, err
+	}
+	allAssetsMap := make(map[string]*api.Asset)
+	for _, a := range allAssets {
+		if a.AssetType == nil {
+			return ops, fmt.Errorf("missing values for team/asset (%v/%v)", teamID, a.ID)
+		}
+		key := fmt.Sprintf("%v-%v", a.Identifier, a.AssetType.Name)
+		allAssetsMap[key] = a
+	}
+
+	// Create an index (identifier, type) for the old assets belonging to the
+	// discovery group.
 	oldAssetsMap := make(map[string]*api.Asset)
 	for _, ag := range group.AssetGroup {
 		if ag.Asset == nil || ag.Asset.AssetType == nil {
 			return ops, fmt.Errorf("missing values for team/asset/group (%v/%v/%v)", teamID, ag.AssetID, ag.GroupID)
 		}
 		key := fmt.Sprintf("%v-%v", ag.Asset.Identifier, ag.Asset.AssetType.Name)
-		oldAssetsMap[key] = ag.Asset
+		oldAssetsMap[key] = allAssetsMap[key]
 	}
 
 	// Prepend a prefix to the annotations so they can be merged without
@@ -346,11 +360,6 @@ func (s vulcanitoService) calculateMergeOperations(ctx context.Context, teamID s
 			// automatically fetch one.
 			if a.AssetType.Name == "AWSAccount" && a.Alias == "" {
 				a.Alias = s.getAccountName(a.Identifier)
-			}
-
-			// If the asset is invalid, abort the creation.
-			if err := a.Validate(); err != nil {
-				return ops, fmt.Errorf("invalid asset, aborting the creation (%+v)", a)
 			}
 
 			ops.Create = append(ops.Create, a)
@@ -395,14 +404,10 @@ func (s vulcanitoService) calculateMergeOperations(ctx context.Context, teamID s
 	// contain only assets that were previously discovered but not in this
 	// round.
 	for _, old := range oldAssetsMap {
-		asset, err := s.FindAsset(ctx, *old)
-		if err != nil {
-			return ops, err
-		}
-
 		del := true
-		for _, g := range asset.AssetGroups {
+		for _, g := range old.AssetGroups {
 			if g.Group != nil && g.Group.Name != group.Name {
+				// TODO: fix because this is not working OK.
 				// Only delete the asset if doesn't belong to more groups than
 				// the auto-discovery group. Also remove annotations previously
 				// added by the discovery service.
