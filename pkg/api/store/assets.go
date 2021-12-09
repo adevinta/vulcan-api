@@ -117,9 +117,9 @@ func (db vulcanitoStore) createAssetsTX(tx *gorm.DB, assets []api.Asset, groups 
 	return createdAssets, nil
 }
 
-// CreateAsset persists an asset in the database.
-// It receives an asset and an array of groups.
-// The asset will be associated with all groups from that array.
+// CreateAsset persists an asset in the database.  It receives an asset and an
+// array of groups.  The asset will be associated with all groups from that
+// array.
 func (db vulcanitoStore) CreateAsset(a api.Asset, groups []api.Group) (*api.Asset, error) {
 	tx := db.Conn.Begin()
 	if tx.Error != nil {
@@ -138,9 +138,6 @@ func (db vulcanitoStore) CreateAsset(a api.Asset, groups []api.Group) (*api.Asse
 	return created, nil
 }
 
-// CreateAsset persists an asset in the database.
-// It receives an asset and an array of groups.
-// The asset will be associated with all groups from that array.
 func (db vulcanitoStore) createAssetTX(tx *gorm.DB, a api.Asset, groups []api.Group) (*api.Asset, error) {
 	// We try to retrieve the asset from the database using the Team ID, Identifier and Asset Type.
 	// This asset will be returned at the end of the function.
