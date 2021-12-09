@@ -225,11 +225,11 @@ type Status struct {
 // list of assets requested by a discovery service.
 type AssetMergeOperations struct {
 	Create  []Asset
+	Assoc   []Asset
 	Update  []Asset
 	Deassoc []Asset
 	Del     []Asset
 
-	TeamID      string
-	Group       Group
-	Annotations []*AssetAnnotation
+	TeamID string
+	Group  Group
 }

@@ -105,5 +105,6 @@ func (ans AssetAnnotationsMap) Merge(annotations AssetAnnotationsMap, prefix str
 			output[k] = v
 		}
 	}
+
 	return output
 }

@@ -50,11 +50,16 @@ type AssetsListRequest struct {
 	Annotations api.AssetAnnotationsMap `json:"annotations"`
 }
 
-type DiscoveredAssetsRequest struct {
-	TeamID      string                  `json:"team_id" urlvar:"team_id"`
-	Assets      []AssetRequest          `json:"assets"`
-	GroupName   string                  `json:"group_name"`
+type AssetWithAnnotationsRequest struct {
+	AssetRequest
+
 	Annotations api.AssetAnnotationsMap `json:"annotations"`
+}
+
+type DiscoveredAssetsRequest struct {
+	TeamID    string                        `json:"team_id" urlvar:"team_id"`
+	Assets    []AssetWithAnnotationsRequest `json:"assets"`
+	GroupName string                        `json:"group_name"`
 }
 
 func makeListAssetsEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
@@ -206,12 +211,13 @@ func makeMergeDiscoveredAssetEndpoint(s api.VulcanitoService, logger kitlog.Logg
 
 			asset := ar.NewAsset()
 			asset.TeamID = requestBody.TeamID
+			asset.AssetAnnotations = ar.Annotations.ToModel()
 
 			assets = append(assets, *asset)
 		}
 
 		// Ask for the service layer to merge the discovered assets.
-		if err := s.MergeDiscoveredAsset(ctx, requestBody.TeamID, assets, requestBody.GroupName, requestBody.Annotations); err != nil {
+		if err := s.MergeDiscoveredAsset(ctx, requestBody.TeamID, assets, requestBody.GroupName); err != nil {
 			return nil, err
 		}
 

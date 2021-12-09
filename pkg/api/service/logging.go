@@ -340,15 +340,15 @@ func (middleware loggingMiddleware) CreateAssetsMultiStatus(ctx context.Context,
 	return middleware.next.CreateAssetsMultiStatus(ctx, assets, groups, annotations)
 }
 
-func (middleware loggingMiddleware) MergeDiscoveredAsset(ctx context.Context, teamID string, assets []api.Asset, groupName string, annotations api.AssetAnnotationsMap) error {
+func (middleware loggingMiddleware) MergeDiscoveredAsset(ctx context.Context, teamID string, assets []api.Asset, groupName string) error {
 	defer func() {
 		XRequestID := ""
 		if ctx != nil {
 			XRequestID, _ = ctx.Value(kithttp.ContextKeyRequestXRequestID).(string)
 		}
-		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "MergeDiscoveredAsset", "teamID", mySprintf(teamID), "assets", mySprintf(assets), "groupName", mySprintf(groupName), "annotations", mySprintf(annotations))
+		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "MergeDiscoveredAsset", "teamID", mySprintf(teamID), "assets", mySprintf(assets), "groupName", mySprintf(groupName))
 	}()
-	return middleware.next.MergeDiscoveredAsset(ctx, teamID, assets, groupName, annotations)
+	return middleware.next.MergeDiscoveredAsset(ctx, teamID, assets, groupName)
 }
 
 func (middleware loggingMiddleware) FindAsset(ctx context.Context, asset api.Asset) (*api.Asset, error) {

@@ -258,7 +258,7 @@ func (s vulcanitoService) CreateAssetsMultiStatus(ctx context.Context, assets []
 // MergeDiscoveredAsset receives an array of assets and merges the content
 // of the asset with the auto-disvovery group.  It returns an array containing
 // one response per request, in the same order as in the original request.
-func (s vulcanitoService) MergeDiscoveredAsset(ctx context.Context, teamID string, assets []api.Asset, groupName string, annotations api.AssetAnnotationsMap) error {
+func (s vulcanitoService) MergeDiscoveredAsset(ctx context.Context, teamID string, assets []api.Asset, groupName string) error {
 	// Check if the group exists and otherwise create it. Also check that there
 	// is no more than one match for the given group name.
 	var group api.Group
@@ -295,7 +295,7 @@ func (s vulcanitoService) MergeDiscoveredAsset(ctx context.Context, teamID strin
 		group = *groups[0]
 	}
 
-	ops, err := s.calculateMergeOperations(ctx, teamID, assets, group, annotations)
+	ops, err := s.calculateMergeOperations(ctx, teamID, assets, group)
 	if err != nil {
 		return err
 	}
@@ -303,8 +303,11 @@ func (s vulcanitoService) MergeDiscoveredAsset(ctx context.Context, teamID strin
 	return s.db.MergeAssets(ops)
 }
 
-func (s vulcanitoService) calculateMergeOperations(ctx context.Context, teamID string, assets []api.Asset, group api.Group, annotations api.AssetAnnotationsMap) (api.AssetMergeOperations, error) {
-	ops := api.AssetMergeOperations{}
+func (s vulcanitoService) calculateMergeOperations(ctx context.Context, teamID string, assets []api.Asset, group api.Group) (api.AssetMergeOperations, error) {
+	ops := api.AssetMergeOperations{
+		TeamID: teamID,
+		Group:  group,
+	}
 
 	allAssets, err := s.ListAssets(ctx, teamID, api.Asset{})
 	if err != nil {
@@ -332,23 +335,19 @@ func (s vulcanitoService) calculateMergeOperations(ctx context.Context, teamID s
 
 	// Prepend a prefix to the annotations so they can be merged without
 	// messing with other annotations that assets might have.
-	annotationsWithPrefix := api.AssetAnnotationsMap{}
 	prefix := fmt.Sprintf("%s/%s", genericAnnotationsPrefix, strings.TrimSuffix(group.Name, api.DiscoveredAssetsGroupSuffix))
-	for k, v := range annotations {
-		newK := fmt.Sprintf("%s/%s", prefix, k)
-		annotationsWithPrefix[newK] = v
-	}
 
-	ops.TeamID = teamID
-	ops.Group = group
-	ops.Annotations = annotationsWithPrefix.ToModel()
-	// Calculate assets to create or update.
+	// Calculate assets to create, associate or update.
 	for _, a := range assets {
+		for _, aa := range a.AssetAnnotations {
+			aa.Key = fmt.Sprintf("%s/%s", prefix, aa.Key)
+		}
+
 		key := fmt.Sprintf("%v-%v", a.Identifier, a.AssetType.Name)
-		old, ok := oldAssetsMap[key]
+		old, okAll := allAssetsMap[key]
 
 		// Asset is new. Create the asset and its annotations.
-		if !ok {
+		if !okAll {
 			// Retrieve asset type from its name.
 			assetType, err := s.GetAssetType(ctx, a.AssetType.Name)
 			if err != nil {
@@ -367,10 +366,17 @@ func (s vulcanitoService) calculateMergeOperations(ctx context.Context, teamID s
 			continue
 		}
 
-		// Asset was already existing, so remove it from the old assets list to
-		// later on identify stale assets (assets that were discovered in the
-		// previous round but not in this one).
-		delete(oldAssetsMap, key)
+		_, okOld := oldAssetsMap[key]
+
+		// Asset is not new but it wasn't associated to the group.
+		if !okOld {
+			ops.Assoc = append(ops.Assoc, *old)
+		} else {
+			// Asset was already existing in the group, so remove it from the old assets list to
+			// later on identify stale assets (assets that were discovered in the
+			// previous round but not in this one).
+			delete(oldAssetsMap, key)
+		}
 
 		updatedAsset := api.Asset{
 			ID:     old.ID,
@@ -391,8 +397,9 @@ func (s vulcanitoService) calculateMergeOperations(ctx context.Context, teamID s
 
 		// Only update the annotations if they are different.
 		oldAnnotations := api.AssetAnnotations(old.AssetAnnotations).ToMap()
-		if !oldAnnotations.Matches(annotationsWithPrefix, prefix) {
-			updatedAsset.AssetAnnotations = oldAnnotations.Merge(annotationsWithPrefix, prefix).ToModel()
+		newAnnotations := api.AssetAnnotations(a.AssetAnnotations).ToMap()
+		if !oldAnnotations.Matches(newAnnotations, prefix) {
+			updatedAsset.AssetAnnotations = oldAnnotations.Merge(newAnnotations, prefix).ToModel()
 			updated = true
 		}
 
@@ -407,15 +414,12 @@ func (s vulcanitoService) calculateMergeOperations(ctx context.Context, teamID s
 	for _, old := range oldAssetsMap {
 		del := true
 		for _, g := range old.AssetGroups {
+			// Only delete the asset if doesn't belong to more groups than
+			// the auto-discovery group. Also remove annotations previously
+			// added by the discovery service.
 			if g.Group != nil && g.Group.Name != group.Name {
-				// TODO: fix because this is not working OK.
-				// Only delete the asset if doesn't belong to more groups than
-				// the auto-discovery group. Also remove annotations previously
-				// added by the discovery service.
 				aux := api.AssetAnnotations(old.AssetAnnotations).ToMap()
-				aux.Merge(api.AssetAnnotationsMap{}, prefix)
-				old.AssetAnnotations = aux.ToModel()
-
+				old.AssetAnnotations = aux.Merge(api.AssetAnnotationsMap{}, prefix).ToModel()
 				ops.Deassoc = append(ops.Deassoc, *old)
 				del = false
 				break

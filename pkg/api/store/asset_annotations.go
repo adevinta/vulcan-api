@@ -88,6 +88,8 @@ func (db vulcanitoStore) CreateAssetAnnotations(teamID string, assetID string, a
 	// Retrieve annotations for the asset
 	createdAnnotations := []*api.AssetAnnotation{}
 	for _, annotation := range annotations {
+		annotation := annotation
+
 		// Ensure consistent Asset ID
 		annotation.AssetID = assetID
 
@@ -214,6 +216,8 @@ func (db vulcanitoStore) putAssetAnnotationsTX(tx *gorm.DB, teamID string, asset
 
 	newAnnotations := []*api.AssetAnnotation{}
 	for _, annotation := range annotations {
+		annotation := annotation
+
 		// Ensure consistent Asset ID
 		annotation.AssetID = assetID
 
