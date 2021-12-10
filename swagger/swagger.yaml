@@ -73,7 +73,7 @@ definitions:
         - annotation/1
         - annotation/2
         items:
-          example: Tenetur consequatur quibusdam.
+          example: Rerum deleniti aut sed illo porro.
           type: string
         type: array
     title: AssetAnnotationDeleteRequest
@@ -96,34 +96,6 @@ definitions:
     description: AssetCollection is the media type for an array of Asset (default
       view)
     example:
-    - alias: AnAlias
-      annotations:
-        annotation/1: value/1
-        annotation/2: value/2
-      classified_at: "2020-09-03T15:00:42.112975Z"
-      environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
-      id: a8720503-0284-45fd-9cf4-5bb6c500966f
-      identifier: vulcan.example.com
-      options: '{"timeout":60}'
-      rolfp: R:1/O:1/L:0/F:0/P:0+S:1
-      scannable: true
-      type:
-        id: 29f83d16-09c4-4be5-8cae-e232d41f388a
-        name: Hostname
-    - alias: AnAlias
-      annotations:
-        annotation/1: value/1
-        annotation/2: value/2
-      classified_at: "2020-09-03T15:00:42.112975Z"
-      environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
-      id: a8720503-0284-45fd-9cf4-5bb6c500966f
-      identifier: vulcan.example.com
-      options: '{"timeout":60}'
-      rolfp: R:1/O:1/L:0/F:0/P:0+S:1
-      scannable: true
-      type:
-        id: 29f83d16-09c4-4be5-8cae-e232d41f388a
-        name: Hostname
     - alias: AnAlias
       annotations:
         annotation/1: value/1
@@ -342,21 +314,6 @@ definitions:
       type:
         id: 29f83d16-09c4-4be5-8cae-e232d41f388a
         name: Hostname
-    - alias: AnAlias
-      classified_at: "2020-09-03T15:00:42.112975Z"
-      environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
-      id: a8720503-0284-45fd-9cf4-5bb6c500966f
-      identifier: vulcan.example.com
-      options: '{"timeout":60}'
-      rolfp: R:1/O:1/L:0/F:0/P:0+S:1
-      scannable: true
-      status:
-        code: 3944598920153519998
-        error: Quo placeat magni harum ea.
-        type: Voluptatum mollitia consequuntur dignissimos.
-      type:
-        id: 29f83d16-09c4-4be5-8cae-e232d41f388a
-        name: Hostname
     items:
       $ref: '#/definitions/Assetresponse'
     title: 'Mediatype identifier: assetresponse; type=collection; view=default'
@@ -465,7 +422,7 @@ definitions:
         - a14c7c65-66ab-4676-bcf6-0dea9719f5c6
         - 9f7a0c78-b752-4126-aa6d-0f286ada7b8f
         items:
-          example: Est est illo et corrupti rerum deleniti.
+          example: Consequatur quibusdam et voluptate est.
           type: string
         type: array
     required:
@@ -1228,6 +1185,10 @@ definitions:
       id: f6360346-77a5-4f97-b919-331363b3af26
       name: Default group
       options: '{"timeout":60}'
+    - description: All newly created assets are added to the Default group
+      id: f6360346-77a5-4f97-b919-331363b3af26
+      name: Default group
+      options: '{"timeout":60}'
     items:
       $ref: '#/definitions/GroupWithoutAssetsCount'
     title: 'Mediatype identifier: group; type=collection; view=default'
@@ -1276,7 +1237,7 @@ definitions:
         - Web
         - HTTP
         items:
-          example: Cumque enim totam ut perspiciatis.
+          example: Sint ratione.
           type: string
         type: array
       recommendations:
@@ -1284,14 +1245,14 @@ definitions:
         example:
         - It is recommended to run DMARC
         items:
-          example: Sequi et sed.
+          example: Cumque enim totam ut perspiciatis.
           type: string
         type: array
       reference_links:
         description: Documentation reference for the issue
         example: []
         items:
-          example: Sint ratione.
+          example: Illum ipsum tempora nemo corrupti sed.
           type: string
         type: array
       summary:
@@ -1299,6 +1260,32 @@ definitions:
         example: MX presence
         type: string
     title: 'Mediatype identifier: issue; view=default'
+    type: object
+  Job:
+    description: Job (default view)
+    example:
+      id: 967d9966-b561-4233-bd6f-cac603fd8320
+      operation: OnboardDiscoveredAssets
+      status: PROCESSING
+      team_id: 9cb0bb2b-ca36-4877-acad-9dde23880595
+    properties:
+      id:
+        description: Job ID
+        example: 967d9966-b561-4233-bd6f-cac603fd8320
+        type: string
+      operation:
+        description: Operation
+        example: OnboardDiscoveredAssets
+        type: string
+      status:
+        description: Status
+        example: PROCESSING
+        type: string
+      team_id:
+        description: Team ID
+        example: 9cb0bb2b-ca36-4877-acad-9dde23880595
+        type: string
+    title: 'Mediatype identifier: job; view=default'
     type: object
   Listassetentry:
     description: List Asset Entry (default view)
@@ -1379,33 +1366,6 @@ definitions:
     description: ListassetentryCollection is the media type for an array of Listassetentry
       (default view)
     example:
-    - alias: AnAlias
-      annotations:
-        annotation/1: value/1
-        annotation/2: value/2
-      classified_at: "2020-09-03T15:00:42.112975Z"
-      environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
-      groups:
-      - description: All newly created assets are added to the Default group
-        id: f6360346-77a5-4f97-b919-331363b3af26
-        name: Default group
-        options: '{"timeout":60}'
-      - description: All newly created assets are added to the Default group
-        id: f6360346-77a5-4f97-b919-331363b3af26
-        name: Default group
-        options: '{"timeout":60}'
-      - description: All newly created assets are added to the Default group
-        id: f6360346-77a5-4f97-b919-331363b3af26
-        name: Default group
-        options: '{"timeout":60}'
-      id: a8720503-0284-45fd-9cf4-5bb6c500966f
-      identifier: vulcan.example.com
-      options: '{"timeout":60}'
-      rolfp: R:1/O:1/L:0/F:0/P:0+S:1
-      scannable: true
-      type:
-        id: 29f83d16-09c4-4be5-8cae-e232d41f388a
-        name: Hostname
     - alias: AnAlias
       annotations:
         annotation/1: value/1
@@ -1994,7 +1954,7 @@ definitions:
         - Hostname
         - Port
         items:
-          example: Natus esse neque aliquid.
+          example: Laborum quas voluptatum sit.
           type: string
         type: array
       name:
@@ -2009,7 +1969,7 @@ definitions:
         items:
           additionalProperties: true
           example:
-            Quis laborum quas voluptatum sit.: Illum ipsum tempora nemo corrupti sed.
+            Perferendis maxime natus esse.: Aliquid molestias velit.
           type: object
         type: array
     title: 'Mediatype identifier: resource; view=default'
@@ -2482,7 +2442,7 @@ definitions:
         example:
         - team:vulcan
         items:
-          example: Placeat omnis perferendis.
+          example: Sequi et sed.
           type: string
         type: array
     title: 'Mediatype identifier: target; view=default'
@@ -2822,6 +2782,30 @@ paths:
       summary: show healthcheck
       tags:
       - healthcheck
+  /jobs/{job_id}:
+    get:
+      description: Describe job
+      operationId: job#show
+      parameters:
+      - description: Job ID
+        in: path
+        name: job_id
+        required: true
+        type: string
+      produces:
+      - job
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Job'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: show job
+      tags:
+      - job
   /profile:
     get:
       description: Show profile information for the current authenticated user based

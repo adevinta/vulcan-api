@@ -636,6 +636,27 @@ func (c *Client) DecodeIssue(resp *http.Response) (*Issue, error) {
 	return &decoded, err
 }
 
+// Job (default view)
+//
+// Identifier: job; view=default
+type Job struct {
+	// Job ID
+	ID *string `form:"id,omitempty" json:"id,omitempty" yaml:"id,omitempty" xml:"id,omitempty"`
+	// Operation
+	Operation *string `form:"operation,omitempty" json:"operation,omitempty" yaml:"operation,omitempty" xml:"operation,omitempty"`
+	// Status
+	Status *string `form:"status,omitempty" json:"status,omitempty" yaml:"status,omitempty" xml:"status,omitempty"`
+	// Team ID
+	TeamID *string `form:"team_id,omitempty" json:"team_id,omitempty" yaml:"team_id,omitempty" xml:"team_id,omitempty"`
+}
+
+// DecodeJob decodes the Job instance encoded in resp body.
+func (c *Client) DecodeJob(resp *http.Response) (*Job, error) {
+	var decoded Job
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return &decoded, err
+}
+
 // List Asset Entry (default view)
 //
 // Identifier: listassetentry; view=default
