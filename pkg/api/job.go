@@ -33,7 +33,7 @@ func (j Job) ToResponse() *JobResponse {
 
 type JobResponse struct {
 	ID        string `json:"id"`
-	TeamID    string `json:"team_id"`
+	TeamID    string `json:"team_id,omitempty"`
 	Operation string `json:"operation"`
 	Status    string `json:"status"`
 }

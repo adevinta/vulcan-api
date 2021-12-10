@@ -13,6 +13,8 @@ type VulcanitoStore interface {
 
 	Healthcheck() error
 
+	FindJob(jobID string) (*Job, error)
+
 	CreateUserIfNotExists(userData saml.UserData) error
 
 	ListUsers() ([]*User, error)

@@ -13,6 +13,9 @@ type VulcanitoService interface {
 	// Healthcheck
 	Healthcheck(ctx context.Context) error
 
+	// Jobs
+	FindJob(ctx context.Context, jobID string) (*Job, error)
+
 	// Users
 	ListUsers(ctx context.Context) ([]*User, error)
 	CreateUser(ctx context.Context, user User) (*User, error)

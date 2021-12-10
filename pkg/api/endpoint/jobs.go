@@ -6,7 +6,6 @@ package endpoint
 
 import (
 	"context"
-	"time"
 
 	"github.com/go-kit/kit/endpoint"
 	kitlog "github.com/go-kit/kit/log"
@@ -26,14 +25,9 @@ func makeFindJobEndpoint(svc api.VulcanitoService, logger kitlog.Logger) endpoin
 		if !ok {
 			return nil, errors.Assertion("Type assertion failed")
 		}
-
-		job := api.Job{
-			ID:        requestBody.ID,
-			TeamID:    "TEAM_ID",
-			Operation: "OPERATION",
-			Status:    "STATUS",
-			CreatedAt: time.Now(),
-			UpdatedAt: time.Now(),
+		job, err := svc.FindJob(ctx, requestBody.ID)
+		if err != nil {
+			return nil, err
 		}
 
 		return Ok{job.ToResponse()}, nil
