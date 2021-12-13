@@ -6,6 +6,7 @@ package service
 
 import (
 	"context"
+	"errors"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -31,7 +32,7 @@ func TestServiceFindJob(t *testing.T) {
 	tests := []struct {
 		ID      string
 		name    string
-		want    interface{}
+		want    *api.Job
 		wantErr error
 	}{
 		{
@@ -55,20 +56,16 @@ func TestServiceFindJob(t *testing.T) {
 			},
 			wantErr: nil,
 		},
-		/*
-			{
-				name:    "InvalidUUID",
-				ID:      "1234",
-				want:    nil,
-				wantErr: errors.New("ID is malformed"),
-			},
-			{
-				name: "NotFound",
-				ID:   "77f58c4b-7632-4e1b-8088-cb7241d148ae",
-				//want:    nil,
-				wantErr: errors.New("Job does not exists"),
-			},
-		*/
+		{
+			name:    "InvalidUUID",
+			ID:      "1234",
+			wantErr: errors.New("ID is malformed"),
+		},
+		{
+			name:    "NotFound",
+			ID:      "77f58c4b-7632-4e1b-8088-cb7241d148ae",
+			wantErr: errors.New("Job does not exists"),
+		},
 	}
 
 	for _, tt := range tests {
@@ -82,13 +79,8 @@ func TestServiceFindJob(t *testing.T) {
 			if diff != "" {
 				t.Fatalf("%v\n", diff)
 			}
-
-			diff = cmp.Diff(nil, nil, ignoreJobsDateFieldsOpts)
-			t.Logf("diff(%v)", diff)
-
 			diff = cmp.Diff(tt.want, got, ignoreJobsDateFieldsOpts)
 			if diff != "" {
-				t.Logf("want(%+v),got(%+v)", tt.want, got)
 				t.Errorf("%v\n", diff)
 			}
 		})
