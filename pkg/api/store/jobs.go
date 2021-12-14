@@ -28,7 +28,7 @@ func (db vulcanitoStore) FindJob(jobID string) (*api.Job, error) {
 	}
 
 	if res.RowsAffected == 0 {
-		return nil, db.logError(errors.NotFound("Job does not exists"))
+		return nil, db.logError(errors.NotFound("Job does not exist"))
 	}
 
 	return job, nil

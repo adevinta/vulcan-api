@@ -63,7 +63,7 @@ func TestStoreFindJob(t *testing.T) {
 		{
 			name:    "NotFound",
 			ID:      "77f58c4b-7632-4e1b-8088-cb7241d148ae",
-			wantErr: errors.New("Job does not exists"),
+			wantErr: errors.New("Job does not exist"),
 		},
 	}
 
