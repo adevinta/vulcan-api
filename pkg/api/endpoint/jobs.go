@@ -25,11 +25,13 @@ func makeFindJobEndpoint(svc api.VulcanitoService, logger kitlog.Logger) endpoin
 		if !ok {
 			return nil, errors.Assertion("Type assertion failed")
 		}
+		if requestBody.ID == "" {
+			return nil, errors.Validation(`ID is empty`)
+		}
 		job, err := svc.FindJob(ctx, requestBody.ID)
 		if err != nil {
 			return nil, err
 		}
-
 		return Ok{job.ToResponse()}, nil
 	}
 }
