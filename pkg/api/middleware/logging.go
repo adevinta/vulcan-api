@@ -18,6 +18,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 
 	"github.com/adevinta/vulcan-api/pkg/api"
+	vulcanendpoint "github.com/adevinta/vulcan-api/pkg/api/endpoint"
 )
 
 func EndpointLogging(logger log.Logger, name string, db api.VulcanitoStore) endpoint.Middleware {
@@ -64,29 +65,35 @@ func EndpointLogging(logger log.Logger, name string, db api.VulcanitoStore) endp
 			}
 
 			begin := time.Now()
-			_ = level.Debug(logger).Log(
-				"X-Request-ID", XRequestID,
-				"endpoint", name,
-				"msg", "calling endpoint",
-				"request", fmt.Sprintf("%+v", request),
-				"user", u,
-				"team", team,
-				"team-name", teamName,
-			)
-			response, err := next(ctx, request)
-			defer func() {
+			// Avoid logging on healthchecks
+			if name != vulcanendpoint.Healthcheck {
 				_ = level.Debug(logger).Log(
 					"X-Request-ID", XRequestID,
 					"endpoint", name,
-					"msg", "called endpoint",
-					"response", fmt.Sprintf("%+v", response),
-					"took", time.Since(begin),
-					"err", err,
+					"msg", "calling endpoint",
+					"request", fmt.Sprintf("%+v", request),
 					"user", u,
 					"team", team,
 					"team-name", teamName,
 				)
-			}()
+			}
+			response, err := next(ctx, request)
+			// Avoid logging on healthchecks
+			if name != vulcanendpoint.Healthcheck {
+				defer func() {
+					_ = level.Debug(logger).Log(
+						"X-Request-ID", XRequestID,
+						"endpoint", name,
+						"msg", "called endpoint",
+						"response", fmt.Sprintf("%+v", response),
+						"took", time.Since(begin),
+						"err", err,
+						"user", u,
+						"team", team,
+						"team-name", teamName,
+					)
+				}()
+			}
 
 			return response, err
 		}
