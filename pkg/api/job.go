@@ -65,6 +65,6 @@ type JobResponse struct {
 }
 
 type JobResult struct {
-	Data  string `json:"data,omitempty"`
-	Error string `json:"error,omitempty"`
+	Data  string `json:"data"`
+	Error string `json:"error"`
 }
