@@ -534,6 +534,7 @@ func addWhitelistingMiddleware(endpoints endpoint.Endpoints, logger log.Logger) 
 		endpoint.ListAssets:             true,
 		endpoint.CreateAsset:            true,
 		endpoint.CreateAssetMultiStatus: true,
+		endpoint.MergeDiscoveredAsset:   true,
 		endpoint.FindAsset:              true,
 		endpoint.UpdateAsset:            true,
 		endpoint.DeleteAsset:            true,
