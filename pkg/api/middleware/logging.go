@@ -24,6 +24,11 @@ import (
 func EndpointLogging(logger log.Logger, name string, db api.VulcanitoStore) endpoint.Middleware {
 	return func(next endpoint.Endpoint) endpoint.Endpoint {
 		return func(ctx context.Context, request interface{}) (interface{}, error) {
+			// Avoid logging on healthcheck
+			if name == vulcanendpoint.Healthcheck {
+				return next(ctx, request)
+			}
+
 			var XRequestID, u, team, teamName string
 
 			if ctx != nil {
@@ -65,35 +70,27 @@ func EndpointLogging(logger log.Logger, name string, db api.VulcanitoStore) endp
 			}
 
 			begin := time.Now()
-			// Avoid logging on healthchecks
-			if name != vulcanendpoint.Healthcheck {
-				_ = level.Debug(logger).Log(
-					"X-Request-ID", XRequestID,
-					"endpoint", name,
-					"msg", "calling endpoint",
-					"request", fmt.Sprintf("%+v", request),
-					"user", u,
-					"team", team,
-					"team-name", teamName,
-				)
-			}
+			_ = level.Debug(logger).Log(
+				"X-Request-ID", XRequestID,
+				"endpoint", name,
+				"msg", "calling endpoint",
+				"request", fmt.Sprintf("%+v", request),
+				"user", u,
+				"team", team,
+				"team-name", teamName,
+			)
 			response, err := next(ctx, request)
-			// Avoid logging on healthchecks
-			if name != vulcanendpoint.Healthcheck {
-				defer func() {
-					_ = level.Debug(logger).Log(
-						"X-Request-ID", XRequestID,
-						"endpoint", name,
-						"msg", "called endpoint",
-						"response", fmt.Sprintf("%+v", response),
-						"took", time.Since(begin),
-						"err", err,
-						"user", u,
-						"team", team,
-						"team-name", teamName,
-					)
-				}()
-			}
+			_ = level.Debug(logger).Log(
+				"X-Request-ID", XRequestID,
+				"endpoint", name,
+				"msg", "called endpoint",
+				"response", fmt.Sprintf("%+v", response),
+				"took", time.Since(begin),
+				"err", err,
+				"user", u,
+				"team", team,
+				"team-name", teamName,
+			)
 
 			return response, err
 		}
