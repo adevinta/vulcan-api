@@ -3,6 +3,7 @@ CREATE TABLE jobs (
 	team_id UUID,
     operation TEXT NOT NULL,
     status TEXT NOT NULL,
+    result TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE,
 

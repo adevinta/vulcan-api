@@ -65,6 +65,17 @@ func TestStoreFindJob(t *testing.T) {
 			ID:      "77f58c4b-7632-4e1b-8088-cb7241d148ae",
 			wantErr: errors.New("Job does not exist"),
 		},
+		{
+			name: "WithResult",
+			ID:   "59a1739c-cadc-4bbc-82a9-ba11d784c9ff",
+			want: &api.Job{
+				ID:        "59a1739c-cadc-4bbc-82a9-ba11d784c9ff",
+				Operation: "OnboardDiscoveredAssets",
+				Status:    "DONE",
+				Result:    `{"data":{},"error":"WRONG"}`,
+			},
+			wantErr: nil,
+		},
 	}
 
 	for _, tt := range tests {
