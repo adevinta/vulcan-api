@@ -49,6 +49,7 @@ const (
 	entityReport    = "report"
 	entityFinding   = "finding"
 	entityStats     = "stats"
+	entityJob       = "job"
 
 	apiComponent  = "api"
 	unknownAction = "unknown"
@@ -145,6 +146,8 @@ var (
 		endpoint.GlobalStatsMTTR:            entityStats,
 		endpoint.GlobalStatsExposure:        entityStats,
 		endpoint.GlobalStatsCurrentExposure: entityStats,
+		// Jobs
+		endpoint.FindJob: entityJob,
 	}
 )
 

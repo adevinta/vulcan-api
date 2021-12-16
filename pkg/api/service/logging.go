@@ -43,6 +43,17 @@ func (middleware loggingMiddleware) Healthcheck(ctx context.Context) error {
 	return middleware.next.Healthcheck(ctx)
 }
 
+func (middleware loggingMiddleware) FindJob(ctx context.Context, jobID string) (*api.Job, error) {
+	defer func() {
+		XRequestID := ""
+		if ctx != nil {
+			XRequestID, _ = ctx.Value(kithttp.ContextKeyRequestXRequestID).(string)
+		}
+		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "FindJob", "jobID", mySprintf(jobID))
+	}()
+	return middleware.next.FindJob(ctx, jobID)
+}
+
 func (middleware loggingMiddleware) ListUsers(ctx context.Context) ([]*api.User, error) {
 
 	defer func() {

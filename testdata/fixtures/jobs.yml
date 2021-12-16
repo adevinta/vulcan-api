@@ -1,0 +1,28 @@
+# Copyright 2021 Adevinta
+
+# jobs.yml
+- id: 8ead6837-2967-42ad-9658-623c97c09d68
+  operation: OnboardDiscoveredAssets
+  status: PENDING
+  created_at: 2017-01-01 12:30:12
+  updated_at: 2017-01-01 12:30:12
+
+- id: f63f0454-fd71-4f37-846a-507c9a1bb429
+  team_id: a14c7c65-66ab-4676-bcf6-0dea9719f5c6
+  operation: OnboardDiscoveredAssets
+  status: PENDING
+  created_at: 2017-01-01 12:30:12
+  updated_at: 2017-01-01 12:30:12
+
+- id: 2f0d28c1-4f5b-414c-a0e6-22164b2aa216
+  operation: OnboardDiscoveredAssets
+  status: WRONG
+  created_at: 2017-01-01 12:30:12
+  updated_at: 2017-01-01 12:30:12
+
+- id: 59a1739c-cadc-4bbc-82a9-ba11d784c9ff
+  operation: OnboardDiscoveredAssets
+  status: DONE
+  result: '{"data":{"key":"value"},"error":"WRONG"}'
+  created_at: 2017-01-01 12:30:12
+  updated_at: 2017-01-01 12:30:12
