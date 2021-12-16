@@ -17,7 +17,7 @@ import (
 type Job struct {
 	ID        string `gorm:"primary_key:true"`
 	TeamID    string `gorm:"Column:team_id"`
-	Operation string `validate:required`
+	Operation string `validate:"required"`
 	// Status possible values are:
 	// - PENDING
 	// - RUNNING
@@ -33,10 +33,10 @@ type Job struct {
 func (j Job) Validate() error {
 	switch j.Status {
 	case "PENDING":
-	case "RUN":
+	case "RUNNING":
 	case "DONE":
 	default:
-		return errors.New("valid states are PENDING, RUN or DONE")
+		return errors.New("valid status are PENDING, RUNNING or DONE")
 	}
 	if !json.Valid([]byte(j.Result)) {
 		return errors.New("invalid JSON")

@@ -18,9 +18,9 @@ var JobMedia = MediaType("job", func() {
 		Attribute("operation", String, "Operation that triggered the job", func() { Example("OnboardDiscoveredAssets") })
 		Attribute("status", String, func() {
 			Description(`Indicates the status of the operation. The possible values are:
-	- 'PENDING': The job has been noted an is pending to be processed
+	- 'PENDING': The job has been noted and is pending to be processed
 	- 'RUNNING': The job is on execution
-	- 'DONE': The job has finished, either successfully os unsuccesfully. Result.error needs to be processed to determine it`)
+	- 'DONE': The job has finished, either successfully or unsuccesfully. Result.error needs to be processed to determine it`)
 			Example("PROCESSING")
 		})
 		Attribute("result", func() {
@@ -50,9 +50,9 @@ var _ = Resource("jobs", func() {
 
 	Action("show", func() {
 		Description(`Describes job status and results. The possible values for the status are:
-	- 'PENDING': The job has been noted an is pending to be processed
+	- 'PENDING': The job has been noted and is pending to be processed
 	- 'RUNNING': The job is on execution
-	- 'DONE': The job has finished, either successfully os unsuccesfully. Result.error needs to be processed to determine it
+	- 'DONE': The job has finished, either successfully or unsuccesfully. Result.error needs to be processed to determine it
 
 The results field indicates if there was an error during the execution of the job, and otherwise can return data from the job execution`)
 		Routing(GET("/:job_id"))
