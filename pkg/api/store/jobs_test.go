@@ -72,7 +72,10 @@ func TestStoreFindJob(t *testing.T) {
 				ID:        "59a1739c-cadc-4bbc-82a9-ba11d784c9ff",
 				Operation: "OnboardDiscoveredAssets",
 				Status:    "DONE",
-				Result:    `{"data":{},"error":"WRONG"}`,
+				Result: api.JobResult{
+					Data:  []byte(`{"key": "value"}`),
+					Error: "WRONG",
+				},
 			},
 			wantErr: nil,
 		},
