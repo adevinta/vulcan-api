@@ -652,9 +652,9 @@ type Job struct {
 		Error *string `form:"error,omitempty" json:"error,omitempty" yaml:"error,omitempty" xml:"error,omitempty"`
 	} `form:"result,omitempty" json:"result,omitempty" yaml:"result,omitempty" xml:"result,omitempty"`
 	// Indicates the status of the operation. The possible values are:
-	// 	- 'PENDING': The job has been noted an is pending to be processed
+	// 	- 'PENDING': The job has been noted and is pending to be processed
 	// 	- 'RUNNING': The job is on execution
-	// 	- 'DONE': The job has finished, either successfully os unsuccesfully. Result.error needs to be processed to determine it
+	// 	- 'DONE': The job has finished, either successfully or unsuccesfully. Result.error needs to be processed to determine it
 	Status *string `form:"status,omitempty" json:"status,omitempty" yaml:"status,omitempty" xml:"status,omitempty"`
 	// Team ID
 	TeamID *string `form:"team_id,omitempty" json:"team_id,omitempty" yaml:"team_id,omitempty" xml:"team_id,omitempty"`

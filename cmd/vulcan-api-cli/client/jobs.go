@@ -22,9 +22,9 @@ func ShowJobsPath(jobID string) string {
 }
 
 // Describes job status and results. The possible values for the status are:
-// - 'PENDING': The job has been noted an is pending to be processed
+// - 'PENDING': The job has been noted and is pending to be processed
 // - 'RUNNING': The job is on execution
-// - 'DONE': The job has finished, either successfully os unsuccesfully. Result.error needs to be processed to determine it
+// - 'DONE': The job has finished, either successfully or unsuccesfully. Result.error needs to be processed to determine it
 //
 // The results field indicates if there was an error during the execution of the job, and otherwise can return data from the job execution
 func (c *Client) ShowJobs(ctx context.Context, path string) (*http.Response, error) {
