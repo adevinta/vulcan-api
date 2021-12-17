@@ -21,6 +21,7 @@ const (
 
 type StatsRequest struct {
 	TeamID      string  `json:"team_id" urlvar:"team_id"`
+	Tags        string  `urlquery:"tags"`
 	MinDate     string  `urlquery:"minDate"`
 	MaxDate     string  `urlquery:"maxDate"`
 	AtDate      string  `urlquery:"atDate"`
@@ -278,6 +279,7 @@ func isValidExposureRequest(r *StatsRequest) bool {
 func buildStatsParams(tag string, r *StatsRequest) api.StatsParams {
 	return api.StatsParams{
 		Tag:         tag,
+		Tags:        r.Tags,
 		MinDate:     r.MinDate,
 		MaxDate:     r.MaxDate,
 		AtDate:      r.AtDate,
