@@ -69,68 +69,10 @@ type (
 		PrettyPrint bool
 	}
 
-	// CreateAssetGroupCommand is the command line data structure for the create action of asset-group
-	CreateAssetGroupCommand struct {
-		Payload     string
-		ContentType string
-		// Group ID
-		GroupID string
-		// Team ID
-		TeamID      string
-		PrettyPrint bool
-	}
-
-	// DeleteAssetGroupCommand is the command line data structure for the delete action of asset-group
-	DeleteAssetGroupCommand struct {
-		// Asset ID
-		AssetID string
-		// Group ID
-		GroupID string
-		// Team ID
-		TeamID      string
-		PrettyPrint bool
-	}
-
-	// ListAssetGroupCommand is the command line data structure for the list action of asset-group
-	ListAssetGroupCommand struct {
-		// Group ID
-		GroupID string
-		// Team ID
-		TeamID      string
-		PrettyPrint bool
-	}
-
-	// CreateAssetsCommand is the command line data structure for the create action of assets
-	CreateAssetsCommand struct {
-		Payload     string
-		ContentType string
-		// Team ID
-		TeamID      string
-		PrettyPrint bool
-	}
-
-	// CreateMultiStatusAssetsCommand is the command line data structure for the createMultiStatus action of assets
-	CreateMultiStatusAssetsCommand struct {
-		Payload     string
-		ContentType string
-		// Team ID
-		TeamID      string
-		PrettyPrint bool
-	}
-
 	// DeleteAssetsCommand is the command line data structure for the delete action of assets
 	DeleteAssetsCommand struct {
 		// Asset ID
 		AssetID string
-		// Team ID
-		TeamID      string
-		PrettyPrint bool
-	}
-
-	// DiscoverAssetsCommand is the command line data structure for the discover action of assets
-	DiscoverAssetsCommand struct {
-		Payload     string
-		ContentType string
 		// Team ID
 		TeamID      string
 		PrettyPrint bool
@@ -156,6 +98,66 @@ type (
 
 	// UpdateAssetsCommand is the command line data structure for the update action of assets
 	UpdateAssetsCommand struct {
+		Payload     string
+		ContentType string
+		// Asset ID
+		AssetID string
+		// Team ID
+		TeamID      string
+		PrettyPrint bool
+	}
+
+	// CreateAssetAnnotationsCommand is the command line data structure for the create action of asset-annotations
+	CreateAssetAnnotationsCommand struct {
+		Payload     string
+		ContentType string
+		// Asset ID
+		AssetID string
+		// Team ID
+		TeamID      string
+		PrettyPrint bool
+	}
+
+	// DeleteAssetAnnotationsCommand is the command line data structure for the delete action of asset-annotations
+	DeleteAssetAnnotationsCommand struct {
+		Payload     string
+		ContentType string
+		// Asset ID
+		AssetID string
+		// Team ID
+		TeamID      string
+		PrettyPrint bool
+	}
+
+	// DiscoverAssetsCommand is the command line data structure for the discover action of assets
+	DiscoverAssetsCommand struct {
+		Payload     string
+		ContentType string
+		// Team ID
+		TeamID      string
+		PrettyPrint bool
+	}
+
+	// ListAssetsCommand is the command line data structure for the list action of assets
+	ListAssetsCommand struct {
+		// Team ID
+		TeamID      string
+		PrettyPrint bool
+	}
+
+	// PutAssetAnnotationsCommand is the command line data structure for the put action of asset-annotations
+	PutAssetAnnotationsCommand struct {
+		Payload     string
+		ContentType string
+		// Asset ID
+		AssetID string
+		// Team ID
+		TeamID      string
+		PrettyPrint bool
+	}
+
+	// UpdateAssetAnnotationsCommand is the command line data structure for the update action of asset-annotations
+	UpdateAssetAnnotationsCommand struct {
 		Payload     string
 		ContentType string
 		// Asset ID
@@ -418,7 +420,9 @@ type (
 		// Maximum issues score filter
 		MaxScore string
 		// Minimum issues score filter
-		MinScore    string
+		MinScore string
+		// Comma separated list of team tags to filter by
+		Tags        string
 		PrettyPrint bool
 	}
 
@@ -429,7 +433,9 @@ type (
 		// Maximum issues score filter
 		MaxScore string
 		// Minimum issues score filter
-		MinScore    string
+		MinScore string
+		// Comma separated list of team tags to filter by
+		Tags        string
 		PrettyPrint bool
 	}
 
@@ -438,50 +444,35 @@ type (
 		// Maximum date to filter statistics by
 		MaxDate string
 		// Minimum date to filter statistics by
-		MinDate     string
+		MinDate string
+		// Comma separated list of team tags to filter by
+		Tags        string
 		PrettyPrint bool
 	}
 
-	// CreateGroupCommand is the command line data structure for the create action of group
-	CreateGroupCommand struct {
+	// ShowHealthcheckCommand is the command line data structure for the show action of healthcheck
+	ShowHealthcheckCommand struct {
+		PrettyPrint bool
+	}
+
+	// ShowJobsCommand is the command line data structure for the show action of jobs
+	ShowJobsCommand struct {
+		// Job ID
+		JobID       string
+		PrettyPrint bool
+	}
+
+	// ListRecipientsCommand is the command line data structure for the list action of recipients
+	ListRecipientsCommand struct {
+		// Team ID
+		TeamID      string
+		PrettyPrint bool
+	}
+
+	// UpdateRecipientsCommand is the command line data structure for the update action of recipients
+	UpdateRecipientsCommand struct {
 		Payload     string
 		ContentType string
-		// Team ID
-		TeamID      string
-		PrettyPrint bool
-	}
-
-	// DeleteGroupCommand is the command line data structure for the delete action of group
-	DeleteGroupCommand struct {
-		// Group ID
-		GroupID string
-		// Team ID
-		TeamID      string
-		PrettyPrint bool
-	}
-
-	// ListGroupCommand is the command line data structure for the list action of group
-	ListGroupCommand struct {
-		// Team ID
-		TeamID      string
-		PrettyPrint bool
-	}
-
-	// ShowGroupCommand is the command line data structure for the show action of group
-	ShowGroupCommand struct {
-		// Group ID
-		GroupID string
-		// Team ID
-		TeamID      string
-		PrettyPrint bool
-	}
-
-	// UpdateGroupCommand is the command line data structure for the update action of group
-	UpdateGroupCommand struct {
-		Payload     string
-		ContentType string
-		// Group ID
-		GroupID string
 		// Team ID
 		TeamID      string
 		PrettyPrint bool
@@ -648,22 +639,6 @@ type (
 	ListProgramScansCommand struct {
 		// Program ID
 		ProgramID string
-		// Team ID
-		TeamID      string
-		PrettyPrint bool
-	}
-
-	// ListRecipientsCommand is the command line data structure for the list action of recipients
-	ListRecipientsCommand struct {
-		// Team ID
-		TeamID      string
-		PrettyPrint bool
-	}
-
-	// UpdateRecipientsCommand is the command line data structure for the update action of recipients
-	UpdateRecipientsCommand struct {
-		Payload     string
-		ContentType string
 		// Team ID
 		TeamID      string
 		PrettyPrint bool
@@ -962,18 +937,19 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 	tmp2.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp2.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp3 := new(CreateTeamsCommand)
+	tmp3 := new(CreateAssetAnnotationsCommand)
 	sub = &cobra.Command{
-		Use:   `teams ["/api/v1/teams"]`,
+		Use:   `asset-annotations ["/api/v1/teams/TEAM_ID/assets/ASSET_ID/annotations"]`,
 		Short: ``,
 		Long: `
 
 Payload example:
 
 {
-   "description": "Security Team",
-   "name": "Security",
-   "tag": "team:security"
+   "annotations": {
+      "annotation/1": "value/1",
+      "annotation/2": "value/2"
+   }
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp3.Run(c, args) },
 	}
@@ -1067,17 +1043,18 @@ Payload example:
 	tmp6.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp6.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp7 := new(CreateGroupCommand)
+	tmp7 := new(CreateTeamsCommand)
 	sub = &cobra.Command{
-		Use:   `group ["/api/v1/teams/TEAM_ID/groups"]`,
+		Use:   `teams ["/api/v1/teams"]`,
 		Short: ``,
 		Long: `
 
 Payload example:
 
 {
-   "name": "Default group",
-   "options": "{\"timeout\":60}"
+   "description": "Security Team",
+   "name": "Security",
+   "tag": "team:security"
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp7.Run(c, args) },
 	}
@@ -1307,18 +1284,28 @@ Payload example:
 		Use:   "delete",
 		Short: `delete action`,
 	}
-	tmp18 := new(DeleteTeamsCommand)
+	tmp18 := new(DeleteAssetAnnotationsCommand)
 	sub = &cobra.Command{
-		Use:   `teams ["/api/v1/teams/TEAM_ID"]`,
+		Use:   `asset-annotations ["/api/v1/teams/TEAM_ID/assets/ASSET_ID/annotations"]`,
 		Short: ``,
-		RunE:  func(cmd *cobra.Command, args []string) error { return tmp18.Run(c, args) },
+		Long: `
+
+Payload example:
+
+{
+   "annotations": [
+      "annotation/1",
+      "annotation/2"
+   ]
+}`,
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp18.Run(c, args) },
 	}
 	tmp18.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp18.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
 	tmp19 := new(DeleteAssetAnnotationsCommand)
 	sub = &cobra.Command{
-		Use:   `asset-annotations ["/api/v1/teams/TEAM_ID/assets/ASSET_ID/annotations"]`,
+		Use:   `assets ["/api/v1/teams/TEAM_ID/assets/ASSET_ID"]`,
 		Short: ``,
 		Long: `
 
@@ -1353,9 +1340,9 @@ Payload example:
 	tmp21.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp21.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp22 := new(DeleteGroupCommand)
+	tmp22 := new(DeleteTeamsCommand)
 	sub = &cobra.Command{
-		Use:   `group ["/api/v1/teams/TEAM_ID/groups/GROUP_ID"]`,
+		Use:   `teams ["/api/v1/teams/TEAM_ID"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp22.Run(c, args) },
 	}
@@ -1622,18 +1609,18 @@ Payload example:
 	tmp38.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp38.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp39 := new(ListAssetAnnotationsCommand)
+	tmp39 := new(ListAssetsCommand)
 	sub = &cobra.Command{
-		Use:   `asset-annotations ["/api/v1/teams/TEAM_ID/assets/ASSET_ID/annotations"]`,
+		Use:   `assets ["/api/v1/teams/TEAM_ID/assets"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp39.Run(c, args) },
 	}
 	tmp39.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp39.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp40 := new(ListAssetGroupCommand)
+	tmp40 := new(ListGroupCommand)
 	sub = &cobra.Command{
-		Use:   `asset-group ["/api/v1/teams/TEAM_ID/groups/GROUP_ID/assets"]`,
+		Use:   `group ["/api/v1/teams/TEAM_ID/groups"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp40.Run(c, args) },
 	}
@@ -1924,7 +1911,7 @@ Payload example:
 	}
 	tmp63 := new(ShowTeamsCommand)
 	sub = &cobra.Command{
-		Use:   `teams ["/api/v1/teams/TEAM_ID"]`,
+		Use:   `assets ["/api/v1/teams/TEAM_ID/assets/ASSET_ID"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp63.Run(c, args) },
 	}
@@ -2059,16 +2046,17 @@ Payload example:
 	}
 	tmp76 := new(UpdateTeamsCommand)
 	sub = &cobra.Command{
-		Use:   `teams ["/api/v1/teams/TEAM_ID"]`,
+		Use:   `asset-annotations ["/api/v1/teams/TEAM_ID/assets/ASSET_ID/annotations"]`,
 		Short: ``,
 		Long: `
 
 Payload example:
 
 {
-   "description": "Security Team",
-   "name": "Security",
-   "tag": "team:security"
+   "annotations": {
+      "annotation/1": "value/1",
+      "annotation/2": "value/2"
+   }
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp76.Run(c, args) },
 	}
@@ -2084,10 +2072,8 @@ Payload example:
 Payload example:
 
 {
-   "annotations": {
-      "annotation/1": "value/1",
-      "annotation/2": "value/2"
-   }
+   "name": "Default group",
+   "options": "{\"timeout\":60}"
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp77.Run(c, args) },
 	}
@@ -3502,6 +3488,8 @@ func (cmd *CurrentExposureGlobalStatsCommand) RegisterFlags(cc *cobra.Command, c
 	cc.Flags().StringVar(&cmd.MaxScore, "maxScore", maxScore, `Maximum issues score filter`)
 	var minScore string
 	cc.Flags().StringVar(&cmd.MinScore, "minScore", minScore, `Minimum issues score filter`)
+	var tags string
+	cc.Flags().StringVar(&cmd.Tags, "tags", tags, `Comma separated list of team tags to filter by`)
 }
 
 // Run makes the HTTP request corresponding to the ExposureGlobalStatsCommand command.
@@ -3550,6 +3538,8 @@ func (cmd *ExposureGlobalStatsCommand) RegisterFlags(cc *cobra.Command, c *clien
 	cc.Flags().StringVar(&cmd.MaxScore, "maxScore", maxScore, `Maximum issues score filter`)
 	var minScore string
 	cc.Flags().StringVar(&cmd.MinScore, "minScore", minScore, `Minimum issues score filter`)
+	var tags string
+	cc.Flags().StringVar(&cmd.Tags, "tags", tags, `Comma separated list of team tags to filter by`)
 }
 
 // Run makes the HTTP request corresponding to the MttrGlobalStatsCommand command.
@@ -3562,7 +3552,7 @@ func (cmd *MttrGlobalStatsCommand) Run(c *client.Client, args []string) error {
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.MttrGlobalStats(ctx, path, stringFlagVal("maxDate", cmd.MaxDate), stringFlagVal("minDate", cmd.MinDate))
+	resp, err := c.MttrGlobalStats(ctx, path, stringFlagVal("maxDate", cmd.MaxDate), stringFlagVal("minDate", cmd.MinDate), stringFlagVal("tags", cmd.Tags))
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
 		return err
@@ -3578,6 +3568,8 @@ func (cmd *MttrGlobalStatsCommand) RegisterFlags(cc *cobra.Command, c *client.Cl
 	cc.Flags().StringVar(&cmd.MaxDate, "maxDate", maxDate, `Maximum date to filter statistics by`)
 	var minDate string
 	cc.Flags().StringVar(&cmd.MinDate, "minDate", minDate, `Minimum date to filter statistics by`)
+	var tags string
+	cc.Flags().StringVar(&cmd.Tags, "tags", tags, `Comma separated list of team tags to filter by`)
 }
 
 // Run makes the HTTP request corresponding to the CreateGroupCommand command.
