@@ -22,7 +22,7 @@ import (
 	"github.com/adevinta/vulcan-api/pkg/common"
 )
 
-const genericAnnotationsPrefix = "autodiscovery"
+const GenericAnnotationsPrefix = "autodiscovery"
 
 type asset struct {
 	identifier string
@@ -335,7 +335,7 @@ func (s vulcanitoService) calculateMergeOperations(ctx context.Context, teamID s
 
 	// Prepend a prefix to the annotations so they can be merged without
 	// messing with other annotations that assets might have.
-	prefix := fmt.Sprintf("%s/%s", genericAnnotationsPrefix, strings.TrimSuffix(group.Name, api.DiscoveredAssetsGroupSuffix))
+	prefix := fmt.Sprintf("%s/%s", GenericAnnotationsPrefix, strings.TrimSuffix(group.Name, api.DiscoveredAssetsGroupSuffix))
 
 	// Calculate assets to create, associate or update.
 	for _, a := range assets {
