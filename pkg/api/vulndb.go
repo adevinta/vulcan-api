@@ -100,6 +100,7 @@ type TargetsList struct {
 // the statistics.
 type StatsParams struct {
 	Tag         string
+	Tags        string
 	MinDate     string
 	MaxDate     string
 	AtDate      string
