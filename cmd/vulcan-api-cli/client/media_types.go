@@ -636,6 +636,37 @@ func (c *Client) DecodeIssue(resp *http.Response) (*Issue, error) {
 	return &decoded, err
 }
 
+// Job (default view)
+//
+// Identifier: job; view=default
+type Job struct {
+	// Job ID
+	ID *string `form:"id,omitempty" json:"id,omitempty" yaml:"id,omitempty" xml:"id,omitempty"`
+	// Operation that triggered the job
+	Operation *string `form:"operation,omitempty" json:"operation,omitempty" yaml:"operation,omitempty" xml:"operation,omitempty"`
+	// Result of the job operation
+	Result *struct {
+		// Optionally populated field when the job finishes correctly, that returns execution related data. The format of the data is defined per operation type
+		Data interface{} `form:"data,omitempty" json:"data,omitempty" yaml:"data,omitempty" xml:"data,omitempty"`
+		// When not empty indicates that the job failed
+		Error *string `form:"error,omitempty" json:"error,omitempty" yaml:"error,omitempty" xml:"error,omitempty"`
+	} `form:"result,omitempty" json:"result,omitempty" yaml:"result,omitempty" xml:"result,omitempty"`
+	// Indicates the status of the operation. The possible values are:
+	// 	- 'PENDING': The job has been noted and is pending to be processed
+	// 	- 'RUNNING': The job is on execution
+	// 	- 'DONE': The job has finished, either successfully or unsuccesfully. Result.error needs to be processed to determine it
+	Status *string `form:"status,omitempty" json:"status,omitempty" yaml:"status,omitempty" xml:"status,omitempty"`
+	// Team ID
+	TeamID *string `form:"team_id,omitempty" json:"team_id,omitempty" yaml:"team_id,omitempty" xml:"team_id,omitempty"`
+}
+
+// DecodeJob decodes the Job instance encoded in resp body.
+func (c *Client) DecodeJob(resp *http.Response) (*Job, error) {
+	var decoded Job
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return &decoded, err
+}
+
 // List Asset Entry (default view)
 //
 // Identifier: listassetentry; view=default
