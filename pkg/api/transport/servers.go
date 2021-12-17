@@ -15,6 +15,8 @@ import (
 	"github.com/go-kit/kit/log/level"
 	kithttp "github.com/go-kit/kit/transport/http"
 	uuid "github.com/satori/go.uuid"
+
+	vulcanendpoint "github.com/adevinta/vulcan-api/pkg/api/endpoint"
 )
 
 // CustomCtxKey represents a custom
@@ -28,26 +30,33 @@ const (
 )
 
 func options(logger kitlog.Logger, endpoint string) []kithttp.ServerOption {
-	return []kithttp.ServerOption{
-		kithttp.ServerBefore(
-			HTTPGenerateXRequestID(),
-			kithttp.PopulateRequestContext,
-			jwt.HTTPToContext(),
-			HTTPRequestLogger(logger),
-			HTTPRequestEndpoint(endpoint)),
-		kithttp.ServerAfter(
-			HTTPReturnXRequestID(),
-		),
+	beforeFuncs := []kithttp.RequestFunc{
+		HTTPGenerateXRequestID(),
+		kithttp.PopulateRequestContext,
+		jwt.HTTPToContext(),
+		HTTPRequestEndpoint(endpoint),
+	}
+	// Avoid logging on healthchecks
+	if endpoint != vulcanendpoint.Healthcheck {
+		beforeFuncs = append(beforeFuncs, HTTPRequestLogger(logger))
+	}
+
+	opts := []kithttp.ServerOption{
+		kithttp.ServerBefore(beforeFuncs...),
+		kithttp.ServerAfter(HTTPReturnXRequestID()),
 		kithttp.ServerErrorEncoder(
 			func(ctx context.Context, err error, w http.ResponseWriter) {
 				w.Header().Set("X-Request-ID", ctx.Value(kithttp.ContextKeyRequestXRequestID).(string))
 				kithttp.DefaultErrorEncoder(ctx, err, w)
 			},
 		),
-		kithttp.ServerFinalizer(
-			HTTPServerFinalizerFunc(logger),
-		),
 	}
+	// Avoid logging on healthchecks
+	if endpoint != vulcanendpoint.Healthcheck {
+		opts = append(opts, kithttp.ServerFinalizer(HTTPServerFinalizerFunc(logger)))
+	}
+
+	return opts
 }
 
 func newServer(e kitendpoint.Endpoint, request interface{}, logger kitlog.Logger, endpoint string) http.Handler {
