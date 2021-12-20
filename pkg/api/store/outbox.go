@@ -16,12 +16,13 @@ import (
 
 const (
 	// operations
-	opDeleteTeam       = "DeleteTeam"
-	opCreateAsset      = "CreateAsset"
-	opDeleteAsset      = "DeleteAsset"
-	opUpdateAsset      = "UpdateAsset"
-	opDeleteAllAssets  = "DeleteAllAssets"
-	opFindingOverwrite = "FindingOverwrite"
+	opDeleteTeam            = "DeleteTeam"
+	opCreateAsset           = "CreateAsset"
+	opDeleteAsset           = "DeleteAsset"
+	opUpdateAsset           = "UpdateAsset"
+	opDeleteAllAssets       = "DeleteAllAssets"
+	opFindingOverwrite      = "FindingOverwrite"
+	opMergeDiscoveredAssets = "MergeDiscoveredAssets"
 )
 
 var (
@@ -44,6 +45,8 @@ func (db vulcanitoStore) pushToOutbox(tx *gorm.DB, op string, data ...interface{
 		buildFunc = db.buildDeleteAllAssetsDTO
 	case opFindingOverwrite:
 		buildFunc = db.buildFindingOverwriteDTO
+	case opMergeDiscoveredAssets:
+		buildFunc = db.buildMergeDiscoveredAssetsDTO
 	default:
 		return errUnimplementedOp
 	}
@@ -218,4 +221,29 @@ func (db vulcanitoStore) insertIntoOutbox(tx *gorm.DB, outbox cdc.Outbox) error 
 		return db.logError(errors.Create(res.Error))
 	}
 	return nil
+}
+
+// buildMergeDiscoveredAssetsDTO builds a MergeDiscoveredAssets action DTO for
+// outbox.  Expected input:
+//	- teamID
+//  - []api.Asset
+//  - groupName
+func (db vulcanitoStore) buildMergeDiscoveredAssetsDTO(tx *gorm.DB, data ...interface{}) (interface{}, error) {
+	if len(data) != 3 {
+		return nil, errInvalidParams
+	}
+	teamID, ok := data[0].(string)
+	if !ok {
+		return nil, errInvalidParams
+	}
+	assets, ok := data[1].([]api.Asset)
+	if !ok {
+		return nil, errInvalidParams
+	}
+	groupName, ok := data[2].(string)
+	if !ok {
+		return nil, errInvalidParams
+	}
+
+	return cdc.OpMergeDiscoveredAssetsDTO{TeamID: teamID, Assets: assets, GroupName: groupName}, nil
 }

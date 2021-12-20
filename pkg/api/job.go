@@ -5,6 +5,7 @@ Copyright 2021 Adevinta
 package api
 
 import (
+	"context"
 	"database/sql/driver"
 	"encoding/json"
 	"errors"
@@ -112,4 +113,12 @@ type JobResponse struct {
 type JobResultResponse struct {
 	Data  string `json:"data"`
 	Error string `json:"error"`
+}
+
+type JobsRunner struct {
+	Client JobsClient
+}
+
+type JobsClient interface {
+	MergeDiscoveredAsset(ctx context.Context, teamID string, assets []Asset, groupName string) error
 }

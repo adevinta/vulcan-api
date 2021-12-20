@@ -309,7 +309,7 @@ func TestParse(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			parser := NewVulnDBTxParser(tc.vulnDBClient, tc.loggr)
+			parser := NewVulnDBAndJobTxParser(tc.vulnDBClient, api.JobsRunner{}, tc.loggr)
 			nParsed := parser.Parse(tc.log)
 			if nParsed != tc.wantNParsed {
 				t.Fatalf("expected nParsed to be %d, but got %d", tc.wantNParsed, nParsed)
