@@ -121,6 +121,7 @@ const (
 	GlobalStatsCurrentExposure = "GlobalStatsCurrentExposure"
 	GlobalStatsOpen            = "GlobalStatsOpen"
 	GlobalStatsFixed           = "GlobalStatsFixed"
+	GlobalStatsAssets          = "GlobalStatsAssets"
 )
 
 // Endpoints contains all available endpoints for this api
@@ -233,6 +234,9 @@ func MakeEndpoints(s api.VulcanitoService, logger log.Logger) Endpoints {
 	endpoints[GlobalStatsMTTR] = makeGlobalStatsMTTREndpoint(s, logger)
 	endpoints[GlobalStatsExposure] = makeGlobalStatsExposureEndpoint(s, logger)
 	endpoints[GlobalStatsCurrentExposure] = makeGlobalStatsCurrentExposureEndpoint(s, logger)
+	endpoints[GlobalStatsOpen] = makeGlobalStatsOpenEndpoint(s, logger)
+	endpoints[GlobalStatsFixed] = makeGlobalStatsFixedEndpoint(s, logger)
+	endpoints[GlobalStatsAssets] = makeGlobalStatsAssetsEndpoint(s, logger)
 
 	return endpoints
 }

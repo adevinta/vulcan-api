@@ -32,6 +32,10 @@ func (s vulcanitoService) StatsFixed(ctx context.Context, params api.StatsParams
 	return s.vulndbClient.StatsFixed(ctx, params)
 }
 
+func (s vulcanitoService) StatsAssets(ctx context.Context, params api.StatsParams) (*api.StatsAssets, error) {
+	return s.vulndbClient.StatsAssets(ctx, params)
+}
+
 func (s vulcanitoService) StatsCoverage(ctx context.Context, teamID string) (*api.StatsCoverage, error) {
 	dg, err := s.db.FindGroupInfo(api.Group{
 		Name:   "Default",

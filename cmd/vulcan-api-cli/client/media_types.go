@@ -1128,6 +1128,21 @@ func (c *Client) DecodeStats(resp *http.Response) (*Stats, error) {
 	return &decoded, err
 }
 
+// Assets by severity stats (default view)
+//
+// Identifier: statsassets; view=default
+type Statsassets struct {
+	// Stats for assets by severity
+	Assets *Stats `form:"assets,omitempty" json:"assets,omitempty" yaml:"assets,omitempty" xml:"assets,omitempty"`
+}
+
+// DecodeStatsassets decodes the Statsassets instance encoded in resp body.
+func (c *Client) DecodeStatsassets(resp *http.Response) (*Statsassets, error) {
+	var decoded Statsassets
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return &decoded, err
+}
+
 // Stats by different averages (default view)
 //
 // Identifier: statsaverages; view=default

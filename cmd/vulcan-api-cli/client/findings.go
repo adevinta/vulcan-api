@@ -90,23 +90,23 @@ func (c *Client) NewFindFindingsFromAIssueFindingsRequest(ctx context.Context, p
 		values.Set("maxDate", *maxDate)
 	}
 	if maxScore != nil {
-		tmp112 := strconv.FormatFloat(*maxScore, 'f', -1, 64)
-		values.Set("maxScore", tmp112)
+		tmp113 := strconv.FormatFloat(*maxScore, 'f', -1, 64)
+		values.Set("maxScore", tmp113)
 	}
 	if minDate != nil {
 		values.Set("minDate", *minDate)
 	}
 	if minScore != nil {
-		tmp113 := strconv.FormatFloat(*minScore, 'f', -1, 64)
-		values.Set("minScore", tmp113)
+		tmp114 := strconv.FormatFloat(*minScore, 'f', -1, 64)
+		values.Set("minScore", tmp114)
 	}
 	if page != nil {
-		tmp114 := strconv.FormatFloat(*page, 'f', -1, 64)
-		values.Set("page", tmp114)
+		tmp115 := strconv.FormatFloat(*page, 'f', -1, 64)
+		values.Set("page", tmp115)
 	}
 	if size != nil {
-		tmp115 := strconv.FormatFloat(*size, 'f', -1, 64)
-		values.Set("size", tmp115)
+		tmp116 := strconv.FormatFloat(*size, 'f', -1, 64)
+		values.Set("size", tmp116)
 	}
 	if sortBy != nil {
 		values.Set("sortBy", *sortBy)
@@ -165,23 +165,23 @@ func (c *Client) NewFindFindingsFromATargetFindingsRequest(ctx context.Context, 
 		values.Set("maxDate", *maxDate)
 	}
 	if maxScore != nil {
-		tmp116 := strconv.FormatFloat(*maxScore, 'f', -1, 64)
-		values.Set("maxScore", tmp116)
+		tmp117 := strconv.FormatFloat(*maxScore, 'f', -1, 64)
+		values.Set("maxScore", tmp117)
 	}
 	if minDate != nil {
 		values.Set("minDate", *minDate)
 	}
 	if minScore != nil {
-		tmp117 := strconv.FormatFloat(*minScore, 'f', -1, 64)
-		values.Set("minScore", tmp117)
+		tmp118 := strconv.FormatFloat(*minScore, 'f', -1, 64)
+		values.Set("minScore", tmp118)
 	}
 	if page != nil {
-		tmp118 := strconv.FormatFloat(*page, 'f', -1, 64)
-		values.Set("page", tmp118)
+		tmp119 := strconv.FormatFloat(*page, 'f', -1, 64)
+		values.Set("page", tmp119)
 	}
 	if size != nil {
-		tmp119 := strconv.FormatFloat(*size, 'f', -1, 64)
-		values.Set("size", tmp119)
+		tmp120 := strconv.FormatFloat(*size, 'f', -1, 64)
+		values.Set("size", tmp120)
 	}
 	if sortBy != nil {
 		values.Set("sortBy", *sortBy)
@@ -376,23 +376,23 @@ func (c *Client) NewListFindingsFindingsRequest(ctx context.Context, path string
 		values.Set("maxDate", *maxDate)
 	}
 	if maxScore != nil {
-		tmp120 := strconv.FormatFloat(*maxScore, 'f', -1, 64)
-		values.Set("maxScore", tmp120)
+		tmp121 := strconv.FormatFloat(*maxScore, 'f', -1, 64)
+		values.Set("maxScore", tmp121)
 	}
 	if minDate != nil {
 		values.Set("minDate", *minDate)
 	}
 	if minScore != nil {
-		tmp121 := strconv.FormatFloat(*minScore, 'f', -1, 64)
-		values.Set("minScore", tmp121)
+		tmp122 := strconv.FormatFloat(*minScore, 'f', -1, 64)
+		values.Set("minScore", tmp122)
 	}
 	if page != nil {
-		tmp122 := strconv.FormatFloat(*page, 'f', -1, 64)
-		values.Set("page", tmp122)
+		tmp123 := strconv.FormatFloat(*page, 'f', -1, 64)
+		values.Set("page", tmp123)
 	}
 	if size != nil {
-		tmp123 := strconv.FormatFloat(*size, 'f', -1, 64)
-		values.Set("size", tmp123)
+		tmp124 := strconv.FormatFloat(*size, 'f', -1, 64)
+		values.Set("size", tmp124)
 	}
 	if sortBy != nil {
 		values.Set("sortBy", *sortBy)
@@ -456,12 +456,12 @@ func (c *Client) NewListFindingsIssuesFindingsRequest(ctx context.Context, path 
 		values.Set("minDate", *minDate)
 	}
 	if page != nil {
-		tmp124 := strconv.FormatFloat(*page, 'f', -1, 64)
-		values.Set("page", tmp124)
+		tmp125 := strconv.FormatFloat(*page, 'f', -1, 64)
+		values.Set("page", tmp125)
 	}
 	if size != nil {
-		tmp125 := strconv.FormatFloat(*size, 'f', -1, 64)
-		values.Set("size", tmp125)
+		tmp126 := strconv.FormatFloat(*size, 'f', -1, 64)
+		values.Set("size", tmp126)
 	}
 	if sortBy != nil {
 		values.Set("sortBy", *sortBy)
@@ -528,12 +528,12 @@ func (c *Client) NewListFindingsTargetsFindingsRequest(ctx context.Context, path
 		values.Set("minDate", *minDate)
 	}
 	if page != nil {
-		tmp126 := strconv.FormatFloat(*page, 'f', -1, 64)
-		values.Set("page", tmp126)
+		tmp127 := strconv.FormatFloat(*page, 'f', -1, 64)
+		values.Set("page", tmp127)
 	}
 	if size != nil {
-		tmp127 := strconv.FormatFloat(*size, 'f', -1, 64)
-		values.Set("size", tmp127)
+		tmp128 := strconv.FormatFloat(*size, 'f', -1, 64)
+		values.Set("size", tmp128)
 	}
 	if sortBy != nil {
 		values.Set("sortBy", *sortBy)

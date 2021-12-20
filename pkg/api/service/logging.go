@@ -44,6 +44,7 @@ func (middleware loggingMiddleware) Healthcheck(ctx context.Context) error {
 }
 
 func (middleware loggingMiddleware) FindJob(ctx context.Context, jobID string) (*api.Job, error) {
+
 	defer func() {
 		XRequestID := ""
 		if ctx != nil {
@@ -51,6 +52,7 @@ func (middleware loggingMiddleware) FindJob(ctx context.Context, jobID string) (
 		}
 		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "FindJob", "jobID", mySprintf(jobID))
 	}()
+
 	return middleware.next.FindJob(ctx, jobID)
 }
 
@@ -1157,4 +1159,17 @@ func (middleware loggingMiddleware) StatsFixed(ctx context.Context, params api.S
 	}()
 
 	return middleware.next.StatsFixed(ctx, params)
+}
+
+func (middleware loggingMiddleware) StatsAssets(ctx context.Context, params api.StatsParams) (*api.StatsAssets, error) {
+
+	defer func() {
+		XRequestID := ""
+		if ctx != nil {
+			XRequestID, _ = ctx.Value(kithttp.ContextKeyRequestXRequestID).(string)
+		}
+		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "StatsAssets", "params", mySprintf(params))
+	}()
+
+	return middleware.next.StatsAssets(ctx, params)
 }

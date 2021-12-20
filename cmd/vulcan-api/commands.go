@@ -492,6 +492,7 @@ func addAuthorizationMiddleware(endpoints endpoint.Endpoints, db api.VulcanitoSt
 		endpoint.GlobalStatsCurrentExposure: true,
 		endpoint.GlobalStatsOpen:            true,
 		endpoint.GlobalStatsFixed:           true,
+		endpoint.GlobalStatsAssets:          true,
 	}
 
 	for name := range endpoints {
@@ -582,6 +583,7 @@ func addWhitelistingMiddleware(endpoints endpoint.Endpoints, logger log.Logger) 
 		endpoint.GlobalStatsCurrentExposure: true,
 		endpoint.GlobalStatsOpen:            true,
 		endpoint.GlobalStatsFixed:           true,
+		endpoint.GlobalStatsAssets:          true,
 	}
 
 	for name := range endpoints {

@@ -148,6 +148,7 @@ var (
 		endpoint.GlobalStatsCurrentExposure: entityStats,
 		endpoint.GlobalStatsOpen:            entityStats,
 		endpoint.GlobalStatsFixed:           entityStats,
+		endpoint.GlobalStatsAssets:          entityStats,
 		// Jobs
 		endpoint.FindJob: entityJob,
 	}

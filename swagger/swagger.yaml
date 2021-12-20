@@ -714,22 +714,6 @@ definitions:
       status_previous: OPEN
       tag: team:security
       user: user@adevinta.com
-    - created_at: "2021-03-27T00:26:43.211506Z"
-      finding_id: 3c7d7003-c53d-4ccc-80e7-f21da241b2d4
-      id: b0720503-0a84-43fd-9cf4-5bb6c500226f
-      notes: This finding is a false positive because...
-      status: FALSE_POSITIVE
-      status_previous: OPEN
-      tag: team:security
-      user: user@adevinta.com
-    - created_at: "2021-03-27T00:26:43.211506Z"
-      finding_id: 3c7d7003-c53d-4ccc-80e7-f21da241b2d4
-      id: b0720503-0a84-43fd-9cf4-5bb6c500226f
-      notes: This finding is a false positive because...
-      status: FALSE_POSITIVE
-      status_previous: OPEN
-      tag: team:security
-      user: user@adevinta.com
     items:
       $ref: '#/definitions/Finding_overwrite'
     title: 'Mediatype identifier: finding_overwrite; type=collection; view=default'
@@ -738,6 +722,118 @@ definitions:
     description: FindingCollection is the media type for an array of Finding (default
       view)
     example:
+    - affected_resource: ""
+      attachments:
+      - content_type: application/json
+        data: e30=
+        name: JSON string
+      - content_type: application/json
+        data: e30=
+        name: JSON string
+      - content_type: application/json
+        data: e30=
+        name: JSON string
+      current_exposure: 4631
+      details: ""
+      id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      impact_details: ""
+      issue:
+        cwe_id: 358
+        description: This domain has at least one MX record
+        id: b0720503-0a84-43fd-9cf4-5bb6c500226f
+        labels:
+        - Web
+        - HTTP
+        recommendations:
+        - It is recommended to run DMARC
+        reference_links: []
+        summary: MX presence
+      resources:
+      - attributes:
+        - Hostname
+        - Port
+        name: Network Resources
+        resources:
+        - Hostname: test.example.com
+          Port: "443"
+      - attributes:
+        - Hostname
+        - Port
+        name: Network Resources
+        resources:
+        - Hostname: test.example.com
+          Port: "443"
+      score: 6.9
+      source:
+        component: vulcan-tls
+        id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
+        instance: b3320f03-1284-42fd-9cf4-5bb6c500966f
+        name: vulcan
+        options: '{"timeout":60}'
+        time: "2019-06-08 11:16:40"
+      status: OPEN
+      target:
+        id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
+        identifier: www.test.com
+        tags:
+        - team:vulcan
+      total_exposure: 4631
+    - affected_resource: ""
+      attachments:
+      - content_type: application/json
+        data: e30=
+        name: JSON string
+      - content_type: application/json
+        data: e30=
+        name: JSON string
+      - content_type: application/json
+        data: e30=
+        name: JSON string
+      current_exposure: 4631
+      details: ""
+      id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      impact_details: ""
+      issue:
+        cwe_id: 358
+        description: This domain has at least one MX record
+        id: b0720503-0a84-43fd-9cf4-5bb6c500226f
+        labels:
+        - Web
+        - HTTP
+        recommendations:
+        - It is recommended to run DMARC
+        reference_links: []
+        summary: MX presence
+      resources:
+      - attributes:
+        - Hostname
+        - Port
+        name: Network Resources
+        resources:
+        - Hostname: test.example.com
+          Port: "443"
+      - attributes:
+        - Hostname
+        - Port
+        name: Network Resources
+        resources:
+        - Hostname: test.example.com
+          Port: "443"
+      score: 6.9
+      source:
+        component: vulcan-tls
+        id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
+        instance: b3320f03-1284-42fd-9cf4-5bb6c500966f
+        name: vulcan
+        options: '{"timeout":60}'
+        time: "2019-06-08 11:16:40"
+      status: OPEN
+      target:
+        id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
+        identifier: www.test.com
+        tags:
+        - team:vulcan
+      total_exposure: 4631
     - affected_resource: ""
       attachments:
       - content_type: application/json
@@ -907,7 +1003,7 @@ definitions:
         - Web
         - HTTP
         items:
-          example: Repellat laboriosam repellat eum.
+          example: Repellat eum.
           type: string
         type: array
     title: 'Mediatype identifier: findings_labels; view=default'
@@ -916,6 +1012,62 @@ definitions:
     description: Findings list (default view)
     example:
       findings:
+      - affected_resource: ""
+        attachments:
+        - content_type: application/json
+          data: e30=
+          name: JSON string
+        - content_type: application/json
+          data: e30=
+          name: JSON string
+        - content_type: application/json
+          data: e30=
+          name: JSON string
+        current_exposure: 4631
+        details: ""
+        id: a8720503-0284-45fd-9cf4-5bb6c500966f
+        impact_details: ""
+        issue:
+          cwe_id: 358
+          description: This domain has at least one MX record
+          id: b0720503-0a84-43fd-9cf4-5bb6c500226f
+          labels:
+          - Web
+          - HTTP
+          recommendations:
+          - It is recommended to run DMARC
+          reference_links: []
+          summary: MX presence
+        resources:
+        - attributes:
+          - Hostname
+          - Port
+          name: Network Resources
+          resources:
+          - Hostname: test.example.com
+            Port: "443"
+        - attributes:
+          - Hostname
+          - Port
+          name: Network Resources
+          resources:
+          - Hostname: test.example.com
+            Port: "443"
+        score: 6.9
+        source:
+          component: vulcan-tls
+          id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
+          instance: b3320f03-1284-42fd-9cf4-5bb6c500966f
+          name: vulcan
+          options: '{"timeout":60}'
+          time: "2019-06-08 11:16:40"
+        status: OPEN
+        target:
+          id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
+          identifier: www.test.com
+          tags:
+          - team:vulcan
+        total_exposure: 4631
       - affected_resource: ""
         attachments:
         - content_type: application/json
@@ -1224,7 +1376,7 @@ definitions:
         - Web
         - HTTP
         items:
-          example: Sint ratione.
+          example: Neque aliquid molestias velit quis laborum.
           type: string
         type: array
       recommendations:
@@ -1232,14 +1384,14 @@ definitions:
         example:
         - It is recommended to run DMARC
         items:
-          example: Laborum quas voluptatum sit.
+          example: Deleniti aut sed.
           type: string
         type: array
       reference_links:
         description: Documentation reference for the issue
         example: []
         items:
-          example: Illum ipsum tempora nemo corrupti sed.
+          example: Porro placeat omnis perferendis maxime natus.
           type: string
         type: array
       summary:
@@ -1533,12 +1685,6 @@ definitions:
     - id: af36818a-0f30-412c-9692-d37716075861
       name: Sample Policy
       settings_count: 12
-    - id: af36818a-0f30-412c-9692-d37716075861
-      name: Sample Policy
-      settings_count: 12
-    - id: af36818a-0f30-412c-9692-d37716075861
-      name: Sample Policy
-      settings_count: 12
     items:
       $ref: '#/definitions/Policy'
     title: 'Mediatype identifier: policy; type=collection; view=default'
@@ -1769,6 +1915,62 @@ definitions:
           settings_count: 12
       schedule:
         cron: 0 7 1 * *
+    - autosend: false
+      disabled: false
+      global: true
+      id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
+      name: Every midnight
+      policy_groups:
+      - group:
+          assets_count: 1
+          description: All newly created assets are added to the Default group
+          id: f6360346-77a5-4f97-b919-331363b3af26
+          name: Default group
+          options: '{"timeout":60}'
+        policy:
+          id: af36818a-0f30-412c-9692-d37716075861
+          name: Sample Policy
+          settings_count: 12
+      - group:
+          assets_count: 1
+          description: All newly created assets are added to the Default group
+          id: f6360346-77a5-4f97-b919-331363b3af26
+          name: Default group
+          options: '{"timeout":60}'
+        policy:
+          id: af36818a-0f30-412c-9692-d37716075861
+          name: Sample Policy
+          settings_count: 12
+      schedule:
+        cron: 0 7 1 * *
+    - autosend: false
+      disabled: false
+      global: true
+      id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
+      name: Every midnight
+      policy_groups:
+      - group:
+          assets_count: 1
+          description: All newly created assets are added to the Default group
+          id: f6360346-77a5-4f97-b919-331363b3af26
+          name: Default group
+          options: '{"timeout":60}'
+        policy:
+          id: af36818a-0f30-412c-9692-d37716075861
+          name: Sample Policy
+          settings_count: 12
+      - group:
+          assets_count: 1
+          description: All newly created assets are added to the Default group
+          id: f6360346-77a5-4f97-b919-331363b3af26
+          name: Default group
+          options: '{"timeout":60}'
+        policy:
+          id: af36818a-0f30-412c-9692-d37716075861
+          name: Sample Policy
+          settings_count: 12
+      schedule:
+        cron: 0 7 1 * *
     items:
       $ref: '#/definitions/Program'
     title: 'Mediatype identifier: program; type=collection; view=default'
@@ -1898,7 +2100,7 @@ definitions:
         - john.doe@vulcan.example.com
         - jane.doe@vulcan.example.com
         items:
-          example: Ut ea est autem doloribus placeat voluptatem.
+          example: At ut.
           type: string
         type: array
     required:
@@ -1969,7 +2171,7 @@ definitions:
         - Hostname
         - Port
         items:
-          example: Rerum deleniti aut sed illo porro.
+          example: Tempora nemo corrupti sed qui.
           type: string
         type: array
       name:
@@ -1984,7 +2186,7 @@ definitions:
         items:
           additionalProperties: true
           example:
-            Perferendis maxime natus esse.: Aliquid molestias velit.
+            Perferendis cumque enim totam ut.: Quia sequi.
           type: object
         type: array
     title: 'Mediatype identifier: resource; view=default'
@@ -2238,6 +2440,20 @@ definitions:
         type: number
     title: 'Mediatype identifier: stats; view=default'
     type: object
+  Statsassets:
+    description: Assets by severity stats (default view)
+    example:
+      assets:
+        critical: 0.8147084592281026
+        high: 0.0942444272316253
+        informational: 0.2903626580923911
+        low: 0.12127770670881338
+        medium: 0.3701317536253242
+    properties:
+      assets:
+        $ref: '#/definitions/Stats'
+    title: 'Mediatype identifier: statsassets; view=default'
+    type: object
   Statsaverages:
     description: Stats by different averages (default view)
     example:
@@ -2383,7 +2599,7 @@ definitions:
         example:
         - team:vulcan
         items:
-          example: Cumque enim totam ut perspiciatis.
+          example: Voluptatum sit eos illum.
           type: string
         type: array
     title: 'Mediatype identifier: target; view=default'
@@ -2417,6 +2633,14 @@ definitions:
   TeamCollection:
     description: TeamCollection is the media type for an array of Team (default view)
     example:
+    - description: Security Team
+      id: ff74a33c-e683-4612-a62f-a9cf385f6522
+      name: Security
+      tag: team:security
+    - description: Security Team
+      id: ff74a33c-e683-4612-a62f-a9cf385f6522
+      name: Security
+      tag: team:security
     - description: Security Team
       id: ff74a33c-e683-4612-a62f-a9cf385f6522
       name: Security
@@ -2769,6 +2993,47 @@ paths:
       summary: profile user
       tags:
       - user
+  /stats/assets:
+    get:
+      description: Get global assets per severity statistics.
+      operationId: global-stats#assets
+      parameters:
+      - description: Specific date to get statistics at (incompatible and preferential
+          to min and max date params)
+        in: query
+        name: atDate
+        required: false
+        type: string
+      - description: A comma separated list of asset identifiers
+        in: query
+        name: identifiers
+        required: false
+        type: string
+      - description: A comma separated list of associated labels
+        in: query
+        name: labels
+        required: false
+        type: string
+      - description: Comma separated list of team tags to filter by. Only admin and
+          observer users are allowed to set this field.
+        in: query
+        name: tags
+        required: false
+        type: string
+      produces:
+      - statsassets
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Statsassets'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: assets global-stats
+      tags:
+      - global-stats
   /stats/exposure:
     get:
       description: Get global exposure statistics. This metric takes into account
