@@ -296,9 +296,7 @@ func (b *BrokerProxy) UpdateAsset(asset api.Asset) (*api.Asset, error) {
 	return a, err
 }
 func (b *BrokerProxy) MergeAssets(mergeOps api.AssetMergeOperations) error {
-	err := b.store.MergeAssets(mergeOps)
-	go b.awakeBroker()
-	return err
+	return b.store.MergeAssets(mergeOps)
 }
 
 // Asset Annotations
