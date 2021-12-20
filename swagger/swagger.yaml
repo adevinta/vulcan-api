@@ -714,6 +714,22 @@ definitions:
       status_previous: OPEN
       tag: team:security
       user: user@adevinta.com
+    - created_at: "2021-03-27T00:26:43.211506Z"
+      finding_id: 3c7d7003-c53d-4ccc-80e7-f21da241b2d4
+      id: b0720503-0a84-43fd-9cf4-5bb6c500226f
+      notes: This finding is a false positive because...
+      status: FALSE_POSITIVE
+      status_previous: OPEN
+      tag: team:security
+      user: user@adevinta.com
+    - created_at: "2021-03-27T00:26:43.211506Z"
+      finding_id: 3c7d7003-c53d-4ccc-80e7-f21da241b2d4
+      id: b0720503-0a84-43fd-9cf4-5bb6c500226f
+      notes: This finding is a false positive because...
+      status: FALSE_POSITIVE
+      status_previous: OPEN
+      tag: team:security
+      user: user@adevinta.com
     items:
       $ref: '#/definitions/Finding_overwrite'
     title: 'Mediatype identifier: finding_overwrite; type=collection; view=default'
@@ -722,118 +738,6 @@ definitions:
     description: FindingCollection is the media type for an array of Finding (default
       view)
     example:
-    - affected_resource: ""
-      attachments:
-      - content_type: application/json
-        data: e30=
-        name: JSON string
-      - content_type: application/json
-        data: e30=
-        name: JSON string
-      - content_type: application/json
-        data: e30=
-        name: JSON string
-      current_exposure: 4631
-      details: ""
-      id: a8720503-0284-45fd-9cf4-5bb6c500966f
-      impact_details: ""
-      issue:
-        cwe_id: 358
-        description: This domain has at least one MX record
-        id: b0720503-0a84-43fd-9cf4-5bb6c500226f
-        labels:
-        - Web
-        - HTTP
-        recommendations:
-        - It is recommended to run DMARC
-        reference_links: []
-        summary: MX presence
-      resources:
-      - attributes:
-        - Hostname
-        - Port
-        name: Network Resources
-        resources:
-        - Hostname: test.example.com
-          Port: "443"
-      - attributes:
-        - Hostname
-        - Port
-        name: Network Resources
-        resources:
-        - Hostname: test.example.com
-          Port: "443"
-      score: 6.9
-      source:
-        component: vulcan-tls
-        id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
-        instance: b3320f03-1284-42fd-9cf4-5bb6c500966f
-        name: vulcan
-        options: '{"timeout":60}'
-        time: "2019-06-08 11:16:40"
-      status: OPEN
-      target:
-        id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
-        identifier: www.test.com
-        tags:
-        - team:vulcan
-      total_exposure: 4631
-    - affected_resource: ""
-      attachments:
-      - content_type: application/json
-        data: e30=
-        name: JSON string
-      - content_type: application/json
-        data: e30=
-        name: JSON string
-      - content_type: application/json
-        data: e30=
-        name: JSON string
-      current_exposure: 4631
-      details: ""
-      id: a8720503-0284-45fd-9cf4-5bb6c500966f
-      impact_details: ""
-      issue:
-        cwe_id: 358
-        description: This domain has at least one MX record
-        id: b0720503-0a84-43fd-9cf4-5bb6c500226f
-        labels:
-        - Web
-        - HTTP
-        recommendations:
-        - It is recommended to run DMARC
-        reference_links: []
-        summary: MX presence
-      resources:
-      - attributes:
-        - Hostname
-        - Port
-        name: Network Resources
-        resources:
-        - Hostname: test.example.com
-          Port: "443"
-      - attributes:
-        - Hostname
-        - Port
-        name: Network Resources
-        resources:
-        - Hostname: test.example.com
-          Port: "443"
-      score: 6.9
-      source:
-        component: vulcan-tls
-        id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
-        instance: b3320f03-1284-42fd-9cf4-5bb6c500966f
-        name: vulcan
-        options: '{"timeout":60}'
-        time: "2019-06-08 11:16:40"
-      status: OPEN
-      target:
-        id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
-        identifier: www.test.com
-        tags:
-        - team:vulcan
-      total_exposure: 4631
     - affected_resource: ""
       attachments:
       - content_type: application/json
@@ -973,6 +877,11 @@ definitions:
         resources_count: 28
         summary: Site Without HTTPS
         targets_count: 14
+      - issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
+        max_score: 6.9
+        resources_count: 28
+        summary: Site Without HTTPS
+        targets_count: 14
       pagination:
         limit: 0.04495248178158175
         more: false
@@ -998,7 +907,7 @@ definitions:
         - Web
         - HTTP
         items:
-          example: Perspiciatis quia sequi et sed.
+          example: Repellat laboriosam repellat eum.
           type: string
         type: array
     title: 'Mediatype identifier: findings_labels; view=default'
@@ -1007,62 +916,6 @@ definitions:
     description: Findings list (default view)
     example:
       findings:
-      - affected_resource: ""
-        attachments:
-        - content_type: application/json
-          data: e30=
-          name: JSON string
-        - content_type: application/json
-          data: e30=
-          name: JSON string
-        - content_type: application/json
-          data: e30=
-          name: JSON string
-        current_exposure: 4631
-        details: ""
-        id: a8720503-0284-45fd-9cf4-5bb6c500966f
-        impact_details: ""
-        issue:
-          cwe_id: 358
-          description: This domain has at least one MX record
-          id: b0720503-0a84-43fd-9cf4-5bb6c500226f
-          labels:
-          - Web
-          - HTTP
-          recommendations:
-          - It is recommended to run DMARC
-          reference_links: []
-          summary: MX presence
-        resources:
-        - attributes:
-          - Hostname
-          - Port
-          name: Network Resources
-          resources:
-          - Hostname: test.example.com
-            Port: "443"
-        - attributes:
-          - Hostname
-          - Port
-          name: Network Resources
-          resources:
-          - Hostname: test.example.com
-            Port: "443"
-        score: 6.9
-        source:
-          component: vulcan-tls
-          id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
-          instance: b3320f03-1284-42fd-9cf4-5bb6c500966f
-          name: vulcan
-          options: '{"timeout":60}'
-          time: "2019-06-08 11:16:40"
-        status: OPEN
-        target:
-          id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
-          identifier: www.test.com
-          tags:
-          - team:vulcan
-        total_exposure: 4631
       - affected_resource: ""
         attachments:
         - content_type: application/json
@@ -1174,11 +1027,6 @@ definitions:
       issues_count: 2
       max_score: 6.9
       target_id: a8720503-0284-45fd-9cf4-5bb6c500966f
-    - findings_count: 5
-      identifier: vulcan.example.com
-      issues_count: 2
-      max_score: 6.9
-      target_id: a8720503-0284-45fd-9cf4-5bb6c500966f
     items:
       $ref: '#/definitions/Findings_target'
     title: 'Mediatype identifier: findings_target; type=collection; view=default'
@@ -1192,6 +1040,16 @@ definitions:
         offset: 0.9837483587621623
         total: 0.7345756811206027
       targets:
+      - findings_count: 5
+        identifier: vulcan.example.com
+        issues_count: 2
+        max_score: 6.9
+        target_id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      - findings_count: 5
+        identifier: vulcan.example.com
+        issues_count: 2
+        max_score: 6.9
+        target_id: a8720503-0284-45fd-9cf4-5bb6c500966f
       - findings_count: 5
         identifier: vulcan.example.com
         issues_count: 2
@@ -1240,6 +1098,16 @@ definitions:
     description: GroupCollection is the media type for an array of Group (default
       view)
     example:
+    - assets_count: 1
+      description: All newly created assets are added to the Default group
+      id: f6360346-77a5-4f97-b919-331363b3af26
+      name: Default group
+      options: '{"timeout":60}'
+    - assets_count: 1
+      description: All newly created assets are added to the Default group
+      id: f6360346-77a5-4f97-b919-331363b3af26
+      name: Default group
+      options: '{"timeout":60}'
     - assets_count: 1
       description: All newly created assets are added to the Default group
       id: f6360346-77a5-4f97-b919-331363b3af26
@@ -1356,7 +1224,7 @@ definitions:
         - Web
         - HTTP
         items:
-          example: Natus esse neque aliquid.
+          example: Sint ratione.
           type: string
         type: array
       recommendations:
@@ -1364,14 +1232,14 @@ definitions:
         example:
         - It is recommended to run DMARC
         items:
-          example: Rerum deleniti aut sed illo porro.
+          example: Cumque enim totam ut perspiciatis.
           type: string
         type: array
       reference_links:
         description: Documentation reference for the issue
         example: []
         items:
-          example: Omnis perferendis.
+          example: Illum ipsum tempora nemo corrupti sed.
           type: string
         type: array
       summary:
@@ -1757,6 +1625,12 @@ definitions:
     - checktype_name: vulcan-tls
       id: 5e51174d-3755-48b2-98bf-37e37cb07f6e
       options: '{"timeout":60}'
+    - checktype_name: vulcan-tls
+      id: 5e51174d-3755-48b2-98bf-37e37cb07f6e
+      options: '{"timeout":60}'
+    - checktype_name: vulcan-tls
+      id: 5e51174d-3755-48b2-98bf-37e37cb07f6e
+      options: '{"timeout":60}'
     items:
       $ref: '#/definitions/Policysetting'
     title: 'Mediatype identifier: policysetting; type=collection; view=default'
@@ -1867,62 +1741,6 @@ definitions:
     description: ProgramCollection is the media type for an array of Program (default
       view)
     example:
-    - autosend: false
-      disabled: false
-      global: true
-      id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
-      name: Every midnight
-      policy_groups:
-      - group:
-          assets_count: 1
-          description: All newly created assets are added to the Default group
-          id: f6360346-77a5-4f97-b919-331363b3af26
-          name: Default group
-          options: '{"timeout":60}'
-        policy:
-          id: af36818a-0f30-412c-9692-d37716075861
-          name: Sample Policy
-          settings_count: 12
-      - group:
-          assets_count: 1
-          description: All newly created assets are added to the Default group
-          id: f6360346-77a5-4f97-b919-331363b3af26
-          name: Default group
-          options: '{"timeout":60}'
-        policy:
-          id: af36818a-0f30-412c-9692-d37716075861
-          name: Sample Policy
-          settings_count: 12
-      schedule:
-        cron: 0 7 1 * *
-    - autosend: false
-      disabled: false
-      global: true
-      id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
-      name: Every midnight
-      policy_groups:
-      - group:
-          assets_count: 1
-          description: All newly created assets are added to the Default group
-          id: f6360346-77a5-4f97-b919-331363b3af26
-          name: Default group
-          options: '{"timeout":60}'
-        policy:
-          id: af36818a-0f30-412c-9692-d37716075861
-          name: Sample Policy
-          settings_count: 12
-      - group:
-          assets_count: 1
-          description: All newly created assets are added to the Default group
-          id: f6360346-77a5-4f97-b919-331363b3af26
-          name: Default group
-          options: '{"timeout":60}'
-        policy:
-          id: af36818a-0f30-412c-9692-d37716075861
-          name: Sample Policy
-          settings_count: 12
-      schedule:
-        cron: 0 7 1 * *
     - autosend: false
       disabled: false
       global: true
@@ -2080,7 +1898,7 @@ definitions:
         - john.doe@vulcan.example.com
         - jane.doe@vulcan.example.com
         items:
-          example: Architecto sapiente voluptatum deserunt at ut ea.
+          example: Ut ea est autem doloribus placeat voluptatem.
           type: string
         type: array
     required:
@@ -2151,7 +1969,7 @@ definitions:
         - Hostname
         - Port
         items:
-          example: Ratione perferendis.
+          example: Rerum deleniti aut sed illo porro.
           type: string
         type: array
       name:
@@ -2166,7 +1984,7 @@ definitions:
         items:
           additionalProperties: true
           example:
-            Voluptatum sit eos illum.: Tempora nemo corrupti sed qui.
+            Perferendis maxime natus esse.: Aliquid molestias velit.
           type: object
         type: array
     title: 'Mediatype identifier: resource; view=default'
@@ -2256,80 +2074,6 @@ definitions:
   ScanCollection:
     description: ScanCollection is the media type for an array of Scan (default view)
     example:
-    - checks_count: 20
-      end_time: "2018-09-07T10:40:52Z"
-      id: 23e7034f-8180-4895-8e7f-73f2f7d90631
-      program:
-        autosend: false
-        disabled: false
-        global: true
-        id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
-        name: Every midnight
-        policy_groups:
-        - group:
-            assets_count: 1
-            description: All newly created assets are added to the Default group
-            id: f6360346-77a5-4f97-b919-331363b3af26
-            name: Default group
-            options: '{"timeout":60}'
-          policy:
-            id: af36818a-0f30-412c-9692-d37716075861
-            name: Sample Policy
-            settings_count: 12
-        - group:
-            assets_count: 1
-            description: All newly created assets are added to the Default group
-            id: f6360346-77a5-4f97-b919-331363b3af26
-            name: Default group
-            options: '{"timeout":60}'
-          policy:
-            id: af36818a-0f30-412c-9692-d37716075861
-            name: Sample Policy
-            settings_count: 12
-        schedule:
-          cron: 0 7 1 * *
-      progress: 1
-      requested_by: john.doe@vulcan.example.com
-      scheduled_time: "2018-09-07T10:40:52Z"
-      start_time: "2018-09-07T10:40:52Z"
-      status: FINISHED
-    - checks_count: 20
-      end_time: "2018-09-07T10:40:52Z"
-      id: 23e7034f-8180-4895-8e7f-73f2f7d90631
-      program:
-        autosend: false
-        disabled: false
-        global: true
-        id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
-        name: Every midnight
-        policy_groups:
-        - group:
-            assets_count: 1
-            description: All newly created assets are added to the Default group
-            id: f6360346-77a5-4f97-b919-331363b3af26
-            name: Default group
-            options: '{"timeout":60}'
-          policy:
-            id: af36818a-0f30-412c-9692-d37716075861
-            name: Sample Policy
-            settings_count: 12
-        - group:
-            assets_count: 1
-            description: All newly created assets are added to the Default group
-            id: f6360346-77a5-4f97-b919-331363b3af26
-            name: Default group
-            options: '{"timeout":60}'
-          policy:
-            id: af36818a-0f30-412c-9692-d37716075861
-            name: Sample Policy
-            settings_count: 12
-        schedule:
-          cron: 0 7 1 * *
-      progress: 1
-      requested_by: john.doe@vulcan.example.com
-      scheduled_time: "2018-09-07T10:40:52Z"
-      start_time: "2018-09-07T10:40:52Z"
-      status: FINISHED
     - checks_count: 20
       end_time: "2018-09-07T10:40:52Z"
       id: 23e7034f-8180-4895-8e7f-73f2f7d90631
@@ -2639,7 +2383,7 @@ definitions:
         example:
         - team:vulcan
         items:
-          example: Velit quis.
+          example: Laborum quas voluptatum sit.
           type: string
         type: array
     title: 'Mediatype identifier: target; view=default'
@@ -2673,10 +2417,6 @@ definitions:
   TeamCollection:
     description: TeamCollection is the media type for an array of Team (default view)
     example:
-    - description: Security Team
-      id: ff74a33c-e683-4612-a62f-a9cf385f6522
-      name: Security
-      tag: team:security
     - description: Security Team
       id: ff74a33c-e683-4612-a62f-a9cf385f6522
       name: Security
@@ -2794,26 +2534,6 @@ definitions:
         last_login: "2018-09-07T10:40:52Z"
         lastname: Doe
         observer: true
-    - role: owner
-      user:
-        active: true
-        admin: true
-        email: john.doe@vulcan.example.com
-        firstname: John
-        id: 967d9966-b561-4233-bd6f-cac603fd8320
-        last_login: "2018-09-07T10:40:52Z"
-        lastname: Doe
-        observer: true
-    - role: owner
-      user:
-        active: true
-        admin: true
-        email: john.doe@vulcan.example.com
-        firstname: John
-        id: 967d9966-b561-4233-bd6f-cac603fd8320
-        last_login: "2018-09-07T10:40:52Z"
-        lastname: Doe
-        observer: true
     items:
       $ref: '#/definitions/Teammember'
     title: 'Mediatype identifier: teammember; type=collection; view=default'
@@ -2894,14 +2614,6 @@ definitions:
   UserCollection:
     description: UserCollection is the media type for an array of User (default view)
     example:
-    - active: true
-      admin: true
-      email: john.doe@vulcan.example.com
-      firstname: John
-      id: 967d9966-b561-4233-bd6f-cac603fd8320
-      last_login: "2018-09-07T10:40:52Z"
-      lastname: Doe
-      observer: true
     - active: true
       admin: true
       email: john.doe@vulcan.example.com
@@ -3078,7 +2790,8 @@ paths:
         name: minScore
         required: false
         type: number
-      - description: Comma separated list of team tags to filter by
+      - description: Comma separated list of team tags to filter by. Only admin and
+          observer users are allowed to set this field.
         in: query
         name: tags
         required: false
@@ -3114,7 +2827,8 @@ paths:
         name: minScore
         required: false
         type: number
-      - description: Comma separated list of team tags to filter by
+      - description: Comma separated list of team tags to filter by. Only admin and
+          observer users are allowed to set this field.
         in: query
         name: tags
         required: false
@@ -3148,7 +2862,8 @@ paths:
         name: minDate
         required: false
         type: string
-      - description: Comma separated list of team tags to filter by
+      - description: Comma separated list of team tags to filter by. Only admin and
+          observer users are allowed to set this field.
         in: query
         name: tags
         required: false
