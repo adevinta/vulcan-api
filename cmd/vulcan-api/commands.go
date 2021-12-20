@@ -220,7 +220,7 @@ func startServer() error {
 		}
 	}()
 
-	jobsRunner := api.JobsRunner{}
+	jobsRunner := &api.JobsRunner{}
 
 	// Build vulcanito deps.
 	db, schedulerClient, err := createVulcanitoDeps(cfg, logger, vulnerabilityDBClient, jobsRunner)
@@ -594,7 +594,7 @@ func addWhitelistingMiddleware(endpoints endpoint.Endpoints, logger log.Logger) 
 	return endpoints
 }
 
-func createVulcanitoDeps(cfg config, l log.Logger, vulnDBClient vulnerabilitydb.Client, jobsRunner api.JobsRunner) (api.VulcanitoStore, *schedule.Client, error) {
+func createVulcanitoDeps(cfg config, l log.Logger, vulnDBClient vulnerabilitydb.Client, jobsRunner *api.JobsRunner) (api.VulcanitoStore, *schedule.Client, error) {
 	db, err := store.NewDB("postgres", cfg.DB.ConnString, l, cfg.DB.LogMode, cfg.Defaults)
 	if err != nil {
 		err = fmt.Errorf("Error opening DB connection: %v", err)

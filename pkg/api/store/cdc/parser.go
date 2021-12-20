@@ -48,13 +48,13 @@ type Parser interface {
 // to handle distributed transactions for VulnDB.
 type VulnDBAndJobTxParser struct {
 	VulnDBClient vulndb.Client
-	JobsRunner   api.JobsRunner
+	JobsRunner   *api.JobsRunner
 	logger       log.Logger
 }
 
 // NewVulnDBAndJobTxParser builds a new CDC log parser
 // to handle distributed transactions for VulnDB.
-func NewVulnDBAndJobTxParser(vulnDBClient vulndb.Client, jobsRunner api.JobsRunner, logger log.Logger) *VulnDBAndJobTxParser {
+func NewVulnDBAndJobTxParser(vulnDBClient vulndb.Client, jobsRunner *api.JobsRunner, logger log.Logger) *VulnDBAndJobTxParser {
 	return &VulnDBAndJobTxParser{
 		VulnDBClient: vulnDBClient,
 		JobsRunner:   jobsRunner,
@@ -289,7 +289,7 @@ func (p *VulnDBAndJobTxParser) processMergeDiscoveredAssets(data []byte) error {
 		return errInvalidData
 	}
 
-	if p.JobsRunner.Client == nil {
+	if p.JobsRunner == nil || p.JobsRunner.Client == nil {
 		return errUnavailabeJobsRunner
 	}
 
