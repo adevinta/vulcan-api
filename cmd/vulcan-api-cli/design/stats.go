@@ -255,4 +255,34 @@ var _ = Resource("global-stats", func() {
 		Security("Bearer")
 		Response(OK, StatsCurrentExposureMedia)
 	})
+
+	Action("open", func() {
+		Description("Get global open issues statistics.")
+		Routing(GET("/open"))
+		Params(func() {
+			Param("tags", String, "Comma separated list of team tags to filter by. Only admin and observer users are allowed to set this field.")
+			Param("minDate", String, "Minimum date to filter statistics by")
+			Param("maxDate", String, "Maximum date to filter statistics by")
+			Param("atDate", String, "Specific date to get statistics at (incompatible and preferential to min and max date params)")
+			Param("identifiers", String, "A comma separated list of asset identifiers")
+			Param("labels", String, "A comma separated list of associated labels")
+		})
+		Security("Bearer")
+		Response(OK, StatsOpenMedia)
+	})
+
+	Action("fixed", func() {
+		Description("Get global fixed issues statistics.")
+		Routing(GET("/fixed"))
+		Params(func() {
+			Param("tags", String, "Comma separated list of team tags to filter by. Only admin and observer users are allowed to set this field.")
+			Param("minDate", String, "Minimum date to filter statistics by")
+			Param("maxDate", String, "Maximum date to filter statistics by")
+			Param("atDate", String, "Specific date to get statistics at (incompatible and preferential to min and max date params)")
+			Param("identifiers", String, "A comma separated list of asset identifiers")
+			Param("labels", String, "A comma separated list of associated labels")
+		})
+		Security("Bearer")
+		Response(OK, StatsFixedMedia)
+	})
 })

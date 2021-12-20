@@ -151,6 +151,8 @@ func AttachRoutes(e endpoint.Endpoints, logger kitlog.Logger) http.Handler {
 	r.Methods("GET").Path("/api/v1/stats/mttr").Handler(newServer(e[endpoint.GlobalStatsMTTR], endpoint.StatsRequest{}, logger, endpoint.GlobalStatsMTTR))
 	r.Methods("GET").Path("/api/v1/stats/exposure").Handler(newServer(e[endpoint.GlobalStatsExposure], endpoint.StatsRequest{}, logger, endpoint.GlobalStatsExposure))
 	r.Methods("GET").Path("/api/v1/stats/exposure/current").Handler(newServer(e[endpoint.GlobalStatsCurrentExposure], endpoint.StatsRequest{}, logger, endpoint.GlobalStatsCurrentExposure))
+	r.Methods("GET").Path("/api/v1/stats/open").Handler(newServer(e[endpoint.GlobalStatsOpen], endpoint.StatsRequest{}, logger, endpoint.GlobalStatsOpen))
+	r.Methods("GET").Path("/api/v1/stats/fixed").Handler(newServer(e[endpoint.GlobalStatsFixed], endpoint.StatsRequest{}, logger, endpoint.GlobalStatsFixed))
 
 	return r
 }
