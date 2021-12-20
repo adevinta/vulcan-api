@@ -666,6 +666,25 @@ type (
 		PrettyPrint bool
 	}
 
+<<<<<<< HEAD
+=======
+	// ListRecipientsCommand is the command line data structure for the list action of recipients
+	ListRecipientsCommand struct {
+		// Team ID
+		TeamID      string
+		PrettyPrint bool
+	}
+
+	// UpdateRecipientsCommand is the command line data structure for the update action of recipients
+	UpdateRecipientsCommand struct {
+		Payload     string
+		ContentType string
+		// Team ID
+		TeamID      string
+		PrettyPrint bool
+	}
+
+>>>>>>> Add authorization for tags query param in global stats endpoints
 	// SendDigestReportCommand is the command line data structure for the send digest action of report
 	SendDigestReportCommand struct {
 		Payload     string
@@ -972,10 +991,10 @@ Payload example:
    "name": "Security",
    "tag": "team:security"
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp3.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp4.Run(c, args) },
 	}
-	tmp3.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp3.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp4.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp4.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
 	tmp4 := new(CreateAssetAnnotationsCommand)
 	sub = &cobra.Command{
@@ -2403,6 +2422,8 @@ func (cmd *CreateAssetAnnotationsCommand) RegisterFlags(cc *cobra.Command, c *cl
 	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
 	var assetID string
 	cc.Flags().StringVar(&cmd.AssetID, "asset_id", assetID, `Asset ID`)
+<<<<<<< HEAD
+=======
 	var teamID string
 	cc.Flags().StringVar(&cmd.TeamID, "team_id", teamID, `Team ID`)
 }
@@ -2442,6 +2463,224 @@ func (cmd *DeleteAssetAnnotationsCommand) RegisterFlags(cc *cobra.Command, c *cl
 	cc.Flags().StringVar(&cmd.AssetID, "asset_id", assetID, `Asset ID`)
 	var teamID string
 	cc.Flags().StringVar(&cmd.TeamID, "team_id", teamID, `Team ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListAssetAnnotationsCommand command.
+func (cmd *ListAssetAnnotationsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/api/v1/teams/%v/assets/%v/annotations", url.QueryEscape(cmd.TeamID), url.QueryEscape(cmd.AssetID))
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListAssetAnnotations(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListAssetAnnotationsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var assetID string
+	cc.Flags().StringVar(&cmd.AssetID, "asset_id", assetID, `Asset ID`)
+	var teamID string
+	cc.Flags().StringVar(&cmd.TeamID, "team_id", teamID, `Team ID`)
+}
+
+// Run makes the HTTP request corresponding to the PutAssetAnnotationsCommand command.
+func (cmd *PutAssetAnnotationsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/api/v1/teams/%v/assets/%v/annotations", url.QueryEscape(cmd.TeamID), url.QueryEscape(cmd.AssetID))
+	}
+	var payload client.AssetAnnotationRequest
+	if cmd.Payload != "" {
+		err := json.Unmarshal([]byte(cmd.Payload), &payload)
+		if err != nil {
+			return fmt.Errorf("failed to deserialize payload: %s", err)
+		}
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.PutAssetAnnotations(ctx, path, &payload)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *PutAssetAnnotationsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request body encoded in JSON")
+	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
+	var assetID string
+	cc.Flags().StringVar(&cmd.AssetID, "asset_id", assetID, `Asset ID`)
+>>>>>>> Add authorization for tags query param in global stats endpoints
+	var teamID string
+	cc.Flags().StringVar(&cmd.TeamID, "team_id", teamID, `Team ID`)
+}
+
+<<<<<<< HEAD
+// Run makes the HTTP request corresponding to the DeleteAssetAnnotationsCommand command.
+func (cmd *DeleteAssetAnnotationsCommand) Run(c *client.Client, args []string) error {
+=======
+// Run makes the HTTP request corresponding to the UpdateAssetAnnotationsCommand command.
+func (cmd *UpdateAssetAnnotationsCommand) Run(c *client.Client, args []string) error {
+>>>>>>> Add authorization for tags query param in global stats endpoints
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/api/v1/teams/%v/assets/%v/annotations", url.QueryEscape(cmd.TeamID), url.QueryEscape(cmd.AssetID))
+	}
+<<<<<<< HEAD
+	var payload client.AssetAnnotationDeleteRequest
+=======
+	var payload client.AssetAnnotationRequest
+>>>>>>> Add authorization for tags query param in global stats endpoints
+	if cmd.Payload != "" {
+		err := json.Unmarshal([]byte(cmd.Payload), &payload)
+		if err != nil {
+			return fmt.Errorf("failed to deserialize payload: %s", err)
+		}
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+<<<<<<< HEAD
+	resp, err := c.DeleteAssetAnnotations(ctx, path, &payload)
+=======
+	resp, err := c.UpdateAssetAnnotations(ctx, path, &payload)
+>>>>>>> Add authorization for tags query param in global stats endpoints
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+<<<<<<< HEAD
+func (cmd *DeleteAssetAnnotationsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+=======
+func (cmd *UpdateAssetAnnotationsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+>>>>>>> Add authorization for tags query param in global stats endpoints
+	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request body encoded in JSON")
+	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
+	var assetID string
+	cc.Flags().StringVar(&cmd.AssetID, "asset_id", assetID, `Asset ID`)
+	var teamID string
+	cc.Flags().StringVar(&cmd.TeamID, "team_id", teamID, `Team ID`)
+<<<<<<< HEAD
+=======
+}
+
+// Run makes the HTTP request corresponding to the CreateAssetGroupCommand command.
+func (cmd *CreateAssetGroupCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/api/v1/teams/%v/groups/%v/assets", url.QueryEscape(cmd.TeamID), url.QueryEscape(cmd.GroupID))
+	}
+	var payload client.AssetGroupPayload
+	if cmd.Payload != "" {
+		err := json.Unmarshal([]byte(cmd.Payload), &payload)
+		if err != nil {
+			return fmt.Errorf("failed to deserialize payload: %s", err)
+		}
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.CreateAssetGroup(ctx, path, &payload)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *CreateAssetGroupCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request body encoded in JSON")
+	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
+	var groupID string
+	cc.Flags().StringVar(&cmd.GroupID, "group_id", groupID, `Group ID`)
+	var teamID string
+	cc.Flags().StringVar(&cmd.TeamID, "team_id", teamID, `Team ID`)
+}
+
+// Run makes the HTTP request corresponding to the DeleteAssetGroupCommand command.
+func (cmd *DeleteAssetGroupCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/api/v1/teams/%v/groups/%v/assets/%v", url.QueryEscape(cmd.TeamID), url.QueryEscape(cmd.GroupID), url.QueryEscape(cmd.AssetID))
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.DeleteAssetGroup(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *DeleteAssetGroupCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var assetID string
+	cc.Flags().StringVar(&cmd.AssetID, "asset_id", assetID, `Asset ID`)
+	var groupID string
+	cc.Flags().StringVar(&cmd.GroupID, "group_id", groupID, `Group ID`)
+	var teamID string
+	cc.Flags().StringVar(&cmd.TeamID, "team_id", teamID, `Team ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListAssetGroupCommand command.
+func (cmd *ListAssetGroupCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/api/v1/teams/%v/groups/%v/assets", url.QueryEscape(cmd.TeamID), url.QueryEscape(cmd.GroupID))
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListAssetGroup(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListAssetGroupCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var groupID string
+	cc.Flags().StringVar(&cmd.GroupID, "group_id", groupID, `Group ID`)
+	var teamID string
+	cc.Flags().StringVar(&cmd.TeamID, "team_id", teamID, `Team ID`)
+>>>>>>> Add authorization for tags query param in global stats endpoints
 }
 
 // Run makes the HTTP request corresponding to the ListAssetAnnotationsCommand command.
@@ -2583,17 +2822,30 @@ func (cmd *CreateAssetGroupCommand) RegisterFlags(cc *cobra.Command, c *client.C
 	cc.Flags().StringVar(&cmd.TeamID, "team_id", teamID, `Team ID`)
 }
 
+<<<<<<< HEAD
 // Run makes the HTTP request corresponding to the DeleteAssetGroupCommand command.
 func (cmd *DeleteAssetGroupCommand) Run(c *client.Client, args []string) error {
+=======
+// Run makes the HTTP request corresponding to the FindFindingFindingsCommand command.
+func (cmd *FindFindingFindingsCommand) Run(c *client.Client, args []string) error {
+>>>>>>> Add authorization for tags query param in global stats endpoints
 	var path string
 	if len(args) > 0 {
 		path = args[0]
 	} else {
+<<<<<<< HEAD
 		path = fmt.Sprintf("/api/v1/teams/%v/groups/%v/assets/%v", url.QueryEscape(cmd.TeamID), url.QueryEscape(cmd.GroupID), url.QueryEscape(cmd.AssetID))
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
 	resp, err := c.DeleteAssetGroup(ctx, path)
+=======
+		path = fmt.Sprintf("/api/v1/teams/%v/findings/%v", url.QueryEscape(cmd.TeamID), url.QueryEscape(cmd.FindingID))
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.FindFindingFindings(ctx, path)
+>>>>>>> Add authorization for tags query param in global stats endpoints
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
 		return err
@@ -2604,15 +2856,22 @@ func (cmd *DeleteAssetGroupCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
+<<<<<<< HEAD
 func (cmd *DeleteAssetGroupCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	var assetID string
 	cc.Flags().StringVar(&cmd.AssetID, "asset_id", assetID, `Asset ID`)
 	var groupID string
 	cc.Flags().StringVar(&cmd.GroupID, "group_id", groupID, `Group ID`)
+=======
+func (cmd *FindFindingFindingsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var findingID string
+	cc.Flags().StringVar(&cmd.FindingID, "finding_id", findingID, `Finding ID`)
+>>>>>>> Add authorization for tags query param in global stats endpoints
 	var teamID string
 	cc.Flags().StringVar(&cmd.TeamID, "team_id", teamID, `Team ID`)
 }
 
+<<<<<<< HEAD
 // Run makes the HTTP request corresponding to the ListAssetGroupCommand command.
 func (cmd *ListAssetGroupCommand) Run(c *client.Client, args []string) error {
 	var path string
@@ -2860,6 +3119,8 @@ func (cmd *FindFindingFindingsCommand) RegisterFlags(cc *cobra.Command, c *clien
 	cc.Flags().StringVar(&cmd.TeamID, "team_id", teamID, `Team ID`)
 }
 
+=======
+>>>>>>> Add authorization for tags query param in global stats endpoints
 // Run makes the HTTP request corresponding to the FindFindingsFromAIssueFindingsCommand command.
 func (cmd *FindFindingsFromAIssueFindingsCommand) Run(c *client.Client, args []string) error {
 	var path string

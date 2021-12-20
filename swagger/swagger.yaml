@@ -722,6 +722,11 @@ definitions:
       status_previous: OPEN
       tag: team:security
       user: user@adevinta.com
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> Add authorization for tags query param in global stats endpoints
     - created_at: "2021-03-27T00:26:43.211506Z"
       finding_id: 3c7d7003-c53d-4ccc-80e7-f21da241b2d4
       id: b0720503-0a84-43fd-9cf4-5bb6c500226f
@@ -730,6 +735,10 @@ definitions:
       status_previous: OPEN
       tag: team:security
       user: user@adevinta.com
+<<<<<<< HEAD
+=======
+>>>>>>> 60e0b90... Add authorization for tags query param in global stats endpoints
+>>>>>>> Add authorization for tags query param in global stats endpoints
     items:
       $ref: '#/definitions/Finding_overwrite'
     title: 'Mediatype identifier: finding_overwrite; type=collection; view=default'
@@ -872,6 +881,11 @@ definitions:
         resources_count: 28
         summary: Site Without HTTPS
         targets_count: 14
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> Add authorization for tags query param in global stats endpoints
       - issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
         max_score: 6.9
         resources_count: 28
@@ -882,6 +896,10 @@ definitions:
         resources_count: 28
         summary: Site Without HTTPS
         targets_count: 14
+<<<<<<< HEAD
+=======
+>>>>>>> 60e0b90... Add authorization for tags query param in global stats endpoints
+>>>>>>> Add authorization for tags query param in global stats endpoints
       pagination:
         limit: 0.04495248178158175
         more: false
@@ -907,7 +925,15 @@ definitions:
         - Web
         - HTTP
         items:
+<<<<<<< HEAD
           example: Repellat laboriosam repellat eum.
+=======
+<<<<<<< HEAD
+          example: Laboriosam repellat eum nihil velit magni id.
+=======
+          example: Repellat laboriosam repellat eum.
+>>>>>>> 60e0b90... Add authorization for tags query param in global stats endpoints
+>>>>>>> Add authorization for tags query param in global stats endpoints
           type: string
         type: array
     title: 'Mediatype identifier: findings_labels; view=default'
@@ -972,6 +998,124 @@ definitions:
           tags:
           - team:vulcan
         total_exposure: 4631
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+      - affected_resource: ""
+        attachments:
+        - content_type: application/json
+          data: e30=
+          name: JSON string
+        - content_type: application/json
+          data: e30=
+          name: JSON string
+        - content_type: application/json
+          data: e30=
+          name: JSON string
+        current_exposure: 4631
+        details: ""
+        id: a8720503-0284-45fd-9cf4-5bb6c500966f
+        impact_details: ""
+        issue:
+          cwe_id: 358
+          description: This domain has at least one MX record
+          id: b0720503-0a84-43fd-9cf4-5bb6c500226f
+          labels:
+          - Web
+          - HTTP
+          recommendations:
+          - It is recommended to run DMARC
+          reference_links: []
+          summary: MX presence
+        resources:
+        - attributes:
+          - Hostname
+          - Port
+          name: Network Resources
+          resources:
+          - Hostname: test.example.com
+            Port: "443"
+        - attributes:
+          - Hostname
+          - Port
+          name: Network Resources
+          resources:
+          - Hostname: test.example.com
+            Port: "443"
+        score: 6.9
+        source:
+          component: vulcan-tls
+          id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
+          instance: b3320f03-1284-42fd-9cf4-5bb6c500966f
+          name: vulcan
+          options: '{"timeout":60}'
+          time: "2019-06-08 11:16:40"
+        status: OPEN
+        target:
+          id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
+          identifier: www.test.com
+          tags:
+          - team:vulcan
+        total_exposure: 4631
+      - affected_resource: ""
+        attachments:
+        - content_type: application/json
+          data: e30=
+          name: JSON string
+        - content_type: application/json
+          data: e30=
+          name: JSON string
+        - content_type: application/json
+          data: e30=
+          name: JSON string
+        current_exposure: 4631
+        details: ""
+        id: a8720503-0284-45fd-9cf4-5bb6c500966f
+        impact_details: ""
+        issue:
+          cwe_id: 358
+          description: This domain has at least one MX record
+          id: b0720503-0a84-43fd-9cf4-5bb6c500226f
+          labels:
+          - Web
+          - HTTP
+          recommendations:
+          - It is recommended to run DMARC
+          reference_links: []
+          summary: MX presence
+        resources:
+        - attributes:
+          - Hostname
+          - Port
+          name: Network Resources
+          resources:
+          - Hostname: test.example.com
+            Port: "443"
+        - attributes:
+          - Hostname
+          - Port
+          name: Network Resources
+          resources:
+          - Hostname: test.example.com
+            Port: "443"
+        score: 6.9
+        source:
+          component: vulcan-tls
+          id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
+          instance: b3320f03-1284-42fd-9cf4-5bb6c500966f
+          name: vulcan
+          options: '{"timeout":60}'
+          time: "2019-06-08 11:16:40"
+        status: OPEN
+        target:
+          id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
+          identifier: www.test.com
+          tags:
+          - team:vulcan
+        total_exposure: 4631
+=======
+>>>>>>> 60e0b90... Add authorization for tags query param in global stats endpoints
+>>>>>>> Add authorization for tags query param in global stats endpoints
       pagination:
         limit: 0.04495248178158175
         more: false
@@ -1027,6 +1171,22 @@ definitions:
       issues_count: 2
       max_score: 6.9
       target_id: a8720503-0284-45fd-9cf4-5bb6c500966f
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+    - findings_count: 5
+      identifier: vulcan.example.com
+      issues_count: 2
+      max_score: 6.9
+      target_id: a8720503-0284-45fd-9cf4-5bb6c500966f
+    - findings_count: 5
+      identifier: vulcan.example.com
+      issues_count: 2
+      max_score: 6.9
+      target_id: a8720503-0284-45fd-9cf4-5bb6c500966f
+=======
+>>>>>>> 60e0b90... Add authorization for tags query param in global stats endpoints
+>>>>>>> Add authorization for tags query param in global stats endpoints
     items:
       $ref: '#/definitions/Findings_target'
     title: 'Mediatype identifier: findings_target; type=collection; view=default'
@@ -1224,7 +1384,15 @@ definitions:
         - Web
         - HTTP
         items:
+<<<<<<< HEAD
           example: Sint ratione.
+=======
+<<<<<<< HEAD
+          example: Ratione perferendis.
+=======
+          example: Sint ratione.
+>>>>>>> 60e0b90... Add authorization for tags query param in global stats endpoints
+>>>>>>> Add authorization for tags query param in global stats endpoints
           type: string
         type: array
       recommendations:
@@ -1232,14 +1400,30 @@ definitions:
         example:
         - It is recommended to run DMARC
         items:
+<<<<<<< HEAD
           example: Cumque enim totam ut perspiciatis.
+=======
+<<<<<<< HEAD
+          example: Voluptatum sit eos illum.
+=======
+          example: Cumque enim totam ut perspiciatis.
+>>>>>>> 60e0b90... Add authorization for tags query param in global stats endpoints
+>>>>>>> Add authorization for tags query param in global stats endpoints
           type: string
         type: array
       reference_links:
         description: Documentation reference for the issue
         example: []
         items:
+<<<<<<< HEAD
           example: Illum ipsum tempora nemo corrupti sed.
+=======
+<<<<<<< HEAD
+          example: Tempora nemo corrupti sed qui.
+=======
+          example: Illum ipsum tempora nemo corrupti sed.
+>>>>>>> 60e0b90... Add authorization for tags query param in global stats endpoints
+>>>>>>> Add authorization for tags query param in global stats endpoints
           type: string
         type: array
       summary:
@@ -1628,9 +1812,18 @@ definitions:
     - checktype_name: vulcan-tls
       id: 5e51174d-3755-48b2-98bf-37e37cb07f6e
       options: '{"timeout":60}'
+<<<<<<< HEAD
     - checktype_name: vulcan-tls
       id: 5e51174d-3755-48b2-98bf-37e37cb07f6e
       options: '{"timeout":60}'
+=======
+<<<<<<< HEAD
+=======
+    - checktype_name: vulcan-tls
+      id: 5e51174d-3755-48b2-98bf-37e37cb07f6e
+      options: '{"timeout":60}'
+>>>>>>> 60e0b90... Add authorization for tags query param in global stats endpoints
+>>>>>>> Add authorization for tags query param in global stats endpoints
     items:
       $ref: '#/definitions/Policysetting'
     title: 'Mediatype identifier: policysetting; type=collection; view=default'
@@ -1898,7 +2091,15 @@ definitions:
         - john.doe@vulcan.example.com
         - jane.doe@vulcan.example.com
         items:
+<<<<<<< HEAD
           example: Ut ea est autem doloribus placeat voluptatem.
+=======
+<<<<<<< HEAD
+          example: Aliquid ipsam voluptate eveniet sint ab.
+=======
+          example: Ut ea est autem doloribus placeat voluptatem.
+>>>>>>> 60e0b90... Add authorization for tags query param in global stats endpoints
+>>>>>>> Add authorization for tags query param in global stats endpoints
           type: string
         type: array
     required:
@@ -1969,7 +2170,15 @@ definitions:
         - Hostname
         - Port
         items:
+<<<<<<< HEAD
           example: Rerum deleniti aut sed illo porro.
+=======
+<<<<<<< HEAD
+          example: Est illo et corrupti rerum deleniti aut.
+=======
+          example: Rerum deleniti aut sed illo porro.
+>>>>>>> 60e0b90... Add authorization for tags query param in global stats endpoints
+>>>>>>> Add authorization for tags query param in global stats endpoints
           type: string
         type: array
       name:
@@ -1984,7 +2193,16 @@ definitions:
         items:
           additionalProperties: true
           example:
+<<<<<<< HEAD
             Perferendis maxime natus esse.: Aliquid molestias velit.
+=======
+<<<<<<< HEAD
+            Porro placeat omnis perferendis maxime natus.: Neque aliquid molestias
+              velit quis laborum.
+=======
+            Perferendis maxime natus esse.: Aliquid molestias velit.
+>>>>>>> 60e0b90... Add authorization for tags query param in global stats endpoints
+>>>>>>> Add authorization for tags query param in global stats endpoints
           type: object
         type: array
     title: 'Mediatype identifier: resource; view=default'
@@ -2111,6 +2329,49 @@ definitions:
       scheduled_time: "2018-09-07T10:40:52Z"
       start_time: "2018-09-07T10:40:52Z"
       status: FINISHED
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+    - checks_count: 20
+      end_time: "2018-09-07T10:40:52Z"
+      id: 23e7034f-8180-4895-8e7f-73f2f7d90631
+      program:
+        autosend: false
+        disabled: false
+        global: true
+        id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
+        name: Every midnight
+        policy_groups:
+        - group:
+            assets_count: 1
+            description: All newly created assets are added to the Default group
+            id: f6360346-77a5-4f97-b919-331363b3af26
+            name: Default group
+            options: '{"timeout":60}'
+          policy:
+            id: af36818a-0f30-412c-9692-d37716075861
+            name: Sample Policy
+            settings_count: 12
+        - group:
+            assets_count: 1
+            description: All newly created assets are added to the Default group
+            id: f6360346-77a5-4f97-b919-331363b3af26
+            name: Default group
+            options: '{"timeout":60}'
+          policy:
+            id: af36818a-0f30-412c-9692-d37716075861
+            name: Sample Policy
+            settings_count: 12
+        schedule:
+          cron: 0 7 1 * *
+      progress: 1
+      requested_by: john.doe@vulcan.example.com
+      scheduled_time: "2018-09-07T10:40:52Z"
+      start_time: "2018-09-07T10:40:52Z"
+      status: FINISHED
+=======
+>>>>>>> 60e0b90... Add authorization for tags query param in global stats endpoints
+>>>>>>> Add authorization for tags query param in global stats endpoints
     items:
       $ref: '#/definitions/Scan'
     title: 'Mediatype identifier: scan; type=collection; view=default'
@@ -2383,7 +2644,15 @@ definitions:
         example:
         - team:vulcan
         items:
+<<<<<<< HEAD
           example: Laborum quas voluptatum sit.
+=======
+<<<<<<< HEAD
+          example: Enim totam ut perspiciatis quia.
+=======
+          example: Laborum quas voluptatum sit.
+>>>>>>> 60e0b90... Add authorization for tags query param in global stats endpoints
+>>>>>>> Add authorization for tags query param in global stats endpoints
           type: string
         type: array
     title: 'Mediatype identifier: target; view=default'
@@ -2790,12 +3059,21 @@ paths:
         name: minScore
         required: false
         type: number
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> Add authorization for tags query param in global stats endpoints
       - description: Comma separated list of team tags to filter by. Only admin and
           observer users are allowed to set this field.
         in: query
         name: tags
         required: false
         type: string
+<<<<<<< HEAD
+=======
+>>>>>>> 60e0b90... Add authorization for tags query param in global stats endpoints
+>>>>>>> Add authorization for tags query param in global stats endpoints
       produces:
       - exposure
       responses:
@@ -2827,12 +3105,21 @@ paths:
         name: minScore
         required: false
         type: number
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> Add authorization for tags query param in global stats endpoints
       - description: Comma separated list of team tags to filter by. Only admin and
           observer users are allowed to set this field.
         in: query
         name: tags
         required: false
         type: string
+<<<<<<< HEAD
+=======
+>>>>>>> 60e0b90... Add authorization for tags query param in global stats endpoints
+>>>>>>> Add authorization for tags query param in global stats endpoints
       produces:
       - current_exposure
       responses:
@@ -2862,12 +3149,21 @@ paths:
         name: minDate
         required: false
         type: string
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> Add authorization for tags query param in global stats endpoints
       - description: Comma separated list of team tags to filter by. Only admin and
           observer users are allowed to set this field.
         in: query
         name: tags
         required: false
         type: string
+<<<<<<< HEAD
+=======
+>>>>>>> 60e0b90... Add authorization for tags query param in global stats endpoints
+>>>>>>> Add authorization for tags query param in global stats endpoints
       produces:
       - mttr
       responses:
