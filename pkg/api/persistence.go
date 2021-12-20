@@ -51,6 +51,7 @@ type VulcanitoStore interface {
 	DeleteAllAssets(teamID string) error
 	UpdateAsset(asset Asset) (*Asset, error)
 	MergeAssets(mergeOps AssetMergeOperations) error
+	MergeAssetsAsync(teamID string, assets []Asset, groupName string) (*Job, error)
 
 	GetAssetType(assetTypeName string) (*AssetType, error)
 

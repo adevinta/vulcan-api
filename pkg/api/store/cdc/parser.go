@@ -293,7 +293,9 @@ func (p *VulnDBAndJobTxParser) processMergeDiscoveredAssets(data []byte) error {
 		return errUnavailabeJobsRunner
 	}
 
-	return p.JobsRunner.Client.MergeDiscoveredAsset(context.Background(), dto.TeamID, dto.Assets, dto.GroupName)
+	// TODO: Who should update the Job???
+
+	return p.JobsRunner.Client.MergeDiscoveredAssets(context.Background(), dto.TeamID, dto.Assets, dto.GroupName)
 }
 
 func (p *VulnDBAndJobTxParser) logErr(e Event, err error) {

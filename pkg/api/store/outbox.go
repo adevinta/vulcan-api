@@ -228,8 +228,9 @@ func (db vulcanitoStore) insertIntoOutbox(tx *gorm.DB, outbox cdc.Outbox) error 
 //	- teamID
 //  - []api.Asset
 //  - groupName
+//  - jobID
 func (db vulcanitoStore) buildMergeDiscoveredAssetsDTO(tx *gorm.DB, data ...interface{}) (interface{}, error) {
-	if len(data) != 3 {
+	if len(data) != 4 {
 		return nil, errInvalidParams
 	}
 	teamID, ok := data[0].(string)
@@ -244,6 +245,10 @@ func (db vulcanitoStore) buildMergeDiscoveredAssetsDTO(tx *gorm.DB, data ...inte
 	if !ok {
 		return nil, errInvalidParams
 	}
+	jobID, ok := data[3].(string)
+	if !ok {
+		return nil, errInvalidParams
+	}
 
-	return cdc.OpMergeDiscoveredAssetsDTO{TeamID: teamID, Assets: assets, GroupName: groupName}, nil
+	return cdc.OpMergeDiscoveredAssetsDTO{TeamID: teamID, Assets: assets, GroupName: groupName, JobID: jobID}, nil
 }

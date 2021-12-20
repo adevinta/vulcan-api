@@ -255,10 +255,9 @@ func (s vulcanitoService) CreateAssetsMultiStatus(ctx context.Context, assets []
 	return responses, nil
 }
 
-// MergeDiscoveredAsset receives an array of assets and merges the content
-// of the asset with the auto-disvovery group.  It returns an array containing
-// one response per request, in the same order as in the original request.
-func (s vulcanitoService) MergeDiscoveredAsset(ctx context.Context, teamID string, assets []api.Asset, groupName string) error {
+// MergeDiscoveredAssets receives an array of assets and merges the content of
+// the asset with the auto-disvovery group.
+func (s vulcanitoService) MergeDiscoveredAssets(ctx context.Context, teamID string, assets []api.Asset, groupName string) error {
 	// Check if the group exists and otherwise create it. Also check that there
 	// is no more than one match for the given group name.
 	var group api.Group
@@ -432,6 +431,12 @@ func (s vulcanitoService) calculateMergeOperations(ctx context.Context, teamID s
 	}
 
 	return ops, nil
+}
+
+// MergeDiscoveredAssetsAsync receives an array of assets and merges the
+// content of the asset with the auto-disvovery group, asynchronously.
+func (s vulcanitoService) MergeDiscoveredAssetsAsync(ctx context.Context, teamID string, assets []api.Asset, groupName string) (*api.Job, error) {
+	return s.db.MergeAssetsAsync(teamID, assets, groupName)
 }
 
 func (s vulcanitoService) detectAssets(ctx context.Context, asset api.Asset) ([]api.Asset, error) {

@@ -57,4 +57,5 @@ type OpMergeDiscoveredAssetsDTO struct {
 	TeamID    string      `json:"team_id"`
 	Assets    []api.Asset `json:"assets"`
 	GroupName string      `json:"group_name"`
+	JobID     string      `json:"job_id"`
 }

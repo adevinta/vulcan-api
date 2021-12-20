@@ -36,8 +36,8 @@ type Job struct {
 	// - PENDING
 	// - RUNNING
 	// - DONE
-	Status JobStatus `validate:"required"`
-	Result JobResult `gorm:"Column:result"`
+	Status JobStatus  `validate:"required"`
+	Result *JobResult `gorm:"Column:result"`
 
 	CreatedAt time.Time
 	UpdatedAt time.Time
@@ -91,13 +91,16 @@ func (j Job) Validate() error {
 }
 
 func (j Job) ToResponse() *JobResponse {
-	return &JobResponse{
+	res := &JobResponse{
 		ID:        j.ID,
 		TeamID:    j.TeamID,
 		Operation: j.Operation,
 		Status:    j.Status,
-		Result:    j.Result.toJobResultResponse(),
 	}
+	if j.Result != nil {
+		res.Result = j.Result.toJobResultResponse()
+	}
+	return res
 }
 
 // JobResponse represents the data for a Job that is
@@ -120,5 +123,5 @@ type JobsRunner struct {
 }
 
 type JobsClient interface {
-	MergeDiscoveredAsset(ctx context.Context, teamID string, assets []Asset, groupName string) error
+	MergeDiscoveredAssets(ctx context.Context, teamID string, assets []Asset, groupName string) error
 }

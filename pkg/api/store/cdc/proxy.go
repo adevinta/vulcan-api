@@ -298,6 +298,11 @@ func (b *BrokerProxy) UpdateAsset(asset api.Asset) (*api.Asset, error) {
 func (b *BrokerProxy) MergeAssets(mergeOps api.AssetMergeOperations) error {
 	return b.store.MergeAssets(mergeOps)
 }
+func (b *BrokerProxy) MergeAssetsAsync(teamID string, assets []api.Asset, groupName string) (*api.Job, error) {
+	j, err := b.store.MergeAssetsAsync(teamID, assets, groupName)
+	go b.awakeBroker()
+	return j, err
+}
 
 // Asset Annotations
 func (b *BrokerProxy) ListAssetAnnotations(teamID string, assetID string) ([]*api.AssetAnnotation, error) {

@@ -524,6 +524,36 @@ func (db vulcanitoStore) MergeAssets(mergeOps api.AssetMergeOperations) error {
 	return nil
 }
 
+func (db vulcanitoStore) MergeAssetsAsync(teamID string, assets []api.Asset, groupName string) (*api.Job, error) {
+	tx := db.Conn.Begin()
+	if tx.Error != nil {
+		return nil, db.logError(errors.Database(tx.Error))
+	}
+
+	job, err := db.createJobTx(
+		tx,
+		api.Job{
+			TeamID:    teamID,
+			Operation: opMergeDiscoveredAssets,
+			Status:    api.JobStatusPending,
+		})
+	if err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+
+	if err := db.pushToOutbox(tx, opMergeDiscoveredAssets, teamID, assets, groupName, job.ID); err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+
+	if tx.Commit().Error != nil {
+		return nil, db.logError(errors.Database(tx.Error))
+	}
+
+	return job, nil
+}
+
 func (db vulcanitoStore) GetAssetType(name string) (*api.AssetType, error) {
 	assetType := &api.AssetType{}
 	result := db.Conn.First(&assetType, "lower(name) = lower(?)", name)
