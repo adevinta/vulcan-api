@@ -119,6 +119,8 @@ const (
 	GlobalStatsMTTR            = "GlobalStatsMTTR"
 	GlobalStatsExposure        = "GlobalStatsExposure"
 	GlobalStatsCurrentExposure = "GlobalStatsCurrentExposure"
+	GlobalStatsOpen            = "GlobalStatsOpen"
+	GlobalStatsFixed           = "GlobalStatsFixed"
 )
 
 // Endpoints contains all available endpoints for this api
