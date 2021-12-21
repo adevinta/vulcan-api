@@ -215,14 +215,6 @@ func (db vulcanitoStore) buildFindingOverwriteDTO(tx *gorm.DB, data ...interface
 	return cdc.OpFindingOverwriteDTO{FindingOverwrite: findingOverwrite}, nil
 }
 
-func (db vulcanitoStore) insertIntoOutbox(tx *gorm.DB, outbox cdc.Outbox) error {
-	res := tx.Create(&outbox)
-	if res.Error != nil {
-		return db.logError(errors.Create(res.Error))
-	}
-	return nil
-}
-
 // buildMergeDiscoveredAssetsDTO builds a MergeDiscoveredAssets action DTO for
 // outbox.  Expected input:
 //	- teamID
@@ -251,4 +243,12 @@ func (db vulcanitoStore) buildMergeDiscoveredAssetsDTO(tx *gorm.DB, data ...inte
 	}
 
 	return cdc.OpMergeDiscoveredAssetsDTO{TeamID: teamID, Assets: assets, GroupName: groupName, JobID: jobID}, nil
+}
+
+func (db vulcanitoStore) insertIntoOutbox(tx *gorm.DB, outbox cdc.Outbox) error {
+	res := tx.Create(&outbox)
+	if res.Error != nil {
+		return db.logError(errors.Create(res.Error))
+	}
+	return nil
 }
