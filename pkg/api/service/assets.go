@@ -22,6 +22,8 @@ import (
 	"github.com/adevinta/vulcan-api/pkg/common"
 )
 
+// GenericAnnotationsPrefix defines a prefix to be added to each asset
+// annotation provided to the discovery endpoint.
 const GenericAnnotationsPrefix = "autodiscovery"
 
 type asset struct {
@@ -255,8 +257,8 @@ func (s vulcanitoService) CreateAssetsMultiStatus(ctx context.Context, assets []
 	return responses, nil
 }
 
-// MergeDiscoveredAssets receives an array of assets and merges the content of
-// the asset with the auto-disvovery group.
+// MergeDiscoveredAssets receives an list of assets to merge with the existing
+// assets of an auto-disvovery group for a team.
 func (s vulcanitoService) MergeDiscoveredAssets(ctx context.Context, teamID string, assets []api.Asset, groupName string) error {
 	// Check if the group exists and otherwise create it. Also check that there
 	// is no more than one match for the given group name.
@@ -308,6 +310,8 @@ func (s vulcanitoService) calculateMergeOperations(ctx context.Context, teamID s
 		Group:  group,
 	}
 
+	// NOTE: ListAssets is used as it's cheaper than execute several FindAsset
+	// operations.
 	allAssets, err := s.ListAssets(ctx, teamID, api.Asset{})
 	if err != nil {
 		return ops, err
@@ -322,7 +326,9 @@ func (s vulcanitoService) calculateMergeOperations(ctx context.Context, teamID s
 	}
 
 	// Create an index (identifier, type) for the old assets belonging to the
-	// discovery group.
+	// discovery group. The assets stored in the map are gathered from the
+	// allAssetsMap because they include the information about the groups they
+	// belong to.
 	oldAssetsMap := make(map[string]*api.Asset)
 	for _, ag := range group.AssetGroup {
 		if ag.Asset == nil || ag.Asset.AssetType == nil {
@@ -433,8 +439,8 @@ func (s vulcanitoService) calculateMergeOperations(ctx context.Context, teamID s
 	return ops, nil
 }
 
-// MergeDiscoveredAssetsAsync receives an array of assets and merges the
-// content of the asset with the auto-disvovery group, asynchronously.
+// MergeDiscoveredAssetsAsync stores the information necessary to perform the
+// MergeDiscoveredAssets operation asynchronously.
 func (s vulcanitoService) MergeDiscoveredAssetsAsync(ctx context.Context, teamID string, assets []api.Asset, groupName string) (*api.Job, error) {
 	return s.db.MergeAssetsAsync(teamID, assets, groupName)
 }
