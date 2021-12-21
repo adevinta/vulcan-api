@@ -184,9 +184,9 @@ func makeCreateAssetMultiStatusEndpoint(s api.VulcanitoService, logger kitlog.Lo
 	}
 }
 
-// makeMergeDiscoveredAssetEndpoint merges a list of assets into a discovery
+// makeMergeDiscoveredAssetsEndpoint merges a list of assets into a discovery
 // asset group, requested by a discovery service.
-func makeMergeDiscoveredAssetEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
+func makeMergeDiscoveredAssetsEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		requestBody, ok := request.(*DiscoveredAssetsRequest)
 		if !ok {

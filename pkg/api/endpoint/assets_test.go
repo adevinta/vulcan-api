@@ -469,7 +469,7 @@ func TestMakeCreateAssetsMultiStatusEndpoint(t *testing.T) {
 	}
 }
 
-func TestMergeDiscoveredAssetEndpointValidation(t *testing.T) {
+func TestMergeDiscoveredAssetsEndpointValidation(t *testing.T) {
 	testStore, err := testutil.PrepareDatabaseLocal("../../../testdata/fixtures", store.NewDB)
 	if err != nil {
 		t.Fatal(err)
@@ -584,7 +584,7 @@ func TestMergeDiscoveredAssetEndpointValidation(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := makeMergeDiscoveredAssetEndpoint(testService, kitlog.NewNopLogger())(context.Background(), tt.req)
+			got, err := makeMergeDiscoveredAssetsEndpoint(testService, kitlog.NewNopLogger())(context.Background(), tt.req)
 			diff := cmp.Diff(errToStr(tt.wantErr), errToStr(err))
 			if diff != "" {
 				t.Fatalf("%v\n", diff)
@@ -598,7 +598,7 @@ func TestMergeDiscoveredAssetEndpointValidation(t *testing.T) {
 	}
 }
 
-func TestMergeDiscoveredAssetEndpointGroupCreation(t *testing.T) {
+func TestMergeDiscoveredAssetsEndpointGroupCreation(t *testing.T) {
 	const teamID = "ea686be5-be9b-473b-ab1b-621a4f575d51"
 
 	testStore, err := testutil.PrepareDatabaseLocal("../../../testdata/fixtures", store.NewDB)
@@ -649,7 +649,7 @@ func TestMergeDiscoveredAssetEndpointGroupCreation(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			_, err = makeMergeDiscoveredAssetEndpoint(testService, kitlog.NewNopLogger())(context.Background(), tt.req)
+			_, err = makeMergeDiscoveredAssetsEndpoint(testService, kitlog.NewNopLogger())(context.Background(), tt.req)
 			diff := cmp.Diff(errToStr(tt.wantErr), errToStr(err))
 			if diff != "" {
 				t.Fatalf("%v\n", diff)
@@ -674,10 +674,10 @@ func TestMergeDiscoveredAssetEndpointGroupCreation(t *testing.T) {
 	}
 }
 
-// TestMergeDiscoveredAssetEndpointAssetsCreated checks that new assets are
+// TestMergeDiscoveredAssetsEndpointAssetsCreated checks that new assets are
 // created, associated with the group, have the correct annotations, scannable
 // field and other options.
-func TestMergeDiscoveredAssetEndpointAssetsCreated(t *testing.T) {
+func TestMergeDiscoveredAssetsEndpointAssetsCreated(t *testing.T) {
 	const (
 		teamID = "ea686be5-be9b-473b-ab1b-621a4f575d51"
 		// empty-discovered-assets
@@ -729,7 +729,7 @@ func TestMergeDiscoveredAssetEndpointAssetsCreated(t *testing.T) {
 	wantROLFP := api.ROLFP{0, 0, 0, 0, 0, 1, false}
 	wantCVSS := "a.b.c.d"
 
-	_, err = makeMergeDiscoveredAssetEndpoint(testService, kitlog.NewNopLogger())(context.Background(), req)
+	_, err = makeMergeDiscoveredAssetsEndpoint(testService, kitlog.NewNopLogger())(context.Background(), req)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -785,7 +785,7 @@ func TestMergeDiscoveredAssetEndpointAssetsCreated(t *testing.T) {
 	}
 }
 
-func TestMergeDiscoveredAssetEndpointAssetsAssociated(t *testing.T) {
+func TestMergeDiscoveredAssetsEndpointAssetsAssociated(t *testing.T) {
 	const (
 		teamID = "ea686be5-be9b-473b-ab1b-621a4f575d51"
 		// empty-discovered-assets
@@ -823,7 +823,7 @@ func TestMergeDiscoveredAssetEndpointAssetsAssociated(t *testing.T) {
 		},
 	}
 
-	_, err = makeMergeDiscoveredAssetEndpoint(testService, kitlog.NewNopLogger())(context.Background(), req)
+	_, err = makeMergeDiscoveredAssetsEndpoint(testService, kitlog.NewNopLogger())(context.Background(), req)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -842,7 +842,7 @@ func TestMergeDiscoveredAssetEndpointAssetsAssociated(t *testing.T) {
 	}
 }
 
-func TestMergeDiscoveredAssetEndpointAssetsUpdated(t *testing.T) {
+func TestMergeDiscoveredAssetsEndpointAssetsUpdated(t *testing.T) {
 	const (
 		teamID = "ea686be5-be9b-473b-ab1b-621a4f575d51"
 		// security-discovered-assets
@@ -930,7 +930,7 @@ func TestMergeDiscoveredAssetEndpointAssetsUpdated(t *testing.T) {
 		"autodiscovery/security/keytonotupdate": "valuetonotupdate",
 	}
 
-	_, err = makeMergeDiscoveredAssetEndpoint(testService, kitlog.NewNopLogger())(context.Background(), req)
+	_, err = makeMergeDiscoveredAssetsEndpoint(testService, kitlog.NewNopLogger())(context.Background(), req)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -975,7 +975,7 @@ func TestMergeDiscoveredAssetEndpointAssetsUpdated(t *testing.T) {
 	}
 }
 
-func TestMergeDiscoveredAssetEndpointAssetsCleared(t *testing.T) {
+func TestMergeDiscoveredAssetsEndpointAssetsCleared(t *testing.T) {
 	const (
 		teamID = "ea686be5-be9b-473b-ab1b-621a4f575d51"
 		// security-discovered-assets
@@ -1040,7 +1040,7 @@ func TestMergeDiscoveredAssetEndpointAssetsCleared(t *testing.T) {
 		"keywithoutprefix": "valuewithoutprefix",
 	}
 
-	_, err = makeMergeDiscoveredAssetEndpoint(testService, kitlog.NewNopLogger())(context.Background(), req)
+	_, err = makeMergeDiscoveredAssetsEndpoint(testService, kitlog.NewNopLogger())(context.Background(), req)
 	if err != nil {
 		t.Fatal(err)
 	}

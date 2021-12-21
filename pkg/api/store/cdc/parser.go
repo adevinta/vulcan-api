@@ -44,18 +44,18 @@ type Parser interface {
 	Parse(log []Event) (nParsed uint)
 }
 
-// VulnDBAndJobTxParser implements a CDC log parser
+// AsyncTxParser implements a CDC log parser
 // to handle distributed transactions for VulnDB.
-type VulnDBAndJobTxParser struct {
+type AsyncTxParser struct {
 	VulnDBClient vulndb.Client
 	JobsRunner   *api.JobsRunner
 	logger       log.Logger
 }
 
-// NewVulnDBAndJobTxParser builds a new CDC log parser
+// NewAsyncTxParser builds a new CDC log parser
 // to handle distributed transactions for VulnDB.
-func NewVulnDBAndJobTxParser(vulnDBClient vulndb.Client, jobsRunner *api.JobsRunner, logger log.Logger) *VulnDBAndJobTxParser {
-	return &VulnDBAndJobTxParser{
+func NewAsyncTxParser(vulnDBClient vulndb.Client, jobsRunner *api.JobsRunner, logger log.Logger) *AsyncTxParser {
+	return &AsyncTxParser{
 		VulnDBClient: vulnDBClient,
 		JobsRunner:   jobsRunner,
 		logger:       logger,
@@ -68,7 +68,7 @@ func NewVulnDBAndJobTxParser(vulnDBClient vulndb.Client, jobsRunner *api.JobsRun
 // error, log processing is stopped.
 // If a permanent error happens during processing of one event or event has reached
 // max processing attempts, that event is discarded counting as if it was processed.
-func (p *VulnDBAndJobTxParser) Parse(log []Event) (nParsed uint) {
+func (p *AsyncTxParser) Parse(log []Event) (nParsed uint) {
 	var processFunc func([]byte) error
 
 	for _, event := range log {
@@ -109,7 +109,7 @@ func (p *VulnDBAndJobTxParser) Parse(log []Event) (nParsed uint) {
 	return
 }
 
-func (p *VulnDBAndJobTxParser) processDeleteTeam(data []byte) error {
+func (p *AsyncTxParser) processDeleteTeam(data []byte) error {
 	var dto OpDeleteTeamDTO
 
 	err := json.Unmarshal(data, &dto)
@@ -127,7 +127,7 @@ func (p *VulnDBAndJobTxParser) processDeleteTeam(data []byte) error {
 	return nil
 }
 
-func (p *VulnDBAndJobTxParser) processCreateAsset(data []byte) error {
+func (p *AsyncTxParser) processCreateAsset(data []byte) error {
 	var dto OpCreateAssetDTO
 
 	err := json.Unmarshal(data, &dto)
@@ -144,7 +144,7 @@ func (p *VulnDBAndJobTxParser) processCreateAsset(data []byte) error {
 	return err
 }
 
-func (p *VulnDBAndJobTxParser) processDeleteAsset(data []byte) error {
+func (p *AsyncTxParser) processDeleteAsset(data []byte) error {
 	var dto OpDeleteAssetDTO
 	ctx := context.Background()
 
@@ -202,7 +202,7 @@ func (p *VulnDBAndJobTxParser) processDeleteAsset(data []byte) error {
 	return nil
 }
 
-func (p *VulnDBAndJobTxParser) processUpdateAsset(data []byte) error {
+func (p *AsyncTxParser) processUpdateAsset(data []byte) error {
 	// An asset update where identifier has changed can imply 2 operations in VulnDB:
 	// - A delete of the asset association wih the team if team has no duplicates
 	//   for the same identifier.
@@ -239,7 +239,7 @@ func (p *VulnDBAndJobTxParser) processUpdateAsset(data []byte) error {
 	return p.processCreateAsset(createJSON)
 }
 
-func (p *VulnDBAndJobTxParser) processDeleteAllAssets(data []byte) error {
+func (p *AsyncTxParser) processDeleteAllAssets(data []byte) error {
 	var dto OpDeleteAllAssetsDTO
 
 	err := json.Unmarshal(data, &dto)
@@ -257,7 +257,7 @@ func (p *VulnDBAndJobTxParser) processDeleteAllAssets(data []byte) error {
 	return nil
 }
 
-func (p *VulnDBAndJobTxParser) processFindingOverwrite(data []byte) error {
+func (p *AsyncTxParser) processFindingOverwrite(data []byte) error {
 	var dto OpFindingOverwriteDTO
 
 	err := json.Unmarshal(data, &dto)
@@ -281,7 +281,7 @@ func (p *VulnDBAndJobTxParser) processFindingOverwrite(data []byte) error {
 	return nil
 }
 
-func (p *VulnDBAndJobTxParser) processMergeDiscoveredAssets(data []byte) error {
+func (p *AsyncTxParser) processMergeDiscoveredAssets(data []byte) error {
 	var dto OpMergeDiscoveredAssetsDTO
 
 	err := json.Unmarshal(data, &dto)
@@ -298,7 +298,7 @@ func (p *VulnDBAndJobTxParser) processMergeDiscoveredAssets(data []byte) error {
 	return p.JobsRunner.Client.MergeDiscoveredAssets(context.Background(), dto.TeamID, dto.Assets, dto.GroupName)
 }
 
-func (p *VulnDBAndJobTxParser) logErr(e Event, err error) {
+func (p *AsyncTxParser) logErr(e Event, err error) {
 	_ = level.Error(p.logger).Log(
 		"component", CDCLogTag, "error", err, "id", e.ID(), "action", e.Action(), "retries", e.ReadCount()+1,
 	)

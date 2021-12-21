@@ -538,7 +538,7 @@ func addWhitelistingMiddleware(endpoints endpoint.Endpoints, logger log.Logger) 
 		endpoint.ListAssets:             true,
 		endpoint.CreateAsset:            true,
 		endpoint.CreateAssetMultiStatus: true,
-		endpoint.MergeDiscoveredAsset:   true,
+		endpoint.MergeDiscoveredAssets:  true,
 		endpoint.FindAsset:              true,
 		endpoint.UpdateAsset:            true,
 		endpoint.DeleteAsset:            true,
@@ -605,7 +605,7 @@ func createVulcanitoDeps(cfg config, l log.Logger, vulnDBClient vulnerabilitydb.
 		err = fmt.Errorf("Error opening DB connection: %v", err)
 		return nil, nil, err
 	}
-	cdcProxy := cdc.NewBrokerProxy(l, cdcDB, db, cdc.NewVulnDBAndJobTxParser(vulnDBClient, jobsRunner, l))
+	cdcProxy := cdc.NewBrokerProxy(l, cdcDB, db, cdc.NewAsyncTxParser(vulnDBClient, jobsRunner, l))
 	s := schedule.NewClient(cfg.Scheduler)
 	return cdcProxy, s, nil
 }
