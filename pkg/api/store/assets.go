@@ -433,6 +433,8 @@ func (db vulcanitoStore) deleteAssetsUnsafeTX(tx *gorm.DB, teamID string, assets
 	return nil
 }
 
+// MergeAssets executes the operations required to update a discovery group in
+// a single transaction.
 func (db vulcanitoStore) MergeAssets(mergeOps api.AssetMergeOperations) error {
 	// Begin a new transaction.
 	tx := db.Conn.Begin()
@@ -524,6 +526,9 @@ func (db vulcanitoStore) MergeAssets(mergeOps api.AssetMergeOperations) error {
 	return nil
 }
 
+// MergeAssetsAsync stores the information required to execute a MergeAssets
+// operation in the Outbox. It also creates a Job to be returned to the user to
+// track the progress of the async operation.
 func (db vulcanitoStore) MergeAssetsAsync(teamID string, assets []api.Asset, groupName string) (*api.Job, error) {
 	tx := db.Conn.Begin()
 	if tx.Error != nil {

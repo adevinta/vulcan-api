@@ -217,7 +217,7 @@ func (db vulcanitoStore) buildFindingOverwriteDTO(tx *gorm.DB, data ...interface
 
 // buildMergeDiscoveredAssetsDTO builds a MergeDiscoveredAssets action DTO for
 // outbox.  Expected input:
-//	- teamID
+//  - teamID
 //  - []api.Asset
 //  - groupName
 //  - jobID

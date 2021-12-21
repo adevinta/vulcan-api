@@ -44,16 +44,16 @@ type Parser interface {
 	Parse(log []Event) (nParsed uint)
 }
 
-// AsyncTxParser implements a CDC log parser
-// to handle distributed transactions for VulnDB.
+// AsyncTxParser implements a CDC log parser to handle distributed transactions
+// for VulnDB and other API asynchronous jobs.
 type AsyncTxParser struct {
 	VulnDBClient vulndb.Client
 	JobsRunner   *api.JobsRunner
 	logger       log.Logger
 }
 
-// NewAsyncTxParser builds a new CDC log parser
-// to handle distributed transactions for VulnDB.
+// NewAsyncTxParser builds a new CDC log parser to handle distributed
+// transactions for VulnDB and other API asynchronous jobs.
 func NewAsyncTxParser(vulnDBClient vulndb.Client, jobsRunner *api.JobsRunner, logger log.Logger) *AsyncTxParser {
 	return &AsyncTxParser{
 		VulnDBClient: vulnDBClient,
@@ -299,6 +299,7 @@ func (p *AsyncTxParser) processMergeDiscoveredAssets(data []byte) error {
 		return nil
 	}
 
+	// Set the status of the Job to RUNNING so the user can track its progress.
 	job := api.Job{
 		ID:        dto.JobID,
 		Status:    api.JobStatusRunning,
@@ -312,6 +313,8 @@ func (p *AsyncTxParser) processMergeDiscoveredAssets(data []byte) error {
 		return nil
 	}
 
+	// Execute the merge of the discovered assets.
+	// TODO: if the error is not nil we should update the Job accordingly.
 	if err := p.JobsRunner.Client.MergeDiscoveredAssets(context.Background(), dto.TeamID, dto.Assets, dto.GroupName); err != nil {
 		_ = level.Error(p.logger).Log(
 			"component", CDCLogTag, "error", err, "job_id", dto.JobID, "action", opMergeDiscoveredAssets,
@@ -319,6 +322,7 @@ func (p *AsyncTxParser) processMergeDiscoveredAssets(data []byte) error {
 		return nil
 	}
 
+	// Mark the job as DONE.
 	job.Status = api.JobStatusDone
 	_, err = p.JobsRunner.Client.UpdateJob(context.Background(), job)
 	if err != nil {
