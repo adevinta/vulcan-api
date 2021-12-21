@@ -969,7 +969,7 @@ func TestVulcanitoService_CreateAssetsMultiStatus(t *testing.T) {
 	}
 }
 
-func TestVulcanitoService_MergeDiscoveredAssetsValidation(t *testing.T) {
+func TestMergeDiscoveredAssetsValidation(t *testing.T) {
 	testStore, err := testutil.PrepareDatabaseLocal("../../../testdata/fixtures", store.NewDB)
 	if err != nil {
 		t.Fatal(err)
@@ -1005,7 +1005,7 @@ func TestVulcanitoService_MergeDiscoveredAssetsValidation(t *testing.T) {
 	}
 }
 
-func TestVulcanitoService_MergeDiscoveredAssetsGroupCreation(t *testing.T) {
+func TestMergeDiscoveredAssetsGroupCreation(t *testing.T) {
 	const teamID = "ea686be5-be9b-473b-ab1b-621a4f575d51"
 
 	testStore, err := testutil.PrepareDatabaseLocal("../../../testdata/fixtures", store.NewDB)
@@ -1079,12 +1079,10 @@ func TestVulcanitoService_MergeDiscoveredAssetsGroupCreation(t *testing.T) {
 	}
 }
 
-/*
-
-// TestVulcanitoService_MergeDiscoveredAssetsAssetsCreated checks that new assets are
+// TestMergeDiscoveredAssetsCreated checks that new assets are
 // created, associated with the group, have the correct annotations, scannable
 // field and other options.
-func TestVulcanitoService_MergeDiscoveredAssetsAssetsCreated(t *testing.T) {
+func TestMergeDiscoveredAssetsCreated(t *testing.T) {
 	const (
 		teamID = "ea686be5-be9b-473b-ab1b-621a4f575d51"
 		// empty-discovered-assets
@@ -1193,9 +1191,8 @@ func TestVulcanitoService_MergeDiscoveredAssetsAssetsCreated(t *testing.T) {
 		}
 	}
 }
-*/
 
-func TestVulcanitoService_MergeDiscoveredAssetsAssetsAssociated(t *testing.T) {
+func TestMergeDiscoveredAssetsAssociated(t *testing.T) {
 	const (
 		teamID = "ea686be5-be9b-473b-ab1b-621a4f575d51"
 		// empty-discovered-assets
@@ -1250,8 +1247,7 @@ func TestVulcanitoService_MergeDiscoveredAssetsAssetsAssociated(t *testing.T) {
 	}
 }
 
-/*
-func TestVulcanitoService_MergeDiscoveredAssetsAssetsUpdated(t *testing.T) {
+func TestMergeDiscoveredAssetsUpdated(t *testing.T) {
 	const (
 		teamID = "ea686be5-be9b-473b-ab1b-621a4f575d51"
 		// security-discovered-assets
@@ -1382,10 +1378,8 @@ func TestVulcanitoService_MergeDiscoveredAssetsAssetsUpdated(t *testing.T) {
 		}
 	}
 }
-*/
 
-/*
-func TestVulcanitoService_MergeDiscoveredAssetsAssetsCleared(t *testing.T) {
+func TestMergeDiscoveredAssetsCleared(t *testing.T) {
 	const (
 		teamID = "ea686be5-be9b-473b-ab1b-621a4f575d51"
 		// security-discovered-assets
@@ -1482,8 +1476,6 @@ func TestVulcanitoService_MergeDiscoveredAssetsAssetsCleared(t *testing.T) {
 		}
 	}
 }
-
-*/
 
 var (
 	loggerAssets log.Logger
