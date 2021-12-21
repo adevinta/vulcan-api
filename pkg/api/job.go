@@ -118,10 +118,13 @@ type JobResultResponse struct {
 	Error string `json:"error"`
 }
 
+// JobsRunner is a dependency used by the CDC parser to execute async API jobs,
+// providing a limited access to the API service layer.
 type JobsRunner struct {
 	Client JobsClient
 }
 
+// JobsClient defines the API service layer methods exposd by the JobsRunner.
 type JobsClient interface {
 	MergeDiscoveredAssets(ctx context.Context, teamID string, assets []Asset, groupName string) error
 	FindJob(ctx context.Context, jobID string) (*Job, error)
