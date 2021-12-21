@@ -220,19 +220,24 @@ func startServer() error {
 		}
 	}()
 
+	// The JobsRunner is a dependency used by the CDC parser to execute async
+	// API jobs, providing a limited access to the API service layer. But as
+	// the service layer depends on the store layer, and the CBC proxies the
+	// store layer, we need to perform the initialization in two steps.
+	// First, declare the an empty JobsRunner and inect it to the CDC parser.
 	jobsRunner := &api.JobsRunner{}
 
-	// Build vulcanito deps.
+	// Build CBC proxied store layer.
 	db, schedulerClient, err := createVulcanitoDeps(cfg, logger, vulnerabilityDBClient, jobsRunner)
 	if err != nil {
 		return err
 	}
 
-	// Build vulcanito service.
+	// Build service layer.
 	vulcanitoService := service.New(logger, db, jwtConfig, cfg.ScanEngine, schedulerClient, cfg.Reports,
 		vulnerabilityDBClient, reportsClient, metricsClient, awsAccounts)
 
-	// Inject jobs runner to CDC proxy.
+	// Second, inject the service layer to the CDC parser JobsRunner.
 	jobsRunner.Client = vulcanitoService
 
 	// Create the global entities service middleware dependencies.
