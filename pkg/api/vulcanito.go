@@ -15,6 +15,7 @@ type VulcanitoService interface {
 
 	// Jobs
 	FindJob(ctx context.Context, jobID string) (*Job, error)
+	UpdateJob(ctx context.Context, job Job) (*Job, error)
 
 	// Users
 	ListUsers(ctx context.Context) ([]*User, error)

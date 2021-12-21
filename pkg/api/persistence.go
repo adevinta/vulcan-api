@@ -14,6 +14,7 @@ type VulcanitoStore interface {
 	Healthcheck() error
 
 	FindJob(jobID string) (*Job, error)
+	UpdateJob(job Job) (*Job, error)
 
 	CreateUserIfNotExists(userData saml.UserData) error
 

@@ -36,21 +36,21 @@ func (db vulcanitoStore) FindJob(jobID string) (*api.Job, error) {
 }
 
 func (db vulcanitoStore) createJobTx(tx *gorm.DB, job api.Job) (*api.Job, error) {
-	res := tx.Preload("Team").Create(&job)
+	res := tx.Create(&job)
 	err := res.Error
 	if err != nil {
 		return nil, db.logError(errors.Create(err))
 	}
-	tx.Preload("Team").First(&job)
+	tx.First(&job)
 	return &job, nil
 }
 
-func (db vulcanitoStore) updateJob(job api.Job) (*api.Job, error) {
-	res := db.Conn.Preload("Team").Update(&job)
+func (db vulcanitoStore) UpdateJob(job api.Job) (*api.Job, error) {
+	res := db.Conn.Model(&job).Update(&job)
 	err := res.Error
 	if err != nil {
 		return nil, db.logError(errors.Update(err))
 	}
-	db.Conn.Preload("Team").First(&job)
+	db.Conn.First(&job)
 	return &job, nil
 }

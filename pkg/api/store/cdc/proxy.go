@@ -186,6 +186,9 @@ func (b *BrokerProxy) Healthcheck() error {
 func (b *BrokerProxy) FindJob(jobID string) (*api.Job, error) {
 	return b.store.FindJob(jobID)
 }
+func (b *BrokerProxy) UpdateJob(job api.Job) (*api.Job, error) {
+	return b.store.UpdateJob(job)
+}
 
 func (b *BrokerProxy) CreateUserIfNotExists(userData saml.UserData) error {
 	return b.store.CreateUserIfNotExists(userData)

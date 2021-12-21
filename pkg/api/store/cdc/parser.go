@@ -286,16 +286,49 @@ func (p *AsyncTxParser) processMergeDiscoveredAssets(data []byte) error {
 
 	err := json.Unmarshal(data, &dto)
 	if err != nil {
-		return errInvalidData
+		_ = level.Error(p.logger).Log(
+			"component", CDCLogTag, "error", err, "action", opMergeDiscoveredAssets,
+		)
+		return nil
 	}
 
 	if p.JobsRunner == nil || p.JobsRunner.Client == nil {
-		return errUnavailabeJobsRunner
+		_ = level.Error(p.logger).Log(
+			"component", CDCLogTag, "error", errUnavailabeJobsRunner, "action", opMergeDiscoveredAssets,
+		)
+		return nil
 	}
 
-	// TODO: Who should update the Job???
+	job := api.Job{
+		ID:        dto.JobID,
+		Status:    api.JobStatusRunning,
+		Operation: opMergeDiscoveredAssets,
+	}
+	_, err = p.JobsRunner.Client.UpdateJob(context.Background(), job)
+	if err != nil {
+		_ = level.Error(p.logger).Log(
+			"component", CDCLogTag, "error", err, "job_id", dto.JobID, "action", opMergeDiscoveredAssets,
+		)
+		return nil
+	}
 
-	return p.JobsRunner.Client.MergeDiscoveredAssets(context.Background(), dto.TeamID, dto.Assets, dto.GroupName)
+	if err := p.JobsRunner.Client.MergeDiscoveredAssets(context.Background(), dto.TeamID, dto.Assets, dto.GroupName); err != nil {
+		_ = level.Error(p.logger).Log(
+			"component", CDCLogTag, "error", err, "job_id", dto.JobID, "action", opMergeDiscoveredAssets,
+		)
+		return nil
+	}
+
+	job.Status = api.JobStatusDone
+	_, err = p.JobsRunner.Client.UpdateJob(context.Background(), job)
+	if err != nil {
+		_ = level.Error(p.logger).Log(
+			"component", CDCLogTag, "error", err, "job_id", dto.JobID, "action", opMergeDiscoveredAssets,
+		)
+		return nil
+	}
+
+	return nil
 }
 
 func (p *AsyncTxParser) logErr(e Event, err error) {

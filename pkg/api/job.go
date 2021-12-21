@@ -58,7 +58,7 @@ func (j *JobResult) Scan(value interface{}) error {
 	if !ok {
 		return fmt.Errorf("failed to unmarshal JSONB value: %v", value)
 	}
-	return json.Unmarshal(bytes, &j)
+	return json.Unmarshal(bytes, j)
 
 }
 
@@ -124,4 +124,6 @@ type JobsRunner struct {
 
 type JobsClient interface {
 	MergeDiscoveredAssets(ctx context.Context, teamID string, assets []Asset, groupName string) error
+	FindJob(ctx context.Context, jobID string) (*Job, error)
+	UpdateJob(ctx context.Context, job Job) (*Job, error)
 }
