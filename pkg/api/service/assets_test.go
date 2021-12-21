@@ -1384,6 +1384,7 @@ func TestVulcanitoService_MergeDiscoveredAssetsAssetsUpdated(t *testing.T) {
 }
 */
 
+/*
 func TestVulcanitoService_MergeDiscoveredAssetsAssetsCleared(t *testing.T) {
 	const (
 		teamID = "ea686be5-be9b-473b-ab1b-621a4f575d51"
@@ -1481,6 +1482,8 @@ func TestVulcanitoService_MergeDiscoveredAssetsAssetsCleared(t *testing.T) {
 		}
 	}
 }
+
+*/
 
 var (
 	loggerAssets log.Logger
