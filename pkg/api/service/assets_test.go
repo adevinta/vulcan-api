@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"os"
 	"reflect"
+	"sort"
 	"testing"
 
 	apierrors "github.com/adevinta/errors"
@@ -18,6 +19,7 @@ import (
 	"github.com/adevinta/vulcan-api/pkg/common"
 	"github.com/adevinta/vulcan-api/pkg/testutil"
 	"github.com/go-kit/kit/log"
+	kitlog "github.com/go-kit/kit/log"
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
 )
@@ -964,6 +966,519 @@ func TestVulcanitoService_CreateAssetsMultiStatus(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+func TestVulcanitoService_MergeDiscoveredAssetsValidation(t *testing.T) {
+	testStore, err := testutil.PrepareDatabaseLocal("../../../testdata/fixtures", store.NewDB)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer testStore.Close()
+
+	testService := buildDefaultVulcanitoSrv(testStore, kitlog.NewNopLogger())
+
+	tests := []struct {
+		name      string
+		teamID    string
+		groupName string
+		assets    []api.Asset
+		wantErr   error
+	}{
+		{
+			name:      "Fails if more than one group matches the name",
+			teamID:    "ea686be5-be9b-473b-ab1b-621a4f575d51",
+			groupName: "coincident-discovered-assets",
+			wantErr:   errors.New("more than one group matches the name coincident-discovered-assets"),
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			err := testService.MergeDiscoveredAssets(context.Background(), tt.teamID, tt.assets, tt.groupName)
+			diff := cmp.Diff(errToStr(tt.wantErr), errToStr(err))
+			if diff != "" {
+				t.Fatalf("%v\n", diff)
+			}
+		})
+	}
+}
+
+func TestVulcanitoService_MergeDiscoveredAssetsGroupCreation(t *testing.T) {
+	const teamID = "ea686be5-be9b-473b-ab1b-621a4f575d51"
+
+	testStore, err := testutil.PrepareDatabaseLocal("../../../testdata/fixtures", store.NewDB)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer testStore.Close()
+
+	testService := buildDefaultVulcanitoSrv(testStore, kitlog.NewNopLogger())
+
+	oldAPIGroups, err := testService.ListGroups(context.Background(), teamID, "")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var oldGroups []string
+	for _, group := range oldAPIGroups {
+		oldGroups = append(oldGroups, group.Name)
+	}
+	sort.Strings(oldGroups)
+
+	tests := []struct {
+		name      string
+		teamID    string
+		groupName string
+		assets    []api.Asset
+		want      interface{}
+		wantErr   error
+	}{
+		{
+			name:      "Group is not created it exists",
+			teamID:    "ea686be5-be9b-473b-ab1b-621a4f575d51",
+			groupName: "security-discovered-assets",
+			want:      oldGroups,
+			wantErr:   nil,
+		},
+		{
+			name:      "Group is created if it doesn't exist",
+			teamID:    "ea686be5-be9b-473b-ab1b-621a4f575d51",
+			groupName: "zzz-new-discovered-assets",
+			want:      append(oldGroups, "zzz-new-discovered-assets"),
+			wantErr:   nil,
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			err := testService.MergeDiscoveredAssets(context.Background(), tt.teamID, tt.assets, tt.groupName)
+			diff := cmp.Diff(errToStr(tt.wantErr), errToStr(err))
+			if diff != "" {
+				t.Fatalf("%v\n", diff)
+			}
+
+			newAPIGroups, err := testService.ListGroups(context.Background(), teamID, "")
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			var newGroups []string
+			for _, group := range newAPIGroups {
+				newGroups = append(newGroups, group.Name)
+			}
+			sort.Strings(newGroups)
+
+			diff = cmp.Diff(tt.want, newGroups)
+			if diff != "" {
+				t.Errorf("%v\n", diff)
+			}
+		})
+	}
+}
+
+/*
+
+// TestVulcanitoService_MergeDiscoveredAssetsAssetsCreated checks that new assets are
+// created, associated with the group, have the correct annotations, scannable
+// field and other options.
+func TestVulcanitoService_MergeDiscoveredAssetsAssetsCreated(t *testing.T) {
+	const (
+		teamID = "ea686be5-be9b-473b-ab1b-621a4f575d51"
+		// empty-discovered-assets
+		groupID = "5296b879-cb7c-4372-bd65-c5a17152b10b"
+	)
+
+	testStore, err := testutil.PrepareDatabaseLocal("../../../testdata/fixtures", store.NewDB)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer testStore.Close()
+
+	testService := buildDefaultVulcanitoSrv(testStore, kitlog.NewNopLogger())
+
+	oldAPIAssets, err := testService.ListAssets(context.Background(), teamID, api.Asset{})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	oldAssets := make(map[string]bool)
+	for _, asset := range oldAPIAssets {
+		oldAssets[asset.ID] = true
+	}
+
+	groupName := "empty-discovered-assets"
+	assets := []api.Asset{
+		api.Asset{
+			TeamID:            teamID,
+			Identifier:        "new.vulcan.example.com",
+			Options:           common.String(`{}`),
+			Scannable:         common.Bool(false),
+			EnvironmentalCVSS: common.String("a.b.c.d"),
+			ROLFP:             &api.ROLFP{0, 0, 0, 0, 0, 1, false},
+			AssetType: &api.AssetType{
+				Name: "Hostname",
+			},
+			AssetAnnotations: []*api.AssetAnnotation{
+				&api.AssetAnnotation{
+					Key:   "whateverkey",
+					Value: "whatevervalue",
+				},
+			},
+		},
+	}
+
+	prefix := fmt.Sprintf("%s/empty", GenericAnnotationsPrefix)
+	wantSize := len(oldAPIAssets) + 1
+	wantAnnotations := api.AssetAnnotationsMap{
+		fmt.Sprintf("%s/whateverkey", prefix): "whatevervalue",
+	}
+	wantROLFP := api.ROLFP{0, 0, 0, 0, 0, 1, false}
+	wantCVSS := "a.b.c.d"
+
+	err = testService.MergeDiscoveredAssets(context.Background(), teamID, assets, groupName)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	newAPIAssets, err := testService.ListAssets(context.Background(), teamID, api.Asset{})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Asset has been created
+	if wantSize != len(newAPIAssets) {
+		t.Fatalf("not all the assets were created: want(%d) got(%d)", wantSize, len(newAPIAssets))
+	}
+
+	for _, asset := range newAPIAssets {
+		// Skip assets that were previously created.
+		if oldAssets[asset.ID] {
+			continue
+		}
+
+		// Check that the identifier and type match.
+		if asset.Identifier != "new.vulcan.example.com" {
+			t.Fatalf("asset identifier does not match: want(new.vulcan.example.com) got(%v)", asset.Identifier)
+		}
+		if asset.AssetType.Name != "Hostname" {
+			t.Fatalf("asset type does not match: want(Hostname) got(%v)", asset.AssetType.Name)
+		}
+
+		// Check that annotations are correct.
+		gotAnnotations := api.AssetAnnotations(asset.AssetAnnotations).ToMap()
+		// Prefix set to "" because there shouldn't be annotations without
+		// prefix either, as assets are new and have been created by the
+		// discovery process.
+		if !wantAnnotations.Matches(gotAnnotations, "") {
+			t.Fatalf("asset annotations does not match: want(%v) got(%v)", wantAnnotations, gotAnnotations)
+		}
+
+		// Check that assets is not scannable.
+		if *asset.Scannable {
+			t.Error("asset shouldn't be scannable")
+		}
+
+		// Check other options.
+		if *asset.Options != "{}" {
+			t.Errorf("asset options: want({}) got(%v)", asset.Options)
+		}
+		if !cmp.Equal(*asset.ROLFP, wantROLFP) {
+			t.Errorf("asset ROLFP: want(%v) got(%v)", wantROLFP, *asset.ROLFP)
+		}
+		if !cmp.Equal(*asset.EnvironmentalCVSS, wantCVSS) {
+			t.Errorf("asset EnviromentalCVSS: want(%v) got(%v)", wantCVSS, *asset.EnvironmentalCVSS)
+		}
+	}
+}
+*/
+
+func TestVulcanitoService_MergeDiscoveredAssetsAssetsAssociated(t *testing.T) {
+	const (
+		teamID = "ea686be5-be9b-473b-ab1b-621a4f575d51"
+		// empty-discovered-assets
+		groupID = "5296b879-cb7c-4372-bd65-c5a17152b10b"
+		// default.vulcan.example.com (Hostname)
+		assetID = "6ace4174-e704-4ea3-9c68-9096966a7e61"
+	)
+
+	testStore, err := testutil.PrepareDatabaseLocal("../../../testdata/fixtures", store.NewDB)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer testStore.Close()
+
+	testService := buildDefaultVulcanitoSrv(testStore, kitlog.NewNopLogger())
+
+	oldAPIGroupAssets, err := testService.ListAssetGroup(context.Background(), api.AssetGroup{GroupID: groupID}, teamID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(oldAPIGroupAssets) != 0 {
+		t.Fatalf("group is not empty: %d", len(oldAPIGroupAssets))
+	}
+
+	groupName := "empty-discovered-assets"
+	assets := []api.Asset{
+		api.Asset{
+			TeamID:     teamID,
+			Identifier: "default.vulcan.example.com",
+			AssetType: &api.AssetType{
+				Name: "Hostname",
+			},
+		},
+	}
+
+	err = testService.MergeDiscoveredAssets(context.Background(), teamID, assets, groupName)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	newAPIGroupAssets, err := testService.ListAssetGroup(context.Background(), api.AssetGroup{GroupID: groupID}, teamID)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(newAPIGroupAssets) != 1 {
+		t.Fatalf("group size is not correct: want(%d) got(%d)", 1, len(newAPIGroupAssets))
+	}
+
+	if id := newAPIGroupAssets[0].ID; id != assetID {
+		t.Fatalf("asset ID does not match: want(%v) got(%v)", assetID, id)
+	}
+}
+
+/*
+func TestVulcanitoService_MergeDiscoveredAssetsAssetsUpdated(t *testing.T) {
+	const (
+		teamID = "ea686be5-be9b-473b-ab1b-621a4f575d51"
+		// security-discovered-assets
+		groupID = "1a893ae9-0340-48ff-a5ac-95408731c80b"
+		// scannable.vulcan.example.com (Hostname)
+		scannableID = "aeb51c5c-7732-444d-9519-55a5108809f9"
+		// nonscannable.vulcan.example.com (Hostname)
+		nonScannableID = "73e33dcb-d07c-41d1-bc32-80861b49941e"
+	)
+
+	testStore, err := testutil.PrepareDatabaseLocal("../../../testdata/fixtures", store.NewDB)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer testStore.Close()
+
+	testService := buildDefaultVulcanitoSrv(testStore, kitlog.NewNopLogger())
+
+	oldAPIGroupAssets, err := testService.ListAssetGroup(context.Background(), api.AssetGroup{GroupID: groupID}, teamID)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(oldAPIGroupAssets) != 2 {
+		t.Fatalf("group size is not correct: want(2) got(%d)", len(oldAPIGroupAssets))
+	}
+
+	for _, asset := range oldAPIGroupAssets {
+		switch asset.ID {
+		case scannableID:
+			if !*asset.Scannable {
+				t.Fatal("scannable asset is marked as non-scannable")
+			}
+		case nonScannableID:
+			if *asset.Scannable {
+				t.Fatal("nonscannable asset is marked as scannable")
+			}
+
+			annotations, err := testService.ListAssetAnnotations(context.Background(), teamID, asset.ID)
+			if err != nil {
+				t.Fatal(err)
+			}
+			annotationsMap := api.AssetAnnotations(annotations).ToMap()
+
+			expectedAnnotations := api.AssetAnnotationsMap{
+				"keywithoutprefix":                      "valuewithoutprefix",
+				"autodiscovery/security/keytoupdate":    "valuetoupdate",
+				"autodiscovery/security/keytonotupdate": "valuetonotupdate",
+				"autodiscovery/security/keytodelete":    "valuetodelete",
+			}
+			if fmt.Sprintf("%v", expectedAnnotations) != fmt.Sprintf("%v", annotationsMap) {
+				t.Fatalf("unexpected annotations: want(%v) got(%v)", expectedAnnotations, annotationsMap)
+			}
+
+		}
+	}
+
+	groupName := "security-discovered-assets"
+	assets := []api.Asset{
+		api.Asset{
+			TeamID:     teamID,
+			Identifier: "scannable.vulcan.example.com",
+			Scannable:  common.Bool(false),
+			AssetType: &api.AssetType{
+				Name: "Hostname",
+			},
+		},
+		api.Asset{
+			TeamID:     teamID,
+			Identifier: "nonscannable.vulcan.example.com",
+			Scannable:  common.Bool(true),
+			AssetType: &api.AssetType{
+				Name: "Hostname",
+			},
+			AssetAnnotations: api.AssetAnnotationsMap{
+				"keytoupdate":    "newvalue",
+				"keytonotupdate": "valuetonotupdate",
+			}.ToModel(),
+		},
+	}
+	wantAnnotations := api.AssetAnnotationsMap{
+		"keywithoutprefix":                      "valuewithoutprefix",
+		"autodiscovery/security/keytoupdate":    "newvalue",
+		"autodiscovery/security/keytonotupdate": "valuetonotupdate",
+	}
+
+	err = testService.MergeDiscoveredAssets(context.Background(), teamID, assets, groupName)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	newAPIGroupAssets, err := testService.ListAssetGroup(context.Background(), api.AssetGroup{GroupID: groupID}, teamID)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(newAPIGroupAssets) != 2 {
+		t.Fatalf("group size is not correct: want(%d) got(%d)", 2, len(newAPIGroupAssets))
+	}
+
+	for _, asset := range newAPIGroupAssets {
+		switch asset.ID {
+		case scannableID:
+			if *asset.Scannable {
+				t.Fatal("scannable asset is marked as scannable")
+			}
+		// Assets marked as non-scannable shouldn't be updated to scannable by
+		// the discovery process, to avoid automatically marking assets as
+		// scannable that were previously marked as non-scannable through the
+		// UI.
+		case nonScannableID:
+			if *asset.Scannable {
+				t.Fatal("nonscannable asset is marked as scannable")
+			}
+
+			annotations, err := testService.ListAssetAnnotations(context.Background(), teamID, asset.ID)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			annotationsMap := api.AssetAnnotations(annotations).ToMap()
+			if fmt.Sprintf("%v", wantAnnotations) != fmt.Sprintf("%v", annotationsMap) {
+				t.Fatalf("unexpected annotations: want(%v) got(%v)", wantAnnotations, annotationsMap)
+			}
+
+		default:
+			t.Fatalf("unexpected asset in the group: asset ID (%v)", asset.ID)
+		}
+	}
+}
+*/
+
+func TestVulcanitoService_MergeDiscoveredAssetsAssetsCleared(t *testing.T) {
+	const (
+		teamID = "ea686be5-be9b-473b-ab1b-621a4f575d51"
+		// security-discovered-assets
+		groupID = "1a893ae9-0340-48ff-a5ac-95408731c80b"
+		// scannable.vulcan.example.com (Hostname)
+		scannableID = "aeb51c5c-7732-444d-9519-55a5108809f9"
+		// nonscannable.vulcan.example.com (Hostname)
+		nonScannableID = "73e33dcb-d07c-41d1-bc32-80861b49941e"
+	)
+
+	testStore, err := testutil.PrepareDatabaseLocal("../../../testdata/fixtures", store.NewDB)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer testStore.Close()
+
+	testService := buildDefaultVulcanitoSrv(testStore, kitlog.NewNopLogger())
+
+	oldAPIAssets, err := testService.ListAssets(context.Background(), teamID, api.Asset{})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	for _, asset := range oldAPIAssets {
+		switch asset.ID {
+		case scannableID:
+			if num := len(asset.AssetGroups); num != 1 {
+				t.Fatalf("scannable asset does not belong to exactly one group: want(1) got(%v)", num)
+			}
+			if group := asset.AssetGroups[0].GroupID; group != groupID {
+				t.Fatalf("scannable asset belongs to unexpected group: want(%v) got(%v)", groupID, group)
+			}
+		case nonScannableID:
+			if num := len(asset.AssetGroups); num != 2 {
+				t.Fatalf("non-scannable asset does not belong to exactly two groups: want(2) got(%v)", num)
+			}
+
+			annotations, err := testService.ListAssetAnnotations(context.Background(), teamID, asset.ID)
+			if err != nil {
+				t.Fatal(err)
+			}
+			annotationsMap := api.AssetAnnotations(annotations).ToMap()
+
+			expectedAnnotations := api.AssetAnnotationsMap{
+				"keywithoutprefix":                      "valuewithoutprefix",
+				"autodiscovery/security/keytoupdate":    "valuetoupdate",
+				"autodiscovery/security/keytonotupdate": "valuetonotupdate",
+				"autodiscovery/security/keytodelete":    "valuetodelete",
+			}
+			if fmt.Sprintf("%v", expectedAnnotations) != fmt.Sprintf("%v", annotationsMap) {
+				t.Fatalf("unexpected annotations: want(%v) got(%v)", expectedAnnotations, annotationsMap)
+			}
+		}
+	}
+
+	groupName := "security-discovered-assets"
+	assets := []api.Asset{}
+	wantAnnotations := api.AssetAnnotationsMap{
+		"keywithoutprefix": "valuewithoutprefix",
+	}
+
+	err = testService.MergeDiscoveredAssets(context.Background(), teamID, assets, groupName)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	newAPIAssets, err := testService.ListAssets(context.Background(), teamID, api.Asset{})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	for _, asset := range newAPIAssets {
+		switch asset.ID {
+		case scannableID:
+			t.Fatal("scannable asset has not been deleted")
+		case nonScannableID:
+			if num := len(asset.AssetGroups); num != 1 {
+				t.Fatalf("non-scannable asset does not belong to exactly one groups: want(1) got(%v)", num)
+			}
+
+			if group := asset.AssetGroups[0].GroupID; group == groupID {
+				t.Fatalf("non-scannable asset has not been deassociated")
+			}
+
+			annotations, err := testService.ListAssetAnnotations(context.Background(), teamID, asset.ID)
+			if err != nil {
+				t.Fatal(err)
+			}
+			annotationsMap := api.AssetAnnotations(annotations).ToMap()
+
+			if fmt.Sprintf("%v", wantAnnotations) != fmt.Sprintf("%v", annotationsMap) {
+				t.Fatalf("unexpected annotations: want(%v) got(%v)", wantAnnotations, annotationsMap)
+			}
+		}
 	}
 }
 
