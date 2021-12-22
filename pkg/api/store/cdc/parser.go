@@ -281,6 +281,17 @@ func (p *AsyncTxParser) processFindingOverwrite(data []byte) error {
 	return nil
 }
 
+// processMergeDiscoveredAssets performs the following actions:
+// - Marks the Job as RUNNING
+// - Calls the MergeDiscoveredAssets operation
+// - Marks the Job as DONE
+// In the case that the MergeDiscoveredAssets operation fails, the error is
+// added to the JobResult.
+// Errors are not returned from the function to avoid this operation to be
+// retried. They are logged instead.
+// NOTE: this operation could be time consuming, and therefore affect
+// consistency introduced by latency executing the other distributed
+// transactions.
 func (p *AsyncTxParser) processMergeDiscoveredAssets(data []byte) error {
 	var dto OpMergeDiscoveredAssetsDTO
 
@@ -305,34 +316,38 @@ func (p *AsyncTxParser) processMergeDiscoveredAssets(data []byte) error {
 		Status:    api.JobStatusRunning,
 		Operation: opMergeDiscoveredAssets,
 	}
-	_, err = p.JobsRunner.Client.UpdateJob(context.Background(), job)
-	if err != nil {
-		_ = level.Error(p.logger).Log(
-			"component", CDCLogTag, "error", err, "job_id", dto.JobID, "action", opMergeDiscoveredAssets,
-		)
+	if err := p.updateJob(job); err != nil {
 		return nil
 	}
 
 	// Execute the merge of the discovered assets.
-	// TODO: if the error is not nil we should update the Job accordingly.
 	if err := p.JobsRunner.Client.MergeDiscoveredAssets(context.Background(), dto.TeamID, dto.Assets, dto.GroupName); err != nil {
 		_ = level.Error(p.logger).Log(
 			"component", CDCLogTag, "error", err, "job_id", dto.JobID, "action", opMergeDiscoveredAssets,
 		)
-		return nil
+		job.Result = &api.JobResult{
+			Error: err.Error(),
+		}
 	}
 
 	// Mark the job as DONE.
 	job.Status = api.JobStatusDone
 	_, err = p.JobsRunner.Client.UpdateJob(context.Background(), job)
-	if err != nil {
-		_ = level.Error(p.logger).Log(
-			"component", CDCLogTag, "error", err, "job_id", dto.JobID, "action", opMergeDiscoveredAssets,
-		)
+	if err := p.updateJob(job); err != nil {
 		return nil
 	}
 
 	return nil
+}
+
+func (p *AsyncTxParser) updateJob(job api.Job) error {
+	_, err := p.JobsRunner.Client.UpdateJob(context.Background(), job)
+	if err != nil {
+		_ = level.Error(p.logger).Log(
+			"component", CDCLogTag, "error", err, "job_id", job.ID, "action", opMergeDiscoveredAssets,
+		)
+	}
+	return err
 }
 
 func (p *AsyncTxParser) logErr(e Event, err error) {
