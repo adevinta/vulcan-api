@@ -322,7 +322,7 @@ var _ = Resource("assets", func() {
 		Response(NoContent, func() {})
 	})
 
-	Action("mergeDiscoveredAssets", func() {
+	Action("discover", func() {
 		Description(`This endpoint receives a list of assets with embedded
 asset annotations, and the group name where to be added. It should be used by
 third-party asset discovery services to onboard the discovered assets into
