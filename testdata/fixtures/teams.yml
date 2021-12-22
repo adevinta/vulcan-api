@@ -62,3 +62,10 @@
   description: Team used for Disjoin tests
   created_at: 2018-01-01 12:30:12
   updated_at: 2018-01-01 12:30:12
+
+# discovery merge tests
+- id: ea686be5-be9b-473b-ab1b-621a4f575d51
+  name: DiscoveryMergeTeam
+  description: Team used for testing the merge of discovered assets
+  created_at: 2018-01-01 12:30:12
+  updated_at: 2018-01-01 12:30:12

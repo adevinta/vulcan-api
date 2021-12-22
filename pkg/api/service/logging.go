@@ -44,6 +44,7 @@ func (middleware loggingMiddleware) Healthcheck(ctx context.Context) error {
 }
 
 func (middleware loggingMiddleware) FindJob(ctx context.Context, jobID string) (*api.Job, error) {
+
 	defer func() {
 		XRequestID := ""
 		if ctx != nil {
@@ -51,7 +52,21 @@ func (middleware loggingMiddleware) FindJob(ctx context.Context, jobID string) (
 		}
 		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "FindJob", "jobID", mySprintf(jobID))
 	}()
+
 	return middleware.next.FindJob(ctx, jobID)
+}
+
+func (middleware loggingMiddleware) UpdateJob(ctx context.Context, job api.Job) (*api.Job, error) {
+
+	defer func() {
+		XRequestID := ""
+		if ctx != nil {
+			XRequestID, _ = ctx.Value(kithttp.ContextKeyRequestXRequestID).(string)
+		}
+		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "UpdateJob", "job", mySprintf(job))
+	}()
+
+	return middleware.next.UpdateJob(ctx, job)
 }
 
 func (middleware loggingMiddleware) ListUsers(ctx context.Context) ([]*api.User, error) {
@@ -338,6 +353,32 @@ func (middleware loggingMiddleware) CreateAssetsMultiStatus(ctx context.Context,
 	}()
 
 	return middleware.next.CreateAssetsMultiStatus(ctx, assets, groups, annotations)
+}
+
+func (middleware loggingMiddleware) MergeDiscoveredAssets(ctx context.Context, teamID string, assets []api.Asset, groupName string) error {
+
+	defer func() {
+		XRequestID := ""
+		if ctx != nil {
+			XRequestID, _ = ctx.Value(kithttp.ContextKeyRequestXRequestID).(string)
+		}
+		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "MergeDiscoveredAssets", "teamID", mySprintf(teamID), "assets", mySprintf(assets), "groupName", mySprintf(groupName))
+	}()
+
+	return middleware.next.MergeDiscoveredAssets(ctx, teamID, assets, groupName)
+}
+
+func (middleware loggingMiddleware) MergeDiscoveredAssetsAsync(ctx context.Context, teamID string, assets []api.Asset, groupName string) (*api.Job, error) {
+
+	defer func() {
+		XRequestID := ""
+		if ctx != nil {
+			XRequestID, _ = ctx.Value(kithttp.ContextKeyRequestXRequestID).(string)
+		}
+		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "MergeDiscoveredAssetsAsync", "teamID", mySprintf(teamID), "assets", mySprintf(assets), "groupName", mySprintf(groupName))
+	}()
+
+	return middleware.next.MergeDiscoveredAssetsAsync(ctx, teamID, assets, groupName)
 }
 
 func (middleware loggingMiddleware) FindAsset(ctx context.Context, asset api.Asset) (*api.Asset, error) {

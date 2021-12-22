@@ -5,6 +5,7 @@ Copyright 2021 Adevinta
 package store
 
 import (
+	"fmt"
 	"strings"
 	"time"
 
@@ -49,6 +50,19 @@ func (db vulcanitoStore) CreateAssets(assets []api.Asset, groups []api.Group, an
 		return nil, db.logError(errors.Database(tx.Error))
 	}
 
+	createdAssets, err := db.createAssetsTX(tx, assets, groups, annotations)
+	if err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+	if tx.Commit().Error != nil {
+		return nil, db.logError(errors.Database(tx.Error))
+	}
+
+	return createdAssets, nil
+}
+
+func (db vulcanitoStore) createAssetsTX(tx *gorm.DB, assets []api.Asset, groups []api.Group, annotations []*api.AssetAnnotation) ([]api.Asset, error) {
 	createdAssets := []api.Asset{}
 
 	for _, a := range assets {
@@ -62,8 +76,6 @@ func (db vulcanitoStore) CreateAssets(assets []api.Asset, groups []api.Group, an
 		if errors.IsKind(err, errors.ErrNotFound) {
 			asset, err = db.createAsset(tx, a)
 			if err != nil {
-				tx.Rollback()
-
 				assetType := ""
 				if a.AssetType != nil {
 					assetType = a.AssetType.Name
@@ -78,8 +90,6 @@ func (db vulcanitoStore) CreateAssets(assets []api.Asset, groups []api.Group, an
 			assetGroup := api.AssetGroup{AssetID: asset.ID, GroupID: g.ID}
 			err := db.createAssetGroup(tx, assetGroup)
 			if err != nil {
-				tx.Rollback()
-
 				if db.IsDuplicateError(err) {
 					err = errors.Duplicated(err.Error())
 				} else {
@@ -91,11 +101,12 @@ func (db vulcanitoStore) CreateAssets(assets []api.Asset, groups []api.Group, an
 
 		// Associate asset with input annotations
 		for _, an := range annotations {
+			an := an
+
 			an.AssetID = asset.ID
 
 			result := tx.Create(&an)
 			if result.Error != nil {
-				tx.Rollback()
 				return nil, errors.Create(result.Error, "assetAnnotation", asset.ID, an.Key)
 			}
 		}
@@ -103,31 +114,36 @@ func (db vulcanitoStore) CreateAssets(assets []api.Asset, groups []api.Group, an
 		createdAssets = append(createdAssets, *asset)
 	}
 
+	return createdAssets, nil
+}
+
+// CreateAsset persists an asset in the database.  It receives an asset and an
+// array of groups.  The asset will be associated with all groups from that
+// array.
+func (db vulcanitoStore) CreateAsset(a api.Asset, groups []api.Group) (*api.Asset, error) {
+	tx := db.Conn.Begin()
+	if tx.Error != nil {
+		return nil, db.logError(errors.Database(tx.Error))
+	}
+
+	created, err := db.createAssetTX(tx, a, groups)
+	if err != nil {
+		tx.Rollback()
+		return nil, err
+	}
 	if tx.Commit().Error != nil {
 		return nil, db.logError(errors.Database(tx.Error))
 	}
 
-	return createdAssets, nil
+	return created, nil
 }
 
-// CreateAsset persists an asset in the database.
-// It receives an asset and an array of groups.
-// The asset will be associated with all groups from that array.
-func (db vulcanitoStore) CreateAsset(a api.Asset, groups []api.Group) (*api.Asset, error) {
-	// Creates a new transaction in the database.
-	tx := db.Conn.Begin()
-	if tx.Error != nil {
-		// We have rceived an error when trying to obtain a new transaction.
-		// No need to rollback the transaction.
-		return nil, db.logError(errors.Database(tx.Error))
-	}
-
+func (db vulcanitoStore) createAssetTX(tx *gorm.DB, a api.Asset, groups []api.Group) (*api.Asset, error) {
 	// We try to retrieve the asset from the database using the Team ID, Identifier and Asset Type.
 	// This asset will be returned at the end of the function.
 	// Abort the transaction in case of errors during the search.
 	asset, err := db.findAsset(tx, a.TeamID, a.Identifier, a.AssetTypeID)
 	if err != nil && !errors.IsKind(err, errors.ErrNotFound) {
-		tx.Rollback()
 		return nil, err
 	}
 
@@ -135,8 +151,6 @@ func (db vulcanitoStore) CreateAsset(a api.Asset, groups []api.Group) (*api.Asse
 	if errors.IsKind(err, errors.ErrNotFound) {
 		asset, err = db.createAsset(tx, a)
 		if err != nil {
-			tx.Rollback()
-
 			assetType := ""
 			if a.AssetType != nil {
 				assetType = a.AssetType.Name
@@ -154,8 +168,6 @@ func (db vulcanitoStore) CreateAsset(a api.Asset, groups []api.Group) (*api.Asse
 		// Create the association in the database.
 		err := db.createAssetGroup(tx, assetGroup)
 		if err != nil {
-			tx.Rollback()
-
 			// Return an specific error for the case in which the association already exists.
 			if db.IsDuplicateError(err) {
 				err = errors.Duplicated(err.Error())
@@ -165,10 +177,6 @@ func (db vulcanitoStore) CreateAsset(a api.Asset, groups []api.Group) (*api.Asse
 
 			return nil, err
 		}
-	}
-
-	if tx.Commit().Error != nil {
-		return nil, db.logError(errors.Database(tx.Error))
 	}
 
 	// Return the asset
@@ -279,8 +287,26 @@ func (db vulcanitoStore) countTeamAssetsByIdentifier(teamID, identifier string) 
 }
 
 func (db vulcanitoStore) UpdateAsset(asset api.Asset) (*api.Asset, error) {
+	tx := db.Conn.Begin()
+	if tx.Error != nil {
+		return nil, db.logError(errors.Database(tx.Error))
+	}
+
+	out, err := db.updateAssetTX(tx, asset)
+	if err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+	if tx.Commit().Error != nil {
+		return nil, db.logError(errors.Database(tx.Error))
+	}
+
+	return out, nil
+}
+
+func (db vulcanitoStore) updateAssetTX(tx *gorm.DB, asset api.Asset) (*api.Asset, error) {
 	findAsset := api.Asset{ID: asset.ID}
-	if db.Conn.
+	if tx.
 		Preload("Team").
 		Where("team_id = ? and id = ?", asset.TeamID, asset.ID).
 		First(&findAsset).
@@ -288,19 +314,12 @@ func (db vulcanitoStore) UpdateAsset(asset api.Asset) (*api.Asset, error) {
 		return nil, db.logError(errors.Forbidden("asset does not belong to team"))
 	}
 
-	tx := db.Conn.Begin()
-	if tx.Error != nil {
-		return nil, db.logError(errors.Database(tx.Error))
-	}
-
 	result := tx.Model(&asset).Where("team_id = ?", asset.TeamID).Update(asset)
 	if result.Error != nil {
-		tx.Rollback()
 		return nil, db.logError(errors.Update(result.Error))
 	}
 	if result.RowsAffected == 0 {
-		tx.Rollback()
-		return nil, db.logError(errors.Update("Asset was not updated"))
+		return nil, db.logError(errors.Update("asset was not updated"))
 	}
 
 	// If asset identifier has changed, we have to propagate the action
@@ -309,51 +328,20 @@ func (db vulcanitoStore) UpdateAsset(asset api.Asset) (*api.Asset, error) {
 	if asset.Identifier != "" && asset.Identifier != findAsset.Identifier {
 		err := db.pushToOutbox(tx, opUpdateAsset, findAsset, asset)
 		if err != nil {
-			tx.Rollback()
 			return nil, err
 		}
-	}
-
-	if tx.Commit().Error != nil {
-		return nil, db.logError(errors.Database(tx.Error))
 	}
 
 	return &asset, nil
 }
 
 func (db vulcanitoStore) DeleteAsset(asset api.Asset) error {
-	findAsset := api.Asset{ID: asset.ID}
-	if db.Conn.
-		Where("team_id = ? and id = ?", asset.TeamID, asset.ID).
-		Preload("Team").
-		First(&findAsset).RecordNotFound() {
-		return db.logError(errors.Forbidden("asset does not belong to team"))
-	}
-
 	tx := db.Conn.Begin()
 	if tx.Error != nil {
 		return db.logError(errors.Database(tx.Error))
 	}
 
-	result := tx.Delete(&api.AssetGroup{}, "asset_id = ?", asset.ID)
-	if result.Error != nil {
-		tx.Rollback()
-		return db.logError(errors.Delete(result.Error))
-	}
-
-	result = tx.Delete(&api.Asset{}, "id = ? and team_id = ?", asset.ID, asset.TeamID)
-	if result.Error != nil {
-		tx.Rollback()
-		return db.logError(errors.Delete(result.Error))
-	}
-
-	if result.RowsAffected == 0 {
-		tx.Rollback()
-		return db.logError(errors.Delete("Asset was not deleted"))
-	}
-
-	err := db.pushToOutbox(tx, opDeleteAsset, findAsset)
-	if err != nil {
+	if err := db.deleteAssetTX(tx, asset); err != nil {
 		tx.Rollback()
 		return err
 	}
@@ -361,7 +349,29 @@ func (db vulcanitoStore) DeleteAsset(asset api.Asset) error {
 	if tx.Commit().Error != nil {
 		return db.logError(errors.Database(tx.Error))
 	}
+
 	return nil
+}
+
+func (db vulcanitoStore) deleteAssetTX(tx *gorm.DB, asset api.Asset) error {
+	findAsset := api.Asset{ID: asset.ID}
+	if tx.
+		Where("team_id = ? and id = ?", asset.TeamID, asset.ID).
+		Preload("Team").
+		First(&findAsset).RecordNotFound() {
+		return db.logError(errors.Forbidden("asset does not belong to team"))
+	}
+
+	result := tx.Delete(&api.Asset{}, "id = ? and team_id = ?", asset.ID, asset.TeamID)
+	if result.Error != nil {
+		return db.logError(errors.Delete(result.Error))
+	}
+
+	if result.RowsAffected == 0 {
+		return db.logError(errors.Delete("Asset was not deleted"))
+	}
+
+	return db.pushToOutbox(tx, opDeleteAsset, findAsset)
 }
 
 func (db vulcanitoStore) DeleteAllAssets(teamID string) error {
@@ -371,15 +381,8 @@ func (db vulcanitoStore) DeleteAllAssets(teamID string) error {
 		return db.logError(errors.Database(tx.Error))
 	}
 
-	// Delete all asset_group associations for this team
-	result := tx.Exec("DELETE from asset_group where asset_id in (select id from assets where team_id = ?)", teamID)
-	if result.Error != nil {
-		tx.Rollback()
-		return db.logError(errors.Delete(result.Error))
-	}
-
 	// Delete all assets from this team
-	result = tx.Delete(&api.Asset{}, "team_id = ?", teamID)
+	result := tx.Delete(&api.Asset{}, "team_id = ?", teamID)
 	if result.Error != nil {
 		tx.Rollback()
 		return db.logError(errors.Delete(result.Error))
@@ -398,6 +401,162 @@ func (db vulcanitoStore) DeleteAllAssets(teamID string) error {
 	}
 
 	return nil
+}
+
+// deleteAssetsUnsafeTX deletes a list of asset without checking the team the
+// asset belongs to. Ensure that the asset list provided to the method doesn't
+// contain taint data (i.e. the data comes from a trusted source).
+func (db vulcanitoStore) deleteAssetsUnsafeTX(tx *gorm.DB, teamID string, assets []api.Asset) error {
+	var assetIDs []string
+	for _, a := range assets {
+		assetIDs = append(assetIDs, a.ID)
+	}
+	result := tx.Exec(`
+		DELETE FROM assets
+		WHERE team_id = ? AND id IN (?)
+	`, teamID, assetIDs)
+	if result.Error != nil {
+		tx.Rollback()
+		return db.logError(errors.Delete(result.Error))
+	}
+
+	if result.RowsAffected != int64(len(assets)) {
+		return db.logError(errors.Delete(fmt.Sprintf("Not all the assets were deleted: %v/%v", result.RowsAffected, len(assets))))
+	}
+
+	for _, asset := range assets {
+		if err := db.pushToOutbox(tx, opDeleteAsset, asset); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+// MergeAssets executes the operations required to update a discovery group in
+// a single transaction.
+func (db vulcanitoStore) MergeAssets(mergeOps api.AssetMergeOperations) error {
+	// Begin a new transaction.
+	tx := db.Conn.Begin()
+	if tx.Error != nil {
+		return db.logError(errors.Database(tx.Error))
+	}
+
+	// Create the new assets, its annotations and add them to the provided
+	// auto-discovery group.
+	for _, asset := range mergeOps.Create {
+		a, err := db.createAssetTX(tx, asset, []api.Group{mergeOps.Group})
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+		_, err = db.putAssetAnnotationsTX(tx, mergeOps.TeamID, a.ID, asset.AssetAnnotations)
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+	}
+
+	// Associate already existing assets to the auto-discovery group.
+	for _, asset := range mergeOps.Assoc {
+		ag := api.AssetGroup{
+			AssetID: asset.ID,
+			GroupID: mergeOps.Group.ID,
+		}
+		_, err := db.groupAssetTX(tx, ag, mergeOps.TeamID)
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+	}
+
+	// If required, update the scannable field and/or the annotations of the
+	// already existing assets.
+	for _, asset := range mergeOps.Update {
+		if len(asset.AssetAnnotations) > 0 {
+			_, err := db.putAssetAnnotationsTX(tx, asset.TeamID, asset.ID, asset.AssetAnnotations)
+			if err != nil {
+				tx.Rollback()
+				return err
+			}
+			asset.AssetAnnotations = nil
+		}
+
+		if asset.Scannable != nil {
+			_, err := db.updateAssetTX(tx, asset)
+			if err != nil {
+				tx.Rollback()
+				return err
+			}
+		}
+	}
+
+	// De-associate assets not present in the current discovery and remove the
+	// stale discovery annotations.
+	for _, asset := range mergeOps.Deassoc {
+		assetGroup := api.AssetGroup{
+			AssetID: asset.ID,
+			GroupID: mergeOps.Group.ID,
+		}
+		err := db.ungroupAssetsTX(tx, assetGroup, asset.TeamID)
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+		_, err = db.putAssetAnnotationsTX(tx, asset.TeamID, asset.ID, asset.AssetAnnotations)
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+	}
+
+	if len(mergeOps.Del) > 0 {
+		err := db.deleteAssetsUnsafeTX(tx, mergeOps.TeamID, mergeOps.Del)
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+	}
+
+	// Commit the transaction.
+	if tx.Commit().Error != nil {
+		return db.logError(errors.Database(tx.Error))
+	}
+
+	return nil
+}
+
+// MergeAssetsAsync stores the information required to execute a MergeAssets
+// operation in the Outbox. It also creates a Job to be returned to the user to
+// track the progress of the async operation.
+func (db vulcanitoStore) MergeAssetsAsync(teamID string, assets []api.Asset, groupName string) (*api.Job, error) {
+	tx := db.Conn.Begin()
+	if tx.Error != nil {
+		return nil, db.logError(errors.Database(tx.Error))
+	}
+
+	job, err := db.createJobTx(
+		tx,
+		api.Job{
+			TeamID:    teamID,
+			Operation: opMergeDiscoveredAssets,
+			Status:    api.JobStatusPending,
+		})
+	if err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+
+	if err := db.pushToOutbox(tx, opMergeDiscoveredAssets, teamID, assets, groupName, job.ID); err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+
+	if tx.Commit().Error != nil {
+		return nil, db.logError(errors.Database(tx.Error))
+	}
+
+	return job, nil
 }
 
 func (db vulcanitoStore) GetAssetType(name string) (*api.AssetType, error) {
@@ -578,22 +737,40 @@ func (db vulcanitoStore) ListGroups(teamID, groupName string) ([]*api.Group, err
 }
 
 func (db vulcanitoStore) GroupAsset(assetsGroup api.AssetGroup, teamID string) (*api.AssetGroup, error) {
+	tx := db.Conn.Begin()
+	if tx.Error != nil {
+		return nil, db.logError(errors.Database(tx.Error))
+	}
+
+	assetGroup, err := db.groupAssetTX(tx, assetsGroup, teamID)
+	if err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+	if tx.Commit().Error != nil {
+		return nil, db.logError(errors.Database(tx.Error))
+	}
+
+	return assetGroup, nil
+}
+
+func (db vulcanitoStore) groupAssetTX(tx *gorm.DB, assetsGroup api.AssetGroup, teamID string) (*api.AssetGroup, error) {
 	asset := api.Asset{ID: assetsGroup.AssetID}
-	if db.Conn.Where("team_id = ?", teamID).First(&asset).RecordNotFound() {
+	if tx.Where("team_id = ?", teamID).First(&asset).RecordNotFound() {
 		return nil, db.logError(errors.Forbidden("asset does not belong to team"))
 	}
 	group := api.Group{ID: assetsGroup.GroupID}
-	if db.Conn.Where("team_id = ?", teamID).First(&group).RecordNotFound() {
+	if tx.Where("team_id = ?", teamID).First(&group).RecordNotFound() {
 		return nil, db.logError(errors.Forbidden("group does not belong to team"))
 	}
-	if !db.Conn.First(&assetsGroup).RecordNotFound() {
+	if !tx.First(&assetsGroup).RecordNotFound() {
 		return nil, db.logError(errors.Duplicated("asset group relation already exists"))
 	}
-	res := db.Conn.Create(&assetsGroup)
+	res := tx.Create(&assetsGroup)
 	if res.Error != nil {
 		return nil, db.logError(errors.Create(res.Error))
 	}
-	db.Conn.
+	tx.
 		Preload("Asset").
 		Preload("Asset.Team").
 		Preload("Group").
@@ -620,21 +797,38 @@ func (db vulcanitoStore) ListAssetGroup(assetGroup api.AssetGroup, teamID string
 }
 
 func (db vulcanitoStore) UngroupAssets(assetGroup api.AssetGroup, teamID string) error {
+	tx := db.Conn.Begin()
+	if tx.Error != nil {
+		return db.logError(errors.Database(tx.Error))
+	}
+
+	err := db.ungroupAssetsTX(tx, assetGroup, teamID)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	if tx.Commit().Error != nil {
+		return db.logError(errors.Database(tx.Error))
+	}
+
+	return nil
+}
+
+func (db vulcanitoStore) ungroupAssetsTX(tx *gorm.DB, assetGroup api.AssetGroup, teamID string) error {
 	asset := api.Asset{ID: assetGroup.AssetID}
-	if db.Conn.Where("team_id = ?", teamID).First(&asset).RecordNotFound() {
+	if tx.Where("team_id = ?", teamID).First(&asset).RecordNotFound() {
 		return db.logError(errors.Forbidden("asset does not belong to team"))
 	}
 	group := api.Group{ID: assetGroup.GroupID}
-	if db.Conn.Where("team_id = ?", teamID).First(&group).RecordNotFound() {
+	if tx.Where("team_id = ?", teamID).First(&group).RecordNotFound() {
 		return db.logError(errors.Forbidden("group does not belong to team"))
 	}
-	if db.Conn.First(&assetGroup).RecordNotFound() {
+	if tx.First(&assetGroup).RecordNotFound() {
 		return db.logError(errors.Duplicated("asset group relation does not exists"))
 	}
-	res := db.Conn.Delete(&assetGroup)
+	res := tx.Delete(&assetGroup)
 	if res.Error != nil {
 		return db.logError(errors.Delete(res.Error))
 	}
-
 	return nil
 }

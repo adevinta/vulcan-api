@@ -44,3 +44,24 @@
 - id: 78ba0bb9-cce7-451d-8e17-ae6b3efbb788
   name: DisjoinB
   team_id: d335c30c-944f-4ab0-9b43-cffccdfbd848
+
+# discovery merge tests
+- id: dd4f7ee7-76de-4922-aeb3-1eade1233550
+  name: Default
+  team_id: ea686be5-be9b-473b-ab1b-621a4f575d51
+
+- id: 1a893ae9-0340-48ff-a5ac-95408731c80b
+  name: security-discovered-assets
+  team_id: ea686be5-be9b-473b-ab1b-621a4f575d51
+
+- id: c9996507-f0eb-449a-9b3d-e49232a07207
+  name: coincident-discovered-assets
+  team_id: ea686be5-be9b-473b-ab1b-621a4f575d51
+
+- id: c171f286-9b7f-4d45-adec-f5c7262c1b5f
+  name: acoincident-discovered-assets
+  team_id: ea686be5-be9b-473b-ab1b-621a4f575d51
+
+- id: 5296b879-cb7c-4372-bd65-c5a17152b10b
+  name: empty-discovered-assets
+  team_id: ea686be5-be9b-473b-ab1b-621a4f575d51

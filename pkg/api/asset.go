@@ -17,6 +17,11 @@ import (
 	types "github.com/adevinta/vulcan-types"
 )
 
+// DiscoveredAssetsGroupSuffix is used by the Merge Discovered Assets feature
+// to restrict the discovery onboarding to Groups with a name containing that
+// suffix.
+const DiscoveredAssetsGroupSuffix = "-discovered-assets"
+
 var ErrROLFPInvalidText = "invalid ROLFP representation"
 
 type Asset struct {
@@ -217,4 +222,27 @@ type AssetCreationResponse struct {
 
 type Status struct {
 	Code int `json:"code"`
+}
+
+// AssetMergeOperations defines a set of operations to perform when merging a
+// list of assets requested by a discovery service.
+type AssetMergeOperations struct {
+	// Create assets that didn't exist yet in the team.
+	Create []Asset
+	// Associate already existing asset to the discovery group.
+	Assoc []Asset
+	// Update assets that were already existing (e.g. the scannable field or
+	// the annotations)
+	Update []Asset
+	// Deassociate assets that haven't been discovered in the current discovery
+	// operation, but that belong to other groups.
+	Deassoc []Asset
+	// Delete assets that haven't been discovered in the current discovery
+	// operation and do not belong to other groups.
+	Del []Asset
+
+	// The team where the operations will be performed.
+	TeamID string
+	// The discovery group.
+	Group Group
 }

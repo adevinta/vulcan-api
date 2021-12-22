@@ -44,3 +44,16 @@
 
 - asset_id: 6a521ca7-490e-4789-a716-c2baca750884 # disjoin4.adevinta.com
   group_id: 78ba0bb9-cce7-451d-8e17-ae6b3efbb788 # DisjoinB
+
+# discovery merge tests
+- asset_id: 6ace4174-e704-4ea3-9c68-9096966a7e61 # default.vulcan.example.com
+  group_id: dd4f7ee7-76de-4922-aeb3-1eade1233550 # Default
+
+- asset_id: 73e33dcb-d07c-41d1-bc32-80861b49941e # nonscannable.vulcan.example.com
+  group_id: 1a893ae9-0340-48ff-a5ac-95408731c80b # security-discovered-assets
+
+- asset_id: aeb51c5c-7732-444d-9519-55a5108809f9 # scannable.vulcan.example.com
+  group_id: 1a893ae9-0340-48ff-a5ac-95408731c80b # security-discovered-assets
+
+- asset_id: 73e33dcb-d07c-41d1-bc32-80861b49941e # nonscannable.vulcan.example.com
+  group_id: dd4f7ee7-76de-4922-aeb3-1eade1233550 # Default

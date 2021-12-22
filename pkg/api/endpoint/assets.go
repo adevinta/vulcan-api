@@ -7,6 +7,7 @@ package endpoint
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/adevinta/errors"
 	"github.com/adevinta/vulcan-api/pkg/api"
@@ -47,6 +48,18 @@ type AssetsListRequest struct {
 	Assets      []AssetRequest          `json:"assets"`
 	Groups      []string                `json:"groups"`
 	Annotations api.AssetAnnotationsMap `json:"annotations"`
+}
+
+type AssetWithAnnotationsRequest struct {
+	AssetRequest
+
+	Annotations api.AssetAnnotationsMap `json:"annotations"`
+}
+
+type DiscoveredAssetsRequest struct {
+	TeamID    string                        `json:"team_id" urlvar:"team_id"`
+	Assets    []AssetWithAnnotationsRequest `json:"assets"`
+	GroupName string                        `json:"group_name"`
 }
 
 func makeListAssetsEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
@@ -168,6 +181,48 @@ func makeCreateAssetMultiStatusEndpoint(s api.VulcanitoService, logger kitlog.Lo
 		}
 
 		return Created{responses}, nil
+	}
+}
+
+// makeMergeDiscoveredAssetsEndpoint merges a list of assets into a discovery
+// asset group, requested by a discovery service.
+func makeMergeDiscoveredAssetsEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		requestBody, ok := request.(*DiscoveredAssetsRequest)
+		if !ok {
+			return nil, errors.Assertion("Type assertion failed")
+		}
+
+		// Validate that the asset group name is one of the allowed ones.
+		if !strings.HasSuffix(requestBody.GroupName, api.DiscoveredAssetsGroupSuffix) {
+			return nil, errors.Validation("Asset group not allowed")
+		}
+
+		// Validate the assets list, initialize each item and set the
+		// team ID to be the same from the request body.
+		assets := []api.Asset{}
+		for _, ar := range requestBody.Assets {
+			if ar.Identifier == "" || ar.Type == "" {
+				return nil, errors.Validation("Asset identifier and type are required for all the assets")
+			}
+			if !api.ValidAssetType(ar.Type) {
+				return nil, errors.Validation(fmt.Errorf("Invalid asset type (%s) for asset (%v)", ar.Type, ar.Identifier))
+			}
+
+			asset := ar.NewAsset()
+			asset.TeamID = requestBody.TeamID
+			asset.AssetAnnotations = ar.Annotations.ToModel()
+
+			assets = append(assets, *asset)
+		}
+
+		// Ask for the service layer to asynchronously merge the discovered assets.
+		job, err := s.MergeDiscoveredAssetsAsync(ctx, requestBody.TeamID, assets, requestBody.GroupName)
+		if err != nil {
+			return nil, err
+		}
+
+		return Accepted{job.ToResponse()}, nil
 	}
 }
 

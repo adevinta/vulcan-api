@@ -14,6 +14,7 @@ type VulcanitoStore interface {
 	Healthcheck() error
 
 	FindJob(jobID string) (*Job, error)
+	UpdateJob(job Job) (*Job, error)
 
 	CreateUserIfNotExists(userData saml.UserData) error
 
@@ -50,6 +51,8 @@ type VulcanitoStore interface {
 	DeleteAsset(asset Asset) error
 	DeleteAllAssets(teamID string) error
 	UpdateAsset(asset Asset) (*Asset, error)
+	MergeAssets(mergeOps AssetMergeOperations) error
+	MergeAssetsAsync(teamID string, assets []Asset, groupName string) (*Job, error)
 
 	GetAssetType(assetTypeName string) (*AssetType, error)
 

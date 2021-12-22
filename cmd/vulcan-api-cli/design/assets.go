@@ -133,6 +133,29 @@ var AssetPayload = Type("AssetPayload", func() {
 	Required("identifier")
 })
 
+var AssetWithAnnotationsPayload = Type("AssetWithAnnotationsPayload", func() {
+	Attribute("type", String, "Type", func() { Example("Hostname") })
+	Attribute("identifier", String, "Identifier", func() { Example("vulcan.example.com") })
+	Attribute("options", String, "Options", func() { Example("{\"timeout\":60}") })
+	Attribute("environmental_cvss", String, "Environmental CVSS", func() { Example("AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H") })
+	Attribute("rolfp", String, "Rolfp plus scope vector", func() { Example("R:1/O:1/L:0/F:0/P:0+S:1") })
+	Attribute("scannable", Boolean, "Scannable", func() {
+		Example(true)
+	})
+	Attribute("alias", String, "The alias of the asset in Vulcan", func() { Example("AnAlias") })
+	Attribute("annotations", HashOf(String, String), func() {
+		Description(`The provided annotations may differ from the ones that
+will be stored, because they will include a prefix to not mess with any other
+annotations already present in the asset.`)
+		Example(map[string]string{
+			"annotation/1": "value/1",
+			"annotation/2": "value/2",
+		})
+	})
+	Required("identifier")
+	Required("type")
+})
+
 var AssetUpdatePayload = Type("AssetUpdatePayload", func() {
 	Attribute("type", String, "Type", func() { Example("Hostname") })
 	Attribute("identifier", String, "Identifier", func() { Example("vulcan.example.com") })
@@ -184,6 +207,17 @@ var CreateAssetPayload = Type("CreateAssetPayload", func() {
 		})
 	})
 	Required("assets")
+})
+
+var DiscoveredAssetsPayload = Type("DiscoveredAssetsPayload", func() {
+	Attribute("assets", ArrayOf(AssetWithAnnotationsPayload))
+	Attribute("group_name", String, func() {
+		Description(`The discovery group name where assets will be added. It
+		must end with '-discovered-assets'. The first part of the name should
+		identify the discovery service using the endpoint`)
+		Example("discoveryserviceX-discovered-assets")
+	})
+	Required("group_name")
 })
 
 var _ = Resource("assets", func() {
@@ -286,5 +320,38 @@ var _ = Resource("assets", func() {
 		})
 		Security("Bearer")
 		Response(NoContent, func() {})
+	})
+
+	Action("discover", func() {
+		Description(`This endpoint receives a list of assets with embedded
+asset annotations, and the group name where to be added. It should be used by
+third-party asset discovery services to onboard the discovered assets into
+Vulcan. The provided list of assets will overwrite the assets previously
+present in the group, in a way that:
+  - Assets that do not exist in the team will be created and associated to the
+  group
+  - Assets that were already existing in the team but not associated to the
+  group will be associated
+  - Existing assets where the scannable field or the annotations are different
+  will be updated accordingly
+  - Assets that were associated to the group and now are not present in the
+  provided list will be de-associated from the group if they belong to any
+  other group, or deleted otherwise
+Because of the latency of this operation the endpoint is asynchronous. It
+returns a 202-Accepted HTTP response with the Job information in the response
+body.
+The discovery group name must end with '-discovered-assets' to not mess with
+manually managed asset groups. Also the first part of the name should identify
+the discovery service using the endpoint, for example:
+serviceX-discovered-assets.
+Also be aware that the provided annotations may differ from the ones that will
+be stored, because they will include a prefix to not mess with any other
+annotations already present in the asset.`)
+		Routing(PUT("discovery"))
+		Payload(DiscoveredAssetsPayload)
+		Security("Bearer")
+		Response(Accepted, JobMedia, func() {
+			Description("Created: All assets were created with success.")
+		})
 	})
 })

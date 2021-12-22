@@ -9,6 +9,7 @@ import (
 
 	"github.com/adevinta/errors"
 	"github.com/adevinta/vulcan-api/pkg/api"
+	"github.com/jinzhu/gorm"
 )
 
 // ListAssetAnnotations returns all annotations of a given asset id
@@ -87,6 +88,8 @@ func (db vulcanitoStore) CreateAssetAnnotations(teamID string, assetID string, a
 	// Retrieve annotations for the asset
 	createdAnnotations := []*api.AssetAnnotation{}
 	for _, annotation := range annotations {
+		annotation := annotation
+
 		// Ensure consistent Asset ID
 		annotation.AssetID = assetID
 
@@ -175,9 +178,29 @@ func (db vulcanitoStore) UpdateAssetAnnotations(teamID string, assetID string, a
 // PutAssetAnnotations overrides all annotations of a given asset with new content.
 // Previous annotations will not ne preserved.
 func (db vulcanitoStore) PutAssetAnnotations(teamID string, assetID string, annotations []*api.AssetAnnotation) ([]*api.AssetAnnotation, error) {
+	// Start transaction
+	tx := db.Conn.Begin()
+	if tx.Error != nil {
+		return nil, db.logError(errors.Database(tx.Error))
+	}
+
+	newAnnotations, err := db.putAssetAnnotationsTX(tx, teamID, assetID, annotations)
+	if err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+
+	if tx.Commit().Error != nil {
+		return nil, db.logError(errors.Database(tx.Error))
+	}
+
+	return newAnnotations, nil
+}
+
+func (db vulcanitoStore) putAssetAnnotationsTX(tx *gorm.DB, teamID string, assetID string, annotations []*api.AssetAnnotation) ([]*api.AssetAnnotation, error) {
 	// Find asset
 	a := api.Asset{}
-	result := db.Conn.Where("team_id = ?", teamID).Where("id = ?", assetID).Find(&a)
+	result := tx.Where("team_id = ?", teamID).Where("id = ?", assetID).Find(&a)
 	if result.Error != nil {
 		if db.NotFoundError(result.Error) {
 			return nil, db.logError(errors.NotFound(result.Error))
@@ -185,35 +208,25 @@ func (db vulcanitoStore) PutAssetAnnotations(teamID string, assetID string, anno
 		return nil, db.logError(result.Error)
 	}
 
-	// Start transaction
-	tx := db.Conn.Begin()
-	if tx.Error != nil {
-		return nil, db.logError(errors.Database(tx.Error))
-	}
-
 	// Clean up all annotations for given asset
 	result = tx.Delete(api.AssetAnnotation{}, "asset_id = ?", assetID)
 	if result.Error != nil {
-		tx.Rollback()
 		return nil, db.logError(errors.Delete(result.Error))
 	}
 
 	newAnnotations := []*api.AssetAnnotation{}
 	for _, annotation := range annotations {
+		annotation := annotation
+
 		// Ensure consistent Asset ID
 		annotation.AssetID = assetID
 
 		// Create Annotation
 		result := tx.Create(&annotation)
 		if result.Error != nil {
-			tx.Rollback()
 			return nil, db.logError(errors.Create(result.Error))
 		}
 		newAnnotations = append(newAnnotations, annotation)
-	}
-
-	if tx.Commit().Error != nil {
-		return nil, db.logError(errors.Database(tx.Error))
 	}
 
 	return newAnnotations, nil

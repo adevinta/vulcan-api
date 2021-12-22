@@ -5,6 +5,7 @@ Copyright 2021 Adevinta
 package api
 
 import (
+	"context"
 	"database/sql/driver"
 	"encoding/json"
 	"errors"
@@ -35,8 +36,8 @@ type Job struct {
 	// - PENDING
 	// - RUNNING
 	// - DONE
-	Status JobStatus `validate:"required"`
-	Result JobResult `gorm:"Column:result"`
+	Status JobStatus  `validate:"required"`
+	Result *JobResult `gorm:"Column:result"`
 
 	CreatedAt time.Time
 	UpdatedAt time.Time
@@ -57,7 +58,7 @@ func (j *JobResult) Scan(value interface{}) error {
 	if !ok {
 		return fmt.Errorf("failed to unmarshal JSONB value: %v", value)
 	}
-	return json.Unmarshal(bytes, &j)
+	return json.Unmarshal(bytes, j)
 
 }
 
@@ -90,13 +91,16 @@ func (j Job) Validate() error {
 }
 
 func (j Job) ToResponse() *JobResponse {
-	return &JobResponse{
+	res := &JobResponse{
 		ID:        j.ID,
 		TeamID:    j.TeamID,
 		Operation: j.Operation,
 		Status:    j.Status,
-		Result:    j.Result.toJobResultResponse(),
 	}
+	if j.Result != nil {
+		res.Result = j.Result.toJobResultResponse()
+	}
+	return res
 }
 
 // JobResponse represents the data for a Job that is
@@ -112,4 +116,17 @@ type JobResponse struct {
 type JobResultResponse struct {
 	Data  string `json:"data"`
 	Error string `json:"error"`
+}
+
+// JobsRunner is a dependency used by the CDC parser to execute async API jobs,
+// providing a limited access to the API service layer.
+type JobsRunner struct {
+	Client JobsClient
+}
+
+// JobsClient defines the API service layer methods exposd by the JobsRunner.
+type JobsClient interface {
+	MergeDiscoveredAssets(ctx context.Context, teamID string, assets []Asset, groupName string) error
+	FindJob(ctx context.Context, jobID string) (*Job, error)
+	UpdateJob(ctx context.Context, job Job) (*Job, error)
 }

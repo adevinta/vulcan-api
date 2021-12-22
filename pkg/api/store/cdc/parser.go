@@ -19,18 +19,20 @@ import (
 
 const (
 	// supported operations
-	opDeleteTeam       = "DeleteTeam"
-	opCreateAsset      = "CreateAsset"
-	opDeleteAsset      = "DeleteAsset"
-	opUpdateAsset      = "UpdateAsset"
-	opDeleteAllAssets  = "DeleteAllAssets"
-	opFindingOverwrite = "FindingOverwrite"
+	opDeleteTeam            = "DeleteTeam"
+	opCreateAsset           = "CreateAsset"
+	opDeleteAsset           = "DeleteAsset"
+	opUpdateAsset           = "UpdateAsset"
+	opDeleteAllAssets       = "DeleteAllAssets"
+	opFindingOverwrite      = "FindingOverwrite"
+	opMergeDiscoveredAssets = "MergeDiscoveredAssets"
 )
 
 var (
-	errInvalidData       = errs.New("invalid data")
-	errUnsupportedAction = errs.New("unsupported action")
-	errTargetNotUnique   = errs.New("target is not unique")
+	errInvalidData          = errs.New("invalid data")
+	errUnsupportedAction    = errs.New("unsupported action")
+	errTargetNotUnique      = errs.New("target is not unique")
+	errUnavailabeJobsRunner = errs.New("unavailable jobs runner")
 )
 
 // Parser defines a CDC log parser.
@@ -42,18 +44,20 @@ type Parser interface {
 	Parse(log []Event) (nParsed uint)
 }
 
-// VulnDBTxParser implements a CDC log parser
-// to handle distributed transactions for VulnDB.
-type VulnDBTxParser struct {
+// AsyncTxParser implements a CDC log parser to handle distributed transactions
+// for VulnDB and other API asynchronous jobs.
+type AsyncTxParser struct {
 	VulnDBClient vulndb.Client
+	JobsRunner   *api.JobsRunner
 	logger       log.Logger
 }
 
-// NewVulnDBTxParser builds a new CDC log parser
-// to handle distributed transactions for VulnDB.
-func NewVulnDBTxParser(vulnDBClient vulndb.Client, logger log.Logger) *VulnDBTxParser {
-	return &VulnDBTxParser{
+// NewAsyncTxParser builds a new CDC log parser to handle distributed
+// transactions for VulnDB and other API asynchronous jobs.
+func NewAsyncTxParser(vulnDBClient vulndb.Client, jobsRunner *api.JobsRunner, logger log.Logger) *AsyncTxParser {
+	return &AsyncTxParser{
 		VulnDBClient: vulnDBClient,
+		JobsRunner:   jobsRunner,
 		logger:       logger,
 	}
 }
@@ -64,7 +68,7 @@ func NewVulnDBTxParser(vulnDBClient vulndb.Client, logger log.Logger) *VulnDBTxP
 // error, log processing is stopped.
 // If a permanent error happens during processing of one event or event has reached
 // max processing attempts, that event is discarded counting as if it was processed.
-func (p *VulnDBTxParser) Parse(log []Event) (nParsed uint) {
+func (p *AsyncTxParser) Parse(log []Event) (nParsed uint) {
 	var processFunc func([]byte) error
 
 	for _, event := range log {
@@ -81,6 +85,8 @@ func (p *VulnDBTxParser) Parse(log []Event) (nParsed uint) {
 			processFunc = p.processDeleteAllAssets
 		case opFindingOverwrite:
 			processFunc = p.processFindingOverwrite
+		case opMergeDiscoveredAssets:
+			processFunc = p.processMergeDiscoveredAssets
 		default:
 			// If action is not supported
 			// log err and stop processing
@@ -103,7 +109,7 @@ func (p *VulnDBTxParser) Parse(log []Event) (nParsed uint) {
 	return
 }
 
-func (p *VulnDBTxParser) processDeleteTeam(data []byte) error {
+func (p *AsyncTxParser) processDeleteTeam(data []byte) error {
 	var dto OpDeleteTeamDTO
 
 	err := json.Unmarshal(data, &dto)
@@ -121,7 +127,7 @@ func (p *VulnDBTxParser) processDeleteTeam(data []byte) error {
 	return nil
 }
 
-func (p *VulnDBTxParser) processCreateAsset(data []byte) error {
+func (p *AsyncTxParser) processCreateAsset(data []byte) error {
 	var dto OpCreateAssetDTO
 
 	err := json.Unmarshal(data, &dto)
@@ -138,7 +144,7 @@ func (p *VulnDBTxParser) processCreateAsset(data []byte) error {
 	return err
 }
 
-func (p *VulnDBTxParser) processDeleteAsset(data []byte) error {
+func (p *AsyncTxParser) processDeleteAsset(data []byte) error {
 	var dto OpDeleteAssetDTO
 	ctx := context.Background()
 
@@ -196,7 +202,7 @@ func (p *VulnDBTxParser) processDeleteAsset(data []byte) error {
 	return nil
 }
 
-func (p *VulnDBTxParser) processUpdateAsset(data []byte) error {
+func (p *AsyncTxParser) processUpdateAsset(data []byte) error {
 	// An asset update where identifier has changed can imply 2 operations in VulnDB:
 	// - A delete of the asset association wih the team if team has no duplicates
 	//   for the same identifier.
@@ -233,7 +239,7 @@ func (p *VulnDBTxParser) processUpdateAsset(data []byte) error {
 	return p.processCreateAsset(createJSON)
 }
 
-func (p *VulnDBTxParser) processDeleteAllAssets(data []byte) error {
+func (p *AsyncTxParser) processDeleteAllAssets(data []byte) error {
 	var dto OpDeleteAllAssetsDTO
 
 	err := json.Unmarshal(data, &dto)
@@ -251,7 +257,7 @@ func (p *VulnDBTxParser) processDeleteAllAssets(data []byte) error {
 	return nil
 }
 
-func (p *VulnDBTxParser) processFindingOverwrite(data []byte) error {
+func (p *AsyncTxParser) processFindingOverwrite(data []byte) error {
 	var dto OpFindingOverwriteDTO
 
 	err := json.Unmarshal(data, &dto)
@@ -275,7 +281,76 @@ func (p *VulnDBTxParser) processFindingOverwrite(data []byte) error {
 	return nil
 }
 
-func (p *VulnDBTxParser) logErr(e Event, err error) {
+// processMergeDiscoveredAssets performs the following actions:
+// - Marks the Job as RUNNING
+// - Calls the MergeDiscoveredAssets operation
+// - Marks the Job as DONE
+// In the case that the MergeDiscoveredAssets operation fails, the error is
+// added to the JobResult.
+// Errors are not returned from the function to avoid this operation to be
+// retried. They are logged instead.
+// NOTE: this operation could be time consuming, and therefore affect
+// consistency introduced by latency executing the other distributed
+// transactions.
+func (p *AsyncTxParser) processMergeDiscoveredAssets(data []byte) error {
+	var dto OpMergeDiscoveredAssetsDTO
+
+	err := json.Unmarshal(data, &dto)
+	if err != nil {
+		_ = level.Error(p.logger).Log(
+			"component", CDCLogTag, "error", err, "action", opMergeDiscoveredAssets,
+		)
+		return nil
+	}
+
+	if p.JobsRunner == nil || p.JobsRunner.Client == nil {
+		_ = level.Error(p.logger).Log(
+			"component", CDCLogTag, "error", errUnavailabeJobsRunner, "action", opMergeDiscoveredAssets,
+		)
+		return nil
+	}
+
+	// Set the status of the Job to RUNNING so the user can track its progress.
+	job := api.Job{
+		ID:        dto.JobID,
+		Status:    api.JobStatusRunning,
+		Operation: opMergeDiscoveredAssets,
+	}
+	if err := p.updateJob(job); err != nil {
+		return nil
+	}
+
+	// Execute the merge of the discovered assets.
+	if err := p.JobsRunner.Client.MergeDiscoveredAssets(context.Background(), dto.TeamID, dto.Assets, dto.GroupName); err != nil {
+		_ = level.Error(p.logger).Log(
+			"component", CDCLogTag, "error", err, "job_id", dto.JobID, "action", opMergeDiscoveredAssets,
+		)
+		job.Result = &api.JobResult{
+			Error: err.Error(),
+		}
+	}
+
+	// Mark the job as DONE.
+	job.Status = api.JobStatusDone
+	_, err = p.JobsRunner.Client.UpdateJob(context.Background(), job)
+	if err := p.updateJob(job); err != nil {
+		return nil
+	}
+
+	return nil
+}
+
+func (p *AsyncTxParser) updateJob(job api.Job) error {
+	_, err := p.JobsRunner.Client.UpdateJob(context.Background(), job)
+	if err != nil {
+		_ = level.Error(p.logger).Log(
+			"component", CDCLogTag, "error", err, "job_id", job.ID, "action", opMergeDiscoveredAssets,
+		)
+	}
+	return err
+}
+
+func (p *AsyncTxParser) logErr(e Event, err error) {
 	_ = level.Error(p.logger).Log(
 		"component", CDCLogTag, "error", err, "id", e.ID(), "action", e.Action(), "retries", e.ReadCount()+1,
 	)
