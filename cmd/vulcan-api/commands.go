@@ -224,7 +224,7 @@ func startServer() error {
 	// API jobs, providing a limited access to the API service layer. But as
 	// the service layer depends on the store layer, and the CBC proxies the
 	// store layer, we need to perform the initialization in two steps.
-	// First, declare the an empty JobsRunner and inect it to the CDC parser.
+	// First, declare an empty JobsRunner and inject it to the CDC parser.
 	jobsRunner := &api.JobsRunner{}
 
 	// Build CBC proxied store layer.
