@@ -165,6 +165,71 @@ func (c *Client) NewDeleteAssetsRequest(ctx context.Context, path string) (*http
 	return req, nil
 }
 
+// DiscoverAssetsPath computes a request path to the discover action of assets.
+func DiscoverAssetsPath(teamID string) string {
+	param0 := teamID
+
+	return fmt.Sprintf("/api/v1/teams/%s/assets/discovery", param0)
+}
+
+// This endpoint receives a list of assets with embedded
+// asset annotations, and the group name where to be added. It should be used by
+// third-party asset discovery services to onboard the discovered assets into
+// Vulcan. The provided list of assets will overwrite the assets previously
+// present in the group, in a way that:
+// - Assets that do not exist in the team will be created and associated to the
+// group
+// - Assets that were already existing in the team but not associated to the
+// group will be associated
+// - Existing assets where the scannable field or the annotations are different
+// will be updated accordingly
+// - Assets that were associated to the group and now are not present in the
+// provided list will be de-associated from the group if they belong to any
+// other group, or deleted otherwise
+// Because of the latency of this operation the endpoint is asynchronous. It
+// returns a 202-Accepted HTTP response with the Job information in the response
+// body.
+// The discovery group name must end with '-discovered-assets' to not mess with
+// manually managed asset groups. Also the first part of the name should identify
+// the discovery service using the endpoint, for example:
+// serviceX-discovered-assets.
+// Also be aware that the provided annotations may differ from the ones that will
+// be stored, because they will include a prefix to not mess with any other
+// annotations already present in the asset.
+func (c *Client) DiscoverAssets(ctx context.Context, path string, payload *DiscoveredAssetsPayload) (*http.Response, error) {
+	req, err := c.NewDiscoverAssetsRequest(ctx, path, payload)
+	if err != nil {
+		return nil, err
+	}
+	return c.Client.Do(ctx, req)
+}
+
+// NewDiscoverAssetsRequest create the request corresponding to the discover action endpoint of the assets resource.
+func (c *Client) NewDiscoverAssetsRequest(ctx context.Context, path string, payload *DiscoveredAssetsPayload) (*http.Request, error) {
+	var body bytes.Buffer
+	err := c.Encoder.Encode(payload, &body, "*/*")
+	if err != nil {
+		return nil, fmt.Errorf("failed to encode body: %s", err)
+	}
+	scheme := c.Scheme
+	if scheme == "" {
+		scheme = "https"
+	}
+	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
+	req, err := http.NewRequestWithContext(ctx, "PUT", u.String(), &body)
+	if err != nil {
+		return nil, err
+	}
+	header := req.Header
+	header.Set("Content-Type", "application/json")
+	if c.BearerSigner != nil {
+		if err := c.BearerSigner.Sign(req); err != nil {
+			return nil, err
+		}
+	}
+	return req, nil
+}
+
 // ListAssetsPath computes a request path to the list action of assets.
 func ListAssetsPath(teamID string) string {
 	param0 := teamID
@@ -197,71 +262,6 @@ func (c *Client) NewListAssetsRequest(ctx context.Context, path string, identifi
 	if err != nil {
 		return nil, err
 	}
-	if c.BearerSigner != nil {
-		if err := c.BearerSigner.Sign(req); err != nil {
-			return nil, err
-		}
-	}
-	return req, nil
-}
-
-// MergeDiscoveredAssetsAssetsPath computes a request path to the mergeDiscoveredAssets action of assets.
-func MergeDiscoveredAssetsAssetsPath(teamID string) string {
-	param0 := teamID
-
-	return fmt.Sprintf("/api/v1/teams/%s/assets/discovery", param0)
-}
-
-// This endpoint receives a list of assets with embedded
-// asset annotations, and the group name where to be added. It should be used by
-// third-party asset discovery services to onboard the discovered assets into
-// Vulcan. The provided list of assets will overwrite the assets previously
-// present in the group, in a way that:
-// - Assets that do not exist in the team will be created and associated to the
-// group
-// - Assets that were already existing in the team but not associated to the
-// group will be associated
-// - Existing assets where the scannable field or the annotations are different
-// will be updated accordingly
-// - Assets that were associated to the group and now are not present in the
-// provided list will be de-associated from the group if they belong to any
-// other group, or deleted otherwise
-// Because of the latency of this operation the endpoint is asynchronous. It
-// returns a 202-Accepted HTTP response with the Job information in the response
-// body.
-// The discovery group name must end with '-discovered-assets' to not mess with
-// manually managed asset groups. Also the first part of the name should identify
-// the discovery service using the endpoint, for example:
-// serviceX-discovered-assets.
-// Also be aware that the provided annotations may differ from the ones that will
-// be stored, because they will include a prefix to not mess with any other
-// annotations already present in the asset.
-func (c *Client) MergeDiscoveredAssetsAssets(ctx context.Context, path string, payload *DiscoveredAssetsPayload) (*http.Response, error) {
-	req, err := c.NewMergeDiscoveredAssetsAssetsRequest(ctx, path, payload)
-	if err != nil {
-		return nil, err
-	}
-	return c.Client.Do(ctx, req)
-}
-
-// NewMergeDiscoveredAssetsAssetsRequest create the request corresponding to the mergeDiscoveredAssets action endpoint of the assets resource.
-func (c *Client) NewMergeDiscoveredAssetsAssetsRequest(ctx context.Context, path string, payload *DiscoveredAssetsPayload) (*http.Request, error) {
-	var body bytes.Buffer
-	err := c.Encoder.Encode(payload, &body, "*/*")
-	if err != nil {
-		return nil, fmt.Errorf("failed to encode body: %s", err)
-	}
-	scheme := c.Scheme
-	if scheme == "" {
-		scheme = "https"
-	}
-	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
-	req, err := http.NewRequestWithContext(ctx, "PUT", u.String(), &body)
-	if err != nil {
-		return nil, err
-	}
-	header := req.Header
-	header.Set("Content-Type", "application/json")
 	if c.BearerSigner != nil {
 		if err := c.BearerSigner.Sign(req); err != nil {
 			return nil, err
