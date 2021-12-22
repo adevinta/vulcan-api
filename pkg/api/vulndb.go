@@ -137,7 +137,7 @@ type StatsFixed struct {
 
 // StatsAssets represents the stats for assets grouped by severity.
 type StatsAssets struct {
-	Assets vulndb.StatsIssueSeverity `json:"assets"`
+	Assets vulndb.StatsAssetsSeverity `json:"assets"`
 }
 
 type StatsCoverage struct {

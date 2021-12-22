@@ -32,6 +32,43 @@ type (
 		PrettyPrint bool
 	}
 
+	// CreateTeamsCommand is the command line data structure for the create action of teams
+	CreateTeamsCommand struct {
+		Payload     string
+		ContentType string
+		PrettyPrint bool
+	}
+
+	// DeleteTeamsCommand is the command line data structure for the delete action of teams
+	DeleteTeamsCommand struct {
+		// Team ID
+		TeamID      string
+		PrettyPrint bool
+	}
+
+	// ListTeamsCommand is the command line data structure for the list action of teams
+	ListTeamsCommand struct {
+		// Team tag
+		Tag         string
+		PrettyPrint bool
+	}
+
+	// ShowTeamsCommand is the command line data structure for the show action of teams
+	ShowTeamsCommand struct {
+		// Team ID
+		TeamID      string
+		PrettyPrint bool
+	}
+
+	// UpdateTeamsCommand is the command line data structure for the update action of teams
+	UpdateTeamsCommand struct {
+		Payload     string
+		ContentType string
+		// team ID
+		TeamID      string
+		PrettyPrint bool
+	}
+
 	// CreateAssetsCommand is the command line data structure for the create action of assets
 	CreateAssetsCommand struct {
 		Payload     string
@@ -137,125 +174,6 @@ type (
 		// Asset ID
 		AssetID string
 		// Team ID
-		TeamID      string
-		PrettyPrint bool
-	}
-
-	// AssetsGlobalStatsCommand is the command line data structure for the assets action of global-stats
-	AssetsGlobalStatsCommand struct {
-		// Specific date to get statistics at (incompatible and preferential to min and max date params)
-		AtDate string
-		// A comma separated list of asset identifiers
-		Identifiers string
-		// A comma separated list of associated labels
-		Labels string
-		// Comma separated list of team tags to filter by. Only admin and observer users are allowed to set this field.
-		Tags        string
-		PrettyPrint bool
-	}
-
-	// CurrentExposureGlobalStatsCommand is the command line data structure for the current exposure action of global-stats
-	CurrentExposureGlobalStatsCommand struct {
-		// Maximum issues score filter
-		MaxScore string
-		// Minimum issues score filter
-		MinScore string
-		// Comma separated list of team tags to filter by. Only admin and observer users are allowed to set this field.
-		Tags        string
-		PrettyPrint bool
-	}
-
-	// ExposureGlobalStatsCommand is the command line data structure for the exposure action of global-stats
-	ExposureGlobalStatsCommand struct {
-		// Specific date to get statistics at
-		AtDate string
-		// Maximum issues score filter
-		MaxScore string
-		// Minimum issues score filter
-		MinScore string
-		// Comma separated list of team tags to filter by. Only admin and observer users are allowed to set this field.
-		Tags        string
-		PrettyPrint bool
-	}
-
-	// FixedGlobalStatsCommand is the command line data structure for the fixed action of global-stats
-	FixedGlobalStatsCommand struct {
-		// Specific date to get statistics at (incompatible and preferential to min and max date params)
-		AtDate string
-		// A comma separated list of asset identifiers
-		Identifiers string
-		// A comma separated list of associated labels
-		Labels string
-		// Maximum date to filter statistics by
-		MaxDate string
-		// Minimum date to filter statistics by
-		MinDate string
-		// Comma separated list of team tags to filter by. Only admin and observer users are allowed to set this field.
-		Tags        string
-		PrettyPrint bool
-	}
-
-	// MttrGlobalStatsCommand is the command line data structure for the mttr action of global-stats
-	MttrGlobalStatsCommand struct {
-		// Maximum date to filter statistics by
-		MaxDate string
-		// Minimum date to filter statistics by
-		MinDate string
-		// Comma separated list of team tags to filter by. Only admin and observer users are allowed to set this field.
-		Tags        string
-		PrettyPrint bool
-	}
-
-	// OpenGlobalStatsCommand is the command line data structure for the open action of global-stats
-	OpenGlobalStatsCommand struct {
-		// Specific date to get statistics at (incompatible and preferential to min and max date params)
-		AtDate string
-		// A comma separated list of asset identifiers
-		Identifiers string
-		// A comma separated list of associated labels
-		Labels string
-		// Maximum date to filter statistics by
-		MaxDate string
-		// Minimum date to filter statistics by
-		MinDate string
-		// Comma separated list of team tags to filter by. Only admin and observer users are allowed to set this field.
-		Tags        string
-		PrettyPrint bool
-	}
-
-	// CreateTeamsCommand is the command line data structure for the create action of teams
-	CreateTeamsCommand struct {
-		Payload     string
-		ContentType string
-		PrettyPrint bool
-	}
-
-	// DeleteTeamsCommand is the command line data structure for the delete action of teams
-	DeleteTeamsCommand struct {
-		// Team ID
-		TeamID      string
-		PrettyPrint bool
-	}
-
-	// ListTeamsCommand is the command line data structure for the list action of teams
-	ListTeamsCommand struct {
-		// Team tag
-		Tag         string
-		PrettyPrint bool
-	}
-
-	// ShowTeamsCommand is the command line data structure for the show action of teams
-	ShowTeamsCommand struct {
-		// Team ID
-		TeamID      string
-		PrettyPrint bool
-	}
-
-	// UpdateTeamsCommand is the command line data structure for the update action of teams
-	UpdateTeamsCommand struct {
-		Payload     string
-		ContentType string
-		// team ID
 		TeamID      string
 		PrettyPrint bool
 	}
@@ -483,6 +401,88 @@ type (
 		SortBy string
 		// Findings Status
 		Status      string
+		PrettyPrint bool
+	}
+
+	// AssetsGlobalStatsCommand is the command line data structure for the assets action of global-stats
+	AssetsGlobalStatsCommand struct {
+		// Specific date to get statistics at (incompatible and preferential to min and max date params)
+		AtDate string
+		// A comma separated list of asset identifiers
+		Identifiers string
+		// A comma separated list of associated labels
+		Labels string
+		// Comma separated list of team tags to filter by. Only admin and observer users are allowed to set this field.
+		Tags        string
+		PrettyPrint bool
+	}
+
+	// CurrentExposureGlobalStatsCommand is the command line data structure for the current exposure action of global-stats
+	CurrentExposureGlobalStatsCommand struct {
+		// Maximum issues score filter
+		MaxScore string
+		// Minimum issues score filter
+		MinScore string
+		// Comma separated list of team tags to filter by. Only admin and observer users are allowed to set this field.
+		Tags        string
+		PrettyPrint bool
+	}
+
+	// ExposureGlobalStatsCommand is the command line data structure for the exposure action of global-stats
+	ExposureGlobalStatsCommand struct {
+		// Specific date to get statistics at
+		AtDate string
+		// Maximum issues score filter
+		MaxScore string
+		// Minimum issues score filter
+		MinScore string
+		// Comma separated list of team tags to filter by. Only admin and observer users are allowed to set this field.
+		Tags        string
+		PrettyPrint bool
+	}
+
+	// FixedGlobalStatsCommand is the command line data structure for the fixed action of global-stats
+	FixedGlobalStatsCommand struct {
+		// Specific date to get statistics at (incompatible and preferential to min and max date params)
+		AtDate string
+		// A comma separated list of asset identifiers
+		Identifiers string
+		// A comma separated list of associated labels
+		Labels string
+		// Maximum date to filter statistics by
+		MaxDate string
+		// Minimum date to filter statistics by
+		MinDate string
+		// Comma separated list of team tags to filter by. Only admin and observer users are allowed to set this field.
+		Tags        string
+		PrettyPrint bool
+	}
+
+	// MttrGlobalStatsCommand is the command line data structure for the mttr action of global-stats
+	MttrGlobalStatsCommand struct {
+		// Maximum date to filter statistics by
+		MaxDate string
+		// Minimum date to filter statistics by
+		MinDate string
+		// Comma separated list of team tags to filter by. Only admin and observer users are allowed to set this field.
+		Tags        string
+		PrettyPrint bool
+	}
+
+	// OpenGlobalStatsCommand is the command line data structure for the open action of global-stats
+	OpenGlobalStatsCommand struct {
+		// Specific date to get statistics at (incompatible and preferential to min and max date params)
+		AtDate string
+		// A comma separated list of asset identifiers
+		Identifiers string
+		// A comma separated list of associated labels
+		Labels string
+		// Maximum date to filter statistics by
+		MaxDate string
+		// Minimum date to filter statistics by
+		MinDate string
+		// Comma separated list of team tags to filter by. Only admin and observer users are allowed to set this field.
+		Tags        string
 		PrettyPrint bool
 	}
 
@@ -1011,35 +1011,27 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 		Use:   "create",
 		Short: `create action`,
 	}
-	tmp3 := new(CreateAssetAnnotationsCommand)
+	tmp3 := new(CreateAPITokenCommand)
 	sub = &cobra.Command{
-		Use:   `asset-annotations ["/api/v1/teams/TEAM_ID/assets/ASSET_ID/annotations"]`,
+		Use:   `api-token ["/api/v1/users/USER_ID/token"]`,
 		Short: ``,
-		Long: `
-
-Payload example:
-
-{
-   "annotations": {
-      "annotation/1": "value/1",
-      "annotation/2": "value/2"
-   }
-}`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp3.Run(c, args) },
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp3.Run(c, args) },
 	}
 	tmp3.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp3.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp4 := new(CreateAssetGroupCommand)
+	tmp4 := new(CreateTeamsCommand)
 	sub = &cobra.Command{
-		Use:   `asset-group ["/api/v1/teams/TEAM_ID/groups/GROUP_ID/assets"]`,
+		Use:   `teams ["/api/v1/teams"]`,
 		Short: ``,
 		Long: `
 
 Payload example:
 
 {
-   "asset_id": "0fc67150-5cd9-486a-aca5-9c9167478e4d"
+   "description": "Security Team",
+   "name": "Security",
+   "tag": "team:security"
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp4.Run(c, args) },
 	}
@@ -1098,7 +1090,42 @@ Payload example:
 	tmp5.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp5.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp6 := new(CreateGroupCommand)
+	tmp6 := new(CreateAssetAnnotationsCommand)
+	sub = &cobra.Command{
+		Use:   `asset-annotations ["/api/v1/teams/TEAM_ID/assets/ASSET_ID/annotations"]`,
+		Short: ``,
+		Long: `
+
+Payload example:
+
+{
+   "annotations": {
+      "annotation/1": "value/1",
+      "annotation/2": "value/2"
+   }
+}`,
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp6.Run(c, args) },
+	}
+	tmp6.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp6.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp7 := new(CreateAssetGroupCommand)
+	sub = &cobra.Command{
+		Use:   `asset-group ["/api/v1/teams/TEAM_ID/groups/GROUP_ID/assets"]`,
+		Short: ``,
+		Long: `
+
+Payload example:
+
+{
+   "asset_id": "0fc67150-5cd9-486a-aca5-9c9167478e4d"
+}`,
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp7.Run(c, args) },
+	}
+	tmp7.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp7.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp8 := new(CreateGroupCommand)
 	sub = &cobra.Command{
 		Use:   `group ["/api/v1/teams/TEAM_ID/groups"]`,
 		Short: ``,
@@ -1110,30 +1137,12 @@ Payload example:
    "name": "Default group",
    "options": "{\"timeout\":60}"
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp6.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp8.Run(c, args) },
 	}
-	tmp6.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp6.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp8.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp8.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp7 := new(CreateTeamsCommand)
-	sub = &cobra.Command{
-		Use:   `teams ["/api/v1/teams"]`,
-		Short: ``,
-		Long: `
-
-Payload example:
-
-{
-   "description": "Security Team",
-   "name": "Security",
-   "tag": "team:security"
-}`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp7.Run(c, args) },
-	}
-	tmp7.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp7.PrettyPrint, "pp", false, "Pretty print response body")
-	command.AddCommand(sub)
-	tmp8 := new(CreatePoliciesCommand)
+	tmp9 := new(CreatePoliciesCommand)
 	sub = &cobra.Command{
 		Use:   `policies ["/api/v1/teams/TEAM_ID/policies"]`,
 		Short: ``,
@@ -1144,12 +1153,12 @@ Payload example:
 {
    "name": "Sample Policy"
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp8.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp9.Run(c, args) },
 	}
-	tmp8.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp8.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp9.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp9.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp9 := new(CreatePolicySettingsCommand)
+	tmp10 := new(CreatePolicySettingsCommand)
 	sub = &cobra.Command{
 		Use:   `policy-settings ["/api/v1/teams/TEAM_ID/policies/POLICY_ID/settings"]`,
 		Short: ``,
@@ -1161,12 +1170,12 @@ Payload example:
    "checktype_name": "vulcan-tls",
    "options": "{\"timeout\":60}"
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp9.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp10.Run(c, args) },
 	}
-	tmp9.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp9.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp10.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp10.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp10 := new(CreateProgramsCommand)
+	tmp11 := new(CreateProgramsCommand)
 	sub = &cobra.Command{
 		Use:   `programs ["/api/v1/teams/TEAM_ID/programs"]`,
 		Short: ``,
@@ -1193,12 +1202,12 @@ Payload example:
       }
    ]
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp10.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp11.Run(c, args) },
 	}
-	tmp10.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp10.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp11.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp11.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp11 := new(CreateScanCommand)
+	tmp12 := new(CreateScanCommand)
 	sub = &cobra.Command{
 		Use:   `scan ["/api/v1/teams/TEAM_ID/scans"]`,
 		Short: ``,
@@ -1210,12 +1219,12 @@ Payload example:
    "program_id": "1bb4c953-245e-477b-b005-400f319274f2",
    "scheduled_time": "2018-09-07T10:40:52Z"
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp11.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp12.Run(c, args) },
 	}
-	tmp11.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp11.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp12.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp12.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp12 := new(CreateScheduleCommand)
+	tmp13 := new(CreateScheduleCommand)
 	sub = &cobra.Command{
 		Use:   `schedule ["/api/v1/teams/TEAM_ID/programs/PROGRAM_ID/schedule"]`,
 		Short: ``,
@@ -1226,12 +1235,12 @@ Payload example:
 {
    "cron": "0 7 1 * *"
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp12.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp13.Run(c, args) },
 	}
-	tmp12.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp12.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp13.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp13.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp13 := new(CreateTeamMembersCommand)
+	tmp14 := new(CreateTeamMembersCommand)
 	sub = &cobra.Command{
 		Use:   `team-members ["/api/v1/teams/TEAM_ID/members"]`,
 		Short: ``,
@@ -1244,12 +1253,12 @@ Payload example:
    "role": "owner",
    "user_id": "967d9966-b561-4233-bd6f-cac603fd8320"
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp13.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp14.Run(c, args) },
 	}
-	tmp13.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp13.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp14.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp14.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp14 := new(CreateUserCommand)
+	tmp15 := new(CreateUserCommand)
 	sub = &cobra.Command{
 		Use:   `user ["/api/v1/users"]`,
 		Short: ``,
@@ -1265,16 +1274,7 @@ Payload example:
    "lastname": "Doe",
    "observer": false
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp14.Run(c, args) },
-	}
-	tmp14.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp14.PrettyPrint, "pp", false, "Pretty print response body")
-	command.AddCommand(sub)
-	tmp15 := new(CreateAPITokenCommand)
-	sub = &cobra.Command{
-		Use:   `api-token ["/api/v1/users/USER_ID/token"]`,
-		Short: ``,
-		RunE:  func(cmd *cobra.Command, args []string) error { return tmp15.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp15.Run(c, args) },
 	}
 	tmp15.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp15.PrettyPrint, "pp", false, "Pretty print response body")
@@ -1373,7 +1373,25 @@ Payload example:
 		Use:   "delete",
 		Short: `delete action`,
 	}
-	tmp19 := new(DeleteAssetAnnotationsCommand)
+	tmp19 := new(DeleteTeamsCommand)
+	sub = &cobra.Command{
+		Use:   `teams ["/api/v1/teams/TEAM_ID"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp19.Run(c, args) },
+	}
+	tmp19.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp19.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp20 := new(DeleteAssetsCommand)
+	sub = &cobra.Command{
+		Use:   `assets ["/api/v1/teams/TEAM_ID/assets/ASSET_ID"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp20.Run(c, args) },
+	}
+	tmp20.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp20.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp21 := new(DeleteAssetAnnotationsCommand)
 	sub = &cobra.Command{
 		Use:   `asset-annotations ["/api/v1/teams/TEAM_ID/assets/ASSET_ID/annotations"]`,
 		Short: ``,
@@ -1387,41 +1405,23 @@ Payload example:
       "annotation/2"
    ]
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp19.Run(c, args) },
-	}
-	tmp19.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp19.PrettyPrint, "pp", false, "Pretty print response body")
-	command.AddCommand(sub)
-	tmp20 := new(DeleteAssetGroupCommand)
-	sub = &cobra.Command{
-		Use:   `asset-group ["/api/v1/teams/TEAM_ID/groups/GROUP_ID/assets/ASSET_ID"]`,
-		Short: ``,
-		RunE:  func(cmd *cobra.Command, args []string) error { return tmp20.Run(c, args) },
-	}
-	tmp20.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp20.PrettyPrint, "pp", false, "Pretty print response body")
-	command.AddCommand(sub)
-	tmp21 := new(DeleteAssetsCommand)
-	sub = &cobra.Command{
-		Use:   `assets ["/api/v1/teams/TEAM_ID/assets/ASSET_ID"]`,
-		Short: ``,
-		RunE:  func(cmd *cobra.Command, args []string) error { return tmp21.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp21.Run(c, args) },
 	}
 	tmp21.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp21.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp22 := new(DeleteGroupCommand)
+	tmp22 := new(DeleteAssetGroupCommand)
 	sub = &cobra.Command{
-		Use:   `group ["/api/v1/teams/TEAM_ID/groups/GROUP_ID"]`,
+		Use:   `asset-group ["/api/v1/teams/TEAM_ID/groups/GROUP_ID/assets/ASSET_ID"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp22.Run(c, args) },
 	}
 	tmp22.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp22.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp23 := new(DeleteTeamsCommand)
+	tmp23 := new(DeleteGroupCommand)
 	sub = &cobra.Command{
-		Use:   `teams ["/api/v1/teams/TEAM_ID"]`,
+		Use:   `group ["/api/v1/teams/TEAM_ID/groups/GROUP_ID"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp23.Run(c, args) },
 	}
@@ -1603,45 +1603,45 @@ Payload example:
 		Use:   "list",
 		Short: `list action`,
 	}
-	tmp39 := new(ListAssetAnnotationsCommand)
+	tmp39 := new(ListTeamsCommand)
 	sub = &cobra.Command{
-		Use:   `asset-annotations ["/api/v1/teams/TEAM_ID/assets/ASSET_ID/annotations"]`,
+		Use:   `teams ["/api/v1/teams"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp39.Run(c, args) },
 	}
 	tmp39.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp39.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp40 := new(ListAssetGroupCommand)
+	tmp40 := new(ListAssetsCommand)
 	sub = &cobra.Command{
-		Use:   `asset-group ["/api/v1/teams/TEAM_ID/groups/GROUP_ID/assets"]`,
+		Use:   `assets ["/api/v1/teams/TEAM_ID/assets"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp40.Run(c, args) },
 	}
 	tmp40.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp40.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp41 := new(ListAssetsCommand)
+	tmp41 := new(ListAssetAnnotationsCommand)
 	sub = &cobra.Command{
-		Use:   `assets ["/api/v1/teams/TEAM_ID/assets"]`,
+		Use:   `asset-annotations ["/api/v1/teams/TEAM_ID/assets/ASSET_ID/annotations"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp41.Run(c, args) },
 	}
 	tmp41.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp41.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp42 := new(ListGroupCommand)
+	tmp42 := new(ListAssetGroupCommand)
 	sub = &cobra.Command{
-		Use:   `group ["/api/v1/teams/TEAM_ID/groups"]`,
+		Use:   `asset-group ["/api/v1/teams/TEAM_ID/groups/GROUP_ID/assets"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp42.Run(c, args) },
 	}
 	tmp42.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp42.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp43 := new(ListTeamsCommand)
+	tmp43 := new(ListGroupCommand)
 	sub = &cobra.Command{
-		Use:   `teams ["/api/v1/teams"]`,
+		Use:   `group ["/api/v1/teams/TEAM_ID/groups"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp43.Run(c, args) },
 	}
@@ -1921,45 +1921,45 @@ Payload example:
 		Use:   "show",
 		Short: `show action`,
 	}
-	tmp65 := new(ShowAssetsCommand)
+	tmp65 := new(ShowTeamsCommand)
 	sub = &cobra.Command{
-		Use:   `assets ["/api/v1/teams/TEAM_ID/assets/ASSET_ID"]`,
+		Use:   `teams ["/api/v1/teams/TEAM_ID"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp65.Run(c, args) },
 	}
 	tmp65.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp65.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp66 := new(ShowGroupCommand)
+	tmp66 := new(ShowAssetsCommand)
 	sub = &cobra.Command{
-		Use:   `group ["/api/v1/teams/TEAM_ID/groups/GROUP_ID"]`,
+		Use:   `assets ["/api/v1/teams/TEAM_ID/assets/ASSET_ID"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp66.Run(c, args) },
 	}
 	tmp66.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp66.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp67 := new(ShowHealthcheckCommand)
+	tmp67 := new(ShowGroupCommand)
 	sub = &cobra.Command{
-		Use:   `healthcheck ["/api/v1/healthcheck"]`,
+		Use:   `group ["/api/v1/teams/TEAM_ID/groups/GROUP_ID"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp67.Run(c, args) },
 	}
 	tmp67.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp67.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp68 := new(ShowJobsCommand)
+	tmp68 := new(ShowHealthcheckCommand)
 	sub = &cobra.Command{
-		Use:   `jobs ["/api/v1/jobs/JOB_ID"]`,
+		Use:   `healthcheck ["/api/v1/healthcheck"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp68.Run(c, args) },
 	}
 	tmp68.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp68.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp69 := new(ShowTeamsCommand)
+	tmp69 := new(ShowJobsCommand)
 	sub = &cobra.Command{
-		Use:   `teams ["/api/v1/teams/TEAM_ID"]`,
+		Use:   `jobs ["/api/v1/jobs/JOB_ID"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp69.Run(c, args) },
 	}
@@ -2056,19 +2056,18 @@ Payload example:
 		Use:   "update",
 		Short: `update action`,
 	}
-	tmp78 := new(UpdateAssetAnnotationsCommand)
+	tmp78 := new(UpdateTeamsCommand)
 	sub = &cobra.Command{
-		Use:   `asset-annotations ["/api/v1/teams/TEAM_ID/assets/ASSET_ID/annotations"]`,
+		Use:   `teams ["/api/v1/teams/TEAM_ID"]`,
 		Short: ``,
 		Long: `
 
 Payload example:
 
 {
-   "annotations": {
-      "annotation/1": "value/1",
-      "annotation/2": "value/2"
-   }
+   "description": "Security Team",
+   "name": "Security",
+   "tag": "team:security"
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp78.Run(c, args) },
 	}
@@ -2097,7 +2096,26 @@ Payload example:
 	tmp79.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp79.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp80 := new(UpdateGroupCommand)
+	tmp80 := new(UpdateAssetAnnotationsCommand)
+	sub = &cobra.Command{
+		Use:   `asset-annotations ["/api/v1/teams/TEAM_ID/assets/ASSET_ID/annotations"]`,
+		Short: ``,
+		Long: `
+
+Payload example:
+
+{
+   "annotations": {
+      "annotation/1": "value/1",
+      "annotation/2": "value/2"
+   }
+}`,
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp80.Run(c, args) },
+	}
+	tmp80.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp80.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp81 := new(UpdateGroupCommand)
 	sub = &cobra.Command{
 		Use:   `group ["/api/v1/teams/TEAM_ID/groups/GROUP_ID"]`,
 		Short: ``,
@@ -2108,24 +2126,6 @@ Payload example:
 {
    "name": "Default group",
    "options": "{\"timeout\":60}"
-}`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp80.Run(c, args) },
-	}
-	tmp80.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp80.PrettyPrint, "pp", false, "Pretty print response body")
-	command.AddCommand(sub)
-	tmp81 := new(UpdateTeamsCommand)
-	sub = &cobra.Command{
-		Use:   `teams ["/api/v1/teams/TEAM_ID"]`,
-		Short: ``,
-		Long: `
-
-Payload example:
-
-{
-   "description": "Security Team",
-   "name": "Security",
-   "tag": "team:security"
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp81.Run(c, args) },
 	}
@@ -2421,6 +2421,32 @@ func boolArray(ins []string) ([]bool, error) {
 		vals = append(vals, *val)
 	}
 	return vals, nil
+}
+
+// Run makes the HTTP request corresponding to the CreateAPITokenCommand command.
+func (cmd *CreateAPITokenCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/api/v1/users/%v/token", url.QueryEscape(cmd.UserID))
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.CreateAPIToken(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *CreateAPITokenCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var userID string
+	cc.Flags().StringVar(&cmd.UserID, "user_id", userID, `User ID`)
 }
 
 // Run makes the HTTP request corresponding to the CreateTeamsCommand command.
@@ -5429,32 +5455,6 @@ func (cmd *UpdateUserCommand) Run(c *client.Client, args []string) error {
 func (cmd *UpdateUserCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request body encoded in JSON")
 	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
-	var userID string
-	cc.Flags().StringVar(&cmd.UserID, "user_id", userID, `User ID`)
-}
-
-// Run makes the HTTP request corresponding to the CreateAPITokenCommand command.
-func (cmd *CreateAPITokenCommand) Run(c *client.Client, args []string) error {
-	var path string
-	if len(args) > 0 {
-		path = args[0]
-	} else {
-		path = fmt.Sprintf("/api/v1/users/%v/token", url.QueryEscape(cmd.UserID))
-	}
-	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.CreateAPIToken(ctx, path)
-	if err != nil {
-		goa.LogError(ctx, "failed", "err", err)
-		return err
-	}
-
-	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
-	return nil
-}
-
-// RegisterFlags registers the command flags with the command line.
-func (cmd *CreateAPITokenCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	var userID string
 	cc.Flags().StringVar(&cmd.UserID, "user_id", userID, `User ID`)
 }

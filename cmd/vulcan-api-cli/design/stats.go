@@ -123,7 +123,7 @@ var StatsFixedMedia = MediaType("statsFixed", func() {
 var StatsAssetsMedia = MediaType("statsAssets", func() {
 	Description("Assets by severity stats")
 	Attributes(func() {
-		Attribute("assets", StatsMedia, "Stats for assets by severity")
+		Attribute("assets", StatsTotalMedia, "Stats for assets by severity")
 	})
 	View("default", func() {
 		Attribute("assets")

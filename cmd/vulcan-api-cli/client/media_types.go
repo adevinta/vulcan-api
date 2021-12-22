@@ -1133,7 +1133,7 @@ func (c *Client) DecodeStats(resp *http.Response) (*Stats, error) {
 // Identifier: statsassets; view=default
 type Statsassets struct {
 	// Stats for assets by severity
-	Assets *Stats `form:"assets,omitempty" json:"assets,omitempty" yaml:"assets,omitempty" xml:"assets,omitempty"`
+	Assets *Statstotal `form:"assets,omitempty" json:"assets,omitempty" yaml:"assets,omitempty" xml:"assets,omitempty"`
 }
 
 // DecodeStatsassets decodes the Statsassets instance encoded in resp body.
