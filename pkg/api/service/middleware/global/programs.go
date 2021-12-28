@@ -52,7 +52,7 @@ func (e *globalEntities) findPoliciesGroups(ctx context.Context, teamID string, 
 		if !ok {
 			return nil, errors.Default(fmt.Sprintf("no global group with name %s defined", pg.Group))
 		}
-		policy, err := globalPolicyToPolicy(ctx, p)
+		policy, err := globalPolicyToPolicy(ctx, e.globalPolicyConfig, p)
 		if err != nil {
 			return nil, err
 		}

@@ -121,7 +121,7 @@ type Policy interface {
 	Init(ChecktypesInformer) error
 	Description() string
 	Name() string
-	Eval(context.Context) ([]*api.ChecktypeSetting, error)
+	Eval(context.Context, GlobalPolicyConfig) ([]*api.ChecktypeSetting, error)
 }
 
 // Program defines the information required to define a global

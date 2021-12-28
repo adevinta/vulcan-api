@@ -44,19 +44,20 @@ type MetadataStore interface {
 
 type globalEntities struct {
 	api.VulcanitoService
-	store            GlobalStore
-	metadata         MetadataStore
-	logger           log.Logger
-	scheduler        *globalScheduler
-	scanEngineConfig scanengine.Config
-	metricsClient    metrics.Client
+	store              GlobalStore
+	metadata           MetadataStore
+	logger             log.Logger
+	scheduler          *globalScheduler
+	scanEngineConfig   scanengine.Config
+	metricsClient      metrics.Client
+	globalPolicyConfig global.GlobalPolicyConfig
 }
 
 // NewEntities returns a middleware to inject global entities functionality
 // in the vulcanito service.
 func NewEntities(l log.Logger, store GlobalStore, metadataStore MetadataStore,
 	scanScheduler schedule.ScanScheduler, reportScheduler schedule.ReportScheduler,
-	sconfig scanengine.Config, metricsClient metrics.Client) Middleware {
+	sconfig scanengine.Config, metricsClient metrics.Client, gpc global.GlobalPolicyConfig) Middleware {
 
 	return func(next api.VulcanitoService) api.VulcanitoService {
 		gscheduler := &globalScheduler{
@@ -64,13 +65,14 @@ func NewEntities(l log.Logger, store GlobalStore, metadataStore MetadataStore,
 			reportScheduler,
 		}
 		g := &globalEntities{
-			store:            store,
-			scheduler:        gscheduler,
-			metadata:         metadataStore,
-			logger:           l,
-			VulcanitoService: next,
-			scanEngineConfig: sconfig,
-			metricsClient:    metricsClient,
+			store:              store,
+			scheduler:          gscheduler,
+			metadata:           metadataStore,
+			logger:             l,
+			VulcanitoService:   next,
+			scanEngineConfig:   sconfig,
+			metricsClient:      metricsClient,
+			globalPolicyConfig: gpc,
 		}
 
 		// We ensure that all the teams have schedules for all the global
