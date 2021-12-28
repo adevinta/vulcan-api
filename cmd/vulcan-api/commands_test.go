@@ -73,7 +73,7 @@ func TestInitConfigGlobalPolicy(t *testing.T) {
 			}),
 		},
 		{
-			name:    "Custom1",
+			name:    "AllSettings",
 			cfgFile: "testdata/globalpolicy/all-settings.toml",
 			wantGlobalPolicyConfig: initGlobalPolicyConfig("all-settings", map[string][]string{
 				"AllowedChecks":     {"check1"},
