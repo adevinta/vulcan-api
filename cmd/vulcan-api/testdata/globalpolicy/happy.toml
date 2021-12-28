@@ -1,0 +1,7 @@
+[globalpolicy]
+[globalpolicy.happy]
+allowed_assettypes = []
+blocked_assettypes = []
+allowed_checks = []
+blocked_checks = []
+excluding_suffixes = []
