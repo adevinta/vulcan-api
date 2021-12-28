@@ -1,32 +1,32 @@
 [server]
-port = 8080
-secret_key = "SUPERSECRETSIGNKEY"
+port = 
+secret_key = ""
 cookie_name = "devcon-token"
-cookie_domain = "localhost"
+cookie_domain = ""
 cookie_secure = false
 
 [db]
-connection_string = "host=localhost port=5432 user=vulcanito dbname=vulcanito password=vulcanito sslmode=disable"
+connection_string = "host= port= user= dbname= password= sslmode="
 log_mode = false
 
 [log]
 # Log level: ERROR, WARN, INFO or DEBUG (default INFO)
-level = "DEBUG"
+level = ""
 
 [saml]
 saml_metadata = ""
 saml_issuer = ""
-saml_callback = "http://localhost:8080/api/v1/login/callback"
-saml_trusted_domains = ["localhost"]
+saml_callback = ""
+saml_trusted_domains = 
 
 [defaults]
 owners = []
 
 [scanengine]
-url = "http://localhost:8081/v1/"
+url = ""
 
 [scheduler]
-url = "http://localhost:8082/"
+url = ""
 # Minimum period time in minutes that a program can be scheduled to run
 minimum_interval = 0.1
 
@@ -35,28 +35,35 @@ enabled = true
 log_messages = true
 polling_interval = 10
 wait_time = 20
-timeout = 30
-queue_arn = "arn:aws:sqs:xxx:123456789012:yyy"
+timeout = 3600
+queue_arn = ""
+endpoint = ""
 
 [reports]
-sns_arn = "arn:aws:sns:xxx:123456789012:yyy"
-api_base_url = "http://localhost:8084"
-vulcanui_url = "http://localhost:1234"
+sns_arn = ""
+sns_endpoint = ""
+api_base_url = ""
+scan_redirect_url= ""
+vulcanui_url = ""
 
 [vulcancore]
-schema = "https"
-host = "persistence.vulcan.example.com"
+schema = "http"
+host = ""
 
 [vulnerabilitydb]
-url = "http://localhost:8083"
+url = ""
 insecure_tls = true
 
+[metrics]
+enabled = false
+
+
 [awscatalogue]
-kind = "None"
-url = "https://catalogue.example.com"
-key = "a key"
+kind = ""
+url = ""
+key = ""
 retries = 4
-retry_interval = 2 # seconds
+retry_interval = 2
 
 [globalpolicy]
 # This config policy emulates code policy definition.
