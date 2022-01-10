@@ -49,6 +49,9 @@ func (c *Client) NewCurrentExposureGlobalStatsRequest(ctx context.Context, path 
 	if tags != nil {
 		values.Set("tags", *tags)
 	}
+	if tags != nil {
+		values.Set("tags", *tags)
+	}
 	u.RawQuery = values.Encode()
 	req, err := http.NewRequestWithContext(ctx, "GET", u.String(), nil)
 	if err != nil {
@@ -95,6 +98,9 @@ func (c *Client) NewExposureGlobalStatsRequest(ctx context.Context, path string,
 	if minScore != nil {
 		tmp130 := strconv.FormatFloat(*minScore, 'f', -1, 64)
 		values.Set("minScore", tmp130)
+	}
+	if tags != nil {
+		values.Set("tags", *tags)
 	}
 	if tags != nil {
 		values.Set("tags", *tags)

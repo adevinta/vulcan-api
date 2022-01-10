@@ -1478,6 +1478,10 @@ definitions:
       id: f6360346-77a5-4f97-b919-331363b3af26
       name: Default group
       options: '{"timeout":60}'
+    - description: All newly created assets are added to the Default group
+      id: f6360346-77a5-4f97-b919-331363b3af26
+      name: Default group
+      options: '{"timeout":60}'
     items:
       $ref: '#/definitions/GroupWithoutAssetsCount'
     title: 'Mediatype identifier: group; type=collection; view=default'
