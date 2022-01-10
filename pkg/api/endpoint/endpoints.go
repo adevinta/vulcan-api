@@ -47,6 +47,7 @@ const (
 	ListAssets             = "ListAssets"
 	CreateAsset            = "CreateAsset"
 	CreateAssetMultiStatus = "CreateAssetMultiStatus"
+	MergeDiscoveredAssets  = "MergeDiscoveredAssets"
 	FindAsset              = "FindAsset"
 	UpdateAsset            = "UpdateAsset"
 	DeleteAsset            = "DeleteAsset"
@@ -162,6 +163,7 @@ func MakeEndpoints(s api.VulcanitoService, logger log.Logger) Endpoints {
 	endpoints[ListAssets] = makeListAssetsEndpoint(s, logger)
 	endpoints[CreateAsset] = makeCreateAssetEndpoint(s, logger)
 	endpoints[CreateAssetMultiStatus] = makeCreateAssetMultiStatusEndpoint(s, logger)
+	endpoints[MergeDiscoveredAssets] = makeMergeDiscoveredAssetsEndpoint(s, logger)
 	endpoints[FindAsset] = makeFindAssetEndpoint(s, logger)
 	endpoints[UpdateAsset] = makeUpdateAssetEndpoint(s, logger)
 	endpoints[DeleteAsset] = makeDeleteAssetEndpoint(s, logger)

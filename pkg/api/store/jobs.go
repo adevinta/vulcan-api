@@ -9,6 +9,7 @@ import (
 
 	"github.com/adevinta/errors"
 	"github.com/adevinta/vulcan-api/pkg/api"
+	"github.com/jinzhu/gorm"
 )
 
 // FindJob retrieves a Job by its ID
@@ -32,4 +33,24 @@ func (db vulcanitoStore) FindJob(jobID string) (*api.Job, error) {
 	}
 
 	return job, nil
+}
+
+func (db vulcanitoStore) createJobTx(tx *gorm.DB, job api.Job) (*api.Job, error) {
+	res := tx.Create(&job)
+	err := res.Error
+	if err != nil {
+		return nil, db.logError(errors.Create(err))
+	}
+	tx.First(&job)
+	return &job, nil
+}
+
+func (db vulcanitoStore) UpdateJob(job api.Job) (*api.Job, error) {
+	res := db.Conn.Model(&job).Update(&job)
+	err := res.Error
+	if err != nil {
+		return nil, db.logError(errors.Update(err))
+	}
+	db.Conn.First(&job)
+	return &job, nil
 }

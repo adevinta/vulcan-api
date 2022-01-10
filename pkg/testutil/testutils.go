@@ -141,6 +141,7 @@ func PrepareDatabaseLocal(fixturesPath string, f func(pDialect, connectionString
 	if err != nil {
 		return nil, err
 	}
+	defer db.Close()
 
 	pc, _, _, _ := runtime.Caller(1)
 	callerName := strings.Replace(runtime.FuncForPC(pc).Name(), ".", "_", -1)
@@ -167,6 +168,7 @@ func PrepareDatabaseLocal(fixturesPath string, f func(pDialect, connectionString
 	if errLocal != nil {
 		return nil, err
 	}
+	defer dbLocal.Close()
 
 	// creating the context that hold the fixtures
 	// see about all compatible databases in this page below

@@ -1,0 +1,21 @@
+# Copyright 2021 Adevinta
+
+# asset_annotations.yml
+
+# discovery merge tests
+
+- asset_id: 73e33dcb-d07c-41d1-bc32-80861b49941e # nonscannable.vulcan.example.com
+  key: "keywithoutprefix"
+  value: "valuewithoutprefix"
+
+- asset_id: 73e33dcb-d07c-41d1-bc32-80861b49941e # nonscannable.vulcan.example.com
+  key: "autodiscovery/security/keytoupdate"
+  value: "valuetoupdate"
+
+- asset_id: 73e33dcb-d07c-41d1-bc32-80861b49941e # nonscannable.vulcan.example.com
+  key: "autodiscovery/security/keytonotupdate"
+  value: "valuetonotupdate"
+
+- asset_id: 73e33dcb-d07c-41d1-bc32-80861b49941e # nonscannable.vulcan.example.com
+  key: "autodiscovery/security/keytodelete"
+  value: "valuetodelete"

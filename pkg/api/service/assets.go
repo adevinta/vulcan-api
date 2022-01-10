@@ -22,6 +22,10 @@ import (
 	"github.com/adevinta/vulcan-api/pkg/common"
 )
 
+// GenericAnnotationsPrefix defines a prefix to be added to each asset
+// annotation provided to the discovery endpoint.
+const GenericAnnotationsPrefix = "autodiscovery"
+
 type asset struct {
 	identifier string
 	assetType  string
@@ -67,7 +71,7 @@ func (s vulcanitoService) CreateAssets(ctx context.Context, assets []api.Asset, 
 
 		// Asset type provided by the user in the request.
 		if asset.AssetType != nil && asset.AssetType.Name != "" {
-			if !validAssetType(asset.AssetType.Name) {
+			if !api.ValidAssetType(asset.AssetType.Name) {
 				return nil, errors.Validation("Asset type not found", "asset", asset.Identifier, asset.AssetType.Name)
 			}
 
@@ -174,7 +178,7 @@ func (s vulcanitoService) CreateAssetsMultiStatus(ctx context.Context, assets []
 		// If user specified the asset type.
 		if asset.AssetType != nil && asset.AssetType.Name != "" {
 			// If the asset type is invalid, abort the asset creation.
-			if !validAssetType(asset.AssetType.Name) {
+			if !api.ValidAssetType(asset.AssetType.Name) {
 				response.Status = errors.Validation("Asset type not found", "asset", asset.Identifier, asset.AssetType.Name)
 				responses = append(responses, response)
 				continue
@@ -253,6 +257,194 @@ func (s vulcanitoService) CreateAssetsMultiStatus(ctx context.Context, assets []
 	return responses, nil
 }
 
+// MergeDiscoveredAssets receives an list of assets to merge with the existing
+// assets of an auto-disvovery group for a team.
+func (s vulcanitoService) MergeDiscoveredAssets(ctx context.Context, teamID string, assets []api.Asset, groupName string) error {
+	// Check if the group exists and otherwise create it. Also check that there
+	// is no more than one match for the given group name.
+	var group api.Group
+
+	groups, err := s.db.ListGroups(teamID, groupName)
+	switch {
+	case err != nil:
+		errMssg := fmt.Sprintf("unable to find group %s: %v", groupName, err)
+		return errors.NotFound(errMssg)
+	// No more than one group should be returned. This check is required
+	// because the store layer is implemented using a LIKE filter.
+	case len(groups) > 1:
+		errMsg := fmt.Sprintf("more than one group matches the name %s", groupName)
+		return errors.Validation(errMsg)
+	// The group doesn't exist, create it.
+	case len(groups) == 0:
+		g := api.Group{
+			TeamID: teamID,
+			Name:   groupName,
+		}
+		res, err := s.CreateGroup(ctx, g)
+		if err != nil {
+			return errors.Database(err)
+		}
+		group = *res
+	// There is exactly one matching group.
+	default:
+		// It shouldn't happen but checking to avoid possible nil pointer
+		// dereferences.
+		if groups[0] == nil {
+			errMsg := fmt.Sprintf("unexpected nil pointer returned for the group %s", groupName)
+			return errors.Database(errMsg)
+		}
+		group = *groups[0]
+	}
+
+	ops, err := s.calculateMergeOperations(ctx, teamID, assets, group)
+	if err != nil {
+		return err
+	}
+
+	return s.db.MergeAssets(ops)
+}
+
+func (s vulcanitoService) calculateMergeOperations(ctx context.Context, teamID string, assets []api.Asset, group api.Group) (api.AssetMergeOperations, error) {
+	ops := api.AssetMergeOperations{
+		TeamID: teamID,
+		Group:  group,
+	}
+
+	// NOTE: ListAssets is used as it's cheaper than execute several FindAsset
+	// operations.
+	allAssets, err := s.ListAssets(ctx, teamID, api.Asset{})
+	if err != nil {
+		return ops, err
+	}
+	allAssetsMap := make(map[string]*api.Asset)
+	for _, a := range allAssets {
+		if a.AssetType == nil {
+			return ops, fmt.Errorf("missing values for team/asset (%v/%v)", teamID, a.ID)
+		}
+		key := fmt.Sprintf("%v-%v", a.Identifier, a.AssetType.Name)
+		allAssetsMap[key] = a
+	}
+
+	// Create an index (identifier, type) for the old assets belonging to the
+	// discovery group. The assets stored in the map are gathered from the
+	// allAssetsMap because they include the information about the groups they
+	// belong to.
+	oldAssetsMap := make(map[string]*api.Asset)
+	for _, ag := range group.AssetGroup {
+		if ag.Asset == nil || ag.Asset.AssetType == nil {
+			return ops, fmt.Errorf("missing values for team/asset/group (%v/%v/%v)", teamID, ag.AssetID, ag.GroupID)
+		}
+		key := fmt.Sprintf("%v-%v", ag.Asset.Identifier, ag.Asset.AssetType.Name)
+		oldAssetsMap[key] = allAssetsMap[key]
+	}
+
+	// Prepend a prefix to the annotations so they can be merged without
+	// messing with other annotations that assets might have.
+	prefix := fmt.Sprintf("%s/%s", GenericAnnotationsPrefix, strings.TrimSuffix(group.Name, api.DiscoveredAssetsGroupSuffix))
+
+	// Calculate assets to create, associate or update.
+	for _, a := range assets {
+		for _, aa := range a.AssetAnnotations {
+			aa.Key = fmt.Sprintf("%s/%s", prefix, aa.Key)
+		}
+
+		key := fmt.Sprintf("%v-%v", a.Identifier, a.AssetType.Name)
+		old, okAll := allAssetsMap[key]
+
+		// Asset is new. Create the asset and its annotations.
+		if !okAll {
+			// Retrieve asset type from its name.
+			assetType, err := s.GetAssetType(ctx, a.AssetType.Name)
+			if err != nil {
+				return ops, fmt.Errorf("can not retrieve the asset type (%v)", a.AssetType.Name)
+			}
+			a.AssetTypeID = assetType.ID
+			a.AssetType = &api.AssetType{Name: assetType.Name}
+
+			// For all AWSAccount assets that do not specify an Alias, try to
+			// automatically fetch one.
+			if a.AssetType.Name == "AWSAccount" && a.Alias == "" {
+				a.Alias = s.getAccountName(a.Identifier)
+			}
+
+			ops.Create = append(ops.Create, a)
+			continue
+		}
+
+		_, okOld := oldAssetsMap[key]
+
+		// Asset is not new but it wasn't associated to the group.
+		if !okOld {
+			ops.Assoc = append(ops.Assoc, *old)
+		} else {
+			// Asset was already existing in the group, so remove it from the old assets list to
+			// later on identify stale assets (assets that were discovered in the
+			// previous round but not in this one).
+			delete(oldAssetsMap, key)
+		}
+
+		updatedAsset := api.Asset{
+			ID:     old.ID,
+			TeamID: old.TeamID,
+		}
+		// Check if the annotations or the scannable property needs to be
+		// updated.
+		updated := false
+
+		// Only update the scannable field if it was scannable before and
+		// the discovery tool marks the asset as non-scannable. Otherwise
+		// an asset manually marked as non-scannable by the user might be
+		// unintentionally scanned.
+		if old.Scannable != nil && *old.Scannable && a.Scannable != nil && !*a.Scannable {
+			updatedAsset.Scannable = a.Scannable
+			updated = true
+		}
+
+		// Only update the annotations if they are different.
+		oldAnnotations := api.AssetAnnotations(old.AssetAnnotations).ToMap()
+		newAnnotations := api.AssetAnnotations(a.AssetAnnotations).ToMap()
+		if !oldAnnotations.Matches(newAnnotations, prefix) {
+			updatedAsset.AssetAnnotations = oldAnnotations.Merge(newAnnotations, prefix).ToModel()
+			updated = true
+		}
+
+		if updated {
+			ops.Update = append(ops.Update, updatedAsset)
+		}
+	}
+
+	// Calculate assets to remove or deassociate. The oldAssetsMap should
+	// contain only assets that were previously discovered but not in this
+	// round.
+	for _, old := range oldAssetsMap {
+		del := true
+		for _, g := range old.AssetGroups {
+			// Only delete the asset if doesn't belong to more groups than
+			// the auto-discovery group. Also remove annotations previously
+			// added by the discovery service.
+			if g.Group != nil && g.Group.Name != group.Name {
+				aux := api.AssetAnnotations(old.AssetAnnotations).ToMap()
+				old.AssetAnnotations = aux.Merge(api.AssetAnnotationsMap{}, prefix).ToModel()
+				ops.Deassoc = append(ops.Deassoc, *old)
+				del = false
+				break
+			}
+		}
+
+		if del {
+			ops.Del = append(ops.Del, *old)
+		}
+	}
+
+	return ops, nil
+}
+
+// MergeDiscoveredAssetsAsync stores the information necessary to perform the
+// MergeDiscoveredAssets operation asynchronously.
+func (s vulcanitoService) MergeDiscoveredAssetsAsync(ctx context.Context, teamID string, assets []api.Asset, groupName string) (*api.Job, error) {
+	return s.db.MergeAssetsAsync(teamID, assets, groupName)
+}
+
 func (s vulcanitoService) detectAssets(ctx context.Context, asset api.Asset) ([]api.Asset, error) {
 	assets, err := getTypesFromIdentifier(asset.Identifier)
 	if err != nil {
@@ -267,7 +459,7 @@ func (s vulcanitoService) detectAssets(ctx context.Context, asset api.Asset) ([]
 	for _, a := range assets {
 		asset := asset
 
-		if !validAssetType(a.assetType) {
+		if !api.ValidAssetType(a.assetType) {
 			return nil, errors.Default("invalid asset type returned by auto-detection routine")
 		}
 
@@ -486,14 +678,4 @@ func getTypesFromIdentifier(identifier string) ([]asset, error) {
 	}
 
 	return assets, nil
-}
-
-func validAssetType(assetType string) bool {
-	valid := []string{"AWSAccount", "IP", "IPRange", "DomainName", "Hostname", "DockerImage", "WebAddress", "GitRepository"}
-	for _, a := range valid {
-		if strings.EqualFold(a, assetType) {
-			return true
-		}
-	}
-	return false
 }

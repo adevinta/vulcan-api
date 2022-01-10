@@ -73,7 +73,7 @@ definitions:
         - annotation/1
         - annotation/2
         items:
-          example: Illo et.
+          example: Ducimus sit odio tenetur consequatur.
           type: string
         type: array
     title: AssetAnnotationDeleteRequest
@@ -208,6 +208,62 @@ definitions:
         type: string
     title: AssetUpdatePayload
     type: object
+  AssetWithAnnotationsPayload:
+    example:
+      alias: AnAlias
+      annotations:
+        annotation/1: value/1
+        annotation/2: value/2
+      environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+      identifier: vulcan.example.com
+      options: '{"timeout":60}'
+      rolfp: R:1/O:1/L:0/F:0/P:0+S:1
+      scannable: true
+      type: Hostname
+    properties:
+      alias:
+        description: The alias of the asset in Vulcan
+        example: AnAlias
+        type: string
+      annotations:
+        additionalProperties: true
+        description: |-
+          The provided annotations may differ from the ones that
+          will be stored, because they will include a prefix to not mess with any other
+          annotations already present in the asset.
+        example:
+          annotation/1: value/1
+          annotation/2: value/2
+        type: object
+      environmental_cvss:
+        description: Environmental CVSS
+        example: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+        type: string
+      identifier:
+        description: Identifier
+        example: vulcan.example.com
+        type: string
+      options:
+        description: Options
+        example: '{"timeout":60}'
+        type: string
+      rolfp:
+        description: Rolfp plus scope vector
+        example: R:1/O:1/L:0/F:0/P:0+S:1
+        type: string
+      scannable:
+        description: Scannable
+        example: true
+        type: boolean
+      type:
+        description: Type
+        example: Hostname
+        type: string
+    required:
+    - identifier
+    - type
+    title: AssetWithAnnotationsPayload
+    type: object
   Assetannotations_response:
     description: Asset Annotations (default view)
     example:
@@ -284,21 +340,6 @@ definitions:
     description: AssetresponseCollection is the media type for an array of Assetresponse
       (default view)
     example:
-    - alias: AnAlias
-      classified_at: "2020-09-03T15:00:42.112975Z"
-      environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
-      id: a8720503-0284-45fd-9cf4-5bb6c500966f
-      identifier: vulcan.example.com
-      options: '{"timeout":60}'
-      rolfp: R:1/O:1/L:0/F:0/P:0+S:1
-      scannable: true
-      status:
-        code: 3944598920153519998
-        error: Quo placeat magni harum ea.
-        type: Voluptatum mollitia consequuntur dignissimos.
-      type:
-        id: 29f83d16-09c4-4be5-8cae-e232d41f388a
-        name: Hostname
     - alias: AnAlias
       classified_at: "2020-09-03T15:00:42.112975Z"
       environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
@@ -437,7 +478,7 @@ definitions:
         - a14c7c65-66ab-4676-bcf6-0dea9719f5c6
         - 9f7a0c78-b752-4126-aa6d-0f286ada7b8f
         items:
-          example: Tenetur consequatur quibusdam.
+          example: Voluptate est.
           type: string
         type: array
     required:
@@ -473,6 +514,86 @@ definitions:
         example: "2020-08-11"
         type: string
     title: DigestPayload
+    type: object
+  DiscoveredAssetsPayload:
+    example:
+      assets:
+      - alias: AnAlias
+        annotations:
+          annotation/1: value/1
+          annotation/2: value/2
+        environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+        identifier: vulcan.example.com
+        options: '{"timeout":60}'
+        rolfp: R:1/O:1/L:0/F:0/P:0+S:1
+        scannable: true
+        type: Hostname
+      - alias: AnAlias
+        annotations:
+          annotation/1: value/1
+          annotation/2: value/2
+        environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+        identifier: vulcan.example.com
+        options: '{"timeout":60}'
+        rolfp: R:1/O:1/L:0/F:0/P:0+S:1
+        scannable: true
+        type: Hostname
+      - alias: AnAlias
+        annotations:
+          annotation/1: value/1
+          annotation/2: value/2
+        environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+        identifier: vulcan.example.com
+        options: '{"timeout":60}'
+        rolfp: R:1/O:1/L:0/F:0/P:0+S:1
+        scannable: true
+        type: Hostname
+      group_name: discoveryserviceX-discovered-assets
+    properties:
+      assets:
+        example:
+        - alias: AnAlias
+          annotations:
+            annotation/1: value/1
+            annotation/2: value/2
+          environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+          identifier: vulcan.example.com
+          options: '{"timeout":60}'
+          rolfp: R:1/O:1/L:0/F:0/P:0+S:1
+          scannable: true
+          type: Hostname
+        - alias: AnAlias
+          annotations:
+            annotation/1: value/1
+            annotation/2: value/2
+          environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+          identifier: vulcan.example.com
+          options: '{"timeout":60}'
+          rolfp: R:1/O:1/L:0/F:0/P:0+S:1
+          scannable: true
+          type: Hostname
+        - alias: AnAlias
+          annotations:
+            annotation/1: value/1
+            annotation/2: value/2
+          environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+          identifier: vulcan.example.com
+          options: '{"timeout":60}'
+          rolfp: R:1/O:1/L:0/F:0/P:0+S:1
+          scannable: true
+          type: Hostname
+        items:
+          $ref: '#/definitions/AssetWithAnnotationsPayload'
+        type: array
+      group_name:
+        description: "The discovery group name where assets will be added. It\n\t\tmust
+          end with '-discovered-assets'. The first part of the name should\n\t\tidentify
+          the discovery service using the endpoint"
+        example: discoveryserviceX-discovered-assets
+        type: string
+    required:
+    - group_name
+    title: DiscoveredAssetsPayload
     type: object
   Error:
     description: Error (default view)
@@ -1533,33 +1654,6 @@ definitions:
       type:
         id: 29f83d16-09c4-4be5-8cae-e232d41f388a
         name: Hostname
-    - alias: AnAlias
-      annotations:
-        annotation/1: value/1
-        annotation/2: value/2
-      classified_at: "2020-09-03T15:00:42.112975Z"
-      environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
-      groups:
-      - description: All newly created assets are added to the Default group
-        id: f6360346-77a5-4f97-b919-331363b3af26
-        name: Default group
-        options: '{"timeout":60}'
-      - description: All newly created assets are added to the Default group
-        id: f6360346-77a5-4f97-b919-331363b3af26
-        name: Default group
-        options: '{"timeout":60}'
-      - description: All newly created assets are added to the Default group
-        id: f6360346-77a5-4f97-b919-331363b3af26
-        name: Default group
-        options: '{"timeout":60}'
-      id: a8720503-0284-45fd-9cf4-5bb6c500966f
-      identifier: vulcan.example.com
-      options: '{"timeout":60}'
-      rolfp: R:1/O:1/L:0/F:0/P:0+S:1
-      scannable: true
-      type:
-        id: 29f83d16-09c4-4be5-8cae-e232d41f388a
-        name: Hostname
     items:
       $ref: '#/definitions/Listassetentry'
     title: 'Mediatype identifier: listassetentry; type=collection; view=default'
@@ -1895,24 +1989,20 @@ definitions:
     type: array
   ProgramPayload:
     example:
-      autosend: false
-      disabled: true
+      autosend: true
+      disabled: false
       name: Every midnight
       policy_groups:
-      - group_id: Est iure provident non consequatur perferendis dolor.
-        policy_id: Dolorem distinctio.
-      - group_id: Est iure provident non consequatur perferendis dolor.
-        policy_id: Dolorem distinctio.
-      - group_id: Est iure provident non consequatur perferendis dolor.
-        policy_id: Dolorem distinctio.
+      - group_id: Iure provident.
+        policy_id: Consequatur perferendis dolor.
     properties:
       autosend:
         description: Autosend
-        example: false
+        example: true
         type: boolean
       disabled:
         description: Disabled
-        example: true
+        example: false
         type: boolean
       name:
         description: name
@@ -1921,12 +2011,8 @@ definitions:
       policy_groups:
         description: PolicyGroups
         example:
-        - group_id: Est iure provident non consequatur perferendis dolor.
-          policy_id: Dolorem distinctio.
-        - group_id: Est iure provident non consequatur perferendis dolor.
-          policy_id: Dolorem distinctio.
-        - group_id: Est iure provident non consequatur perferendis dolor.
-          policy_id: Dolorem distinctio.
+        - group_id: Iure provident.
+          policy_id: Consequatur perferendis dolor.
         items:
           $ref: '#/definitions/ProgramPolicyGroupPayload'
         type: array
@@ -1934,16 +2020,16 @@ definitions:
     type: object
   ProgramPolicyGroupPayload:
     example:
-      group_id: Est iure provident non consequatur perferendis dolor.
-      policy_id: Dolorem distinctio.
+      group_id: Iure provident.
+      policy_id: Consequatur perferendis dolor.
     properties:
       group_id:
         description: group
-        example: Est iure provident non consequatur perferendis dolor.
+        example: Iure provident.
         type: string
       policy_id:
         description: policy
-        example: Dolorem distinctio.
+        example: Consequatur perferendis dolor.
         type: string
     title: ProgramPolicyGroupPayload
     type: object
@@ -1953,12 +2039,8 @@ definitions:
       disabled: false
       name: Every midnight
       policy_groups:
-      - group_id: Est iure provident non consequatur perferendis dolor.
-        policy_id: Dolorem distinctio.
-      - group_id: Est iure provident non consequatur perferendis dolor.
-        policy_id: Dolorem distinctio.
-      - group_id: Est iure provident non consequatur perferendis dolor.
-        policy_id: Dolorem distinctio.
+      - group_id: Iure provident.
+        policy_id: Consequatur perferendis dolor.
     properties:
       autosend:
         description: Autosend
@@ -1975,12 +2057,8 @@ definitions:
       policy_groups:
         description: PolicyGroups
         example:
-        - group_id: Est iure provident non consequatur perferendis dolor.
-          policy_id: Dolorem distinctio.
-        - group_id: Est iure provident non consequatur perferendis dolor.
-          policy_id: Dolorem distinctio.
-        - group_id: Est iure provident non consequatur perferendis dolor.
-          policy_id: Dolorem distinctio.
+        - group_id: Iure provident.
+          policy_id: Consequatur perferendis dolor.
         items:
           $ref: '#/definitions/ProgramPolicyGroupPayload'
         type: array
@@ -2554,6 +2632,14 @@ definitions:
   TeamCollection:
     description: TeamCollection is the media type for an array of Team (default view)
     example:
+    - description: Security Team
+      id: ff74a33c-e683-4612-a62f-a9cf385f6522
+      name: Security
+      tag: team:security
+    - description: Security Team
+      id: ff74a33c-e683-4612-a62f-a9cf385f6522
+      name: Security
+      tag: team:security
     - description: Security Team
       id: ff74a33c-e683-4612-a62f-a9cf385f6522
       name: Security
@@ -3605,6 +3691,59 @@ paths:
       summary: put asset-annotations
       tags:
       - asset-annotations
+  /teams/{team_id}/assets/discovery:
+    put:
+      description: |-
+        This endpoint receives a list of assets with embedded
+        asset annotations, and the group name where to be added. It should be used by
+        third-party asset discovery services to onboard the discovered assets into
+        Vulcan. The provided list of assets will overwrite the assets previously
+        present in the group, in a way that:
+          - Assets that do not exist in the team will be created and associated to the
+          group
+          - Assets that were already existing in the team but not associated to the
+          group will be associated
+          - Existing assets where the scannable field or the annotations are different
+          will be updated accordingly
+          - Assets that were associated to the group and now are not present in the
+          provided list will be de-associated from the group if they belong to any
+          other group, or deleted otherwise
+        Because of the latency of this operation the endpoint is asynchronous. It
+        returns a 202-Accepted HTTP response with the Job information in the response
+        body.
+        The discovery group name must end with '-discovered-assets' to not mess with
+        manually managed asset groups. Also the first part of the name should identify
+        the discovery service using the endpoint, for example:
+        serviceX-discovered-assets.
+        Also be aware that the provided annotations may differ from the ones that will
+        be stored, because they will include a prefix to not mess with any other
+        annotations already present in the asset.
+      operationId: assets#discover
+      parameters:
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/DiscoveredAssetsPayload'
+      produces:
+      - job
+      responses:
+        "202":
+          description: 'Created: All assets were created with success.'
+          schema:
+            $ref: '#/definitions/Job'
+      schemes:
+      - https
+      security:
+      - Bearer: []
+      summary: discover assets
+      tags:
+      - assets
   /teams/{team_id}/assets/multistatus:
     post:
       description: "Creates assets in bulk mode (MultiStatus).\n\t\t\tThis operation

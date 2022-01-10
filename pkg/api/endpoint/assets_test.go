@@ -6,6 +6,7 @@ package endpoint
 
 import (
 	"context"
+	"errors"
 	"net/http"
 	"testing"
 	"time"
@@ -460,6 +461,135 @@ func TestMakeCreateAssetsMultiStatusEndpoint(t *testing.T) {
 				if !tt.wantClassified && assetResp.ClassifiedAt != nil {
 					t.Fatalf(("Expected asset to NOT be classified, but it was"))
 				}
+			}
+		})
+	}
+}
+
+func TestMergeDiscoveredAssetsEndpoint(t *testing.T) {
+	testStore, err := testutil.PrepareDatabaseLocal("../../../testdata/fixtures", store.NewDB)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer testStore.Close()
+
+	testService := buildTestService(testStore)
+
+	tests := []struct {
+		req     interface{}
+		name    string
+		want    interface{}
+		wantErr error
+	}{
+		{
+			name: "Happy Path",
+			req: &DiscoveredAssetsRequest{
+				TeamID: "ea686be5-be9b-473b-ab1b-621a4f575d51",
+				Assets: []AssetWithAnnotationsRequest{
+					AssetWithAnnotationsRequest{
+						AssetRequest: AssetRequest{
+							Identifier:        "fancy.vulcan.example.com",
+							Type:              "Hostname",
+							Options:           common.String(`{}`),
+							Scannable:         common.Bool(true),
+							EnvironmentalCVSS: common.String("a.b.c.d"),
+							ROLFP:             &api.ROLFP{0, 0, 0, 0, 0, 1, false},
+						},
+					},
+				},
+				GroupName: "whatever-discovered-assets",
+			},
+			want: Accepted{
+				&api.JobResponse{
+					TeamID:    "ea686be5-be9b-473b-ab1b-621a4f575d51",
+					Operation: "MergeDiscoveredAssets",
+					Status:    api.JobStatusPending,
+				},
+			},
+			wantErr: nil,
+		},
+		{
+			name: "Fails if group doesn't end with '-discovered-assets'",
+			req: &DiscoveredAssetsRequest{
+				TeamID: "ea686be5-be9b-473b-ab1b-621a4f575d51",
+				Assets: []AssetWithAnnotationsRequest{
+					AssetWithAnnotationsRequest{
+						AssetRequest: AssetRequest{
+							Identifier:        "fancy.vulcan.example.com",
+							Type:              "Hostname",
+							Options:           common.String(`{}`),
+							Scannable:         common.Bool(true),
+							EnvironmentalCVSS: common.String("a.b.c.d"),
+							ROLFP:             &api.ROLFP{0, 0, 0, 0, 0, 1, false},
+						},
+					},
+				},
+				GroupName: "Default",
+			},
+			wantErr: errors.New("Asset group not allowed"),
+		},
+		{
+			name: "Fails if identifier is missing",
+			req: &DiscoveredAssetsRequest{
+				TeamID: "ea686be5-be9b-473b-ab1b-621a4f575d51",
+				Assets: []AssetWithAnnotationsRequest{
+					AssetWithAnnotationsRequest{
+						AssetRequest: AssetRequest{
+							Type: "Hostname",
+						},
+					},
+				},
+				GroupName: "whatever-discovered-assets",
+			},
+			wantErr: errors.New("Asset identifier and type are required for all the assets"),
+		},
+		{
+			name: "Fails if type is missing",
+			req: &DiscoveredAssetsRequest{
+				TeamID: "ea686be5-be9b-473b-ab1b-621a4f575d51",
+				Assets: []AssetWithAnnotationsRequest{
+					AssetWithAnnotationsRequest{
+						AssetRequest: AssetRequest{
+							Identifier: "fancy.vulcan.example.com",
+						},
+					},
+				},
+				GroupName: "whatever-discovered-assets",
+			},
+			wantErr: errors.New("Asset identifier and type are required for all the assets"),
+		},
+		{
+			name: "Fails if type is invalid",
+			req: &DiscoveredAssetsRequest{
+				TeamID: "ea686be5-be9b-473b-ab1b-621a4f575d51",
+				Assets: []AssetWithAnnotationsRequest{
+					AssetWithAnnotationsRequest{
+						AssetRequest: AssetRequest{
+							Identifier: "fancy.vulcan.example.com",
+							Type:       "WRONG",
+						},
+					},
+				},
+				GroupName: "whatever-discovered-assets",
+			},
+			wantErr: errors.New("Invalid asset type (WRONG) for asset (fancy.vulcan.example.com)"),
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := makeMergeDiscoveredAssetsEndpoint(testService, kitlog.NewNopLogger())(context.Background(), tt.req)
+			diff := cmp.Diff(errToStr(tt.wantErr), errToStr(err))
+			if diff != "" {
+				t.Fatalf("%v\n", diff)
+			}
+
+			diff = cmp.Diff(tt.want, got, cmp.Options{
+				cmpopts.IgnoreFields(api.JobResponse{}, "ID"),
+			})
+			if diff != "" {
+				t.Errorf("%v\n", diff)
 			}
 		})
 	}

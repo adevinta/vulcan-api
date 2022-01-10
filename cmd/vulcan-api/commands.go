@@ -175,7 +175,6 @@ func initConfig() {
 }
 
 func startServer() error {
-
 	var logger log.Logger
 	{
 		logger = log.NewLogfmtLogger(os.Stderr)
@@ -221,15 +220,25 @@ func startServer() error {
 		}
 	}()
 
-	// Build vulcanito deps.
-	db, schedulerClient, err := createVulcanitoDeps(cfg, logger, vulnerabilityDBClient)
+	// The JobsRunner is a dependency used by the CDC parser to execute async
+	// API jobs, providing a limited access to the API service layer. But as
+	// the service layer depends on the store layer, and the CBC proxies the
+	// store layer, we need to perform the initialization in two steps.
+	// First, declare an empty JobsRunner and inject it to the CDC parser.
+	jobsRunner := &api.JobsRunner{}
+
+	// Build CBC proxied store layer.
+	db, schedulerClient, err := createVulcanitoDeps(cfg, logger, vulnerabilityDBClient, jobsRunner)
 	if err != nil {
 		return err
 	}
 
-	// Build vulcanito service.
+	// Build service layer.
 	vulcanitoService := service.New(logger, db, jwtConfig, cfg.ScanEngine, schedulerClient, cfg.Reports,
 		vulnerabilityDBClient, reportsClient, metricsClient, awsAccounts)
+
+	// Second, inject the service layer to the CDC parser JobsRunner.
+	jobsRunner.Client = vulcanitoService
 
 	// Create the global entities service middleware dependencies.
 	coreclient := newVulcanCoreAPIClient(cfg.VulcanCore)
@@ -538,6 +547,7 @@ func addWhitelistingMiddleware(endpoints endpoint.Endpoints, logger log.Logger) 
 		endpoint.ListAssets:             true,
 		endpoint.CreateAsset:            true,
 		endpoint.CreateAssetMultiStatus: true,
+		endpoint.MergeDiscoveredAssets:  true,
 		endpoint.FindAsset:              true,
 		endpoint.UpdateAsset:            true,
 		endpoint.DeleteAsset:            true,
@@ -596,8 +606,7 @@ func addWhitelistingMiddleware(endpoints endpoint.Endpoints, logger log.Logger) 
 	return endpoints
 }
 
-func createVulcanitoDeps(cfg config, l log.Logger, vulnDBClient vulnerabilitydb.Client) (api.VulcanitoStore, *schedule.Client, error) {
-
+func createVulcanitoDeps(cfg config, l log.Logger, vulnDBClient vulnerabilitydb.Client, jobsRunner *api.JobsRunner) (api.VulcanitoStore, *schedule.Client, error) {
 	db, err := store.NewDB("postgres", cfg.DB.ConnString, l, cfg.DB.LogMode, cfg.Defaults)
 	if err != nil {
 		err = fmt.Errorf("Error opening DB connection: %v", err)
@@ -608,7 +617,7 @@ func createVulcanitoDeps(cfg config, l log.Logger, vulnDBClient vulnerabilitydb.
 		err = fmt.Errorf("Error opening DB connection: %v", err)
 		return nil, nil, err
 	}
-	cdcProxy := cdc.NewBrokerProxy(l, cdcDB, db, cdc.NewVulnDBTxParser(vulnDBClient, l))
+	cdcProxy := cdc.NewBrokerProxy(l, cdcDB, db, cdc.NewAsyncTxParser(vulnDBClient, jobsRunner, l))
 	s := schedule.NewClient(cfg.Scheduler)
 	return cdcProxy, s, nil
 }

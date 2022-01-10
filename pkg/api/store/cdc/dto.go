@@ -50,3 +50,12 @@ type OpDeleteAllAssetsDTO struct {
 type OpFindingOverwriteDTO struct {
 	FindingOverwrite api.FindingOverwrite `json:"finding_overwrite"`
 }
+
+// OpMergeDiscoveredAssetsDTO represents the data to store
+// as part of CDC log for a MergeDiscoveredAsset operation.
+type OpMergeDiscoveredAssetsDTO struct {
+	TeamID    string      `json:"team_id"`
+	Assets    []api.Asset `json:"assets"`
+	GroupName string      `json:"group_name"`
+	JobID     string      `json:"job_id"`
+}

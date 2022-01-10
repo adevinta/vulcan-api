@@ -186,6 +186,9 @@ func (b *BrokerProxy) Healthcheck() error {
 func (b *BrokerProxy) FindJob(jobID string) (*api.Job, error) {
 	return b.store.FindJob(jobID)
 }
+func (b *BrokerProxy) UpdateJob(job api.Job) (*api.Job, error) {
+	return b.store.UpdateJob(job)
+}
 
 func (b *BrokerProxy) CreateUserIfNotExists(userData saml.UserData) error {
 	return b.store.CreateUserIfNotExists(userData)
@@ -294,6 +297,14 @@ func (b *BrokerProxy) UpdateAsset(asset api.Asset) (*api.Asset, error) {
 	a, err := b.store.UpdateAsset(asset)
 	go b.awakeBroker()
 	return a, err
+}
+func (b *BrokerProxy) MergeAssets(mergeOps api.AssetMergeOperations) error {
+	return b.store.MergeAssets(mergeOps)
+}
+func (b *BrokerProxy) MergeAssetsAsync(teamID string, assets []api.Asset, groupName string) (*api.Job, error) {
+	j, err := b.store.MergeAssetsAsync(teamID, assets, groupName)
+	go b.awakeBroker()
+	return j, err
 }
 
 // Asset Annotations

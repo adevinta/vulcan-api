@@ -229,6 +229,102 @@ type AssetUpdatePayload struct {
 	Type *string `form:"type,omitempty" json:"type,omitempty" yaml:"type,omitempty" xml:"type,omitempty"`
 }
 
+// assetWithAnnotationsPayload user type.
+type assetWithAnnotationsPayload struct {
+	// The alias of the asset in Vulcan
+	Alias *string `form:"alias,omitempty" json:"alias,omitempty" yaml:"alias,omitempty" xml:"alias,omitempty"`
+	// The provided annotations may differ from the ones that
+	// will be stored, because they will include a prefix to not mess with any other
+	// annotations already present in the asset.
+	Annotations map[string]string `form:"annotations,omitempty" json:"annotations,omitempty" yaml:"annotations,omitempty" xml:"annotations,omitempty"`
+	// Environmental CVSS
+	EnvironmentalCvss *string `form:"environmental_cvss,omitempty" json:"environmental_cvss,omitempty" yaml:"environmental_cvss,omitempty" xml:"environmental_cvss,omitempty"`
+	// Identifier
+	Identifier *string `form:"identifier,omitempty" json:"identifier,omitempty" yaml:"identifier,omitempty" xml:"identifier,omitempty"`
+	// Options
+	Options *string `form:"options,omitempty" json:"options,omitempty" yaml:"options,omitempty" xml:"options,omitempty"`
+	// Rolfp plus scope vector
+	Rolfp *string `form:"rolfp,omitempty" json:"rolfp,omitempty" yaml:"rolfp,omitempty" xml:"rolfp,omitempty"`
+	// Scannable
+	Scannable *bool `form:"scannable,omitempty" json:"scannable,omitempty" yaml:"scannable,omitempty" xml:"scannable,omitempty"`
+	// Type
+	Type *string `form:"type,omitempty" json:"type,omitempty" yaml:"type,omitempty" xml:"type,omitempty"`
+}
+
+// Validate validates the assetWithAnnotationsPayload type instance.
+func (ut *assetWithAnnotationsPayload) Validate() (err error) {
+	if ut.Identifier == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "identifier"))
+	}
+	if ut.Type == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "type"))
+	}
+	return
+}
+
+// Publicize creates AssetWithAnnotationsPayload from assetWithAnnotationsPayload
+func (ut *assetWithAnnotationsPayload) Publicize() *AssetWithAnnotationsPayload {
+	var pub AssetWithAnnotationsPayload
+	if ut.Alias != nil {
+		pub.Alias = ut.Alias
+	}
+	if ut.Annotations != nil {
+		pub.Annotations = ut.Annotations
+	}
+	if ut.EnvironmentalCvss != nil {
+		pub.EnvironmentalCvss = ut.EnvironmentalCvss
+	}
+	if ut.Identifier != nil {
+		pub.Identifier = *ut.Identifier
+	}
+	if ut.Options != nil {
+		pub.Options = ut.Options
+	}
+	if ut.Rolfp != nil {
+		pub.Rolfp = ut.Rolfp
+	}
+	if ut.Scannable != nil {
+		pub.Scannable = ut.Scannable
+	}
+	if ut.Type != nil {
+		pub.Type = *ut.Type
+	}
+	return &pub
+}
+
+// AssetWithAnnotationsPayload user type.
+type AssetWithAnnotationsPayload struct {
+	// The alias of the asset in Vulcan
+	Alias *string `form:"alias,omitempty" json:"alias,omitempty" yaml:"alias,omitempty" xml:"alias,omitempty"`
+	// The provided annotations may differ from the ones that
+	// will be stored, because they will include a prefix to not mess with any other
+	// annotations already present in the asset.
+	Annotations map[string]string `form:"annotations,omitempty" json:"annotations,omitempty" yaml:"annotations,omitempty" xml:"annotations,omitempty"`
+	// Environmental CVSS
+	EnvironmentalCvss *string `form:"environmental_cvss,omitempty" json:"environmental_cvss,omitempty" yaml:"environmental_cvss,omitempty" xml:"environmental_cvss,omitempty"`
+	// Identifier
+	Identifier string `form:"identifier" json:"identifier" yaml:"identifier" xml:"identifier"`
+	// Options
+	Options *string `form:"options,omitempty" json:"options,omitempty" yaml:"options,omitempty" xml:"options,omitempty"`
+	// Rolfp plus scope vector
+	Rolfp *string `form:"rolfp,omitempty" json:"rolfp,omitempty" yaml:"rolfp,omitempty" xml:"rolfp,omitempty"`
+	// Scannable
+	Scannable *bool `form:"scannable,omitempty" json:"scannable,omitempty" yaml:"scannable,omitempty" xml:"scannable,omitempty"`
+	// Type
+	Type string `form:"type" json:"type" yaml:"type" xml:"type"`
+}
+
+// Validate validates the AssetWithAnnotationsPayload type instance.
+func (ut *AssetWithAnnotationsPayload) Validate() (err error) {
+	if ut.Identifier == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "identifier"))
+	}
+	if ut.Type == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "type"))
+	}
+	return
+}
+
 // createAssetPayload user type.
 type createAssetPayload struct {
 	Annotations map[string]string `form:"annotations,omitempty" json:"annotations,omitempty" yaml:"annotations,omitempty" xml:"annotations,omitempty"`
@@ -317,6 +413,69 @@ type DigestPayload struct {
 	EndDate *string `form:"end_date,omitempty" json:"end_date,omitempty" yaml:"end_date,omitempty" xml:"end_date,omitempty"`
 	// Start Date
 	StartDate *string `form:"start_date,omitempty" json:"start_date,omitempty" yaml:"start_date,omitempty" xml:"start_date,omitempty"`
+}
+
+// discoveredAssetsPayload user type.
+type discoveredAssetsPayload struct {
+	Assets []*assetWithAnnotationsPayload `form:"assets,omitempty" json:"assets,omitempty" yaml:"assets,omitempty" xml:"assets,omitempty"`
+	// The discovery group name where assets will be added. It
+	// 		must end with '-discovered-assets'. The first part of the name should
+	// 		identify the discovery service using the endpoint
+	GroupName *string `form:"group_name,omitempty" json:"group_name,omitempty" yaml:"group_name,omitempty" xml:"group_name,omitempty"`
+}
+
+// Validate validates the discoveredAssetsPayload type instance.
+func (ut *discoveredAssetsPayload) Validate() (err error) {
+	if ut.GroupName == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "group_name"))
+	}
+	for _, e := range ut.Assets {
+		if e != nil {
+			if err2 := e.Validate(); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
+}
+
+// Publicize creates DiscoveredAssetsPayload from discoveredAssetsPayload
+func (ut *discoveredAssetsPayload) Publicize() *DiscoveredAssetsPayload {
+	var pub DiscoveredAssetsPayload
+	if ut.Assets != nil {
+		pub.Assets = make([]*AssetWithAnnotationsPayload, len(ut.Assets))
+		for i2, elem2 := range ut.Assets {
+			pub.Assets[i2] = elem2.Publicize()
+		}
+	}
+	if ut.GroupName != nil {
+		pub.GroupName = *ut.GroupName
+	}
+	return &pub
+}
+
+// DiscoveredAssetsPayload user type.
+type DiscoveredAssetsPayload struct {
+	Assets []*AssetWithAnnotationsPayload `form:"assets,omitempty" json:"assets,omitempty" yaml:"assets,omitempty" xml:"assets,omitempty"`
+	// The discovery group name where assets will be added. It
+	// 		must end with '-discovered-assets'. The first part of the name should
+	// 		identify the discovery service using the endpoint
+	GroupName string `form:"group_name" json:"group_name" yaml:"group_name" xml:"group_name"`
+}
+
+// Validate validates the DiscoveredAssetsPayload type instance.
+func (ut *DiscoveredAssetsPayload) Validate() (err error) {
+	if ut.GroupName == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "group_name"))
+	}
+	for _, e := range ut.Assets {
+		if e != nil {
+			if err2 := e.Validate(); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
 }
 
 // findingOverwritePayload user type.

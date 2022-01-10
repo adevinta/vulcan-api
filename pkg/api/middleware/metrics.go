@@ -84,6 +84,7 @@ var (
 		endpoint.ListAssets:             entityAsset,
 		endpoint.CreateAsset:            entityAsset,
 		endpoint.CreateAssetMultiStatus: entityAsset,
+		endpoint.MergeDiscoveredAssets:  entityAsset,
 		endpoint.FindAsset:              entityAsset,
 		endpoint.UpdateAsset:            entityAsset,
 		endpoint.DeleteAsset:            entityAsset,
