@@ -22,8 +22,8 @@ func AssetsGlobalStatsPath() string {
 }
 
 // Get global assets per severity statistics.
-func (c *Client) AssetsGlobalStats(ctx context.Context, path string, atDate *string, identifiers *string, labels *string, tags *string) (*http.Response, error) {
-	req, err := c.NewAssetsGlobalStatsRequest(ctx, path, atDate, identifiers, labels, tags)
+func (c *Client) AssetsGlobalStats(ctx context.Context, path string, identifiers *string, labels *string, tags *string) (*http.Response, error) {
+	req, err := c.NewAssetsGlobalStatsRequest(ctx, path, identifiers, labels, tags)
 	if err != nil {
 		return nil, err
 	}
@@ -31,16 +31,13 @@ func (c *Client) AssetsGlobalStats(ctx context.Context, path string, atDate *str
 }
 
 // NewAssetsGlobalStatsRequest create the request corresponding to the assets action endpoint of the global-stats resource.
-func (c *Client) NewAssetsGlobalStatsRequest(ctx context.Context, path string, atDate *string, identifiers *string, labels *string, tags *string) (*http.Request, error) {
+func (c *Client) NewAssetsGlobalStatsRequest(ctx context.Context, path string, identifiers *string, labels *string, tags *string) (*http.Request, error) {
 	scheme := c.Scheme
 	if scheme == "" {
 		scheme = "https"
 	}
 	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
 	values := u.Query()
-	if atDate != nil {
-		values.Set("atDate", *atDate)
-	}
 	if identifiers != nil {
 		values.Set("identifiers", *identifiers)
 	}
@@ -87,12 +84,12 @@ func (c *Client) NewCurrentExposureGlobalStatsRequest(ctx context.Context, path 
 	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
 	values := u.Query()
 	if maxScore != nil {
-		tmp130 := strconv.FormatFloat(*maxScore, 'f', -1, 64)
-		values.Set("maxScore", tmp130)
+		tmp114 := strconv.FormatFloat(*maxScore, 'f', -1, 64)
+		values.Set("maxScore", tmp114)
 	}
 	if minScore != nil {
-		tmp131 := strconv.FormatFloat(*minScore, 'f', -1, 64)
-		values.Set("minScore", tmp131)
+		tmp115 := strconv.FormatFloat(*minScore, 'f', -1, 64)
+		values.Set("minScore", tmp115)
 	}
 	if tags != nil {
 		values.Set("tags", *tags)
@@ -137,12 +134,12 @@ func (c *Client) NewExposureGlobalStatsRequest(ctx context.Context, path string,
 		values.Set("atDate", *atDate)
 	}
 	if maxScore != nil {
-		tmp132 := strconv.FormatFloat(*maxScore, 'f', -1, 64)
-		values.Set("maxScore", tmp132)
+		tmp116 := strconv.FormatFloat(*maxScore, 'f', -1, 64)
+		values.Set("maxScore", tmp116)
 	}
 	if minScore != nil {
-		tmp133 := strconv.FormatFloat(*minScore, 'f', -1, 64)
-		values.Set("minScore", tmp133)
+		tmp117 := strconv.FormatFloat(*minScore, 'f', -1, 64)
+		values.Set("minScore", tmp117)
 	}
 	if tags != nil {
 		values.Set("tags", *tags)

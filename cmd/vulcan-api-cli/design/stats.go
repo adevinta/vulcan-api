@@ -301,7 +301,6 @@ var _ = Resource("global-stats", func() {
 		Routing(GET("/assets"))
 		Params(func() {
 			Param("tags", String, "Comma separated list of team tags to filter by. Only admin and observer users are allowed to set this field.")
-			Param("atDate", String, "Specific date to get statistics at (incompatible and preferential to min and max date params)")
 			Param("identifiers", String, "A comma separated list of asset identifiers")
 			Param("labels", String, "A comma separated list of associated labels")
 		})
