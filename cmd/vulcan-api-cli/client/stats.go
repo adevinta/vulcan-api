@@ -75,12 +75,12 @@ func (c *Client) NewCurrentExposureStatsRequest(ctx context.Context, path string
 	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
 	values := u.Query()
 	if maxScore != nil {
-		tmp133 := strconv.FormatFloat(*maxScore, 'f', -1, 64)
-		values.Set("maxScore", tmp133)
+		tmp134 := strconv.FormatFloat(*maxScore, 'f', -1, 64)
+		values.Set("maxScore", tmp134)
 	}
 	if minScore != nil {
-		tmp134 := strconv.FormatFloat(*minScore, 'f', -1, 64)
-		values.Set("minScore", tmp134)
+		tmp135 := strconv.FormatFloat(*minScore, 'f', -1, 64)
+		values.Set("minScore", tmp135)
 	}
 	u.RawQuery = values.Encode()
 	req, err := http.NewRequestWithContext(ctx, "GET", u.String(), nil)
@@ -123,12 +123,12 @@ func (c *Client) NewExposureStatsRequest(ctx context.Context, path string, atDat
 		values.Set("atDate", *atDate)
 	}
 	if maxScore != nil {
-		tmp135 := strconv.FormatFloat(*maxScore, 'f', -1, 64)
-		values.Set("maxScore", tmp135)
+		tmp136 := strconv.FormatFloat(*maxScore, 'f', -1, 64)
+		values.Set("maxScore", tmp136)
 	}
 	if minScore != nil {
-		tmp136 := strconv.FormatFloat(*minScore, 'f', -1, 64)
-		values.Set("minScore", tmp136)
+		tmp137 := strconv.FormatFloat(*minScore, 'f', -1, 64)
+		values.Set("minScore", tmp137)
 	}
 	u.RawQuery = values.Encode()
 	req, err := http.NewRequestWithContext(ctx, "GET", u.String(), nil)
