@@ -22,8 +22,8 @@ func CurrentExposureGlobalStatsPath() string {
 }
 
 // Get global current exposure statistics. This metric takes into account only the exposure for open vulnerabilities since the last time they were detected.
-func (c *Client) CurrentExposureGlobalStats(ctx context.Context, path string, maxScore *float64, minScore *float64) (*http.Response, error) {
-	req, err := c.NewCurrentExposureGlobalStatsRequest(ctx, path, maxScore, minScore)
+func (c *Client) CurrentExposureGlobalStats(ctx context.Context, path string, maxScore *float64, minScore *float64, tags *string) (*http.Response, error) {
+	req, err := c.NewCurrentExposureGlobalStatsRequest(ctx, path, maxScore, minScore, tags)
 	if err != nil {
 		return nil, err
 	}
@@ -31,7 +31,7 @@ func (c *Client) CurrentExposureGlobalStats(ctx context.Context, path string, ma
 }
 
 // NewCurrentExposureGlobalStatsRequest create the request corresponding to the current exposure action endpoint of the global-stats resource.
-func (c *Client) NewCurrentExposureGlobalStatsRequest(ctx context.Context, path string, maxScore *float64, minScore *float64) (*http.Request, error) {
+func (c *Client) NewCurrentExposureGlobalStatsRequest(ctx context.Context, path string, maxScore *float64, minScore *float64, tags *string) (*http.Request, error) {
 	scheme := c.Scheme
 	if scheme == "" {
 		scheme = "https"
@@ -45,6 +45,9 @@ func (c *Client) NewCurrentExposureGlobalStatsRequest(ctx context.Context, path 
 	if minScore != nil {
 		tmp128 := strconv.FormatFloat(*minScore, 'f', -1, 64)
 		values.Set("minScore", tmp128)
+	}
+	if tags != nil {
+		values.Set("tags", *tags)
 	}
 	u.RawQuery = values.Encode()
 	req, err := http.NewRequestWithContext(ctx, "GET", u.String(), nil)
@@ -66,8 +69,8 @@ func ExposureGlobalStatsPath() string {
 }
 
 // Get global exposure statistics. This metric takes into account the exposure across all lifecycle of vulnerabilities.
-func (c *Client) ExposureGlobalStats(ctx context.Context, path string, atDate *string, maxScore *float64, minScore *float64) (*http.Response, error) {
-	req, err := c.NewExposureGlobalStatsRequest(ctx, path, atDate, maxScore, minScore)
+func (c *Client) ExposureGlobalStats(ctx context.Context, path string, atDate *string, maxScore *float64, minScore *float64, tags *string) (*http.Response, error) {
+	req, err := c.NewExposureGlobalStatsRequest(ctx, path, atDate, maxScore, minScore, tags)
 	if err != nil {
 		return nil, err
 	}
@@ -75,7 +78,7 @@ func (c *Client) ExposureGlobalStats(ctx context.Context, path string, atDate *s
 }
 
 // NewExposureGlobalStatsRequest create the request corresponding to the exposure action endpoint of the global-stats resource.
-func (c *Client) NewExposureGlobalStatsRequest(ctx context.Context, path string, atDate *string, maxScore *float64, minScore *float64) (*http.Request, error) {
+func (c *Client) NewExposureGlobalStatsRequest(ctx context.Context, path string, atDate *string, maxScore *float64, minScore *float64, tags *string) (*http.Request, error) {
 	scheme := c.Scheme
 	if scheme == "" {
 		scheme = "https"
@@ -92,6 +95,9 @@ func (c *Client) NewExposureGlobalStatsRequest(ctx context.Context, path string,
 	if minScore != nil {
 		tmp130 := strconv.FormatFloat(*minScore, 'f', -1, 64)
 		values.Set("minScore", tmp130)
+	}
+	if tags != nil {
+		values.Set("tags", *tags)
 	}
 	u.RawQuery = values.Encode()
 	req, err := http.NewRequestWithContext(ctx, "GET", u.String(), nil)
@@ -113,8 +119,8 @@ func MttrGlobalStatsPath() string {
 }
 
 // Get global MTTR statistics.
-func (c *Client) MttrGlobalStats(ctx context.Context, path string, maxDate *string, minDate *string) (*http.Response, error) {
-	req, err := c.NewMttrGlobalStatsRequest(ctx, path, maxDate, minDate)
+func (c *Client) MttrGlobalStats(ctx context.Context, path string, maxDate *string, minDate *string, tags *string) (*http.Response, error) {
+	req, err := c.NewMttrGlobalStatsRequest(ctx, path, maxDate, minDate, tags)
 	if err != nil {
 		return nil, err
 	}
@@ -122,7 +128,7 @@ func (c *Client) MttrGlobalStats(ctx context.Context, path string, maxDate *stri
 }
 
 // NewMttrGlobalStatsRequest create the request corresponding to the mttr action endpoint of the global-stats resource.
-func (c *Client) NewMttrGlobalStatsRequest(ctx context.Context, path string, maxDate *string, minDate *string) (*http.Request, error) {
+func (c *Client) NewMttrGlobalStatsRequest(ctx context.Context, path string, maxDate *string, minDate *string, tags *string) (*http.Request, error) {
 	scheme := c.Scheme
 	if scheme == "" {
 		scheme = "https"
@@ -134,6 +140,9 @@ func (c *Client) NewMttrGlobalStatsRequest(ctx context.Context, path string, max
 	}
 	if minDate != nil {
 		values.Set("minDate", *minDate)
+	}
+	if tags != nil {
+		values.Set("tags", *tags)
 	}
 	u.RawQuery = values.Encode()
 	req, err := http.NewRequestWithContext(ctx, "GET", u.String(), nil)

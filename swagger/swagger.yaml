@@ -73,7 +73,7 @@ definitions:
         - annotation/1
         - annotation/2
         items:
-          example: Illo et.
+          example: Ducimus sit odio tenetur consequatur.
           type: string
         type: array
     title: AssetAnnotationDeleteRequest
@@ -96,34 +96,6 @@ definitions:
     description: AssetCollection is the media type for an array of Asset (default
       view)
     example:
-    - alias: AnAlias
-      annotations:
-        annotation/1: value/1
-        annotation/2: value/2
-      classified_at: "2020-09-03T15:00:42.112975Z"
-      environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
-      id: a8720503-0284-45fd-9cf4-5bb6c500966f
-      identifier: vulcan.example.com
-      options: '{"timeout":60}'
-      rolfp: R:1/O:1/L:0/F:0/P:0+S:1
-      scannable: true
-      type:
-        id: 29f83d16-09c4-4be5-8cae-e232d41f388a
-        name: Hostname
-    - alias: AnAlias
-      annotations:
-        annotation/1: value/1
-        annotation/2: value/2
-      classified_at: "2020-09-03T15:00:42.112975Z"
-      environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
-      id: a8720503-0284-45fd-9cf4-5bb6c500966f
-      identifier: vulcan.example.com
-      options: '{"timeout":60}'
-      rolfp: R:1/O:1/L:0/F:0/P:0+S:1
-      scannable: true
-      type:
-        id: 29f83d16-09c4-4be5-8cae-e232d41f388a
-        name: Hostname
     - alias: AnAlias
       annotations:
         annotation/1: value/1
@@ -398,21 +370,6 @@ definitions:
       type:
         id: 29f83d16-09c4-4be5-8cae-e232d41f388a
         name: Hostname
-    - alias: AnAlias
-      classified_at: "2020-09-03T15:00:42.112975Z"
-      environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
-      id: a8720503-0284-45fd-9cf4-5bb6c500966f
-      identifier: vulcan.example.com
-      options: '{"timeout":60}'
-      rolfp: R:1/O:1/L:0/F:0/P:0+S:1
-      scannable: true
-      status:
-        code: 3944598920153519998
-        error: Quo placeat magni harum ea.
-        type: Voluptatum mollitia consequuntur dignissimos.
-      type:
-        id: 29f83d16-09c4-4be5-8cae-e232d41f388a
-        name: Hostname
     items:
       $ref: '#/definitions/Assetresponse'
     title: 'Mediatype identifier: assetresponse; type=collection; view=default'
@@ -521,7 +478,7 @@ definitions:
         - a14c7c65-66ab-4676-bcf6-0dea9719f5c6
         - 9f7a0c78-b752-4126-aa6d-0f286ada7b8f
         items:
-          example: Sit odio tenetur consequatur quibusdam.
+          example: Voluptate est.
           type: string
         type: array
     required:
@@ -1539,33 +1496,6 @@ definitions:
     description: ListassetentryCollection is the media type for an array of Listassetentry
       (default view)
     example:
-    - alias: AnAlias
-      annotations:
-        annotation/1: value/1
-        annotation/2: value/2
-      classified_at: "2020-09-03T15:00:42.112975Z"
-      environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
-      groups:
-      - description: All newly created assets are added to the Default group
-        id: f6360346-77a5-4f97-b919-331363b3af26
-        name: Default group
-        options: '{"timeout":60}'
-      - description: All newly created assets are added to the Default group
-        id: f6360346-77a5-4f97-b919-331363b3af26
-        name: Default group
-        options: '{"timeout":60}'
-      - description: All newly created assets are added to the Default group
-        id: f6360346-77a5-4f97-b919-331363b3af26
-        name: Default group
-        options: '{"timeout":60}'
-      id: a8720503-0284-45fd-9cf4-5bb6c500966f
-      identifier: vulcan.example.com
-      options: '{"timeout":60}'
-      rolfp: R:1/O:1/L:0/F:0/P:0+S:1
-      scannable: true
-      type:
-        id: 29f83d16-09c4-4be5-8cae-e232d41f388a
-        name: Hostname
     - alias: AnAlias
       annotations:
         annotation/1: value/1
@@ -2996,6 +2926,12 @@ paths:
         name: minScore
         required: false
         type: number
+      - description: Comma separated list of team tags to filter by. Only admin and
+          observer users are allowed to set this field.
+        in: query
+        name: tags
+        required: false
+        type: string
       produces:
       - exposure
       responses:
@@ -3027,6 +2963,12 @@ paths:
         name: minScore
         required: false
         type: number
+      - description: Comma separated list of team tags to filter by. Only admin and
+          observer users are allowed to set this field.
+        in: query
+        name: tags
+        required: false
+        type: string
       produces:
       - current_exposure
       responses:
@@ -3054,6 +2996,12 @@ paths:
       - description: Minimum date to filter statistics by
         in: query
         name: minDate
+        required: false
+        type: string
+      - description: Comma separated list of team tags to filter by. Only admin and
+          observer users are allowed to set this field.
+        in: query
+        name: tags
         required: false
         type: string
       produces:

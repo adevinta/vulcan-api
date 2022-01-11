@@ -223,6 +223,7 @@ var _ = Resource("global-stats", func() {
 		Description("Get global MTTR statistics.")
 		Routing(GET("/mttr"))
 		Params(func() {
+			Param("tags", String, "Comma separated list of team tags to filter by. Only admin and observer users are allowed to set this field.")
 			Param("minDate", String, "Minimum date to filter statistics by")
 			Param("maxDate", String, "Maximum date to filter statistics by")
 		})
@@ -234,6 +235,7 @@ var _ = Resource("global-stats", func() {
 		Description("Get global exposure statistics. This metric takes into account the exposure across all lifecycle of vulnerabilities.")
 		Routing(GET("/exposure"))
 		Params(func() {
+			Param("tags", String, "Comma separated list of team tags to filter by. Only admin and observer users are allowed to set this field.")
 			Param("atDate", String, "Specific date to get statistics at")
 			Param("minScore", Number, "Minimum issues score filter")
 			Param("maxScore", Number, "Maximum issues score filter")
@@ -246,6 +248,7 @@ var _ = Resource("global-stats", func() {
 		Description("Get global current exposure statistics. This metric takes into account only the exposure for open vulnerabilities since the last time they were detected.")
 		Routing(GET("/exposure/current"))
 		Params(func() {
+			Param("tags", String, "Comma separated list of team tags to filter by. Only admin and observer users are allowed to set this field.")
 			Param("minScore", Number, "Minimum issues score filter")
 			Param("maxScore", Number, "Maximum issues score filter")
 		})
