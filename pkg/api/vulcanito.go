@@ -130,4 +130,5 @@ type VulcanitoService interface {
 	StatsCurrentExposure(ctx context.Context, params StatsParams) (*StatsCurrentExposure, error)
 	StatsOpen(ctx context.Context, params StatsParams) (*StatsOpen, error)
 	StatsFixed(ctx context.Context, params StatsParams) (*StatsFixed, error)
+	StatsAssets(ctx context.Context, params StatsParams) (*StatsAssets, error)
 }

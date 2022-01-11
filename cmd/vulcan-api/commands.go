@@ -484,20 +484,24 @@ func addAuthorizationMiddleware(endpoints endpoint.Endpoints, db api.VulcanitoSt
 	authMiddleware := middleware.NewAuthorizationMiddleware(authSrv, logger)
 
 	exceptions := map[string]bool{
-		endpoint.Healthcheck:         true,
-		endpoint.FindJob:             true,
-		endpoint.CreateUser:          true,
-		endpoint.UpdateUser:          true,
-		endpoint.DeleteUser:          true,
-		endpoint.FindUser:            true,
-		endpoint.FindProfile:         true,
-		endpoint.ListTeams:           true,
-		endpoint.CreateTeam:          true,
-		endpoint.ListUsers:           true,
-		endpoint.GenerateAPIToken:    true,
-		endpoint.FindTeamsByUser:     true,
-		endpoint.GlobalStatsMTTR:     true,
-		endpoint.GlobalStatsExposure: true,
+		endpoint.Healthcheck:                true,
+		endpoint.FindJob:                    true,
+		endpoint.CreateUser:                 true,
+		endpoint.UpdateUser:                 true,
+		endpoint.DeleteUser:                 true,
+		endpoint.FindUser:                   true,
+		endpoint.FindProfile:                true,
+		endpoint.ListTeams:                  true,
+		endpoint.CreateTeam:                 true,
+		endpoint.ListUsers:                  true,
+		endpoint.GenerateAPIToken:           true,
+		endpoint.FindTeamsByUser:            true,
+		endpoint.GlobalStatsMTTR:            true,
+		endpoint.GlobalStatsExposure:        true,
+		endpoint.GlobalStatsCurrentExposure: true,
+		endpoint.GlobalStatsOpen:            true,
+		endpoint.GlobalStatsFixed:           true,
+		endpoint.GlobalStatsAssets:          true,
 	}
 
 	for name := range endpoints {
@@ -587,6 +591,9 @@ func addWhitelistingMiddleware(endpoints endpoint.Endpoints, logger log.Logger) 
 		endpoint.GlobalStatsMTTR:            true,
 		endpoint.GlobalStatsExposure:        true,
 		endpoint.GlobalStatsCurrentExposure: true,
+		endpoint.GlobalStatsOpen:            true,
+		endpoint.GlobalStatsFixed:           true,
+		endpoint.GlobalStatsAssets:          true,
 	}
 
 	for name := range endpoints {
