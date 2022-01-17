@@ -120,6 +120,16 @@ var StatsFixedMedia = MediaType("statsFixed", func() {
 	})
 })
 
+var StatsAssetsMedia = MediaType("statsAssets", func() {
+	Description("Assets by severity stats")
+	Attributes(func() {
+		Attribute("assets", StatsTotalMedia, "Stats for assets by severity")
+	})
+	View("default", func() {
+		Attribute("assets")
+	})
+})
+
 var StatsCoverageMedia = MediaType("statsCoverage", func() {
 	Description("Asset Coverage: discovered vs. confirmed")
 	Attributes(func() {
@@ -223,6 +233,7 @@ var _ = Resource("global-stats", func() {
 		Description("Get global MTTR statistics.")
 		Routing(GET("/mttr"))
 		Params(func() {
+			Param("tags", String, "Comma separated list of team tags to filter by. Only admin and observer users are allowed to set this field.")
 			Param("minDate", String, "Minimum date to filter statistics by")
 			Param("maxDate", String, "Maximum date to filter statistics by")
 		})
@@ -234,6 +245,7 @@ var _ = Resource("global-stats", func() {
 		Description("Get global exposure statistics. This metric takes into account the exposure across all lifecycle of vulnerabilities.")
 		Routing(GET("/exposure"))
 		Params(func() {
+			Param("tags", String, "Comma separated list of team tags to filter by. Only admin and observer users are allowed to set this field.")
 			Param("atDate", String, "Specific date to get statistics at")
 			Param("minScore", Number, "Minimum issues score filter")
 			Param("maxScore", Number, "Maximum issues score filter")
@@ -246,10 +258,53 @@ var _ = Resource("global-stats", func() {
 		Description("Get global current exposure statistics. This metric takes into account only the exposure for open vulnerabilities since the last time they were detected.")
 		Routing(GET("/exposure/current"))
 		Params(func() {
+			Param("tags", String, "Comma separated list of team tags to filter by. Only admin and observer users are allowed to set this field.")
 			Param("minScore", Number, "Minimum issues score filter")
 			Param("maxScore", Number, "Maximum issues score filter")
 		})
 		Security("Bearer")
 		Response(OK, StatsCurrentExposureMedia)
+	})
+
+	Action("open", func() {
+		Description("Get global open issues statistics.")
+		Routing(GET("/open"))
+		Params(func() {
+			Param("tags", String, "Comma separated list of team tags to filter by. Only admin and observer users are allowed to set this field.")
+			Param("minDate", String, "Minimum date to filter statistics by")
+			Param("maxDate", String, "Maximum date to filter statistics by")
+			Param("atDate", String, "Specific date to get statistics at (incompatible and preferential to min and max date params)")
+			Param("identifiers", String, "A comma separated list of asset identifiers")
+			Param("labels", String, "A comma separated list of associated labels")
+		})
+		Security("Bearer")
+		Response(OK, StatsOpenMedia)
+	})
+
+	Action("fixed", func() {
+		Description("Get global fixed issues statistics.")
+		Routing(GET("/fixed"))
+		Params(func() {
+			Param("tags", String, "Comma separated list of team tags to filter by. Only admin and observer users are allowed to set this field.")
+			Param("minDate", String, "Minimum date to filter statistics by")
+			Param("maxDate", String, "Maximum date to filter statistics by")
+			Param("atDate", String, "Specific date to get statistics at (incompatible and preferential to min and max date params)")
+			Param("identifiers", String, "A comma separated list of asset identifiers")
+			Param("labels", String, "A comma separated list of associated labels")
+		})
+		Security("Bearer")
+		Response(OK, StatsFixedMedia)
+	})
+
+	Action("assets", func() {
+		Description("Get global assets per severity statistics.")
+		Routing(GET("/assets"))
+		Params(func() {
+			Param("tags", String, "Comma separated list of team tags to filter by. Only admin and observer users are allowed to set this field.")
+			Param("identifiers", String, "A comma separated list of asset identifiers")
+			Param("labels", String, "A comma separated list of associated labels")
+		})
+		Security("Bearer")
+		Response(OK, StatsAssetsMedia)
 	})
 })

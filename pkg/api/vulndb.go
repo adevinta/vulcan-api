@@ -100,6 +100,7 @@ type TargetsList struct {
 // the statistics.
 type StatsParams struct {
 	Tag         string
+	Tags        string
 	MinDate     string
 	MaxDate     string
 	AtDate      string
@@ -132,6 +133,11 @@ type StatsOpen struct {
 // StatsFixed represents the stats for fixed issues grouped by severity.
 type StatsFixed struct {
 	FixedIssues vulndb.StatsIssueSeverity `json:"fixed_issues"`
+}
+
+// StatsAssets represents the stats for assets grouped by severity.
+type StatsAssets struct {
+	Assets vulndb.StatsAssetsSeverity `json:"assets"`
 }
 
 type StatsCoverage struct {

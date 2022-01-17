@@ -21,6 +21,7 @@ const (
 
 type StatsRequest struct {
 	TeamID      string  `json:"team_id" urlvar:"team_id"`
+	Tags        string  `urlquery:"tags"`
 	MinDate     string  `urlquery:"minDate"`
 	MaxDate     string  `urlquery:"maxDate"`
 	AtDate      string  `urlquery:"atDate"`
@@ -182,6 +183,18 @@ func makeGlobalStatsMTTREndpoint(s api.VulcanitoService, logger kitlog.Logger) e
 			return nil, errors.Validation("Invalid query params")
 		}
 
+		// Only admin and observer users
+		// can set Tags query parameter.
+		if r.Tags != "" {
+			authorized, err := isAuthorizedTagsParam(ctx)
+			if err != nil {
+				return nil, err
+			}
+			if !authorized {
+				return nil, errors.Forbidden("User is not allowed to set Tags parameter")
+			}
+		}
+
 		// Build stats param with void tag
 		// so we get global metrics instead
 		// of specific team metrics.
@@ -206,6 +219,18 @@ func makeGlobalStatsExposureEndpoint(s api.VulcanitoService, logger kitlog.Logge
 			return nil, errors.Validation("Invalid query params")
 		}
 
+		// Only admin and observer users
+		// can set Tags query parameter.
+		if r.Tags != "" {
+			authorized, err := isAuthorizedTagsParam(ctx)
+			if err != nil {
+				return nil, err
+			}
+			if !authorized {
+				return nil, errors.Forbidden("User is not allowed to set Tags parameter")
+			}
+		}
+
 		// Build stats param with void tag
 		// so we get global metrics instead
 		// of specific team metrics.
@@ -226,12 +251,120 @@ func makeGlobalStatsCurrentExposureEndpoint(s api.VulcanitoService, logger kitlo
 			return nil, errors.Assertion("Type assertion failed")
 		}
 
+		// Only admin and observer users
+		// can set Tags query parameter.
+		if r.Tags != "" {
+			authorized, err := isAuthorizedTagsParam(ctx)
+			if err != nil {
+				return nil, err
+			}
+			if !authorized {
+				return nil, errors.Forbidden("User is not allowed to set Tags parameter")
+			}
+		}
+
 		// Build stats param with void tag
 		// so we get global metrics instead
 		// of specific team metrics.
 		params := buildStatsParams("", r)
 
 		response, err = s.StatsCurrentExposure(ctx, params)
+		if err != nil {
+			return nil, err
+		}
+		return Ok{response}, nil
+	}
+}
+
+func makeGlobalStatsOpenEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		r, ok := request.(*StatsRequest)
+		if !ok {
+			return nil, errors.Assertion("Type assertion failed")
+		}
+
+		// Only admin and observer users
+		// can set Tags query parameter.
+		if r.Tags != "" {
+			authorized, err := isAuthorizedTagsParam(ctx)
+			if err != nil {
+				return nil, err
+			}
+			if !authorized {
+				return nil, errors.Forbidden("User is not allowed to set Tags parameter")
+			}
+		}
+
+		// Build stats param with void tag
+		// so we get global metrics instead
+		// of specific team metrics.
+		params := buildStatsParams("", r)
+
+		response, err = s.StatsOpen(ctx, params)
+		if err != nil {
+			return nil, err
+		}
+		return Ok{response}, nil
+	}
+}
+
+func makeGlobalStatsFixedEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		r, ok := request.(*StatsRequest)
+		if !ok {
+			return nil, errors.Assertion("Type assertion failed")
+		}
+
+		// Only admin and observer users
+		// can set Tags query parameter.
+		if r.Tags != "" {
+			authorized, err := isAuthorizedTagsParam(ctx)
+			if err != nil {
+				return nil, err
+			}
+			if !authorized {
+				return nil, errors.Forbidden("User is not allowed to set Tags parameter")
+			}
+		}
+
+		// Build stats param with void tag
+		// so we get global metrics instead
+		// of specific team metrics.
+		params := buildStatsParams("", r)
+
+		response, err = s.StatsFixed(ctx, params)
+		if err != nil {
+			return nil, err
+		}
+		return Ok{response}, nil
+	}
+}
+
+func makeGlobalStatsAssetsEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		r, ok := request.(*StatsRequest)
+		if !ok {
+			return nil, errors.Assertion("Type assertion failed")
+		}
+
+		// Only admin and observer users
+		// can set Tags query parameter.
+		if r.Tags != "" {
+			authorized, err := isAuthorizedTagsParam(ctx)
+			if err != nil {
+				return nil, err
+			}
+			if !authorized {
+				return nil, errors.Forbidden("User is not allowed to set Tags parameter")
+			}
+		}
+
+		// Build stats param with void tag
+		// so we get global metrics instead
+		// of specific team metrics.
+		params := buildStatsParams("", r)
+
+		response, err = s.StatsAssets(ctx, params)
 		if err != nil {
 			return nil, err
 		}
@@ -278,6 +411,7 @@ func isValidExposureRequest(r *StatsRequest) bool {
 func buildStatsParams(tag string, r *StatsRequest) api.StatsParams {
 	return api.StatsParams{
 		Tag:         tag,
+		Tags:        r.Tags,
 		MinDate:     r.MinDate,
 		MaxDate:     r.MaxDate,
 		AtDate:      r.AtDate,
@@ -290,4 +424,15 @@ func buildStatsParams(tag string, r *StatsRequest) api.StatsParams {
 
 func isValidDate(date string) bool {
 	return regexp.MustCompile(dateFmtRegEx).MatchString(date)
+}
+
+// isAuthorizedTagsParam returns true if context user is authorized
+// to set Tags query param. Only admin and observer roles are allowed.
+func isAuthorizedTagsParam(ctx context.Context) (bool, error) {
+	user, err := api.UserFromContext(ctx)
+	if err != nil {
+		return false, err
+	}
+	return (user.Admin != nil && *user.Admin) ||
+		(user.Observer != nil && *user.Observer), nil
 }
