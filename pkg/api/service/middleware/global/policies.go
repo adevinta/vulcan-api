@@ -23,7 +23,7 @@ func (e *globalEntities) ListPolicies(ctx context.Context, teamID string) ([]*ap
 	}
 	globalPolicies := e.store.Policies()
 	for n, p := range globalPolicies {
-		checktypes, err := p.Eval(ctx)
+		checktypes, err := p.Eval(ctx, e.globalPolicyConfig)
 		if err != nil {
 			return nil, err
 		}
@@ -43,7 +43,7 @@ func (e *globalEntities) FindPolicy(ctx context.Context, policyID string) (*api.
 	if !ok {
 		return e.VulcanitoService.FindPolicy(ctx, policyID)
 	}
-	return globalPolicyToPolicy(ctx, p)
+	return globalPolicyToPolicy(ctx, e.globalPolicyConfig, p)
 }
 
 func (e *globalEntities) UpdatePolicy(ctx context.Context, policy api.Policy) (*api.Policy, error) {
@@ -65,7 +65,7 @@ func (e *globalEntities) ListChecktypeSetting(ctx context.Context, policyID stri
 	if !ok {
 		return e.VulcanitoService.ListChecktypeSetting(ctx, policyID)
 	}
-	return p.Eval(ctx)
+	return p.Eval(ctx, e.globalPolicyConfig)
 }
 
 func (e *globalEntities) FindChecktypeSetting(ctx context.Context, policyID, checktypeSettingID string) (*api.ChecktypeSetting, error) {
@@ -74,7 +74,7 @@ func (e *globalEntities) FindChecktypeSetting(ctx context.Context, policyID, che
 		return e.VulcanitoService.FindChecktypeSetting(ctx, policyID, checktypeSettingID)
 	}
 
-	checktypes, err := p.Eval(ctx)
+	checktypes, err := p.Eval(ctx, e.globalPolicyConfig)
 	if err != nil {
 		return nil, err
 	}
@@ -105,8 +105,8 @@ func (e *globalEntities) UpdateChecktypeSetting(ctx context.Context, checktypeSe
 	return e.VulcanitoService.UpdateChecktypeSetting(ctx, checktypeSetting)
 }
 
-func globalPolicyToPolicy(ctx context.Context, p global.Policy) (*api.Policy, error) {
-	settings, err := p.Eval(ctx)
+func globalPolicyToPolicy(ctx context.Context, gpc global.GlobalPolicyConfig, p global.Policy) (*api.Policy, error) {
+	settings, err := p.Eval(ctx, gpc)
 	if err != nil {
 		return nil, err
 	}

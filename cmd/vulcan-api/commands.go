@@ -131,19 +131,20 @@ type awsCatalogueConfig struct {
 }
 
 type config struct {
-	Server          serverConfig
-	DB              dbConfig
-	Log             logConfig
-	SAML            samlConfig
-	Defaults        store.DefaultEntities
-	ScanEngine      scanengine.Config
-	Scheduler       schedule.Config
-	SQS             queue.Config
-	Reports         reports.Config
-	VulcanCore      vulcanCoreConfig
-	VulnerabilityDB vulnerabilityDBConfig
-	Metrics         metricsConfig
-	AWSCatalogue    awsCatalogueConfig
+	Server             serverConfig
+	DB                 dbConfig
+	Log                logConfig
+	SAML               samlConfig
+	Defaults           store.DefaultEntities
+	ScanEngine         scanengine.Config
+	Scheduler          schedule.Config
+	SQS                queue.Config
+	Reports            reports.Config
+	VulcanCore         vulcanCoreConfig
+	VulnerabilityDB    vulnerabilityDBConfig
+	Metrics            metricsConfig
+	AWSCatalogue       awsCatalogueConfig
+	GlobalPolicyConfig global.GlobalPolicyConfig `mapstructure:"globalpolicy"`
 }
 
 func initConfig() {
@@ -247,7 +248,7 @@ func startServer() error {
 		fmt.Printf("error creating checktypesinformer: %v", err)
 		return err
 	}
-	globalMiddleware := globalmiddleware.NewEntities(logger, globalEntities, db, schedulerClient, schedulerClient, cfg.ScanEngine, metricsClient)
+	globalMiddleware := globalmiddleware.NewEntities(logger, globalEntities, db, schedulerClient, schedulerClient, cfg.ScanEngine, metricsClient, cfg.GlobalPolicyConfig)
 	// Add global middleware to the vulcanito service.
 	vulcanitoService = globalMiddleware(vulcanitoService)
 

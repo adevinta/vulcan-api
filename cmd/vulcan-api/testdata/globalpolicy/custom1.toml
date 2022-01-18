@@ -1,0 +1,7 @@
+[globalpolicy]
+[globalpolicy.custom1]
+allowed_assettypes = ["assettypeA"]
+blocked_assettypes = []
+allowed_checks = ["check1", "check2"]
+blocked_checks = []
+excluding_suffixes = ["-experimental"]

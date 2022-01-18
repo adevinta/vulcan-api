@@ -57,3 +57,12 @@ url = "https://catalogue.example.com"
 key = "a key"
 retries = 4
 retry_interval = 2 # seconds
+
+[globalpolicy]
+# This config policy emulates code policy definition.
+[globalpolicy.web-scanning-global]
+allowed_assettypes = []
+blocked_assettypes = []
+allowed_checks = ["vulcan-zap"]
+blocked_checks = []
+excluding_suffixes = ["-experimental"]
