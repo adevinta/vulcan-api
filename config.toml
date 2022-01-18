@@ -63,3 +63,7 @@ url = "$AWSCATALOGUE_URL"
 key = "$AWSCATALOGUE_KEY"
 retries = $AWSCATALOGUE_RETRIES
 retry_interval = $AWSCATALOGUE_RETRY_INTERVAL
+
+# Leave this entry at the end so run.sh can fill dynamically
+# global program policy configurations accordingly.
+[globalpolicy]
