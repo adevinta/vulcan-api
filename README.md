@@ -84,6 +84,12 @@ Those are the variables you have to setup:
 |VULNERABILITYDB_URL||http://localhost:8083|
 |SCAN_REDIRECT_URL|Redirecting URL for reports, OPTIONAL|https://insights-redirect.vulcan.s3-xxx.amazonaws.com/index.html?reportUrl=|
 |VULCAN_UI_URL|Vulcan UI base URL for Digest report link|http://localhost:1234|
+|GPC_${i}_NAME|Specify the name of the global policy that the ${i} ALLOW/BLOCK list will apply. Rquired if any ALLOW/BLOCK list is specified.|web-scanning-global|
+|GPC_${i}_ALLOWED_ASSETTYPES|Specify an array of allowed assettypes for the specified global policy. Optional.|[]|
+|GPC_${i}_BLOCKED_ASSETTYPES|Specify an array of blocked assettypes for the specified global policy. Optional.|[]|
+|GPC_${i}_ALLOWED_CHECKS|Specify an array of allowed checks for the specified global policy. Optional.|["vulcan-zap","vulcan-burp"]|
+|GPC_${i}_BLOCKED_CHECKS|Specify an array of blocked checks for the specified global policy. Optional.|["vulcan-masscan"]|
+|GPC_${i}_EXCLUDING_SUFFIXES|Specify an array of suffixes for checks to be excluded. Optional.|["experimental"]|
 
 First we have to build the `vulcan-api` because the build only copies the file.
 
