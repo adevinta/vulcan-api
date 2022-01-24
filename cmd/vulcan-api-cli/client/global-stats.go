@@ -67,8 +67,8 @@ func CurrentExposureGlobalStatsPath() string {
 }
 
 // Get global current exposure statistics. This metric takes into account only the exposure for open vulnerabilities since the last time they were detected.
-func (c *Client) CurrentExposureGlobalStats(ctx context.Context, path string, maxScore *float64, minScore *float64, tags *string) (*http.Response, error) {
-	req, err := c.NewCurrentExposureGlobalStatsRequest(ctx, path, maxScore, minScore, tags)
+func (c *Client) CurrentExposureGlobalStats(ctx context.Context, path string, labels *string, maxScore *float64, minScore *float64, tags *string) (*http.Response, error) {
+	req, err := c.NewCurrentExposureGlobalStatsRequest(ctx, path, labels, maxScore, minScore, tags)
 	if err != nil {
 		return nil, err
 	}
@@ -76,20 +76,23 @@ func (c *Client) CurrentExposureGlobalStats(ctx context.Context, path string, ma
 }
 
 // NewCurrentExposureGlobalStatsRequest create the request corresponding to the current exposure action endpoint of the global-stats resource.
-func (c *Client) NewCurrentExposureGlobalStatsRequest(ctx context.Context, path string, maxScore *float64, minScore *float64, tags *string) (*http.Request, error) {
+func (c *Client) NewCurrentExposureGlobalStatsRequest(ctx context.Context, path string, labels *string, maxScore *float64, minScore *float64, tags *string) (*http.Request, error) {
 	scheme := c.Scheme
 	if scheme == "" {
 		scheme = "https"
 	}
 	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
 	values := u.Query()
+	if labels != nil {
+		values.Set("labels", *labels)
+	}
 	if maxScore != nil {
-		tmp130 := strconv.FormatFloat(*maxScore, 'f', -1, 64)
-		values.Set("maxScore", tmp130)
+		tmp114 := strconv.FormatFloat(*maxScore, 'f', -1, 64)
+		values.Set("maxScore", tmp114)
 	}
 	if minScore != nil {
-		tmp131 := strconv.FormatFloat(*minScore, 'f', -1, 64)
-		values.Set("minScore", tmp131)
+		tmp115 := strconv.FormatFloat(*minScore, 'f', -1, 64)
+		values.Set("minScore", tmp115)
 	}
 	if tags != nil {
 		values.Set("tags", *tags)
@@ -134,12 +137,12 @@ func (c *Client) NewExposureGlobalStatsRequest(ctx context.Context, path string,
 		values.Set("atDate", *atDate)
 	}
 	if maxScore != nil {
-		tmp132 := strconv.FormatFloat(*maxScore, 'f', -1, 64)
-		values.Set("maxScore", tmp132)
+		tmp116 := strconv.FormatFloat(*maxScore, 'f', -1, 64)
+		values.Set("maxScore", tmp116)
 	}
 	if minScore != nil {
-		tmp133 := strconv.FormatFloat(*minScore, 'f', -1, 64)
-		values.Set("minScore", tmp133)
+		tmp117 := strconv.FormatFloat(*minScore, 'f', -1, 64)
+		values.Set("minScore", tmp117)
 	}
 	if tags != nil {
 		values.Set("tags", *tags)
@@ -218,8 +221,8 @@ func MttrGlobalStatsPath() string {
 }
 
 // Get global MTTR statistics.
-func (c *Client) MttrGlobalStats(ctx context.Context, path string, maxDate *string, minDate *string, tags *string) (*http.Response, error) {
-	req, err := c.NewMttrGlobalStatsRequest(ctx, path, maxDate, minDate, tags)
+func (c *Client) MttrGlobalStats(ctx context.Context, path string, labels *string, maxDate *string, minDate *string, tags *string) (*http.Response, error) {
+	req, err := c.NewMttrGlobalStatsRequest(ctx, path, labels, maxDate, minDate, tags)
 	if err != nil {
 		return nil, err
 	}
@@ -227,13 +230,16 @@ func (c *Client) MttrGlobalStats(ctx context.Context, path string, maxDate *stri
 }
 
 // NewMttrGlobalStatsRequest create the request corresponding to the mttr action endpoint of the global-stats resource.
-func (c *Client) NewMttrGlobalStatsRequest(ctx context.Context, path string, maxDate *string, minDate *string, tags *string) (*http.Request, error) {
+func (c *Client) NewMttrGlobalStatsRequest(ctx context.Context, path string, labels *string, maxDate *string, minDate *string, tags *string) (*http.Request, error) {
 	scheme := c.Scheme
 	if scheme == "" {
 		scheme = "https"
 	}
 	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
 	values := u.Query()
+	if labels != nil {
+		values.Set("labels", *labels)
+	}
 	if maxDate != nil {
 		values.Set("maxDate", *maxDate)
 	}
