@@ -81,7 +81,7 @@ var (
 			// Minute | Hour | Dom | Month | Dow
 			// Standard crontab specs, e.g. "* * * * ?"
 			// Descriptors, e.g. "@midnight", "@every 1h30m"
-			Cron: "0 8 15 * *", // Run the scan every 15th of the month at 8am UTC.
+			Cron: "0 8 * * 3", // Run the scan every Wednesday at 8am UTC.
 
 			// Autosend is set by default to false for this program.
 			Autosend: &vFalse,
