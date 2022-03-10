@@ -13,7 +13,7 @@ require (
 	github.com/adevinta/vulnerability-db-api v0.0.0-20211222100150-3406b653577e
 	github.com/aws/aws-sdk-go v1.40.59
 	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
-	github.com/docker/distribution v2.7.1+incompatible
+	github.com/docker/distribution v2.8.0+incompatible
 	github.com/go-kit/kit v0.12.0
 	github.com/goadesign/goa v1.4.3
 	github.com/golang-jwt/jwt/v4 v4.1.0
