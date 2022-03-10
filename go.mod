@@ -9,7 +9,7 @@ require (
 	github.com/adevinta/vulcan-metrics-client v0.0.0-20200617105830-6078a0e12ebd
 	github.com/adevinta/vulcan-report v0.0.0-20190503133936-d8a2d4cb18ff
 	github.com/adevinta/vulcan-scan-engine v0.0.0-20211011153901-f80146c81d43
-	github.com/adevinta/vulcan-types v0.0.0-20211011153447-1b4d6804c22e
+	github.com/adevinta/vulcan-types v0.0.0-20220310133120-53f000e5196f
 	github.com/adevinta/vulnerability-db-api v0.0.0-20211222100150-3406b653577e
 	github.com/aws/aws-sdk-go v1.40.59
 	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
