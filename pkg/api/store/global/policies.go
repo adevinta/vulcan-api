@@ -34,6 +34,7 @@ func init() {
 	registerPolicy(&SensitivePolicy{})
 	registerPolicy(&WebScanningPolicy{})
 	registerPolicy(&RedconPolicy{})
+	registerPolicy(&CPPolicy{})
 }
 
 // DefaultPolicy contains all checks execpts the ones for docker images.
@@ -248,6 +249,55 @@ func (r *RedconPolicy) Eval(ctx context.Context, gpc GlobalPolicyConfig) ([]*api
 	}
 
 	// The Redcon policy is the same that the Default policy
+	// but excluding "vulcan-nessus".
+	dp := &DefaultPolicy{checktypeInformer: r.checktypeInformer}
+	checktypes, err := dp.Eval(ctx, gpc)
+	if err != nil {
+		return nil, err
+	}
+	index := -1
+	for i, c := range checktypes {
+		if c.CheckTypeName == "vulcan-nessus" {
+			index = i
+		}
+	}
+	if index == -1 {
+		return checktypes, nil
+	}
+	return append(checktypes[:index], checktypes[index+1:]...), nil
+}
+
+// CPPolicy contains all checks associated with the "DefaultPolicy", but
+// excluding "vulcan-nessus"
+type CPPolicy struct {
+	checktypeInformer ChecktypesInformer
+}
+
+// Name returns the name of the group.
+func (r *CPPolicy) Name() string {
+	return "cp-global"
+}
+
+// Description returns a meaningful explanation of the group.
+func (r *CPPolicy) Description() string {
+	return "Default set of checktypes that will be executed against the assets present in the cp-global group"
+}
+
+func (r *CPPolicy) Init(informer ChecktypesInformer) error {
+	r.checktypeInformer = informer
+	return nil
+}
+
+func (r *CPPolicy) Eval(ctx context.Context, gpc GlobalPolicyConfig) ([]*api.ChecktypeSetting, error) {
+	checkTypesInfo, err := r.checktypeInformer.ByAssettype(ctx)
+	if err != nil {
+		return nil, errors.Default(err)
+	}
+	if config, ok := gpc[r.Name()]; ok {
+		return evalWithConfig(ctx, config, checkTypesInfo)
+	}
+
+	// The CP policy is the same that the Default policy
 	// but excluding "vulcan-nessus".
 	dp := &DefaultPolicy{checktypeInformer: r.checktypeInformer}
 	checktypes, err := dp.Eval(ctx, gpc)

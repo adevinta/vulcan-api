@@ -18,6 +18,7 @@ func init() {
 	registerGroup(&SensitiveGroup{&globalGroup{}})
 	registerGroup(&RedconGroup{&globalGroup{}})
 	registerGroup(&WebScanningGroup{&globalGroup{}})
+	registerGroup(&CPGroup{&globalGroup{}})
 }
 
 // DefaultGroup resolves all the assets present
@@ -224,4 +225,72 @@ func (g *WebScanningGroup) Eval(teamID string) ([]*api.Asset, error) {
 	var excluded []string
 
 	return g.Store.DisjoinAssetsInGroups(teamID, wsg.ID, excluded)
+}
+
+// CPGroup resolves the assets detected by CP excluding those present
+// in the Default, Sensitive and Redcon groups.
+type CPGroup struct {
+	*globalGroup
+}
+
+// Name returns the name of the group.
+func (g *CPGroup) Name() string {
+	return "cp-global"
+}
+
+// Description returns a meaningful explanation of the group.
+func (g *CPGroup) Description() string {
+	return `This global group contains the Common Platform assets as discovered
+	by the CP, excluding those present in the Default, Sensitive or Redcon
+	groups.`
+}
+
+// Eval returns the current assets of a team belonging to this group.
+func (g *CPGroup) Eval(teamID string) ([]*api.Asset, error) {
+	// Find the group id of the CP group of the team.
+	cpg, err := g.Store.FindGroupInfo(api.Group{
+		Name:   api.CPDiscoveredAssetsGroupName,
+		TeamID: teamID,
+	})
+	if err != nil {
+		if errors.IsRootOfKind(err, errors.ErrNotFound) {
+			return []*api.Asset{}, nil
+		}
+		return nil, err
+	}
+
+	var excluded []string
+
+	dg, err := g.Store.FindGroupInfo(api.Group{
+		Name:   "Default",
+		TeamID: teamID,
+	})
+	if err != nil {
+		return nil, fmt.Errorf("Default group not found: %w", err)
+	}
+	excluded = append(excluded, dg.ID)
+
+	sg, err := g.Store.FindGroupInfo(api.Group{
+		Name:   "Sensitive",
+		TeamID: teamID,
+	})
+	if err != nil && !errors.IsKind(err, errors.ErrNotFound) {
+		return nil, err
+	}
+	if err == nil {
+		excluded = append(excluded, sg.ID)
+	}
+
+	rg, err := g.Store.FindGroupInfo(api.Group{
+		Name:   api.DiscoveredAssetsGroupName,
+		TeamID: teamID,
+	})
+	if err != nil && !errors.IsKind(err, errors.ErrNotFound) {
+		return nil, err
+	}
+	if err == nil {
+		excluded = append(excluded, rg.ID)
+	}
+
+	return g.Store.DisjoinAssetsInGroups(teamID, cpg.ID, excluded)
 }
