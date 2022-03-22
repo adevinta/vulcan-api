@@ -33,8 +33,9 @@ func (d *DefaultGroup) Name() string {
 
 // Description returns a meanfull explanation of the group.
 func (d *DefaultGroup) Description() string {
-	return ` This global group contains all the assets that are in the default group of your team and not 
-	in the sensitive group. Assets in this group will be scanned using the default global policy`
+	return "This global group contains all the assets that are in the default " +
+		"group of your team and not in the sensitive group. Assets in this group " +
+		"will be scanned using the default global policy."
 }
 
 // Eval returns the current assets of a team belinging to this group.
@@ -126,7 +127,7 @@ func (d *SensitiveGroup) Name() string {
 }
 
 func (d *SensitiveGroup) Description() string {
-	return `assets in the sensitive group of the team`
+	return `Assets in the sensitive group of the team`
 }
 
 func (g *SensitiveGroup) ShadowTeamGroup() string {
@@ -240,9 +241,9 @@ func (g *CPGroup) Name() string {
 
 // Description returns a meaningful explanation of the group.
 func (g *CPGroup) Description() string {
-	return `This global group contains the Common Platform assets as discovered
-	by the CP, excluding those present in the Default, Sensitive or Redcon
-	groups.`
+	return "This global group contains the Common Platform assets as discovered " +
+		"by the CP, excluding those present in the Default, Sensitive or Redcon " +
+		"groups."
 }
 
 // Eval returns the current assets of a team belonging to this group.
