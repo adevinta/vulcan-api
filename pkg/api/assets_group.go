@@ -14,8 +14,11 @@ import (
 )
 
 const (
-	DiscoveredAssetsGroupName  = "security-team-discovered-assets"
-	WebScanningAssetsGroupName = "web-scanning"
+	// Assets discovered by Redcon.
+	DiscoveredAssetsGroupName = "security-team-discovered-assets"
+	// Assets discovered by the Common Platform.
+	CPDiscoveredAssetsGroupName = "cp-discovered-assets"
+	WebScanningAssetsGroupName  = "web-scanning"
 )
 
 type AssetGroup struct {
