@@ -216,7 +216,7 @@ func (s vulcanitoService) CreateAssetsMultiStatus(ctx context.Context, assets []
 		}
 
 		// For all AWSAccount assets that do not specify an Alias, try to
-		// automatically fetch one
+		// automatically fetch one.
 		for i, a := range assetGroup {
 			if a.AssetType.Name == "AWSAccount" && a.Alias == "" {
 				a.Alias = s.getAccountName(a.Identifier)
@@ -225,28 +225,29 @@ func (s vulcanitoService) CreateAssetsMultiStatus(ctx context.Context, assets []
 		}
 
 		// Request the asset creation to the store layer.
-		assetsCreated, err := s.db.CreateAssets(assetGroup, groups, annotations)
-		if err != nil {
-			// If assets group atomic creation failed, return error
-			// for the asset specified by user, not for the ones that
-			// might be auto detected from it if no type was specified.
-			response.Status = err
-			responses = append(responses, response)
-			continue
-		}
+		// Each asset is created independently, even if they have been detected.
+		// In case of failure the error is recorded as part of the response.
+		for _, a := range assetGroup {
+			assetCreated, err := s.db.CreateAsset(a, groups, annotations)
+			if err != nil {
+				response.Identifier = a.Identifier
+				response.AssetType = a.AssetType.ToResponse()
+				response.Status = err
+				responses = append(responses, response)
+				continue
+			}
 
-		// If the creation was successful, add the asset representation to the array of responses.
-		for _, ac := range assetsCreated {
+			// If the creation was successful, add the asset representation to the array of responses.
 			responses = append(responses, api.AssetCreationResponse{
-				ID:                ac.ID,
-				Identifier:        ac.Identifier,
-				AssetType:         ac.AssetType.ToResponse(),
-				Alias:             ac.Alias,
+				ID:                assetCreated.ID,
+				Identifier:        assetCreated.Identifier,
+				AssetType:         assetCreated.AssetType.ToResponse(),
+				Alias:             assetCreated.Alias,
 				Options:           asset.Options,
 				EnvironmentalCVSS: asset.EnvironmentalCVSS,
 				Scannable:         asset.Scannable,
-				ROLFP:             ac.ROLFP,
-				ClassifiedAt:      ac.ClassifiedAt,
+				ROLFP:             assetCreated.ROLFP,
+				ClassifiedAt:      assetCreated.ClassifiedAt,
 				Status: api.Status{
 					Code: http.StatusCreated,
 				},
