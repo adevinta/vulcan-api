@@ -117,8 +117,8 @@ func (db vulcanitoStore) createAssetsTX(tx *gorm.DB, assets []api.Asset, groups 
 	return createdAssets, nil
 }
 
-// CreateAsset persists an asset in the database along with the defined annotations.
-// It receives an asset and an array of groups.  The asset will be associated with all
+// CreateAsset persists an asset in the database along with its annotations.
+// It receives an asset and an array of groups. The asset will be associated with all
 // groups from that array.
 func (db vulcanitoStore) CreateAsset(a api.Asset, groups []api.Group) (*api.Asset, error) {
 	tx := db.Conn.Begin()
@@ -445,7 +445,12 @@ func (db vulcanitoStore) MergeAssets(mergeOps api.AssetMergeOperations) error {
 	// Create the new assets, its annotations and add them to the provided
 	// auto-discovery group.
 	for _, asset := range mergeOps.Create {
-		_, err := db.createAssetTX(tx, asset, []api.Group{mergeOps.Group})
+		a, err := db.createAssetTX(tx, asset, []api.Group{mergeOps.Group})
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+		_, err = db.putAssetAnnotationsTX(tx, mergeOps.TeamID, a.ID, asset.AssetAnnotations)
 		if err != nil {
 			tx.Rollback()
 			return err
