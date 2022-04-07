@@ -272,8 +272,8 @@ func (b *BrokerProxy) ListAssets(teamID string, asset api.Asset) ([]*api.Asset, 
 func (b *BrokerProxy) FindAsset(teamID, assetID string) (*api.Asset, error) {
 	return b.store.FindAsset(teamID, assetID)
 }
-func (b *BrokerProxy) CreateAsset(asset api.Asset, groups []api.Group, annotations []*api.AssetAnnotation) (*api.Asset, error) {
-	a, err := b.store.CreateAsset(asset, groups, annotations)
+func (b *BrokerProxy) CreateAsset(asset api.Asset, groups []api.Group) (*api.Asset, error) {
+	a, err := b.store.CreateAsset(asset, groups)
 	go b.awakeBroker()
 	return a, err
 }

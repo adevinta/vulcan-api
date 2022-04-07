@@ -250,13 +250,12 @@ func TestStoreCreateAsset(t *testing.T) {
 	expTeamUpdatedAt, _ := time.Parse("2006-01-02 15:04:05", "2017-01-01 12:30:12")
 
 	tests := []struct {
-		name        string
-		asset       api.Asset
-		groups      []api.Group
-		annotations []*api.AssetAnnotation
-		want        *api.Asset
-		wantErr     error
-		expOutbox   expOutbox
+		name      string
+		asset     api.Asset
+		groups    []api.Group
+		want      *api.Asset
+		wantErr   error
+		expOutbox expOutbox
 	}{
 		{
 			name: "HappyPath",
@@ -315,72 +314,6 @@ func TestStoreCreateAsset(t *testing.T) {
 			},
 		},
 		{
-			name: "Create Asset with Annotations",
-			asset: api.Asset{
-				TeamID:            "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
-				Identifier:        "ui.vulcan.example.com",
-				AssetTypeID:       hostnameType.ID,
-				EnvironmentalCVSS: common.String("c.v.s.s."),
-				Scannable:         common.Bool(true),
-				Options:           common.String(opts),
-				ROLFP:             &api.ROLFP{IsEmpty: true},
-				Alias:             "Alias2",
-			},
-			groups: []api.Group{
-				{
-					ID: "ab310d43-8cdf-4f65-9ee8-d1813a22bab4",
-				},
-			},
-			annotations: []*api.AssetAnnotation{
-				{
-					Key:   "Annotation1",
-					Value: "1",
-				},
-				{
-					Key:   "Annotation2",
-					Value: "2",
-				},
-			},
-			want: &api.Asset{
-				TeamID:            "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
-				Identifier:        "ui.vulcan.example.com",
-				AssetTypeID:       hostnameType.ID,
-				EnvironmentalCVSS: common.String("c.v.s.s."),
-				Scannable:         common.Bool(true),
-				Options:           common.String(opts),
-				ROLFP:             &api.ROLFP{IsEmpty: true},
-				Alias:             "Alias2",
-			},
-			wantErr: nil,
-			expOutbox: expOutbox{
-				action: opCreateAsset,
-				dto: cdc.OpCreateAssetDTO{
-					Asset: api.Asset{
-						TeamID: "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
-						Team: &api.Team{
-							ID:          "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
-							Name:        "Foo Team",
-							Description: "Foo foo...",
-							Tag:         "team:foo-team",
-							CreatedAt:   &expTeamCreatedAt,
-							UpdatedAt:   &expTeamUpdatedAt,
-						},
-						Alias:      "Alias2",
-						Identifier: "ui.vulcan.example.com",
-						AssetType: &api.AssetType{
-							ID:   hostnameType.ID,
-							Name: hostnameType.Name,
-						},
-						AssetTypeID:       hostnameType.ID,
-						EnvironmentalCVSS: common.String("c.v.s.s."),
-						ROLFP:             &api.ROLFP{IsEmpty: true},
-						Scannable:         common.Bool(true),
-						Options:           common.String(opts),
-					},
-				},
-			},
-		},
-		{
 			name: "NonExistentTeam",
 			asset: api.Asset{
 				TeamID:            "9f7a0c78-b752-4126-aa6d-0f286ada7b8f",
@@ -400,7 +333,7 @@ func TestStoreCreateAsset(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := testStoreLocal.CreateAsset(tt.asset, tt.groups, tt.annotations)
+			got, err := testStoreLocal.CreateAsset(tt.asset, tt.groups)
 			if errToStr(err) != errToStr(tt.wantErr) {
 				t.Fatal(err)
 			}

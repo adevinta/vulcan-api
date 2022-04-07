@@ -228,7 +228,8 @@ func (s vulcanitoService) CreateAssetsMultiStatus(ctx context.Context, assets []
 		// Each asset is created independently, even if they have been detected.
 		// In case of failure the error is recorded as part of the response.
 		for _, a := range assetGroup {
-			assetCreated, err := s.db.CreateAsset(a, groups, annotations)
+			a.AssetAnnotations = annotations
+			assetCreated, err := s.db.CreateAsset(a, groups)
 			if err != nil {
 				response.Identifier = a.Identifier
 				response.AssetType = a.AssetType.ToResponse()

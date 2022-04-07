@@ -66,26 +66,67 @@ func (db vulcanitoStore) createAssetsTX(tx *gorm.DB, assets []api.Asset, groups 
 	createdAssets := []api.Asset{}
 
 	for _, a := range assets {
-		asset, err := db.createAssetTX(tx, a, groups, annotations)
-		if err != nil {
+		// Check if asset already exists.
+		asset, err := db.findAsset(tx, a.TeamID, a.Identifier, a.AssetTypeID)
+		if err != nil && !errors.IsKind(err, errors.ErrNotFound) {
 			return nil, err
 		}
+
+		// If asset does not exist, create it.
+		if errors.IsKind(err, errors.ErrNotFound) {
+			asset, err = db.createAsset(tx, a)
+			if err != nil {
+				assetType := ""
+				if a.AssetType != nil {
+					assetType = a.AssetType.Name
+				}
+				err = errors.Create(err.Error(), "asset", a.Identifier, assetType)
+				return nil, err
+			}
+		}
+
+		// Associate asset with group for each input group.
+		for _, g := range groups {
+			assetGroup := api.AssetGroup{AssetID: asset.ID, GroupID: g.ID}
+			err := db.createAssetGroup(tx, assetGroup)
+			if err != nil {
+				if db.IsDuplicateError(err) {
+					err = errors.Duplicated(err.Error())
+				} else {
+					err = errors.Create(err.Error(), "assetGroup", asset.ID, g.ID)
+				}
+				return nil, err
+			}
+		}
+
+		// Associate asset with input annotations
+		for _, an := range annotations {
+			an := an
+
+			an.AssetID = asset.ID
+
+			result := tx.Create(&an)
+			if result.Error != nil {
+				return nil, errors.Create(result.Error, "assetAnnotation", asset.ID, an.Key)
+			}
+		}
+
 		createdAssets = append(createdAssets, *asset)
 	}
 
 	return createdAssets, nil
 }
 
-// CreateAsset persists an asset in the database.  It receives an asset, and
-// two arrays of associated groups and annotations. Returns the asset without
-// preloading the groups or annotations data.
-func (db vulcanitoStore) CreateAsset(a api.Asset, groups []api.Group, annotations []*api.AssetAnnotation) (*api.Asset, error) {
+// CreateAsset persists an asset in the database along with the defined annotations.
+// It receives an asset and an array of groups.  The asset will be associated with all
+// groups from that array.
+func (db vulcanitoStore) CreateAsset(a api.Asset, groups []api.Group) (*api.Asset, error) {
 	tx := db.Conn.Begin()
 	if tx.Error != nil {
 		return nil, db.logError(errors.Database(tx.Error))
 	}
 
-	created, err := db.createAssetTX(tx, a, groups, annotations)
+	created, err := db.createAssetTX(tx, a, groups)
 	if err != nil {
 		tx.Rollback()
 		return nil, err
@@ -97,14 +138,16 @@ func (db vulcanitoStore) CreateAsset(a api.Asset, groups []api.Group, annotation
 	return created, nil
 }
 
-func (db vulcanitoStore) createAssetTX(tx *gorm.DB, a api.Asset, groups []api.Group, annotations []*api.AssetAnnotation) (*api.Asset, error) {
-	// Check if asset already exists.
+func (db vulcanitoStore) createAssetTX(tx *gorm.DB, a api.Asset, groups []api.Group) (*api.Asset, error) {
+	// We try to retrieve the asset from the database using the Team ID, Identifier and Asset Type.
+	// This asset will be returned at the end of the function.
+	// Abort the transaction in case of errors during the search.
 	asset, err := db.findAsset(tx, a.TeamID, a.Identifier, a.AssetTypeID)
 	if err != nil && !errors.IsKind(err, errors.ErrNotFound) {
 		return nil, err
 	}
 
-	// If asset does not exist, create it.
+	// If the asset does not exist, then we create a new asset.
 	if errors.IsKind(err, errors.ErrNotFound) {
 		asset, err = db.createAsset(tx, a)
 		if err != nil {
@@ -117,32 +160,26 @@ func (db vulcanitoStore) createAssetTX(tx *gorm.DB, a api.Asset, groups []api.Gr
 		}
 	}
 
-	// Associate asset with group for each input group.
+	// Associate the asset with all groups.
 	for _, g := range groups {
+		// Declare an object representing the association between asset and group.
 		assetGroup := api.AssetGroup{AssetID: asset.ID, GroupID: g.ID}
+
+		// Create the association in the database.
 		err := db.createAssetGroup(tx, assetGroup)
 		if err != nil {
+			// Return an specific error for the case in which the association already exists.
 			if db.IsDuplicateError(err) {
 				err = errors.Duplicated(err.Error())
 			} else {
 				err = errors.Create(err.Error(), "assetGroup", asset.ID, g.ID)
 			}
+
 			return nil, err
 		}
 	}
 
-	// Associate asset with input annotations
-	for _, an := range annotations {
-		an := an
-
-		an.AssetID = asset.ID
-
-		result := tx.Create(&an)
-		if result.Error != nil {
-			return nil, errors.Create(result.Error, "assetAnnotation", asset.ID, an.Key)
-		}
-	}
-
+	// Return the asset
 	return asset, nil
 }
 
@@ -408,7 +445,7 @@ func (db vulcanitoStore) MergeAssets(mergeOps api.AssetMergeOperations) error {
 	// Create the new assets, its annotations and add them to the provided
 	// auto-discovery group.
 	for _, asset := range mergeOps.Create {
-		_, err := db.createAssetTX(tx, asset, []api.Group{mergeOps.Group}, asset.AssetAnnotations)
+		_, err := db.createAssetTX(tx, asset, []api.Group{mergeOps.Group})
 		if err != nil {
 			tx.Rollback()
 			return err
