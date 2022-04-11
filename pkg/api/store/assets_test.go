@@ -270,7 +270,7 @@ func TestStoreCreateAsset(t *testing.T) {
 				Alias:             "Alias1",
 			},
 			groups: []api.Group{
-				api.Group{
+				{
 					ID: "ab310d43-8cdf-4f65-9ee8-d1813a22bab4",
 				},
 			},

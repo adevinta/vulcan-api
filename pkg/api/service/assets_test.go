@@ -884,10 +884,12 @@ func TestVulcanitoService_CreateAssetsMultiStatus(t *testing.T) {
 			want: []api.AssetCreationResponse{
 				{
 					Identifier: "nfl.com",
-					AssetType:  api.AssetTypeResponse{},
-					Options:    common.String(""),
-					Scannable:  common.Bool(true),
-					ROLFP:      &api.ROLFP{IsEmpty: true},
+					AssetType: api.AssetTypeResponse{
+						Name: "Hostname",
+					},
+					Options:   common.String(""),
+					Scannable: common.Bool(true),
+					ROLFP:     &api.ROLFP{IsEmpty: true},
 					Status: &apierrors.ErrorStack{
 						Errors: []apierrors.Error{
 							{
@@ -896,6 +898,19 @@ func TestVulcanitoService_CreateAssetsMultiStatus(t *testing.T) {
 								HTTPStatusCode: 409,
 							},
 						},
+					},
+				},
+				{
+					Identifier: "nfl.com",
+					AssetType: api.AssetTypeResponse{
+						ID:   "e2e4b23e-b72c-40a6-9f72-e6ade33a7b00",
+						Name: "DomainName",
+					},
+					Options:   common.String(""),
+					Scannable: common.Bool(true),
+					ROLFP:     &api.ROLFP{IsEmpty: true},
+					Status: api.Status{
+						Code: 201,
 					},
 				},
 				{

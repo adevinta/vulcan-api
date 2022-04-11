@@ -91,7 +91,7 @@ func CreateMultiStatusAssetsPath(teamID string) string {
 // - This endpoint will return an array of AssetResponse in the following way:
 // · For each asset with specified type, returns an AssetResponse indicating the success or failure for its creation.
 // · For each asset with no type specified and successfully created, returns one AssetResponse for each auto detected asset.
-// · For each asset with no type specified which its creation produced an error, returns one AssetResponse indicating the failure for the creation of its detected assets without specifying which exact type failed.
+// · For each asset detected from the ones with no type indicated which their creation produced an error, returns one AssetResponse indicating the failure for its creation specifying its detected type.
 // In the case of all assets being successfully created, this endpoint will return status code 201-Created.
 // Otherwise, it will return a 207-MultiStatus code, indicating that at least one of the requested operations failed.
 //
