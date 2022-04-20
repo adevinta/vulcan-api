@@ -345,12 +345,20 @@ func (s vulcanitoService) calculateMergeOperations(ctx context.Context, teamID s
 	prefix := fmt.Sprintf("%s/%s", GenericAnnotationsPrefix, strings.TrimSuffix(group.Name, api.DiscoveredAssetsGroupSuffix))
 
 	// Calculate assets to create, associate or update.
+	dedupIdx := make(map[string]struct{})
 	for _, a := range assets {
+		key := fmt.Sprintf("%v-%v", a.Identifier, a.AssetType.Name)
+
+		// Handle possible duplicated assets
+		if _, ok := dedupIdx[key]; ok {
+			continue
+		}
+		dedupIdx[key] = struct{}{}
+
 		for _, aa := range a.AssetAnnotations {
 			aa.Key = fmt.Sprintf("%s/%s", prefix, aa.Key)
 		}
 
-		key := fmt.Sprintf("%v-%v", a.Identifier, a.AssetType.Name)
 		old, okAll := allAssetsMap[key]
 
 		// Asset is new. Create the asset and its annotations.

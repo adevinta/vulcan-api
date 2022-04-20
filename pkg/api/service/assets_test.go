@@ -1124,7 +1124,7 @@ func TestMergeDiscoveredAssetsCreated(t *testing.T) {
 
 	groupName := "empty-discovered-assets"
 	assets := []api.Asset{
-		api.Asset{
+		{
 			TeamID:            teamID,
 			Identifier:        "new.vulcan.example.com",
 			Options:           common.String(`{}`),
@@ -1135,7 +1135,7 @@ func TestMergeDiscoveredAssetsCreated(t *testing.T) {
 				Name: "Hostname",
 			},
 			AssetAnnotations: []*api.AssetAnnotation{
-				&api.AssetAnnotation{
+				{
 					Key:   "whateverkey",
 					Value: "whatevervalue",
 				},
@@ -1234,7 +1234,7 @@ func TestMergeDiscoveredAssetsAssociated(t *testing.T) {
 
 	groupName := "empty-discovered-assets"
 	assets := []api.Asset{
-		api.Asset{
+		{
 			TeamID:     teamID,
 			Identifier: "default.vulcan.example.com",
 			AssetType: &api.AssetType{
@@ -1322,7 +1322,7 @@ func TestMergeDiscoveredAssetsUpdated(t *testing.T) {
 
 	groupName := "security-discovered-assets"
 	assets := []api.Asset{
-		api.Asset{
+		{
 			TeamID:     teamID,
 			Identifier: "scannable.vulcan.example.com",
 			Scannable:  common.Bool(false),
@@ -1330,7 +1330,7 @@ func TestMergeDiscoveredAssetsUpdated(t *testing.T) {
 				Name: "Hostname",
 			},
 		},
-		api.Asset{
+		{
 			TeamID:     teamID,
 			Identifier: "nonscannable.vulcan.example.com",
 			Scannable:  common.Bool(true),
@@ -1488,6 +1488,92 @@ func TestMergeDiscoveredAssetsCleared(t *testing.T) {
 			if fmt.Sprintf("%v", wantAnnotations) != fmt.Sprintf("%v", annotationsMap) {
 				t.Fatalf("unexpected annotations: want(%v) got(%v)", wantAnnotations, annotationsMap)
 			}
+		}
+	}
+}
+
+func TestMergeDiscoveredAssetsDeduplicated(t *testing.T) {
+	const (
+		teamID = "ea686be5-be9b-473b-ab1b-621a4f575d51"
+		// empty-discovered-assets
+		groupID = "5296b879-cb7c-4372-bd65-c5a17152b10b"
+	)
+
+	testStore, err := testutil.PrepareDatabaseLocal("../../../testdata/fixtures", store.NewDB)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer testStore.Close()
+
+	testService := buildDefaultVulcanitoSrv(testStore, kitlog.NewNopLogger())
+
+	oldAPIAssets, err := testService.ListAssets(context.Background(), teamID, api.Asset{})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	oldAssets := make(map[string]bool)
+	for _, asset := range oldAPIAssets {
+		oldAssets[asset.ID] = true
+	}
+
+	groupName := "empty-discovered-assets"
+	assets := []api.Asset{
+		{
+			TeamID:            teamID,
+			Identifier:        "duplicated.vulcan.example.com",
+			Options:           common.String(`{}`),
+			Scannable:         common.Bool(false),
+			EnvironmentalCVSS: common.String("a.b.c.d"),
+			ROLFP:             &api.ROLFP{0, 0, 0, 0, 0, 1, false},
+			AssetType: &api.AssetType{
+				Name: "Hostname",
+			},
+		},
+		{
+			TeamID:            teamID,
+			Identifier:        "duplicated.vulcan.example.com",
+			Options:           common.String(`{}`),
+			Scannable:         common.Bool(false),
+			EnvironmentalCVSS: common.String("a.b.c.d"),
+			ROLFP:             &api.ROLFP{0, 0, 0, 0, 0, 1, false},
+			AssetType: &api.AssetType{
+				Name: "Hostname",
+			},
+		},
+	}
+
+	wantSize := len(oldAPIAssets) + 1
+	wantIdentifier := "duplicated.vulcan.example.com"
+	wantType := "Hostname"
+
+	err = testService.MergeDiscoveredAssets(context.Background(), teamID, assets, groupName)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	newAPIAssets, err := testService.ListAssets(context.Background(), teamID, api.Asset{})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Asset has been created
+	if wantSize != len(newAPIAssets) {
+		t.Fatalf("not all the assets were created: want(%d) got(%d)", wantSize, len(newAPIAssets))
+	}
+
+	for _, asset := range newAPIAssets {
+		// Skip assets that were previously created.
+		if oldAssets[asset.ID] {
+			continue
+		}
+
+		// Check that the identifier and type match.
+		if asset.Identifier != wantIdentifier {
+			t.Fatalf("asset identifier does not match: want(%s) got(%v)", wantIdentifier, asset.Identifier)
+		}
+		if asset.AssetType.Name != wantType {
+			t.Fatalf("asset type does not match: want(%s) got(%v)", wantType, asset.AssetType.Name)
 		}
 	}
 }
