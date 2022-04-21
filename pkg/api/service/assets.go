@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"reflect"
 	"strings"
 	"time"
 
@@ -345,15 +346,22 @@ func (s vulcanitoService) calculateMergeOperations(ctx context.Context, teamID s
 	prefix := fmt.Sprintf("%s/%s", GenericAnnotationsPrefix, strings.TrimSuffix(group.Name, api.DiscoveredAssetsGroupSuffix))
 
 	// Calculate assets to create, associate or update.
-	dedupIdx := make(map[string]struct{})
-	for _, a := range assets {
+	dedupIdx := make(map[string]*api.Asset)
+	for i, a := range assets {
 		key := fmt.Sprintf("%v-%v", a.Identifier, a.AssetType.Name)
 
-		// Handle possible duplicated assets
-		if _, ok := dedupIdx[key]; ok {
-			continue
+		// If asset is duplicated (same identifier and type) in the payload
+		// with the same attributes, ignore it. Otherwise return error.
+		if processed, ok := dedupIdx[key]; ok {
+			if reflect.DeepEqual(*processed, a) {
+				continue
+			}
+			return ops, fmt.Errorf(
+				"duplicated asset in payload with different attributes. identifier: %s, type: %s",
+				a.Identifier, a.AssetType.Name,
+			)
 		}
-		dedupIdx[key] = struct{}{}
+		dedupIdx[key] = &assets[i]
 
 		for _, aa := range a.AssetAnnotations {
 			aa.Key = fmt.Sprintf("%s/%s", prefix, aa.Key)
