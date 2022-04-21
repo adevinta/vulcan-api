@@ -198,8 +198,9 @@ func DiscoverAssetsPath(teamID string) string {
 // be stored, because they will include a prefix to not mess with any other
 // annotations already present in the asset.
 //
-// Duplicated assets (same identifier and type) in the payload do not produce an
-// error but only the first one will be taken into account.
+// Duplicated assets (same identifier and type) in the payload are ignored if all
+// their attributes are matching. Otherwise they produce an error and the job is
+// aborted.
 func (c *Client) DiscoverAssets(ctx context.Context, path string, payload *DiscoveredAssetsPayload) (*http.Response, error) {
 	req, err := c.NewDiscoverAssetsRequest(ctx, path, payload)
 	if err != nil {

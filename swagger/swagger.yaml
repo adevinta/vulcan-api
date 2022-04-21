@@ -73,7 +73,7 @@ definitions:
         - annotation/1
         - annotation/2
         items:
-          example: Est illo et corrupti rerum deleniti aut.
+          example: Illo et.
           type: string
         type: array
     title: AssetAnnotationDeleteRequest
@@ -383,6 +383,36 @@ definitions:
       type:
         id: 29f83d16-09c4-4be5-8cae-e232d41f388a
         name: Hostname
+    - alias: AnAlias
+      classified_at: "2020-09-03T15:00:42.112975Z"
+      environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+      id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      identifier: vulcan.example.com
+      options: '{"timeout":60}'
+      rolfp: R:1/O:1/L:0/F:0/P:0+S:1
+      scannable: true
+      status:
+        code: 3944598920153519998
+        error: Quo placeat magni harum ea.
+        type: Voluptatum mollitia consequuntur dignissimos.
+      type:
+        id: 29f83d16-09c4-4be5-8cae-e232d41f388a
+        name: Hostname
+    - alias: AnAlias
+      classified_at: "2020-09-03T15:00:42.112975Z"
+      environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+      id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      identifier: vulcan.example.com
+      options: '{"timeout":60}'
+      rolfp: R:1/O:1/L:0/F:0/P:0+S:1
+      scannable: true
+      status:
+        code: 3944598920153519998
+        error: Quo placeat magni harum ea.
+        type: Voluptatum mollitia consequuntur dignissimos.
+      type:
+        id: 29f83d16-09c4-4be5-8cae-e232d41f388a
+        name: Hostname
     items:
       $ref: '#/definitions/Assetresponse'
     title: 'Mediatype identifier: assetresponse; type=collection; view=default'
@@ -491,7 +521,7 @@ definitions:
         - a14c7c65-66ab-4676-bcf6-0dea9719f5c6
         - 9f7a0c78-b752-4126-aa6d-0f286ada7b8f
         items:
-          example: Ducimus sit odio tenetur consequatur.
+          example: Sit odio tenetur consequatur quibusdam.
           type: string
         type: array
     required:
@@ -856,6 +886,14 @@ definitions:
       status_previous: OPEN
       tag: team:security
       user: user@adevinta.com
+    - created_at: "2021-03-27T00:26:43.211506Z"
+      finding_id: 3c7d7003-c53d-4ccc-80e7-f21da241b2d4
+      id: b0720503-0a84-43fd-9cf4-5bb6c500226f
+      notes: This finding is a false positive because...
+      status: FALSE_POSITIVE
+      status_previous: OPEN
+      tag: team:security
+      user: user@adevinta.com
     items:
       $ref: '#/definitions/Finding_overwrite'
     title: 'Mediatype identifier: finding_overwrite; type=collection; view=default'
@@ -985,16 +1023,6 @@ definitions:
       resources_count: 28
       summary: Site Without HTTPS
       targets_count: 14
-    - issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
-      max_score: 6.9
-      resources_count: 28
-      summary: Site Without HTTPS
-      targets_count: 14
-    - issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
-      max_score: 6.9
-      resources_count: 28
-      summary: Site Without HTTPS
-      targets_count: 14
     items:
       $ref: '#/definitions/Findings_issue'
     title: 'Mediatype identifier: findings_issue; type=collection; view=default'
@@ -1003,6 +1031,16 @@ definitions:
     description: Findings by Issue list (default view)
     example:
       issues:
+      - issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
+        max_score: 6.9
+        resources_count: 28
+        summary: Site Without HTTPS
+        targets_count: 14
+      - issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
+        max_score: 6.9
+        resources_count: 28
+        summary: Site Without HTTPS
+        targets_count: 14
       - issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
         max_score: 6.9
         resources_count: 28
@@ -1033,7 +1071,7 @@ definitions:
         - Web
         - HTTP
         items:
-          example: Laboriosam repellat eum nihil velit magni id.
+          example: Repellat laboriosam repellat eum.
           type: string
         type: array
     title: 'Mediatype identifier: findings_labels; view=default'
@@ -1042,118 +1080,6 @@ definitions:
     description: Findings list (default view)
     example:
       findings:
-      - affected_resource: ""
-        attachments:
-        - content_type: application/json
-          data: e30=
-          name: JSON string
-        - content_type: application/json
-          data: e30=
-          name: JSON string
-        - content_type: application/json
-          data: e30=
-          name: JSON string
-        current_exposure: 4631
-        details: ""
-        id: a8720503-0284-45fd-9cf4-5bb6c500966f
-        impact_details: ""
-        issue:
-          cwe_id: 358
-          description: This domain has at least one MX record
-          id: b0720503-0a84-43fd-9cf4-5bb6c500226f
-          labels:
-          - Web
-          - HTTP
-          recommendations:
-          - It is recommended to run DMARC
-          reference_links: []
-          summary: MX presence
-        resources:
-        - attributes:
-          - Hostname
-          - Port
-          name: Network Resources
-          resources:
-          - Hostname: test.example.com
-            Port: "443"
-        - attributes:
-          - Hostname
-          - Port
-          name: Network Resources
-          resources:
-          - Hostname: test.example.com
-            Port: "443"
-        score: 6.9
-        source:
-          component: vulcan-tls
-          id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
-          instance: b3320f03-1284-42fd-9cf4-5bb6c500966f
-          name: vulcan
-          options: '{"timeout":60}'
-          time: "2019-06-08 11:16:40"
-        status: OPEN
-        target:
-          id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
-          identifier: www.test.com
-          tags:
-          - team:vulcan
-        total_exposure: 4631
-      - affected_resource: ""
-        attachments:
-        - content_type: application/json
-          data: e30=
-          name: JSON string
-        - content_type: application/json
-          data: e30=
-          name: JSON string
-        - content_type: application/json
-          data: e30=
-          name: JSON string
-        current_exposure: 4631
-        details: ""
-        id: a8720503-0284-45fd-9cf4-5bb6c500966f
-        impact_details: ""
-        issue:
-          cwe_id: 358
-          description: This domain has at least one MX record
-          id: b0720503-0a84-43fd-9cf4-5bb6c500226f
-          labels:
-          - Web
-          - HTTP
-          recommendations:
-          - It is recommended to run DMARC
-          reference_links: []
-          summary: MX presence
-        resources:
-        - attributes:
-          - Hostname
-          - Port
-          name: Network Resources
-          resources:
-          - Hostname: test.example.com
-            Port: "443"
-        - attributes:
-          - Hostname
-          - Port
-          name: Network Resources
-          resources:
-          - Hostname: test.example.com
-            Port: "443"
-        score: 6.9
-        source:
-          component: vulcan-tls
-          id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
-          instance: b3320f03-1284-42fd-9cf4-5bb6c500966f
-          name: vulcan
-          options: '{"timeout":60}'
-          time: "2019-06-08 11:16:40"
-        status: OPEN
-        target:
-          id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
-          identifier: www.test.com
-          tags:
-          - team:vulcan
-        total_exposure: 4631
       - affected_resource: ""
         attachments:
         - content_type: application/json
@@ -1265,16 +1191,6 @@ definitions:
       issues_count: 2
       max_score: 6.9
       target_id: a8720503-0284-45fd-9cf4-5bb6c500966f
-    - findings_count: 5
-      identifier: vulcan.example.com
-      issues_count: 2
-      max_score: 6.9
-      target_id: a8720503-0284-45fd-9cf4-5bb6c500966f
-    - findings_count: 5
-      identifier: vulcan.example.com
-      issues_count: 2
-      max_score: 6.9
-      target_id: a8720503-0284-45fd-9cf4-5bb6c500966f
     items:
       $ref: '#/definitions/Findings_target'
     title: 'Mediatype identifier: findings_target; type=collection; view=default'
@@ -1346,6 +1262,16 @@ definitions:
     description: GroupCollection is the media type for an array of Group (default
       view)
     example:
+    - assets_count: 1
+      description: All newly created assets are added to the Default group
+      id: f6360346-77a5-4f97-b919-331363b3af26
+      name: Default group
+      options: '{"timeout":60}'
+    - assets_count: 1
+      description: All newly created assets are added to the Default group
+      id: f6360346-77a5-4f97-b919-331363b3af26
+      name: Default group
+      options: '{"timeout":60}'
     - assets_count: 1
       description: All newly created assets are added to the Default group
       id: f6360346-77a5-4f97-b919-331363b3af26
@@ -1462,7 +1388,7 @@ definitions:
         - Web
         - HTTP
         items:
-          example: Ratione perferendis.
+          example: Cumque enim totam ut perspiciatis.
           type: string
         type: array
       recommendations:
@@ -1470,14 +1396,14 @@ definitions:
         example:
         - It is recommended to run DMARC
         items:
-          example: Quas voluptatum sit eos illum ipsum tempora.
+          example: Illum ipsum tempora nemo corrupti sed.
           type: string
         type: array
       reference_links:
         description: Documentation reference for the issue
         example: []
         items:
-          example: Corrupti sed qui.
+          example: Sint ratione.
           type: string
         type: array
       summary:
@@ -1857,6 +1783,12 @@ definitions:
     - checktype_name: vulcan-tls
       id: 5e51174d-3755-48b2-98bf-37e37cb07f6e
       options: '{"timeout":60}'
+    - checktype_name: vulcan-tls
+      id: 5e51174d-3755-48b2-98bf-37e37cb07f6e
+      options: '{"timeout":60}'
+    - checktype_name: vulcan-tls
+      id: 5e51174d-3755-48b2-98bf-37e37cb07f6e
+      options: '{"timeout":60}'
     items:
       $ref: '#/definitions/Policysetting'
     title: 'Mediatype identifier: policysetting; type=collection; view=default'
@@ -2023,6 +1955,34 @@ definitions:
           settings_count: 12
       schedule:
         cron: 0 7 1 * *
+    - autosend: false
+      disabled: false
+      global: true
+      id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
+      name: Every midnight
+      policy_groups:
+      - group:
+          assets_count: 1
+          description: All newly created assets are added to the Default group
+          id: f6360346-77a5-4f97-b919-331363b3af26
+          name: Default group
+          options: '{"timeout":60}'
+        policy:
+          id: af36818a-0f30-412c-9692-d37716075861
+          name: Sample Policy
+          settings_count: 12
+      - group:
+          assets_count: 1
+          description: All newly created assets are added to the Default group
+          id: f6360346-77a5-4f97-b919-331363b3af26
+          name: Default group
+          options: '{"timeout":60}'
+        policy:
+          id: af36818a-0f30-412c-9692-d37716075861
+          name: Sample Policy
+          settings_count: 12
+      schedule:
+        cron: 0 7 1 * *
     items:
       $ref: '#/definitions/Program'
     title: 'Mediatype identifier: program; type=collection; view=default'
@@ -2120,7 +2080,6 @@ definitions:
       view)
     example:
     - email: john.doe@vulcan.example.com
-    - email: john.doe@vulcan.example.com
     items:
       $ref: '#/definitions/Recipient'
     title: 'Mediatype identifier: recipient; type=collection; view=default'
@@ -2137,7 +2096,7 @@ definitions:
         - john.doe@vulcan.example.com
         - jane.doe@vulcan.example.com
         items:
-          example: Doloribus placeat voluptatem ratione corrupti.
+          example: At ut.
           type: string
         type: array
     required:
@@ -2208,7 +2167,7 @@ definitions:
         - Hostname
         - Port
         items:
-          example: Illo porro placeat omnis.
+          example: Rerum deleniti aut sed illo porro.
           type: string
         type: array
       name:
@@ -2223,7 +2182,7 @@ definitions:
         items:
           additionalProperties: true
           example:
-            Natus esse neque aliquid.: Velit quis.
+            Perferendis maxime natus esse.: Aliquid molestias velit.
           type: object
         type: array
     title: 'Mediatype identifier: resource; view=default'
@@ -2637,7 +2596,7 @@ definitions:
         example:
         - team:vulcan
         items:
-          example: Enim totam ut perspiciatis quia.
+          example: Laborum quas voluptatum sit.
           type: string
         type: array
     title: 'Mediatype identifier: target; view=default'
@@ -2671,6 +2630,14 @@ definitions:
   TeamCollection:
     description: TeamCollection is the media type for an array of Team (default view)
     example:
+    - description: Security Team
+      id: ff74a33c-e683-4612-a62f-a9cf385f6522
+      name: Security
+      tag: team:security
+    - description: Security Team
+      id: ff74a33c-e683-4612-a62f-a9cf385f6522
+      name: Security
+      tag: team:security
     - description: Security Team
       id: ff74a33c-e683-4612-a62f-a9cf385f6522
       name: Security
@@ -2778,16 +2745,6 @@ definitions:
     description: TeammemberCollection is the media type for an array of Teammember
       (default view)
     example:
-    - role: owner
-      user:
-        active: true
-        admin: true
-        email: john.doe@vulcan.example.com
-        firstname: John
-        id: 967d9966-b561-4233-bd6f-cac603fd8320
-        last_login: "2018-09-07T10:40:52Z"
-        lastname: Doe
-        observer: true
     - role: owner
       user:
         active: true
@@ -3755,8 +3712,9 @@ paths:
         be stored, because they will include a prefix to not mess with any other
         annotations already present in the asset.
 
-        Duplicated assets (same identifier and type) in the payload do not produce an
-        error but only the first one will be taken into account.
+        Duplicated assets (same identifier and type) in the payload are ignored if all
+        their attributes are matching. Otherwise they produce an error and the job is
+        aborted.
       operationId: assets#discover
       parameters:
       - description: Team ID
