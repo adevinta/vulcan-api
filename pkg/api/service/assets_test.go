@@ -11,7 +11,6 @@ import (
 	"os"
 	"reflect"
 	"sort"
-	"strings"
 	"testing"
 
 	apierrors "github.com/adevinta/errors"
@@ -1493,7 +1492,7 @@ func TestMergeDiscoveredAssetsCleared(t *testing.T) {
 	}
 }
 
-func TestMergeDiscoveredAssetsDeduplicatedWithSameAttributes(t *testing.T) {
+func TestMergeDiscoveredAssetsDeduplicated(t *testing.T) {
 	const (
 		teamID = "ea686be5-be9b-473b-ab1b-621a4f575d51"
 		// empty-discovered-assets
@@ -1576,67 +1575,6 @@ func TestMergeDiscoveredAssetsDeduplicatedWithSameAttributes(t *testing.T) {
 		if asset.AssetType.Name != wantType {
 			t.Fatalf("asset type does not match: want(%s) got(%v)", wantType, asset.AssetType.Name)
 		}
-	}
-}
-
-func TestMergeDiscoveredAssetsDeduplicatedWithDifferentAttributes(t *testing.T) {
-	const (
-		teamID = "ea686be5-be9b-473b-ab1b-621a4f575d51"
-		// empty-discovered-assets
-		groupID = "5296b879-cb7c-4372-bd65-c5a17152b10b"
-	)
-
-	testStore, err := testutil.PrepareDatabaseLocal("../../../testdata/fixtures", store.NewDB)
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer testStore.Close()
-
-	testService := buildDefaultVulcanitoSrv(testStore, kitlog.NewNopLogger())
-
-	oldAPIAssets, err := testService.ListAssets(context.Background(), teamID, api.Asset{})
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	oldAssets := make(map[string]bool)
-	for _, asset := range oldAPIAssets {
-		oldAssets[asset.ID] = true
-	}
-
-	groupName := "empty-discovered-assets"
-	assets := []api.Asset{
-		{
-			TeamID:            teamID,
-			Identifier:        "duplicated.vulcan.example.com",
-			Options:           common.String(`{}`),
-			Scannable:         common.Bool(false),
-			EnvironmentalCVSS: common.String("a.b.c.d"),
-			ROLFP:             &api.ROLFP{0, 0, 0, 0, 0, 1, false},
-			AssetType: &api.AssetType{
-				Name: "Hostname",
-			},
-		},
-		{
-			TeamID:     teamID,
-			Identifier: "duplicated.vulcan.example.com",
-			Options:    common.String(`{}`),
-			// Notice the difference in the Scannable field
-			Scannable:         common.Bool(true),
-			EnvironmentalCVSS: common.String("a.b.c.d"),
-			ROLFP:             &api.ROLFP{0, 0, 0, 0, 0, 1, false},
-			AssetType: &api.AssetType{
-				Name: "Hostname",
-			},
-		},
-	}
-
-	err = testService.MergeDiscoveredAssets(context.Background(), teamID, assets, groupName)
-	if err == nil {
-		t.Fatal("expected duplicated error but got none")
-	}
-	if !strings.HasPrefix(err.Error(), "duplicated asset in payload with different attributes") {
-		t.Fatalf("expected duplicated error but got: %v", err)
 	}
 }
 
