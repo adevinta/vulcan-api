@@ -340,13 +340,18 @@ present in the group, in a way that:
 Because of the latency of this operation the endpoint is asynchronous. It
 returns a 202-Accepted HTTP response with the Job information in the response
 body.
+
 The discovery group name must end with '-discovered-assets' to not mess with
 manually managed asset groups. Also the first part of the name should identify
 the discovery service using the endpoint, for example:
 serviceX-discovered-assets.
 Also be aware that the provided annotations may differ from the ones that will
 be stored, because they will include a prefix to not mess with any other
-annotations already present in the asset.`)
+annotations already present in the asset.
+
+Duplicated assets (same identifier and type) in the payload are ignored if all
+their attributes are matching. Otherwise they produce an error and the job is
+aborted.`)
 		Routing(PUT("discovery"))
 		Payload(DiscoveredAssetsPayload)
 		Security("Bearer")
