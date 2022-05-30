@@ -205,7 +205,10 @@ func (db vulcanitoStore) createAsset(tx *gorm.DB, asset api.Asset) (*api.Asset, 
 		return nil, db.logError(errors.Create(res.Error))
 	}
 
-	res = tx.Preload("Team").Preload("AssetType").Find(&asset)
+	res = tx.
+		Preload("AssetAnnotations").
+		Preload("Team").
+		Preload("AssetType").Find(&asset)
 	if res.Error != nil {
 		return nil, db.logError(errors.Database(res.Error))
 	}
