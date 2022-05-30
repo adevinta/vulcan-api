@@ -160,16 +160,17 @@ func TestStoreCreateAssets(t *testing.T) {
 	}
 
 	tests := []struct {
-		name    string
-		assets  []api.Asset
-		groups  []api.Group
-		want    []api.Asset
-		wantErr error
+		name        string
+		assets      []api.Asset
+		groups      []api.Group
+		annotations []*api.AssetAnnotation
+		want        []api.Asset
+		wantErr     error
 	}{
 		{
 			name: "HappyPath",
 			assets: []api.Asset{
-				api.Asset{
+				{
 					TeamID:            "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
 					Identifier:        "vulcan.example.com",
 					AssetTypeID:       hostnameType.ID,
@@ -180,12 +181,12 @@ func TestStoreCreateAssets(t *testing.T) {
 					Alias:             "Alias1",
 				}},
 			groups: []api.Group{
-				api.Group{
+				{
 					ID: "ab310d43-8cdf-4f65-9ee8-d1813a22bab4",
 				},
 			},
 			want: []api.Asset{
-				api.Asset{
+				{
 					TeamID:            "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
 					Identifier:        "vulcan.example.com",
 					AssetTypeID:       hostnameType.ID,
@@ -200,7 +201,7 @@ func TestStoreCreateAssets(t *testing.T) {
 		{
 			name: "NonExistentTeam",
 			assets: []api.Asset{
-				api.Asset{
+				{
 					TeamID:            "9f7a0c78-b752-4126-aa6d-0f286ada7b8f",
 					Identifier:        "vulcan.example.com",
 					AssetTypeID:       hostnameType.ID,
@@ -213,17 +214,54 @@ func TestStoreCreateAssets(t *testing.T) {
 			want:    nil,
 			wantErr: errors.New("[asset][vulcan.example.com][] record not found"),
 		},
+		{
+			name: "WithAnnotations",
+			annotations: []*api.AssetAnnotation{
+				{
+					Key:   "key1",
+					Value: "value1",
+				},
+			},
+			assets: []api.Asset{
+				{
+					TeamID:            "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
+					Identifier:        "asset_with_anontations.example.com",
+					AssetTypeID:       hostnameType.ID,
+					EnvironmentalCVSS: common.String("c.v.s.s."),
+					Scannable:         common.Bool(true),
+					Options:           common.String(`{"checktype_options":[{"name":"vulcan-exposed-memcheck","options":{"https":"true","port":"11211"}},{"name":"vulcan-nessus","options":{"enabled":"false"}}]}`),
+					ROLFP:             &api.ROLFP{IsEmpty: true},
+					AssetAnnotations:  []*api.AssetAnnotation{},
+				}},
+			groups: []api.Group{},
+			want: []api.Asset{
+				{
+					TeamID:            "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
+					Identifier:        "asset_with_anontations.example.com",
+					AssetTypeID:       hostnameType.ID,
+					EnvironmentalCVSS: common.String("c.v.s.s."),
+					Scannable:         common.Bool(true),
+					Options:           common.String(`{"checktype_options":[{"name":"vulcan-exposed-memcheck","options":{"https":"true","port":"11211"}},{"name":"vulcan-nessus","options":{"enabled":"false"}}]}`),
+					ROLFP:             &api.ROLFP{IsEmpty: true},
+					AssetAnnotations: []*api.AssetAnnotation{
+						{
+							Key:   "key1",
+							Value: "value1",
+						},
+					},
+				}},
+		},
 	}
 
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := testStoreLocal.CreateAssets(tt.assets, tt.groups, []*api.AssetAnnotation{})
+			got, err := testStoreLocal.CreateAssets(tt.assets, tt.groups, tt.annotations)
 			if errToStr(err) != errToStr(tt.wantErr) {
 				t.Fatal(err)
 			}
 
-			diff := cmp.Diff(tt.want, got, cmp.Options{ignoreFieldsAsset})
+			diff := cmp.Diff(tt.want, got, cmp.Options{ignoreFieldsAsset}, cmp.Options{ignoreFieldsAnnotations})
 			if diff != "" {
 				t.Errorf("%v\n", diff)
 			}

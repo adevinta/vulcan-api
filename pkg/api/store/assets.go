@@ -110,7 +110,7 @@ func (db vulcanitoStore) createAssetsTX(tx *gorm.DB, assets []api.Asset, groups 
 				return nil, errors.Create(result.Error, "assetAnnotation", asset.ID, an.Key)
 			}
 		}
-
+		asset.AssetAnnotations = annotations
 		createdAssets = append(createdAssets, *asset)
 	}
 
