@@ -409,8 +409,7 @@ func TestStoreDeleteTeam(t *testing.T) {
 				// Verify outbox data
 				expCreatedAt, _ := time.Parse("2006-01-02 15:04:05", "2018-01-01 12:30:12")
 				expUpdatedAt, _ := time.Parse("2006-01-02 15:04:05", "2018-01-01 12:30:12")
-
-				verifyOutbox(t, testStoreLocal, opDeleteTeam, cdc.OpDeleteTeamDTO{
+				deleteDTO := cdc.OpDeleteTeamDTO{
 					Team: api.Team{
 						ID:          "0ef82297-e7c7-4c46-a852-ae3ffbecc4bc",
 						Name:        "Delete Team",
@@ -418,7 +417,12 @@ func TestStoreDeleteTeam(t *testing.T) {
 						CreatedAt:   &expCreatedAt,
 						UpdatedAt:   &expUpdatedAt,
 					},
-				}, nil)
+				}
+				expOutbox := expOutbox{
+					action: opDeleteTeam,
+					dto:    deleteDTO,
+				}
+				verifyOutbox(t, testStoreLocal, expOutbox, nil)
 			}
 		})
 	}
