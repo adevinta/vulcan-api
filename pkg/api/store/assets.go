@@ -44,13 +44,13 @@ func (db vulcanitoStore) ListAssets(teamID string, asset api.Asset) ([]*api.Asse
 	return assets, nil
 }
 
-func (db vulcanitoStore) CreateAssets(assets []api.Asset, groups []api.Group, annotations []*api.AssetAnnotation) ([]api.Asset, error) {
+func (db vulcanitoStore) CreateAssets(assets []api.Asset, groups []api.Group) ([]api.Asset, error) {
 	tx := db.Conn.Begin()
 	if tx.Error != nil {
 		return nil, db.logError(errors.Database(tx.Error))
 	}
 
-	createdAssets, err := db.createAssetsTX(tx, assets, groups, annotations)
+	createdAssets, err := db.createAssetsTX(tx, assets, groups)
 	if err != nil {
 		tx.Rollback()
 		return nil, err
@@ -62,7 +62,7 @@ func (db vulcanitoStore) CreateAssets(assets []api.Asset, groups []api.Group, an
 	return createdAssets, nil
 }
 
-func (db vulcanitoStore) createAssetsTX(tx *gorm.DB, assets []api.Asset, groups []api.Group, annotations []*api.AssetAnnotation) ([]api.Asset, error) {
+func (db vulcanitoStore) createAssetsTX(tx *gorm.DB, assets []api.Asset, groups []api.Group) ([]api.Asset, error) {
 	createdAssets := []api.Asset{}
 
 	for _, a := range assets {
@@ -98,19 +98,6 @@ func (db vulcanitoStore) createAssetsTX(tx *gorm.DB, assets []api.Asset, groups 
 				return nil, err
 			}
 		}
-
-		// Associate asset with input annotations
-		for _, an := range annotations {
-			an := an
-
-			an.AssetID = asset.ID
-
-			result := tx.Create(&an)
-			if result.Error != nil {
-				return nil, errors.Create(result.Error, "assetAnnotation", asset.ID, an.Key)
-			}
-		}
-		asset.AssetAnnotations = annotations
 		createdAssets = append(createdAssets, *asset)
 	}
 
