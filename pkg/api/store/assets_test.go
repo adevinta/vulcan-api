@@ -522,24 +522,12 @@ func TestStoreUpdateAsset(t *testing.T) {
 				Identifier: "nonscannable.vulcan.example.com",
 				AssetAnnotations: []*api.AssetAnnotation{
 					{
-						Key:   "keywithoutprefix",
-						Value: "valuewithoutprefix",
-					},
-					{
-						Key:   "autodiscovery/security/keytoupdate",
-						Value: "updated",
-					},
-					{
 						Key:   "newkey",
 						Value: "newvalue",
 					},
 					{
-						Key:   "autodiscovery/security/keytonotupdate",
-						Value: "valuetonotupdate",
-					},
-					{
-						Key:   "autodiscovery/security/keytodelete",
-						Value: "valuetodelete",
+						Key:   "autodiscovery/security/keytoupdate",
+						Value: "updated",
 					},
 				},
 			},
