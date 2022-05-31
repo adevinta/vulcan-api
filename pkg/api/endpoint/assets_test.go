@@ -670,6 +670,47 @@ func TestMakeUpdateAssetsEndpoint(t *testing.T) {
 			wantErr:        nil,
 			wantClassified: true,
 		},
+
+		{
+			name: "ReturnAnnotations",
+			req: &AssetRequest{
+				ID:        "73e33dcb-d07c-41d1-bc32-80861b49941e",
+				TeamID:    "ea686be5-be9b-473b-ab1b-621a4f575d51",
+				Scannable: common.Bool(true),
+			},
+			want: Ok{
+				api.AssetResponse{
+					Identifier: "nonscannable.vulcan.example.com",
+					AssetType: api.AssetTypeResponse{
+						ID: "1937b564-bbc4-47f6-9722-b4a8c8ac0595",
+					},
+					Options:           common.String(`{}`),
+					Scannable:         common.Bool(true),
+					EnvironmentalCVSS: common.String("5"),
+					ROLFP:             api.DefaultROLFP,
+					Annotations: api.AssetAnnotationsMap{
+						"autodiscovery/security/keytodelete":    "valuetodelete",
+						"autodiscovery/security/keytonotupdate": "valuetonotupdate",
+						"autodiscovery/security/keytoupdate":    "valuetoupdate",
+						"keywithoutprefix":                      "valuewithoutprefix",
+					},
+					Groups: []*api.GroupResponse{
+						{
+							ID:          "1a893ae9-0340-48ff-a5ac-95408731c80b",
+							Name:        "security-discovered-assets",
+							AssetsCount: intPointer(2),
+						},
+						{
+							ID:          "dd4f7ee7-76de-4922-aeb3-1eade1233550",
+							Name:        "Default",
+							AssetsCount: intPointer(2),
+						},
+					},
+				},
+			},
+			wantErr:        nil,
+			wantClassified: false,
+		},
 	}
 
 	testTimeRef := time.Now()
