@@ -294,17 +294,38 @@ func (db vulcanitoStore) UpdateAsset(asset api.Asset) (*api.Asset, error) {
 	return out, nil
 }
 
+// updateAssetTX updates the non zero value fields of a the given asset using
+// the given transaction including the annotations, that means that if the
+// AssetAnnotations field in not nill all the annotations of the asset not
+// present in the slice will be deleted. The method ensures that the teamID id
+// of the asset to update is actually the team that owns the asset, so the
+// asset must have a teamID specified.
 func (db vulcanitoStore) updateAssetTX(tx *gorm.DB, asset api.Asset) (*api.Asset, error) {
 	findAsset := api.Asset{ID: asset.ID}
-	if tx.
+	result := tx.
 		Preload("Team").
 		Where("team_id = ? and id = ?", asset.TeamID, asset.ID).
-		First(&findAsset).
-		RecordNotFound() {
+		First(&findAsset)
+
+	if result.RecordNotFound() {
 		return nil, db.logError(errors.Forbidden("asset does not belong to team"))
 	}
+	if result.Error != nil {
+		msg := fmt.Errorf("error checking the team of the asset to update: %w", result.Error)
+		return nil, db.logError(errors.Update(msg))
+	}
 
-	result := tx.Model(&asset).Where("team_id = ?", asset.TeamID).Update(asset)
+	if asset.AssetAnnotations != nil {
+		annotationResult := tx.Where("asset_id = ?", asset.ID).
+			Delete(api.AssetAnnotation{})
+		if annotationResult.Error != nil {
+			return nil, db.logError(errors.Update(annotationResult.Error))
+		}
+	}
+	result = tx.Model(&asset).
+		Where("team_id = ?", asset.TeamID).
+		Update(asset)
+
 	if result.Error != nil {
 		return nil, db.logError(errors.Update(result.Error))
 	}
