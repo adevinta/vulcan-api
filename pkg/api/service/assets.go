@@ -101,15 +101,15 @@ func (s vulcanitoService) CreateAssets(ctx context.Context, assets []api.Asset, 
 		}
 	}
 
-	// For all AWSAccount assets that do not specify an Alias, try to
-	// automatically fetch one
+	// Add Annotations and AWS Account alias (if needed).
 	for i, a := range assetsToCreate {
+		a.AssetAnnotations = annotations
 		if a.AssetType.Name == "AWSAccount" && a.Alias == "" {
 			a.Alias = s.getAccountName(a.Identifier)
-			assetsToCreate[i] = a
 		}
+		assetsToCreate[i] = a
 	}
-	return s.db.CreateAssets(assetsToCreate, groups, annotations)
+	return s.db.CreateAssets(assetsToCreate, groups)
 }
 
 func (s vulcanitoService) getAccountName(identifier string) string {

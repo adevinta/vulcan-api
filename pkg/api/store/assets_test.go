@@ -160,12 +160,11 @@ func TestStoreCreateAssets(t *testing.T) {
 	}
 
 	tests := []struct {
-		name        string
-		assets      []api.Asset
-		groups      []api.Group
-		annotations []*api.AssetAnnotation
-		want        []api.Asset
-		wantErr     error
+		name    string
+		assets  []api.Asset
+		groups  []api.Group
+		want    []api.Asset
+		wantErr error
 	}{
 		{
 			name: "HappyPath",
@@ -195,6 +194,7 @@ func TestStoreCreateAssets(t *testing.T) {
 					Options:           common.String(`{"checktype_options":[{"name":"vulcan-exposed-memcheck","options":{"https":"true","port":"11211"}},{"name":"vulcan-nessus","options":{"enabled":"false"}}]}`),
 					ROLFP:             &api.ROLFP{IsEmpty: true},
 					Alias:             "Alias1",
+					AssetAnnotations:  []*api.AssetAnnotation{},
 				}},
 			wantErr: nil,
 		},
@@ -216,12 +216,6 @@ func TestStoreCreateAssets(t *testing.T) {
 		},
 		{
 			name: "WithAnnotations",
-			annotations: []*api.AssetAnnotation{
-				{
-					Key:   "key1",
-					Value: "value1",
-				},
-			},
 			assets: []api.Asset{
 				{
 					TeamID:            "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
@@ -231,7 +225,12 @@ func TestStoreCreateAssets(t *testing.T) {
 					Scannable:         common.Bool(true),
 					Options:           common.String(`{"checktype_options":[{"name":"vulcan-exposed-memcheck","options":{"https":"true","port":"11211"}},{"name":"vulcan-nessus","options":{"enabled":"false"}}]}`),
 					ROLFP:             &api.ROLFP{IsEmpty: true},
-					AssetAnnotations:  []*api.AssetAnnotation{},
+					AssetAnnotations: []*api.AssetAnnotation{
+						{
+							Key:   "key1",
+							Value: "value1",
+						},
+					},
 				}},
 			groups: []api.Group{},
 			want: []api.Asset{
@@ -256,7 +255,7 @@ func TestStoreCreateAssets(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := testStoreLocal.CreateAssets(tt.assets, tt.groups, tt.annotations)
+			got, err := testStoreLocal.CreateAssets(tt.assets, tt.groups)
 			if errToStr(err) != errToStr(tt.wantErr) {
 				t.Fatal(err)
 			}
@@ -319,6 +318,7 @@ func TestStoreCreateAsset(t *testing.T) {
 				Options:           common.String(opts),
 				ROLFP:             &api.ROLFP{IsEmpty: true},
 				Alias:             "Alias1",
+				AssetAnnotations:  []*api.AssetAnnotation{},
 			},
 			wantErr: nil,
 			expOutbox: expOutbox{
@@ -345,6 +345,7 @@ func TestStoreCreateAsset(t *testing.T) {
 						ROLFP:             &api.ROLFP{IsEmpty: true},
 						Scannable:         common.Bool(true),
 						Options:           common.String(opts),
+						AssetAnnotations:  []*api.AssetAnnotation{},
 					},
 				},
 			},
