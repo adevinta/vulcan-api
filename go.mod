@@ -1,6 +1,6 @@
 module github.com/adevinta/vulcan-api
 
-go 1.17
+go 1.18
 
 require (
 	github.com/adevinta/errors v0.0.0-20190715095242-ec69baa2d063
