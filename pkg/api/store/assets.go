@@ -456,12 +456,7 @@ func (db vulcanitoStore) MergeAssets(mergeOps api.AssetMergeOperations) error {
 	// Create the new assets, its annotations and add them to the provided
 	// auto-discovery group.
 	for _, asset := range mergeOps.Create {
-		a, err := db.createAssetTX(tx, asset, []api.Group{mergeOps.Group})
-		if err != nil {
-			tx.Rollback()
-			return err
-		}
-		_, err = db.putAssetAnnotationsTX(tx, mergeOps.TeamID, a.ID, asset.AssetAnnotations)
+		_, err := db.createAssetTX(tx, asset, []api.Group{mergeOps.Group})
 		if err != nil {
 			tx.Rollback()
 			return err
@@ -484,16 +479,7 @@ func (db vulcanitoStore) MergeAssets(mergeOps api.AssetMergeOperations) error {
 	// If required, update the scannable field and/or the annotations of the
 	// already existing assets.
 	for _, asset := range mergeOps.Update {
-		if len(asset.AssetAnnotations) > 0 {
-			_, err := db.putAssetAnnotationsTX(tx, asset.TeamID, asset.ID, asset.AssetAnnotations)
-			if err != nil {
-				tx.Rollback()
-				return err
-			}
-			asset.AssetAnnotations = nil
-		}
-
-		if asset.Scannable != nil {
+		if asset.Scannable != nil || asset.AssetAnnotations != nil {
 			_, err := db.updateAssetTX(tx, asset)
 			if err != nil {
 				tx.Rollback()
@@ -514,7 +500,16 @@ func (db vulcanitoStore) MergeAssets(mergeOps api.AssetMergeOperations) error {
 			tx.Rollback()
 			return err
 		}
-		_, err = db.putAssetAnnotationsTX(tx, asset.TeamID, asset.ID, asset.AssetAnnotations)
+		// In a "dissociate group operation" we only want to update annotations
+		// of the asset, not the rest of the fields. To do so, we leave all the
+		// fields of the asset set to their zero value, except for the ID, the
+		// teamID and the annotations.
+		a := api.Asset{
+			ID:               asset.ID,
+			TeamID:           asset.TeamID,
+			AssetAnnotations: asset.AssetAnnotations,
+		}
+		_, err = db.updateAssetTX(tx, a)
 		if err != nil {
 			tx.Rollback()
 			return err
