@@ -3,12 +3,12 @@ module github.com/adevinta/vulcan-api
 go 1.18
 
 require (
-	github.com/adevinta/errors v0.0.0-20190715095242-ec69baa2d063
+	github.com/adevinta/errors v0.0.0-20210316150432-f3311a255744
 	github.com/adevinta/vulcan-core-cli v1.0.0-rc1
 	github.com/adevinta/vulcan-groupie v1.0.0-rc1
 	github.com/adevinta/vulcan-metrics-client v1.0.0-rc1
 	github.com/adevinta/vulcan-report v1.0.0-rc1
-	github.com/adevinta/vulcan-scan-engine v0.0.0-20211011153901-f80146c81d43
+	github.com/adevinta/vulcan-scan-engine v1.0.0-rc1
 	github.com/adevinta/vulcan-types v1.0.0
 	github.com/adevinta/vulnerability-db-api v1.0.0-rc1
 	github.com/aws/aws-sdk-go v1.44.19
@@ -42,6 +42,9 @@ require (
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/go-kit/log v0.2.0 // indirect
 	github.com/go-logfmt/logfmt v0.5.1 // indirect
+	github.com/go-openapi/analysis v0.21.3 // indirect
+	github.com/go-openapi/spec v0.20.6 // indirect
+	github.com/go-openapi/swag v0.21.1 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/gofrs/uuid v4.1.0+incompatible // indirect
