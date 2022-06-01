@@ -12,21 +12,11 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-// ListAssetAnnotations returns all annotations of a given asset id
+// ListAssetAnnotations returns all annotations of a given asset id.
 func (db vulcanitoStore) ListAssetAnnotations(teamID string, assetID string) ([]*api.AssetAnnotation, error) {
-	// Find asset
-	a := api.Asset{}
-	result := db.Conn.Where("team_id = ?", teamID).Where("id = ?", assetID).Find(&a)
-	if result.Error != nil {
-		if db.NotFoundError(result.Error) {
-			return nil, db.logError(errors.NotFound(result.Error))
-		}
-		return nil, db.logError(result.Error)
-	}
-
-	// List annotations
+	// List annotations.
 	annotations := []*api.AssetAnnotation{}
-	result = db.Conn.
+	result := db.Conn.
 		Preload("Asset").
 		Joins("left join assets on assets.id = asset_annotations.asset_id").
 		Where("asset_id = ?", assetID).
@@ -43,9 +33,9 @@ func (db vulcanitoStore) ListAssetAnnotations(teamID string, assetID string) ([]
 	return annotations, nil
 }
 
-// GetAssetAnnotation retrives a single Annotation by its key
+// GetAssetAnnotation retrives a single Annotation by its key.
 func (db vulcanitoStore) GetAssetAnnotation(teamID string, assetID string, key string) (*api.AssetAnnotation, error) {
-	// Create new annotations
+	// Create new annotations.
 	annotation := api.AssetAnnotation{}
 	result := db.Conn.
 		Preload("Asset").
@@ -69,16 +59,6 @@ func (db vulcanitoStore) GetAssetAnnotation(teamID string, assetID string, key s
 
 // CreateAssetAnnotations assign new annotations of a given asset id
 func (db vulcanitoStore) CreateAssetAnnotations(teamID string, assetID string, annotations []*api.AssetAnnotation) ([]*api.AssetAnnotation, error) {
-	// Find asset
-	a := api.Asset{}
-	result := db.Conn.Where("team_id = ?", teamID).Where("id = ?", assetID).Find(&a)
-	if result.Error != nil {
-		if db.NotFoundError(result.Error) {
-			return nil, db.logError(errors.NotFound(result.Error))
-		}
-		return nil, db.logError(result.Error)
-	}
-
 	// Start a new transaction
 	tx := db.Conn.Begin()
 	if tx.Error != nil {

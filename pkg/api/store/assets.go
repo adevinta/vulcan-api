@@ -297,9 +297,9 @@ func (db vulcanitoStore) UpdateAsset(asset api.Asset) (*api.Asset, error) {
 // updateAssetTX updates the non zero value fields of a the given asset using
 // the given transaction including the annotations, that means that if the
 // AssetAnnotations field in not nill all the annotations of the asset not
-// present in the slice will be deleted. The method ensures that the teamID id
+// present in the slice will be deleted. The method ensures that the team ID
 // of the asset to update is actually the team that owns the asset, so the
-// asset must have a teamID specified.
+// asset must have a team ID specified.
 func (db vulcanitoStore) updateAssetTX(tx *gorm.DB, asset api.Asset) (*api.Asset, error) {
 	findAsset := api.Asset{ID: asset.ID}
 	result := tx.
@@ -336,6 +336,14 @@ func (db vulcanitoStore) updateAssetTX(tx *gorm.DB, asset api.Asset) (*api.Asset
 	// If asset identifier has changed, we have to propagate the action
 	// to the vulnerability DB so ownership from previous identifier is
 	// removed for this team if necessary, and also the new one is created.
+
+	// TODO: review this not exactly correct, we can't really know here if
+	// the findAsset variable contains the lastest data related to the
+	// Identifier at a relevant point of time for this transaction, as it could
+	// have been changed after we retrieved it but before we commit this
+	// transaction. It is also not strictly correct to send here the content of
+	// the findAsset variable as the old asset info in the outbox, because when
+	// the transaction is committed those values could have already changed.
 	if asset.Identifier != "" && asset.Identifier != findAsset.Identifier {
 		err := db.pushToOutbox(tx, opUpdateAsset, findAsset, asset)
 		if err != nil {
