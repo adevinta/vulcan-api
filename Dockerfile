@@ -4,6 +4,13 @@ FROM golang:1.18.2-alpine3.15 as builder
 
 WORKDIR /app
 
+WORKDIR /app
+
+COPY go.mod .
+COPY go.sum .
+
+RUN go mod download
+
 COPY . .
 
 RUN cd cmd/vulcan-api && GOOS=linux GOARCH=amd64 go build . && cd -
