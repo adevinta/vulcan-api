@@ -252,3 +252,12 @@ func (db vulcanitoStore) insertIntoOutbox(tx *gorm.DB, outbox cdc.Outbox) error 
 	}
 	return nil
 }
+
+// CleanOutbox deletes of the records in the outbox table.
+func (db vulcanitoStore) DeleteAllOutbox() error {
+	res := db.Conn.Exec("DELETE FROM outbox")
+	if res.Error != nil {
+		return db.logError(errors.Delete(res.Error))
+	}
+	return nil
+}

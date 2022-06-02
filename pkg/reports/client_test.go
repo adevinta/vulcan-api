@@ -5,6 +5,7 @@ Copyright 2021 Adevinta
 package reports
 
 import (
+	"context"
 	"encoding/json"
 	errs "errors"
 	"fmt"
@@ -17,7 +18,6 @@ import (
 	"github.com/adevinta/errors"
 	"github.com/aws/aws-sdk-go/service/sns"
 	"github.com/aws/aws-sdk-go/service/sns/snsiface"
-	"github.com/docker/distribution/context"
 )
 
 var (

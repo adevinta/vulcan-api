@@ -13,17 +13,38 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
+type expOutbox struct {
+	action     string
+	notPresent bool
+	dto        interface{}
+}
+
 // verifyOutbox is a testing helper function to verify outbox data.
-func verifyOutbox(t *testing.T, store api.VulcanitoStore, expOp string, expDTO interface{}, ignoreFields map[string][]string) {
+func verifyOutbox(t *testing.T, store api.VulcanitoStore, exp expOutbox, ignoreFields map[string][]string) {
 	t.Helper()
 
+	expOp := exp.action
+	expDTO := exp.dto
+	expNotPresent := exp.notPresent
 	var outbox cdc.Outbox
-
-	err := store.(vulcanitoStore).Conn.Raw(`
+	db := store.(vulcanitoStore)
+	err := db.Conn.Raw(`
 		SELECT * FROM outbox
 		ORDER BY created_at DESC
 		LIMIT 1`,
 	).Scan(&outbox).Error
+	if expNotPresent {
+		// If no outbox data should be present and we had a NotFoundError the
+		// verification is okey.
+		if db.NotFoundError(err) {
+			return
+		}
+		if err != nil {
+			t.Fatalf("error verifying outbox: %v", err)
+		}
+		t.Fatal("error verifying outbox: no records expected but some found")
+	}
+
 	if err != nil {
 		t.Fatalf("error verifying outbox: %v", err)
 	}

@@ -13,7 +13,6 @@ require (
 	github.com/adevinta/vulnerability-db-api v0.0.0-20211222100150-3406b653577e
 	github.com/aws/aws-sdk-go v1.40.59
 	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
-	github.com/docker/distribution v2.7.1+incompatible
 	github.com/go-kit/kit v0.12.0
 	github.com/goadesign/goa v1.4.3
 	github.com/golang-jwt/jwt/v4 v4.1.0
@@ -61,7 +60,6 @@ require (
 	github.com/mitchellh/mapstructure v1.4.2 // indirect
 	github.com/pelletier/go-toml v1.9.4 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	github.com/sirupsen/logrus v1.8.1 // indirect
 	github.com/spf13/afero v1.6.0 // indirect
 	github.com/spf13/cast v1.4.1 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
@@ -78,4 +76,5 @@ require (
 	google.golang.org/protobuf v1.27.1 // indirect
 	gopkg.in/ini.v1 v1.63.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
