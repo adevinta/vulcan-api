@@ -500,7 +500,7 @@ func TestStoreUpdateAsset(t *testing.T) {
 			},
 		},
 		{
-			name: "UpdatesButNotDeletesAnnotations",
+			name: "UpdatesAddsAndDeletesAnnotations",
 			asset: api.Asset{
 				ID:         "73e33dcb-d07c-41d1-bc32-80861b49941e",
 				Identifier: "nonscannable.vulcan.example.com",
