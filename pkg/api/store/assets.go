@@ -5,11 +5,12 @@ Copyright 2021 Adevinta
 package store
 
 import (
+	goerrors "errors"
 	"fmt"
 	"strings"
 	"time"
 
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 
 	"github.com/adevinta/errors"
 	"github.com/adevinta/vulcan-api/pkg/api"
@@ -29,7 +30,7 @@ const (
 
 	// duplicateRecordMsg defines the prefix returned by postgres when trying
 	// to create a row that already exists.
-	duplicateRecordPrefix = "pq: duplicate key value violates unique constrain"
+	duplicateRecordPrefix = "ERROR: duplicate key value violates unique constraint"
 )
 
 // IsValid returns true if the receiver of the method is a valid predefined
@@ -220,7 +221,7 @@ func (db vulcanitoStore) createAsset(tx *gorm.DB, asset api.Asset) (*api.Asset, 
 		asset.ClassifiedAt = &now
 	}
 
-	res = tx.Create(&asset)
+	res = tx.Omit("ID").Create(&asset)
 	if res.Error != nil {
 		return nil, db.logError(errors.Create(res.Error))
 	}
@@ -242,7 +243,7 @@ func (db vulcanitoStore) createAsset(tx *gorm.DB, asset api.Asset) (*api.Asset, 
 }
 
 func (db vulcanitoStore) createAssetGroup(tx *gorm.DB, assetGroup api.AssetGroup) error {
-	res := tx.Create(&assetGroup)
+	res := tx.Omit("id").Create(&assetGroup)
 	if res.Error != nil {
 		return db.logError(errors.Create(res.Error))
 	}
@@ -341,7 +342,7 @@ func (db vulcanitoStore) updateAssetTX(tx *gorm.DB, asset api.Asset, annotations
 		Where("team_id = ? and id = ?", asset.TeamID, asset.ID).
 		First(&findAsset)
 
-	if result.RecordNotFound() {
+	if goerrors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return nil, db.logError(errors.Forbidden("asset does not belong to team"))
 	}
 	if result.Error != nil {
@@ -356,7 +357,7 @@ func (db vulcanitoStore) updateAssetTX(tx *gorm.DB, asset api.Asset, annotations
 
 	result = tx.Model(&asset).
 		Where("team_id = ?", asset.TeamID).
-		Update(asset)
+		Updates(asset)
 	if result.Error != nil {
 		return nil, db.logError(errors.Update(result.Error))
 	}
@@ -411,10 +412,11 @@ func (db vulcanitoStore) DeleteAsset(asset api.Asset) error {
 
 func (db vulcanitoStore) deleteAssetTX(tx *gorm.DB, asset api.Asset) error {
 	findAsset := api.Asset{ID: asset.ID}
-	if tx.
+	err := tx.
 		Where("team_id = ? and id = ?", asset.TeamID, asset.ID).
 		Preload("Team").
-		First(&findAsset).RecordNotFound() {
+		First(&findAsset).Error
+	if goerrors.Is(err, gorm.ErrRecordNotFound) {
 		return db.logError(errors.Forbidden("asset does not belong to team"))
 	}
 
@@ -623,7 +625,9 @@ func (db vulcanitoStore) GetAssetType(name string) (*api.AssetType, error) {
 }
 
 func (db vulcanitoStore) CreateGroup(group api.Group) (*api.Group, error) {
-	res := db.Conn.Preload("Team").Create(&group)
+	res := db.Conn.Preload("Team").
+		Omit("id").
+		Create(&group)
 	err := res.Error
 	if err != nil {
 		if strings.Contains(err.Error(), "duplicate") {
@@ -637,11 +641,13 @@ func (db vulcanitoStore) CreateGroup(group api.Group) (*api.Group, error) {
 
 func (db vulcanitoStore) UpdateGroup(group api.Group) (*api.Group, error) {
 	findGroup := api.Group{ID: group.ID}
-	if db.Conn.Where("team_id = ? and id = ?", group.TeamID, group.ID).First(&findGroup).RecordNotFound() {
+	err := db.Conn.Where("team_id = ? and id = ?", group.TeamID, group.ID).
+		First(&findGroup).Error
+	if goerrors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, db.logError(errors.Forbidden("group does not belong to team"))
 	}
 
-	result := db.Conn.Model(&group).Where("team_id = ?", group.TeamID).Update(group)
+	result := db.Conn.Model(&group).Where("team_id = ?", group.TeamID).Updates(group)
 	if result.RowsAffected == 0 {
 		return nil, db.logError(errors.Update("Asset group was not updated"))
 	}
@@ -713,16 +719,16 @@ func (db vulcanitoStore) DisjoinAssetsInGroups(teamID, inGroupID string, notInGr
 		at[t.ID] = t
 	}
 	assets := []*api.Asset{}
-	res := db.Conn.Raw(`SELECT a.* FROM assets a
+	err := db.Conn.Raw(`SELECT a.* FROM assets a
 			JOIN asset_group ag ON ag.asset_id=a.id JOIN asset_types t ON t.id=a.asset_type_id
 			WHERE a.scannable=true AND a.team_id=? AND ag.group_id=?
 			AND NOT EXISTS(SELECT 1 FROM asset_group ag2 JOIN assets a2 ON ag2.asset_id=a2.id WHERE ag2.asset_id=a.id AND a2.team_id=a.team_id AND ag2.group_id in (?))`,
-		teamID, inGroupID, notInGroupIDs).Scan(&assets)
-	if res.RecordNotFound() {
+		teamID, inGroupID, notInGroupIDs).Scan(&assets).Error
+	if goerrors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, db.logError(errors.ErrNotFound)
 	}
-	if res.Error != nil {
-		return nil, db.logError(errors.Database(res.Error))
+	if err != nil {
+		return nil, db.logError(errors.Database(err))
 	}
 
 	for _, a := range assets {
@@ -739,17 +745,16 @@ func (db vulcanitoStore) CountAssetsInGroups(teamID string, groupIDs []string) (
 	var count struct {
 		Count int
 	}
-	res := db.Conn.Raw(`SELECT COUNT(DISTINCT aa.id)
+	err := db.Conn.Raw(`SELECT COUNT(DISTINCT aa.id)
 			FROM asset_group AS ag
 			JOIN assets AS aa ON ag.asset_id=aa.id
 			WHERE ag.group_id IN (?) AND aa.team_id=?`,
-		groupIDs, teamID).Scan(&count)
-
-	if res.RecordNotFound() {
+		groupIDs, teamID).Scan(&count).Error
+	if goerrors.Is(err, gorm.ErrRecordNotFound) {
 		return 0, db.logError(errors.ErrNotFound)
 	}
-	if res.Error != nil {
-		return 0, db.logError(errors.Database(res.Error))
+	if err != nil {
+		return 0, db.logError(errors.Database(err))
 	}
 
 	return count.Count, nil
@@ -807,14 +812,17 @@ func (db vulcanitoStore) GroupAsset(assetsGroup api.AssetGroup, teamID string) (
 
 func (db vulcanitoStore) groupAssetTX(tx *gorm.DB, assetsGroup api.AssetGroup, teamID string) (*api.AssetGroup, error) {
 	asset := api.Asset{ID: assetsGroup.AssetID}
-	if tx.Where("team_id = ?", teamID).First(&asset).RecordNotFound() {
+	err := tx.Where("team_id = ?", teamID).First(&asset).Error
+	if goerrors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, db.logError(errors.Forbidden("asset does not belong to team"))
 	}
 	group := api.Group{ID: assetsGroup.GroupID}
-	if tx.Where("team_id = ?", teamID).First(&group).RecordNotFound() {
+	err = tx.Where("team_id = ?", teamID).First(&group).Error
+	if goerrors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, db.logError(errors.Forbidden("group does not belong to team"))
 	}
-	if !tx.First(&assetsGroup).RecordNotFound() {
+	err = tx.First(&assetsGroup).Error
+	if !goerrors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, db.logError(errors.Duplicated("asset group relation already exists"))
 	}
 	res := tx.Create(&assetsGroup)
@@ -832,7 +840,8 @@ func (db vulcanitoStore) groupAssetTX(tx *gorm.DB, assetsGroup api.AssetGroup, t
 
 func (db vulcanitoStore) ListAssetGroup(assetGroup api.AssetGroup, teamID string) ([]*api.AssetGroup, error) {
 	group := api.Group{ID: assetGroup.GroupID}
-	if db.Conn.Where("team_id = ?", teamID).First(&group).RecordNotFound() {
+	err := db.Conn.Where("team_id = ?", teamID).First(&group).Error
+	if goerrors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, db.logError(errors.Forbidden("group does not belong to team"))
 	}
 	assetGroups := []*api.AssetGroup{}
@@ -867,14 +876,17 @@ func (db vulcanitoStore) UngroupAssets(assetGroup api.AssetGroup, teamID string)
 
 func (db vulcanitoStore) ungroupAssetsTX(tx *gorm.DB, assetGroup api.AssetGroup, teamID string) error {
 	asset := api.Asset{ID: assetGroup.AssetID}
-	if tx.Where("team_id = ?", teamID).First(&asset).RecordNotFound() {
+	err := tx.Where("team_id = ?", teamID).First(&asset).Error
+	if goerrors.Is(err, gorm.ErrRecordNotFound) {
 		return db.logError(errors.Forbidden("asset does not belong to team"))
 	}
 	group := api.Group{ID: assetGroup.GroupID}
-	if tx.Where("team_id = ?", teamID).First(&group).RecordNotFound() {
+	err = tx.Where("team_id = ?", teamID).First(&group).Error
+	if goerrors.Is(err, gorm.ErrRecordNotFound) {
 		return db.logError(errors.Forbidden("group does not belong to team"))
 	}
-	if tx.First(&assetGroup).RecordNotFound() {
+	err = tx.First(&assetGroup).Error
+	if goerrors.Is(err, gorm.ErrRecordNotFound) {
 		return db.logError(errors.Duplicated("asset group relation does not exists"))
 	}
 	res := tx.Delete(&assetGroup)

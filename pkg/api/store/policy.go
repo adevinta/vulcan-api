@@ -57,7 +57,7 @@ func (db vulcanitoStore) UpdatePolicy(policy api.Policy) (*api.Policy, error) {
 	result := db.Conn.Model(&policy).
 		Preload("Group").
 		Where("team_id = ?", policy.TeamID).
-		Update(policy)
+		Updates(policy)
 	if result.Error != nil {
 		return nil, db.logError(errors.Update(result.Error))
 	}
@@ -137,7 +137,7 @@ func (db vulcanitoStore) UpdateChecktypeSetting(checktypeSetting api.ChecktypeSe
 		return nil, db.logError(errors.Database(res.Error))
 	}
 
-	result := db.Conn.Model(&checktypeSetting).Update(checktypeSetting)
+	result := db.Conn.Model(&checktypeSetting).Updates(checktypeSetting)
 	if result.Error != nil {
 		return nil, db.logError(errors.Update(result.Error))
 	}

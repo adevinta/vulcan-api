@@ -107,7 +107,7 @@ func TestMakeListAssetsEndpoint(t *testing.T) {
 				TeamID: "2a5db64a-xxxx",
 			},
 			want:    nil,
-			wantErr: apiErrors.NotFound(`pq: invalid input syntax for type uuid: "2a5db64a-xxxx"`),
+			wantErr: apiErrors.NotFound(`pq: invalid input syntax for type uuid: "2a5db64a-xxxx" (SQLSTATE 22P02)`),
 		},
 		{
 			name: "TeamIDMissing",

@@ -70,7 +70,7 @@ func (db vulcanitoStore) UpdateUser(user api.User) (*api.User, error) {
 		return nil, db.logError(errors.Database(res.Error))
 	}
 
-	res = tx.Model(user).Update(&user)
+	res = tx.Model(user).Updates(&user)
 	if res.Error != nil {
 		tx.Rollback()
 		return nil, db.logError(errors.Update(res.Error))
@@ -173,7 +173,7 @@ func (db vulcanitoStore) CreateUserIfNotExists(userData saml.UserData) error {
 		u.Firstname = userData.FirstName
 		u.Lastname = userData.LastName
 	}
-	res = db.Conn.Model(u).Update(u)
+	res = db.Conn.Model(u).Updates(u)
 	if res.Error != nil {
 		return db.logError(errors.Create(res.Error))
 	}

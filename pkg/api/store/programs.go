@@ -6,8 +6,8 @@ package store
 
 import (
 	"github.com/adevinta/errors"
-	"github.com/jinzhu/gorm"
 	"github.com/adevinta/vulcan-api/pkg/api"
+	"gorm.io/gorm"
 )
 
 func (db vulcanitoStore) ListPrograms(teamID string) ([]*api.Program, error) {
@@ -110,7 +110,7 @@ func (db vulcanitoStore) UpdateProgram(program api.Program, teamID string) (*api
 			return nil, err
 		}
 	}
-	result := tx.Model(&program).Where("team_id = ?", teamID).Update(program)
+	result := tx.Model(&program).Where("team_id = ?", teamID).Updates(program)
 	if result.Error != nil {
 		tx.Rollback()
 		return nil, db.logError(errors.Update(result.Error))

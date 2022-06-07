@@ -56,7 +56,7 @@ func TestStoreFindTeamMember(t *testing.T) {
 			teamID:  "aaaaaaaa-bbbb-cccc-dddd",
 			userID:  "4a4bec34-8c1b-42c4-a6fb-2a2dbafc572e",
 			want:    nil,
-			wantErr: errors.New(`pq: invalid input syntax for type uuid: "aaaaaaaa-bbbb-cccc-dddd"`),
+			wantErr: errors.New(`pq: invalid input syntax for type uuid: "aaaaaaaa-bbbb-cccc-dddd" (SQLSTATE 22P02)`),
 		},
 	}
 

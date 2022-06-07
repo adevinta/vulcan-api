@@ -5,15 +5,20 @@ Copyright 2021 Adevinta
 package store
 
 import (
+	"fmt"
+	golog "log"
+	"os"
 	"runtime"
 	"strings"
+	"time"
 
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
+	glogger "gorm.io/gorm/logger"
 
 	// Import postgres dialect
-	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"gorm.io/driver/postgres"
 
 	"github.com/adevinta/vulcan-api/pkg/api"
 )
@@ -34,16 +39,43 @@ type vulcanitoStore struct {
 // circular dependencies in the testutils package
 type DefaultEntities map[string][]string
 
+type gormLogger struct {
+	log.Logger
+}
+
+func (g gormLogger) Printf(s string, args ...interface{}) {
+	msg := fmt.Sprintf(s, args...)
+	g.Log(msg)
+}
+
 // NewDB returns a connection to a Postgres instance
 func NewDB(pDialect, connectionString string, logger log.Logger, logMode bool, defaults map[string][]string) (api.VulcanitoStore, error) {
-	if pDialect == "" {
-		pDialect = dialect
-	}
-	conn, err := gorm.Open(pDialect, connectionString)
+	// gormlogger := gormLogger{logger}
+	// level := glogger.Error
+	// if logMode {
+	// 	level = glogger.Info
+	// }
+	// newLogger := glogger.New(
+	// 	gormlogger, // io writer
+	// 	glogger.Config{
+	// 		LogLevel: level,
+	// 	},
+	// )
+	newLogger := glogger.New(
+		golog.New(os.Stdout, "\r\n", golog.LstdFlags), // io writer
+		glogger.Config{
+			SlowThreshold:             time.Second,  // Slow SQL threshold
+			LogLevel:                  glogger.Info, // Log level
+			IgnoreRecordNotFoundError: true,         // Ignore ErrRecordNotFound error for logger
+			Colorful:                  false,        // Disable color
+		},
+	)
+	conn, err := gorm.Open(postgres.Open(connectionString), &gorm.Config{
+		Logger: newLogger,
+	})
 	if err != nil {
 		return nil, err
 	}
-	conn.LogMode(logMode)
 	return vulcanitoStore{
 		Conn:     conn,
 		logger:   logger,
@@ -65,7 +97,11 @@ func (db vulcanitoStore) IsDuplicateError(err error) bool {
 
 // Close close vulcanitoStore db connection
 func (db vulcanitoStore) Close() error {
-	return db.Conn.Close()
+	conn, err := db.Conn.DB()
+	if err != nil {
+		return err
+	}
+	return conn.Close()
 }
 
 func (db vulcanitoStore) logError(err error) error {

@@ -16,7 +16,8 @@ import (
 
 	// This package is intended to be used by tests in other packages so they don't have to interact
 	// directly with the db so makes sense to import the driver here.
-	_ "github.com/lib/pq"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 
 	"github.com/go-kit/kit/log"
 	testfixtures "gopkg.in/testfixtures.v2"
@@ -137,23 +138,26 @@ func PrepareDatabaseLocal(fixturesPath string, f func(pDialect, connectionString
 	// Open connection with the test database.
 	// Do NOT import fixtures in a production database!
 	// Existing data would be deleted
-	db, err := sql.Open(dialect, dsn)
+	srcDB, err := sql.Open(dialect, dsn)
 	if err != nil {
 		return nil, err
 	}
-	defer db.Close()
+	db, err := gorm.Open(postgres.New(postgres.Config{
+		Conn: srcDB,
+	}), &gorm.Config{})
+	defer srcDB.Close()
 
 	pc, _, _, _ := runtime.Caller(1)
 	callerName := strings.Replace(runtime.FuncForPC(pc).Name(), ".", "_", -1)
 	callerName = strings.Replace(callerName, "-", "_", -1)
 	parts := strings.Split(callerName, "/")
 	dbName := strings.ToLower(fmt.Sprintf("vulcanito_%s_test", parts[len(parts)-1]))
-	_, err = db.Exec(fmt.Sprintf("DROP DATABASE IF EXISTS %s;", dbName))
+	err = db.Exec(fmt.Sprintf("DROP DATABASE IF EXISTS %s;", dbName)).Error
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = db.Exec(fmt.Sprintf("CREATE DATABASE %s WITH TEMPLATE vulcanito OWNER vulcanito_test;", dbName))
+	err = db.Exec(fmt.Sprintf("CREATE DATABASE %s WITH TEMPLATE vulcanito OWNER vulcanito_test;", dbName)).Error
 	if err != nil {
 		return nil, err
 	}
@@ -177,7 +181,7 @@ func PrepareDatabaseLocal(fixturesPath string, f func(pDialect, connectionString
 		return nil, err
 	}
 
-	testStoreLocal, err := f(dialectLocal, dsnLocal, log.NewNopLogger(), false, map[string][]string{})
+	testStoreLocal, err := f(dialectLocal, dsnLocal, log.NewNopLogger(), true, map[string][]string{})
 	if err != nil {
 		return nil, err
 	}

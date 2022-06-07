@@ -9,7 +9,7 @@ import (
 
 	"github.com/adevinta/errors"
 	"github.com/adevinta/vulcan-api/pkg/api"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 // FindJob retrieves a Job by its ID
@@ -20,7 +20,7 @@ func (db vulcanitoStore) FindJob(jobID string) (*api.Job, error) {
 	job := &api.Job{ID: jobID}
 	res := db.Conn.Find(job)
 	if res.Error != nil {
-		if strings.HasPrefix(res.Error.Error(), `pq: invalid input syntax for type uuid`) {
+		if strings.HasPrefix(res.Error.Error(), `pq: invalid input syntax for type uuid (SQLSTATE 22P02)`) {
 			return nil, db.logError(errors.Validation(`ID is malformed`))
 		}
 		if !db.NotFoundError(res.Error) {
@@ -46,7 +46,7 @@ func (db vulcanitoStore) createJobTx(tx *gorm.DB, job api.Job) (*api.Job, error)
 }
 
 func (db vulcanitoStore) UpdateJob(job api.Job) (*api.Job, error) {
-	res := db.Conn.Model(&job).Update(&job)
+	res := db.Conn.Model(&job).Updates(&job)
 	err := res.Error
 	if err != nil {
 		return nil, db.logError(errors.Update(err))

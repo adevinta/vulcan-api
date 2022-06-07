@@ -79,7 +79,7 @@ func (db vulcanitoStore) FindGlobalProgramMetadata(programID string, teamID stri
 }
 
 func (db vulcanitoStore) UpdateGlobalProgramMetadata(metadata api.GlobalProgramsMetadata) error {
-	return db.Conn.Model(&metadata).Update(metadata).Error
+	return db.Conn.Model(&metadata).Updates(metadata).Error
 }
 
 func (db vulcanitoStore) DeleteProgramMetadata(program string) error {

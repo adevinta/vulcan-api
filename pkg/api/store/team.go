@@ -6,8 +6,8 @@ package store
 
 import (
 	"github.com/adevinta/errors"
-	"github.com/jinzhu/gorm"
 	"github.com/adevinta/vulcan-api/pkg/api"
+	"gorm.io/gorm"
 )
 
 // CreateTeam inserts a new team in the database and includes the current user
@@ -57,10 +57,10 @@ func (db vulcanitoStore) UpdateTeam(team api.Team) (*api.Team, error) {
 
 	res := db.Conn.Find(&findTeam)
 	if res.Error != nil {
-		if db.NotFoundError(res.Error) {
-			return nil, db.logError(errors.NotFound(res.Error))
-		}
 		return nil, db.logError(errors.Database(res.Error))
+	}
+	if res.RowsAffected != 1 {
+		return nil, db.logError(errors.NotFound(gorm.ErrRecordNotFound))
 	}
 
 	res = db.Conn.Model(&team).Updates(&team)

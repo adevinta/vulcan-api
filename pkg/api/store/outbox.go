@@ -11,7 +11,7 @@ import (
 	errors "github.com/adevinta/errors"
 	"github.com/adevinta/vulcan-api/pkg/api"
 	"github.com/adevinta/vulcan-api/pkg/api/store/cdc"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 const (
@@ -246,7 +246,7 @@ func (db vulcanitoStore) buildMergeDiscoveredAssetsDTO(tx *gorm.DB, data ...inte
 }
 
 func (db vulcanitoStore) insertIntoOutbox(tx *gorm.DB, outbox cdc.Outbox) error {
-	res := tx.Create(&outbox)
+	res := tx.Omit("id").Create(&outbox)
 	if res.Error != nil {
 		return db.logError(errors.Create(res.Error))
 	}
