@@ -3,11 +3,11 @@ module github.com/adevinta/vulcan-api
 go 1.18
 
 require (
-	github.com/adevinta/errors v1.0.0 // from upgrade version - will be v1.0.0 when merged and tagged
-	github.com/adevinta/vulcan-core-cli v1.0.0-rc1
-	github.com/adevinta/vulcan-groupie v1.0.0-rc1
-	github.com/adevinta/vulcan-metrics-client v1.0.0-rc1
-	github.com/adevinta/vulcan-report v1.0.0-rc1
+	github.com/adevinta/errors v1.0.0
+	github.com/adevinta/vulcan-core-cli v1.0.0
+	github.com/adevinta/vulcan-groupie v1.0.0
+	github.com/adevinta/vulcan-metrics-client v1.0.0
+	github.com/adevinta/vulcan-report v1.0.0
 	github.com/adevinta/vulcan-scan-engine v1.0.0-rc1
 	github.com/adevinta/vulcan-types v1.0.0
 	github.com/adevinta/vulnerability-db-api v1.0.0-rc1
@@ -73,8 +73,8 @@ require (
 	github.com/subosito/gotenv v1.2.0 // indirect
 	github.com/zach-klippenstein/goregen v0.0.0-20160303162051-795b5e3961ea // indirect
 	golang.org/x/mod v0.5.0 // indirect
-	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd // indirect
-	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e // indirect
+	golang.org/x/net v0.0.0-20220607020251-c690dde0001d // indirect
+	golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/tools v0.1.6-0.20210726203631-07bc1bf47fb2 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
