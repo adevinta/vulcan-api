@@ -3,7 +3,7 @@ module github.com/adevinta/vulcan-api
 go 1.18
 
 require (
-	github.com/adevinta/errors v0.0.0-20220602153357-d053d72f99e6 // from upgrade version - will be v1.0.0 when merged and tagged
+	github.com/adevinta/errors v1.0.0 // from upgrade version - will be v1.0.0 when merged and tagged
 	github.com/adevinta/vulcan-core-cli v1.0.0-rc1
 	github.com/adevinta/vulcan-groupie v1.0.0-rc1
 	github.com/adevinta/vulcan-metrics-client v1.0.0-rc1
