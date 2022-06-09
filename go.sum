@@ -64,8 +64,8 @@ github.com/adevinta/vulcan-metrics-client v1.0.0 h1:gkWoyVESQxG+Ms/DdvDPttu96ieh
 github.com/adevinta/vulcan-metrics-client v1.0.0/go.mod h1:v1lRugB/hInlu+2FC6Q7nXROve9CVAe1K3oza2tYBcQ=
 github.com/adevinta/vulcan-report v1.0.0 h1:44aICPZ+4svucgCSA5KmjlT3ZGzrvZXiSnkbnj6AC2k=
 github.com/adevinta/vulcan-report v1.0.0/go.mod h1:k34KaeoXc3H77WNMwI9F4F1G28hBjB95PeMUp9oHbEE=
-github.com/adevinta/vulcan-scan-engine v1.0.0-rc1 h1:iB2nsU2FL7IIuqBUMciIs32hM1Tv63jyf9M+kiZgkZQ=
-github.com/adevinta/vulcan-scan-engine v1.0.0-rc1/go.mod h1:+UHn9+f4xr1wRllHHy68NLGVJxKZsHpK9rkim9mjlIQ=
+github.com/adevinta/vulcan-scan-engine v1.0.0 h1:WsCYI9/tOJz1E99mxN6QkN8XucKwz9R0oUP6sfnaQZw=
+github.com/adevinta/vulcan-scan-engine v1.0.0/go.mod h1:rnSU/2nYLqfxLq8smALsZwZe1BkzWZNs26crleijdBM=
 github.com/adevinta/vulcan-types v1.0.0 h1:tjt59GA4+USJ0naCoAXFNBbIGXqoF+a21BV6rD8fLXc=
 github.com/adevinta/vulcan-types v1.0.0/go.mod h1:bf/j+YA20WO1IkqlPa5GgXUYdYUAfjOOJ9alsJDQ6t8=
 github.com/adevinta/vulnerability-db-api v1.0.0-rc1 h1:/Zk1Gjqn2hqPTHzS/kea9Tn2Lu63LWV2UHPG2SUIFDI=
