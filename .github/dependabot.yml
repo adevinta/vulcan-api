@@ -8,3 +8,7 @@ updates:
   allow:
   - dependency-name: "*adevinta*"
   - dependency-name: "github.com/filewalkwithme/impl"
+- package-ecosystem: "docker"
+  directory: "/"
+  schedule:
+    interval: "weekly"
