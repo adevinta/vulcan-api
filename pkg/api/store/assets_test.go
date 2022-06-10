@@ -7,6 +7,8 @@ package store
 import (
 	"errors"
 	"log"
+	"sort"
+	"strings"
 	"testing"
 	"time"
 
@@ -20,15 +22,11 @@ import (
 )
 
 var (
-	ignoreFieldsAsset   = cmpopts.IgnoreFields(api.Asset{}, append(baseModelFieldNames, "Team", "AssetType", "AssetTypeID", "ClassifiedAt")...)
-	ignoreFieldsDisjoin = cmpopts.IgnoreFields(api.Asset{}, "CreatedAt", "UpdatedAt", "Team", "AssetType")
-	ignoreFieldsGroup   = cmpopts.IgnoreFields(api.Group{}, []string{"ID", "CreatedAt", "UpdatedAt", "Team", "AssetGroup"}...)
+	ignoreFieldsAsset       = cmpopts.IgnoreFields(api.Asset{}, append(baseModelFieldNames, "Team", "AssetType", "AssetTypeID", "ClassifiedAt")...)
+	ignoreFieldsDisjoin     = cmpopts.IgnoreFields(api.Asset{}, "CreatedAt", "UpdatedAt", "Team", "AssetType")
+	ignoreFieldsGroup       = cmpopts.IgnoreFields(api.Group{}, []string{"ID", "CreatedAt", "UpdatedAt", "Team", "AssetGroup"}...)
+	ignoreFieldsAnnotations = cmpopts.IgnoreFields(api.AssetAnnotation{}, "Asset", "AssetID", "CreatedAt", "UpdatedAt")
 )
-
-type expOutbox struct {
-	action string
-	dto    interface{}
-}
 
 func TestStoreListAssets(t *testing.T) {
 	testStoreLocal, err := testutil.PrepareDatabaseLocal("../../../testdata/fixtures", NewDB)
@@ -162,16 +160,17 @@ func TestStoreCreateAssets(t *testing.T) {
 	}
 
 	tests := []struct {
-		name    string
-		assets  []api.Asset
-		groups  []api.Group
-		want    []api.Asset
-		wantErr error
+		name        string
+		assets      []api.Asset
+		groups      []api.Group
+		annotations []*api.AssetAnnotation
+		want        []api.Asset
+		wantErr     error
 	}{
 		{
 			name: "HappyPath",
 			assets: []api.Asset{
-				api.Asset{
+				{
 					TeamID:            "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
 					Identifier:        "vulcan.example.com",
 					AssetTypeID:       hostnameType.ID,
@@ -182,12 +181,12 @@ func TestStoreCreateAssets(t *testing.T) {
 					Alias:             "Alias1",
 				}},
 			groups: []api.Group{
-				api.Group{
+				{
 					ID: "ab310d43-8cdf-4f65-9ee8-d1813a22bab4",
 				},
 			},
 			want: []api.Asset{
-				api.Asset{
+				{
 					TeamID:            "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
 					Identifier:        "vulcan.example.com",
 					AssetTypeID:       hostnameType.ID,
@@ -202,7 +201,7 @@ func TestStoreCreateAssets(t *testing.T) {
 		{
 			name: "NonExistentTeam",
 			assets: []api.Asset{
-				api.Asset{
+				{
 					TeamID:            "9f7a0c78-b752-4126-aa6d-0f286ada7b8f",
 					Identifier:        "vulcan.example.com",
 					AssetTypeID:       hostnameType.ID,
@@ -215,17 +214,54 @@ func TestStoreCreateAssets(t *testing.T) {
 			want:    nil,
 			wantErr: errors.New("[asset][vulcan.example.com][] record not found"),
 		},
+		{
+			name: "WithAnnotations",
+			annotations: []*api.AssetAnnotation{
+				{
+					Key:   "key1",
+					Value: "value1",
+				},
+			},
+			assets: []api.Asset{
+				{
+					TeamID:            "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
+					Identifier:        "asset_with_anontations.example.com",
+					AssetTypeID:       hostnameType.ID,
+					EnvironmentalCVSS: common.String("c.v.s.s."),
+					Scannable:         common.Bool(true),
+					Options:           common.String(`{"checktype_options":[{"name":"vulcan-exposed-memcheck","options":{"https":"true","port":"11211"}},{"name":"vulcan-nessus","options":{"enabled":"false"}}]}`),
+					ROLFP:             &api.ROLFP{IsEmpty: true},
+					AssetAnnotations:  []*api.AssetAnnotation{},
+				}},
+			groups: []api.Group{},
+			want: []api.Asset{
+				{
+					TeamID:            "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
+					Identifier:        "asset_with_anontations.example.com",
+					AssetTypeID:       hostnameType.ID,
+					EnvironmentalCVSS: common.String("c.v.s.s."),
+					Scannable:         common.Bool(true),
+					Options:           common.String(`{"checktype_options":[{"name":"vulcan-exposed-memcheck","options":{"https":"true","port":"11211"}},{"name":"vulcan-nessus","options":{"enabled":"false"}}]}`),
+					ROLFP:             &api.ROLFP{IsEmpty: true},
+					AssetAnnotations: []*api.AssetAnnotation{
+						{
+							Key:   "key1",
+							Value: "value1",
+						},
+					},
+				}},
+		},
 	}
 
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := testStoreLocal.CreateAssets(tt.assets, tt.groups, []*api.AssetAnnotation{})
+			got, err := testStoreLocal.CreateAssets(tt.assets, tt.groups, tt.annotations)
 			if errToStr(err) != errToStr(tt.wantErr) {
 				t.Fatal(err)
 			}
 
-			diff := cmp.Diff(tt.want, got, cmp.Options{ignoreFieldsAsset})
+			diff := cmp.Diff(tt.want, got, cmp.Options{ignoreFieldsAsset}, cmp.Options{ignoreFieldsAnnotations})
 			if diff != "" {
 				t.Errorf("%v\n", diff)
 			}
@@ -345,17 +381,18 @@ func TestStoreCreateAsset(t *testing.T) {
 
 			if tt.wantErr == nil {
 				ignoreFieldsOutbox := map[string][]string{"asset": {"id", "classified_at"}}
-				verifyOutbox(t, testStoreLocal, tt.expOutbox.action, tt.expOutbox.dto, ignoreFieldsOutbox)
+				verifyOutbox(t, testStoreLocal, tt.expOutbox, ignoreFieldsOutbox)
 			}
 		})
 	}
 }
 
 func TestStoreUpdateAsset(t *testing.T) {
-	testStoreLocal, err := testutil.PrepareDatabaseLocal("../../../testdata/fixtures", NewDB)
+	testStore, err := testutil.PrepareDatabaseLocal("../../../testdata/fixtures", NewDB)
 	if err != nil {
 		log.Fatal(err)
 	}
+	testStoreLocal := testStore.(vulcanitoStore)
 	defer testStoreLocal.Close()
 
 	hpExpTeamCreatedAt, _ := time.Parse("2006-01-02 15:04:05", "2017-01-01 12:30:12")
@@ -364,11 +401,12 @@ func TestStoreUpdateAsset(t *testing.T) {
 	ndExpTeamUpdatedAt, _ := time.Parse("2006-01-02 15:04:05", "2018-01-01 12:30:12")
 
 	tests := []struct {
-		name      string
-		asset     api.Asset
-		want      *api.Asset
-		wantErr   error
-		expOutbox expOutbox
+		name        string
+		asset       api.Asset
+		want        *api.Asset
+		wantErr     error
+		cleanOutbox bool
+		expOutbox   expOutbox
 	}{
 		{
 			name: "HappyPath",
@@ -460,17 +498,91 @@ func TestStoreUpdateAsset(t *testing.T) {
 				},
 			},
 		},
+		{
+			name: "UpdatesButNotDeletesAnnotations",
+			asset: api.Asset{
+				ID:         "73e33dcb-d07c-41d1-bc32-80861b49941e",
+				Identifier: "nonscannable.vulcan.example.com",
+				TeamID:     "ea686be5-be9b-473b-ab1b-621a4f575d51",
+				AssetAnnotations: []*api.AssetAnnotation{
+					{
+						Key:   "newkey",
+						Value: "newvalue",
+					},
+					{
+						Key:   "autodiscovery/security/keytoupdate",
+						Value: "updated",
+					},
+				},
+			},
+			want: &api.Asset{
+				ID:         "73e33dcb-d07c-41d1-bc32-80861b49941e",
+				TeamID:     "ea686be5-be9b-473b-ab1b-621a4f575d51",
+				Identifier: "nonscannable.vulcan.example.com",
+				AssetAnnotations: []*api.AssetAnnotation{
+					{
+						Key:   "keywithoutprefix",
+						Value: "valuewithoutprefix",
+					},
+					{
+						Key:   "autodiscovery/security/keytoupdate",
+						Value: "updated",
+					},
+					{
+						Key:   "newkey",
+						Value: "newvalue",
+					},
+					{
+						Key:   "autodiscovery/security/keytonotupdate",
+						Value: "valuetonotupdate",
+					},
+					{
+						Key:   "autodiscovery/security/keytodelete",
+						Value: "valuetodelete",
+					},
+				},
+			},
+			wantErr:     nil,
+			cleanOutbox: true,
+			expOutbox: expOutbox{
+				action:     opUpdateAsset,
+				notPresent: true,
+			},
+		},
 	}
 
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
+			if tt.cleanOutbox {
+				if err := testStoreLocal.DeleteAllOutbox(); err != nil {
+					t.Fatalf("error cleaning outbox: %+v", err)
+				}
+			}
 			got, err := testStoreLocal.UpdateAsset(tt.asset)
 			if errToStr(err) != errToStr(tt.wantErr) {
 				t.Fatal(err)
 			}
+			// UpdateAsset does not return the data related to asset being updated.
+			// So we must do it by hand.
+			annotations, err := testStoreLocal.ListAssetAnnotations(tt.asset.TeamID, tt.asset.ID)
+			if err != nil {
+				t.Fatalf("error getting asset annotations %+v", err)
+			}
+			got.AssetAnnotations = annotations
+			trans := cmp.Transformer("SortAnnotations", func(in []*api.AssetAnnotation) []*api.AssetAnnotation {
+				out := append([]*api.AssetAnnotation(nil), in...)
+				sort.Slice(out, func(i, j int) bool {
+					return strings.Compare(out[i].Key, out[j].Key) < 0
+				})
+				return out
+			})
 
-			diff := cmp.Diff(tt.want, got, cmp.Options{ignoreFieldsAsset})
+			diff := cmp.Diff(tt.want, got,
+				trans,
+				cmp.Options{ignoreFieldsAsset},
+				cmp.Options{ignoreFieldsAnnotations},
+			)
 			if diff != "" {
 				t.Errorf("%v\n", diff)
 			}
@@ -480,7 +592,7 @@ func TestStoreUpdateAsset(t *testing.T) {
 					"old_asset": {"alias", "asset_type", "asset_type_id", "environmental_cvss", "rolfp", "scannable", "classified_at", "options"},
 					"new_asset": {"alias", "asset_type", "asset_type_id", "environmental_cvss", "rolfp", "scannable", "classified_at", "options"},
 				}
-				verifyOutbox(t, testStoreLocal, tt.expOutbox.action, tt.expOutbox.dto, ignoreFieldsOutbox)
+				verifyOutbox(t, testStoreLocal, tt.expOutbox, ignoreFieldsOutbox)
 			}
 		})
 	}
@@ -746,7 +858,7 @@ func TestStoreDeleteAsset(t *testing.T) {
 				t.Fatalf("Asset %v was not deleted", tt.asset)
 			}
 
-			verifyOutbox(t, testStoreLocal, tt.expOutbox.action, tt.expOutbox.dto, nil)
+			verifyOutbox(t, testStoreLocal, tt.expOutbox, nil)
 		})
 	}
 }
@@ -810,7 +922,7 @@ func TestStoreDeleteAllAssets(t *testing.T) {
 				t.Fatalf("Number of orphan asset group associations left on database is different than zero: %d", result.Count)
 			}
 
-			verifyOutbox(t, testStoreLocal, tt.expOutbox.action, tt.expOutbox.dto, nil)
+			verifyOutbox(t, testStoreLocal, tt.expOutbox, nil)
 		})
 	}
 }
