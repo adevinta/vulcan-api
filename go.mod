@@ -10,7 +10,7 @@ require (
 	github.com/adevinta/vulcan-report v1.0.0
 	github.com/adevinta/vulcan-scan-engine v1.0.0
 	github.com/adevinta/vulcan-types v1.0.0
-	github.com/adevinta/vulnerability-db-api v1.0.0-rc1
+	github.com/adevinta/vulnerability-db-api v1.0.0
 	github.com/aws/aws-sdk-go v1.44.19
 	github.com/docker/distribution v2.8.1+incompatible
 	github.com/go-kit/kit v0.12.0
