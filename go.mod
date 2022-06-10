@@ -12,7 +12,6 @@ require (
 	github.com/adevinta/vulcan-types v1.0.0
 	github.com/adevinta/vulnerability-db-api v1.0.0
 	github.com/aws/aws-sdk-go v1.44.19
-	github.com/docker/distribution v2.8.1+incompatible
 	github.com/go-kit/kit v0.12.0
 	github.com/goadesign/goa v1.4.3
 	github.com/golang-jwt/jwt/v4 v4.1.0
@@ -39,6 +38,7 @@ require (
 	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
 	github.com/dimfeld/httppath v0.0.0-20170720192232-ee938bf73598 // indirect
 	github.com/dimfeld/httptreemux v5.0.1+incompatible // indirect
+	github.com/docker/distribution v2.8.1+incompatible // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/go-kit/log v0.2.0 // indirect
 	github.com/go-logfmt/logfmt v0.5.1 // indirect
