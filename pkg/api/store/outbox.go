@@ -55,7 +55,9 @@ func (db vulcanitoStore) pushToOutbox(tx *gorm.DB, op string, data ...interface{
 	if err != nil {
 		return db.logError(errors.Default(err))
 	}
-
+	if dto == nil {
+		return nil
+	}
 	dtoData, err := json.Marshal(dto)
 	if err != nil {
 		return db.logError(errors.Default(err))
@@ -110,12 +112,20 @@ func (db vulcanitoStore) buildCreateAssetDTO(tx *gorm.DB, data ...interface{}) (
 // Expected input:
 //	- api.Asset
 func (db vulcanitoStore) buildDeleteAssetDTO(tx *gorm.DB, data ...interface{}) (interface{}, error) {
-	if len(data) != 1 {
+	if len(data) != 1 && len(data) != 2 {
 		return nil, errInvalidParams
 	}
 	asset, ok := data[0].(api.Asset)
 	if !ok || asset.Team == nil {
 		return nil, errInvalidParams
+	}
+	deleteAllAssetsOp := false
+	if len(data) == 2 {
+		param, ok := data[1].(bool)
+		if !ok {
+			return nil, errInvalidParams
+		}
+		deleteAllAssetsOp = param
 	}
 
 	// Because multiple assets can have the same identifier, even
@@ -131,7 +141,7 @@ func (db vulcanitoStore) buildDeleteAssetDTO(tx *gorm.DB, data ...interface{}) (
 	// Don't store unnecessary data
 	asset.AssetGroups = nil
 
-	return cdc.OpDeleteAssetDTO{Asset: asset, DupAssets: dupAssets}, nil
+	return cdc.OpDeleteAssetDTO{Asset: asset, DupAssets: dupAssets, DeleteAllAssetsOp: deleteAllAssetsOp}, nil
 }
 
 // buildUpdateAssetDTO builds a UpdateAsset action DTO for outbox.
@@ -183,21 +193,16 @@ func (db vulcanitoStore) buildDeleteAllAssetsDTO(tx *gorm.DB, data ...interface{
 	if len(data) != 1 {
 		return nil, errInvalidParams
 	}
-	teamID, ok := data[0].(string)
+	team, ok := data[0].(api.Team)
 	if !ok {
 		return nil, errInvalidParams
 	}
-	team, err := db.FindTeam(teamID)
-	if err != nil {
-		return nil, err
-	}
-
 	// Don't store unnecessary data
 	team.Assets = nil
 	team.UserTeam = nil
 	team.Groups = nil
 
-	return cdc.OpDeleteAllAssetsDTO{Team: *team}, nil
+	return cdc.OpDeleteAllAssetsDTO{Team: team}, nil
 }
 
 // buildFindingOverwriteDTO builds a FindingOverwrite action DTO for outbox.

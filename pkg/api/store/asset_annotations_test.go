@@ -73,7 +73,6 @@ func TestStoreCreateAssetAnnotations(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := db.CreateAssetAnnotations(tt.teamID, tt.assetID, tt.annotations)
 			if errToStr(err) != errToStr(tt.wantErr) {
-
 				t.Fatalf("got error != want err, %+v!=%+v", errToStr(err), errToStr(tt.wantErr))
 			}
 			diff := cmp.Diff(tt.want, got, cmp.Options{ignoreFieldsAnnotations})
