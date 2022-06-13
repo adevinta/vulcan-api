@@ -69,9 +69,9 @@ func (db vulcanitoStore) UpdateAssetAnnotations(teamID string, assetID string, a
 	if tx.Commit().Error != nil {
 		return nil, db.logError(errors.Database(tx.Error))
 	}
-	// Notice that depending on the execution of other concurrent transactions
-	// we could be returning a set of annotations with information that were
-	// never present "as is" in the DB at any point in time.
+	// TODO: Depending on the execution of other concurrent transactions we
+	// could be returning a set of annotations with information that were never
+	// present "as is" in the DB at any point in time.
 	return annotations, nil
 }
 
