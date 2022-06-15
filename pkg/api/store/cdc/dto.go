@@ -25,8 +25,8 @@ type OpDeleteAssetDTO struct {
 	// DupAssets is the number of assets which have the same identifier in the
 	// same team as Asset.
 	DupAssets int `json:"duplicates"`
-	// Marks the cause for the asset to be deleted an operation for deleteing
-	// all assets of a team.
+	// The operation the caused this asset to be deleted was a call to "delete
+	// all assets of a team".
 	DeleteAllAssetsOp bool `json:"delete_all_assets_op"`
 }
 
