@@ -314,10 +314,10 @@ func (db vulcanitoStore) UpdateAsset(asset api.Asset) (*api.Asset, error) {
 // updateAssetTX updates the non zero value fields of a given asset using the
 // given transaction including the annotations, that means that if the
 // AssetAnnotations field is not nil all the annotations of the asset not
-// present in the slice will be deleted. If the parameter onlyCreateAnnotations
-// is set to true the method will only try create new annotations without
-// deleting or updating the current annotations of the asset. Notice that at
-// least the values: ID and teamID of the asset must be specified.
+// present in the slice will be deleted. The annotations will be updated
+// according to to the value specified in the parameter annotationsBehavior.
+// Notice that at least the values: ID and teamID of the asset must be
+// specified.
 func (db vulcanitoStore) updateAssetTX(tx *gorm.DB, asset api.Asset, annotationsBehavior updateAnnotationsBehavior) (*api.Asset, error) {
 	findAsset := api.Asset{ID: asset.ID}
 	result := tx.
