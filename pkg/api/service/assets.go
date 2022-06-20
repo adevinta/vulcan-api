@@ -101,15 +101,15 @@ func (s vulcanitoService) CreateAssets(ctx context.Context, assets []api.Asset, 
 		}
 	}
 
-	// For all AWSAccount assets that do not specify an Alias, try to
-	// automatically fetch one
+	// Add Annotations and AWS Account alias (if needed).
 	for i, a := range assetsToCreate {
+		a.AssetAnnotations = annotations
 		if a.AssetType.Name == "AWSAccount" && a.Alias == "" {
 			a.Alias = s.getAccountName(a.Identifier)
-			assetsToCreate[i] = a
 		}
+		assetsToCreate[i] = a
 	}
-	return s.db.CreateAssets(assetsToCreate, groups, annotations)
+	return s.db.CreateAssets(assetsToCreate, groups)
 }
 
 func (s vulcanitoService) getAccountName(identifier string) string {
@@ -261,7 +261,7 @@ func (s vulcanitoService) CreateAssetsMultiStatus(ctx context.Context, assets []
 }
 
 // MergeDiscoveredAssets receives an list of assets to merge with the existing
-// assets of an auto-disvovery group for a team.
+// assets of an auto-discovery group for a team.
 func (s vulcanitoService) MergeDiscoveredAssets(ctx context.Context, teamID string, assets []api.Asset, groupName string) error {
 	// Check if the group exists and otherwise create it. Also check that there
 	// is no more than one match for the given group name.

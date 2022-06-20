@@ -15,6 +15,23 @@ import (
 	"github.com/adevinta/vulcan-api/pkg/api"
 )
 
+// updateAnnotationsBehavior is used by the parameter `annotationsBehavior` of
+// the method `updateAssetTX` to define the desired behavior of the method
+// regarding the annotations of the asset to update.
+type updateAnnotationsBehavior byte
+
+const (
+	// Annotations update behavior.
+	annotationsCreateBehavior updateAnnotationsBehavior = iota
+	annotationsReplaceBehavior
+	annotationsUpdateBehavior
+	annotationsDeleteBehavior
+
+	// duplicateRecordMsg defines the prefix returned by postgres when trying
+	// to create a row that already exists.
+	duplicateRecordPrefix = "pq: duplicate key value violates unique constrain"
+)
+
 func (db vulcanitoStore) ListAssets(teamID string, asset api.Asset) ([]*api.Asset, error) {
 	findTeam := &api.Team{ID: teamID}
 	res := db.Conn.Find(&findTeam)
@@ -44,13 +61,13 @@ func (db vulcanitoStore) ListAssets(teamID string, asset api.Asset) ([]*api.Asse
 	return assets, nil
 }
 
-func (db vulcanitoStore) CreateAssets(assets []api.Asset, groups []api.Group, annotations []*api.AssetAnnotation) ([]api.Asset, error) {
+func (db vulcanitoStore) CreateAssets(assets []api.Asset, groups []api.Group) ([]api.Asset, error) {
 	tx := db.Conn.Begin()
 	if tx.Error != nil {
 		return nil, db.logError(errors.Database(tx.Error))
 	}
 
-	createdAssets, err := db.createAssetsTX(tx, assets, groups, annotations)
+	createdAssets, err := db.createAssetsTX(tx, assets, groups)
 	if err != nil {
 		tx.Rollback()
 		return nil, err
@@ -62,7 +79,7 @@ func (db vulcanitoStore) CreateAssets(assets []api.Asset, groups []api.Group, an
 	return createdAssets, nil
 }
 
-func (db vulcanitoStore) createAssetsTX(tx *gorm.DB, assets []api.Asset, groups []api.Group, annotations []*api.AssetAnnotation) ([]api.Asset, error) {
+func (db vulcanitoStore) createAssetsTX(tx *gorm.DB, assets []api.Asset, groups []api.Group) ([]api.Asset, error) {
 	createdAssets := []api.Asset{}
 
 	for _, a := range assets {
@@ -98,19 +115,6 @@ func (db vulcanitoStore) createAssetsTX(tx *gorm.DB, assets []api.Asset, groups 
 				return nil, err
 			}
 		}
-
-		// Associate asset with input annotations
-		for _, an := range annotations {
-			an := an
-
-			an.AssetID = asset.ID
-
-			result := tx.Create(&an)
-			if result.Error != nil {
-				return nil, errors.Create(result.Error, "assetAnnotation", asset.ID, an.Key)
-			}
-		}
-		asset.AssetAnnotations = annotations
 		createdAssets = append(createdAssets, *asset)
 	}
 
@@ -205,7 +209,10 @@ func (db vulcanitoStore) createAsset(tx *gorm.DB, asset api.Asset) (*api.Asset, 
 		return nil, db.logError(errors.Create(res.Error))
 	}
 
-	res = tx.Preload("Team").Preload("AssetType").Find(&asset)
+	res = tx.
+		Preload("AssetAnnotations").
+		Preload("Team").
+		Preload("AssetType").Find(&asset)
 	if res.Error != nil {
 		return nil, db.logError(errors.Database(res.Error))
 	}
@@ -292,7 +299,7 @@ func (db vulcanitoStore) UpdateAsset(asset api.Asset) (*api.Asset, error) {
 		return nil, db.logError(errors.Database(tx.Error))
 	}
 
-	out, err := db.updateAssetTX(tx, asset)
+	out, err := db.updateAssetTX(tx, asset, annotationsReplaceBehavior)
 	if err != nil {
 		tx.Rollback()
 		return nil, err
@@ -304,27 +311,60 @@ func (db vulcanitoStore) UpdateAsset(asset api.Asset) (*api.Asset, error) {
 	return out, nil
 }
 
-func (db vulcanitoStore) updateAssetTX(tx *gorm.DB, asset api.Asset) (*api.Asset, error) {
+// updateAssetTX updates the non zero value fields of a given asset using the
+// given transaction including the annotations, that means that if the
+// AssetAnnotations field is not nil all the annotations of the asset not
+// present in the slice will be deleted. The annotations will be updated
+// according to to the value specified in the parameter annotationsBehavior.
+// Notice that at least the values: ID and teamID of the asset must be
+// specified.
+func (db vulcanitoStore) updateAssetTX(tx *gorm.DB, asset api.Asset, annotationsBehavior updateAnnotationsBehavior) (*api.Asset, error) {
 	findAsset := api.Asset{ID: asset.ID}
-	if tx.
+	result := tx.
 		Preload("Team").
 		Where("team_id = ? and id = ?", asset.TeamID, asset.ID).
-		First(&findAsset).
-		RecordNotFound() {
+		First(&findAsset)
+
+	if result.RecordNotFound() {
 		return nil, db.logError(errors.Forbidden("asset does not belong to team"))
 	}
+	if result.Error != nil {
+		msg := fmt.Errorf("error checking the team of the asset to update: %w", result.Error)
+		return nil, db.logError(errors.Update(msg))
+	}
 
-	result := tx.Model(&asset).Where("team_id = ?", asset.TeamID).Update(asset)
+	// We will the update the anontations by hand after updating the corresponding fields
+	// of asset.
+	annotations := asset.AssetAnnotations
+	asset.AssetAnnotations = nil
+
+	result = tx.Model(&asset).
+		Where("team_id = ?", asset.TeamID).
+		Update(asset)
 	if result.Error != nil {
 		return nil, db.logError(errors.Update(result.Error))
 	}
-	if result.RowsAffected == 0 {
-		return nil, db.logError(errors.Update("asset was not updated"))
+	var err error
+	if annotations != nil {
+		annotations, err = db.updateAnnotationsTX(tx, asset.ID, asset.TeamID, annotations, annotationsBehavior)
+		if err != nil {
+			return nil, err
+		}
 	}
+	asset.AssetAnnotations = annotations
 
 	// If asset identifier has changed, we have to propagate the action
 	// to the vulnerability DB so ownership from previous identifier is
 	// removed for this team if necessary, and also the new one is created.
+
+	// TODO: review this not exactly correct, we can't really know here if the
+	// findAsset variable contains the lastest data related to the Identifier
+	// at a relevant point of time for this transaction, as it could have been
+	// changed after we retrieved it but before we commit this transaction. It
+	// is also not strictly correct to send here the content of the findAsset
+	// variable as the old asset info in the outbox, because when the
+	// transaction is committed those values could have already changed and the
+	// values corresponding to the old asset could be different.
 	if asset.Identifier != "" && asset.Identifier != findAsset.Identifier {
 		err := db.pushToOutbox(tx, opUpdateAsset, findAsset, asset)
 		if err != nil {
@@ -445,12 +485,7 @@ func (db vulcanitoStore) MergeAssets(mergeOps api.AssetMergeOperations) error {
 	// Create the new assets, its annotations and add them to the provided
 	// auto-discovery group.
 	for _, asset := range mergeOps.Create {
-		a, err := db.createAssetTX(tx, asset, []api.Group{mergeOps.Group})
-		if err != nil {
-			tx.Rollback()
-			return err
-		}
-		_, err = db.putAssetAnnotationsTX(tx, mergeOps.TeamID, a.ID, asset.AssetAnnotations)
+		_, err := db.createAssetTX(tx, asset, []api.Group{mergeOps.Group})
 		if err != nil {
 			tx.Rollback()
 			return err
@@ -473,17 +508,8 @@ func (db vulcanitoStore) MergeAssets(mergeOps api.AssetMergeOperations) error {
 	// If required, update the scannable field and/or the annotations of the
 	// already existing assets.
 	for _, asset := range mergeOps.Update {
-		if len(asset.AssetAnnotations) > 0 {
-			_, err := db.putAssetAnnotationsTX(tx, asset.TeamID, asset.ID, asset.AssetAnnotations)
-			if err != nil {
-				tx.Rollback()
-				return err
-			}
-			asset.AssetAnnotations = nil
-		}
-
-		if asset.Scannable != nil {
-			_, err := db.updateAssetTX(tx, asset)
+		if asset.Scannable != nil || asset.AssetAnnotations != nil {
+			_, err := db.updateAssetTX(tx, asset, annotationsReplaceBehavior)
 			if err != nil {
 				tx.Rollback()
 				return err
@@ -503,7 +529,16 @@ func (db vulcanitoStore) MergeAssets(mergeOps api.AssetMergeOperations) error {
 			tx.Rollback()
 			return err
 		}
-		_, err = db.putAssetAnnotationsTX(tx, asset.TeamID, asset.ID, asset.AssetAnnotations)
+		// In a "dissociate group operation" we only want to update annotations
+		// of the asset, not the rest of the fields. To do so, we leave all the
+		// fields of the asset set to their zero value, except for the ID, the
+		// teamID and the annotations.
+		a := api.Asset{
+			ID:               asset.ID,
+			TeamID:           asset.TeamID,
+			AssetAnnotations: asset.AssetAnnotations,
+		}
+		_, err = db.updateAssetTX(tx, a, annotationsReplaceBehavior)
 		if err != nil {
 			tx.Rollback()
 			return err
@@ -829,6 +864,94 @@ func (db vulcanitoStore) ungroupAssetsTX(tx *gorm.DB, assetGroup api.AssetGroup,
 	res := tx.Delete(&assetGroup)
 	if res.Error != nil {
 		return db.logError(errors.Delete(res.Error))
+	}
+	return nil
+}
+
+// updateAnontationsTX updates the annotations of an asset ensuring the asset
+// belongs to the given team id when the updates are committed. The method will
+// only create, completely replace, or only update the annotations according to
+// the paremeter annotationsBehavior.
+func (db vulcanitoStore) updateAnnotationsTX(tx *gorm.DB, assetID string, teamID string, annotations []*api.AssetAnnotation,
+	annotationsBehavior updateAnnotationsBehavior) ([]*api.AssetAnnotation, error) {
+	switch annotationsBehavior {
+	case annotationsReplaceBehavior:
+		return db.replaceAnnotationsTX(tx, assetID, teamID, annotations)
+	case annotationsCreateBehavior:
+		return db.createAnnotationsTX(tx, assetID, teamID, annotations)
+	case annotationsUpdateBehavior:
+		return db.updateExistingAnnotationsTX(tx, assetID, teamID, annotations)
+	case annotationsDeleteBehavior:
+		err := db.deleteAnnotationsTX(tx, assetID, teamID, annotations)
+		return nil, err
+	}
+	return nil, nil
+}
+
+func (db vulcanitoStore) replaceAnnotationsTX(tx *gorm.DB, assetID string, teamID string,
+	annotations []*api.AssetAnnotation) ([]*api.AssetAnnotation, error) {
+	stm := "DELETE FROM asset_annotations an USING assets a WHERE a.id = an.asset_id and a.id = ? and a.team_id = ?"
+	result := tx.Exec(stm, assetID, teamID)
+	if result.Error != nil {
+		return nil, db.logError(errors.Update(result.Error))
+	}
+	return db.createAnnotationsTX(tx, assetID, teamID, annotations)
+}
+
+func (db vulcanitoStore) createAnnotationsTX(tx *gorm.DB, assetID string, teamID string,
+	annotations []*api.AssetAnnotation) ([]*api.AssetAnnotation, error) {
+	out := []*api.AssetAnnotation{}
+	for _, annotation := range annotations {
+		a := api.AssetAnnotation{}
+		stm := `INSERT INTO asset_annotations SELECT a.id, ?, ? FROM assets a WHERE a.id = ? AND a.team_id = ?
+			RETURNING *`
+		result := tx.Raw(stm, annotation.Key, annotation.Value, assetID, teamID).Scan(&a)
+		if result.Error != nil && strings.HasPrefix(result.Error.Error(), duplicateRecordPrefix) {
+			err := fmt.Errorf("annotation '%v' already present for asset id '%v'", annotation.Key, assetID)
+			err = errors.Create(err)
+			return nil, db.logError(err)
+		}
+		if result.Error != nil {
+			return nil, db.logError(errors.Update(result.Error))
+		}
+		out = append(out, &a)
+	}
+	return out, nil
+}
+
+func (db vulcanitoStore) updateExistingAnnotationsTX(tx *gorm.DB, assetID string, teamID string,
+	annotations []*api.AssetAnnotation) ([]*api.AssetAnnotation, error) {
+	var out = make([]*api.AssetAnnotation, 0)
+	for _, annotation := range annotations {
+		a := api.AssetAnnotation{}
+		stm := `UPDATE asset_annotations an SET value = ? FROM assets a WHERE
+				an.key = ? AND an.asset_id = a.id AND a.id = ? AND a.team_id = ?
+				RETURNING *`
+		result := tx.Raw(stm, annotation.Value, annotation.Key, assetID, teamID).Scan(&a)
+		if result.RowsAffected != 1 {
+			err := fmt.Errorf("annotation '%v' not found for asset id '%v'", annotation.Key, assetID)
+			return nil, db.logError(errors.NotFound(err))
+		}
+		if result.Error != nil {
+			return nil, db.logError(errors.Update(result.Error))
+		}
+		out = append(out, &a)
+	}
+	return out, nil
+}
+
+func (db vulcanitoStore) deleteAnnotationsTX(tx *gorm.DB, assetID string, teamID string, annotations []*api.AssetAnnotation) error {
+	for _, a := range annotations {
+		stm := `DELETE FROM asset_annotations an USING assets a WHERE a.id = an.asset_id AND a.id = ? AND a.team_id = ?
+			AND an.key = ?`
+		result := tx.Exec(stm, assetID, teamID, a.Key)
+		if result.Error != nil {
+			return db.logError(errors.Update(result.Error))
+		}
+		if result.RowsAffected != 1 {
+			err := fmt.Errorf("annotation '%v' not found for asset id '%v'", a.Key, a.AssetID)
+			return db.logError(errors.NotFound(err))
+		}
 	}
 	return nil
 }
