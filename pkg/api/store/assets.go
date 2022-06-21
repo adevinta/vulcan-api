@@ -363,12 +363,7 @@ func (db vulcanitoStore) updateAssetTX(tx *gorm.DB, asset api.Asset, annotations
 	// We assume the team information can be stale data.
 	asset.Team = &assetInfo.Team
 	if annotations != nil {
-		err = db.updateAnnotationsTX(tx, asset.ID, asset.TeamID, annotations, annotationsBehavior)
-		if err != nil {
-			return nil, err
-		}
-		stm = `SELECT key, value FROM asset_annotations WHERE asset_id = ?`
-		err = tx.Raw(stm, asset.ID).Scan(&annotations).Error
+		annotations, err = db.updateAnnotationsTX(tx, asset.ID, asset.TeamID, annotations, annotationsBehavior)
 		if err != nil {
 			return nil, err
 		}
@@ -1061,6 +1056,7 @@ func (db vulcanitoStore) createAnnotationsTX(tx *gorm.DB, assetID string, teamID
 			err = errors.Create(err)
 			return nil, db.logError(err)
 		}
+		a.AssetID = ""
 		if result.Error != nil {
 			return nil, db.logError(errors.Update(result.Error))
 		}
@@ -1087,7 +1083,7 @@ func (db vulcanitoStore) updateExistingAnnotationsTX(tx *gorm.DB, assetID string
 		}
 		out = append(out, &a)
 	}
-	return nil
+	return out, nil
 }
 
 func (db vulcanitoStore) deleteAnnotationsTX(tx *gorm.DB, assetID string, teamID string, annotations []*api.AssetAnnotation) error {
