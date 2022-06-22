@@ -131,6 +131,9 @@ func (db vulcanitoStore) buildDeleteAssetDTO(tx *gorm.DB, data ...interface{}) (
 	// Because multiple assets can have the same identifier, even
 	// for the same team, we have to count how many duplicates
 	// are for the given asset identifier and its associated team.
+	// TODO: Review this query could have problems if the assets of a team
+	// having the same identifier have change since the outbox operations was
+	// `enqueued'.
 	dupAssets, err := db.countTeamAssetsByIdentifier(asset.TeamID, asset.Identifier)
 	if err != nil {
 		return nil, err
