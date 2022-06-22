@@ -6,6 +6,7 @@ package store
 
 import (
 	"encoding/json"
+	"fmt"
 	"testing"
 
 	"github.com/adevinta/vulcan-api/pkg/api"
@@ -17,6 +18,37 @@ type expOutbox struct {
 	action     string
 	notPresent bool
 	dto        interface{}
+}
+
+// Compare compares a expected outbox structure with an outbox
+// record.
+func (e expOutbox) Compare(outbox cdc.Outbox, ignoreFields map[string][]string) string {
+	var diff string
+	if e.action != outbox.Operation {
+		diff = fmt.Sprintf("error verifying outbox, expected Op to be %s but got %s",
+			e.action, outbox.Operation)
+		return diff
+	}
+	expDTO := e.dto
+	expMap, err := ifaceToMapIface(expDTO)
+	if err != nil {
+		diff = fmt.Sprintf("error verifying outbox, error converting expDTO: %v", err)
+		return diff
+	}
+	filterFields(expMap, ignoreFields)
+
+	gotMap, err := bSliceToMapIface(outbox.DTO)
+	if err != nil {
+		diff = fmt.Sprintf("error verifying outbox, error converting gotDTO: %v", err)
+		return diff
+	}
+	filterFields(gotMap, ignoreFields)
+	diff = cmp.Diff(expMap, gotMap)
+	if diff != "" {
+		diff = fmt.Sprintf("error verifying outbox, DTO's do not match.\nDiff:\n%v", diff)
+		return diff
+	}
+	return ""
 }
 
 // verifyOutbox is a testing helper function to verify outbox data.
@@ -70,6 +102,11 @@ func verifyOutbox(t *testing.T, store api.VulcanitoStore, exp expOutbox, ignoreF
 	if diff != "" {
 		t.Fatalf("error verifying outbox, DTO's do not match.\nDiff:\n%v", diff)
 	}
+}
+
+type testCdCOutbox struct {
+	DTO       string
+	Operation string
 }
 
 func filterFields(m map[string]interface{}, ignoreFields map[string][]string) {

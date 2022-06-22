@@ -5,6 +5,7 @@ Copyright 2021 Adevinta
 package store
 
 import (
+	"encoding/json"
 	"errors"
 	"log"
 	"sort"
@@ -436,7 +437,8 @@ func TestStoreUpdateAsset(t *testing.T) {
 							CreatedAt:   &hpExpTeamCreatedAt,
 							UpdatedAt:   &hpExpTeamUpdatedAt,
 						},
-						Identifier: "foo1.vulcan.example.com",
+						Identifier:       "foo1.vulcan.example.com",
+						AssetAnnotations: []*api.AssetAnnotation{},
 					},
 					NewAsset: api.Asset{
 						ID:     "0f206826-14ec-4e85-a5a4-e2decdfbc193",
@@ -449,7 +451,8 @@ func TestStoreUpdateAsset(t *testing.T) {
 							CreatedAt:   &hpExpTeamCreatedAt,
 							UpdatedAt:   &hpExpTeamUpdatedAt,
 						},
-						Identifier: "vulcan.example.bis.com",
+						Identifier:       "vulcan.example.bis.com",
+						AssetAnnotations: []*api.AssetAnnotation{},
 					},
 					DupAssets: 1,
 				},
@@ -481,7 +484,8 @@ func TestStoreUpdateAsset(t *testing.T) {
 							CreatedAt:   &ndExpTeamCreatedAt,
 							UpdatedAt:   &ndExpTeamUpdatedAt,
 						},
-						Identifier: "noscan.vulcan.example.com",
+						Identifier:       "noscan.vulcan.example.com",
+						AssetAnnotations: []*api.AssetAnnotation{},
 					},
 					NewAsset: api.Asset{
 						ID:     "49f90ed2-2f71-11e9-b210-d663bd873d93",
@@ -493,7 +497,8 @@ func TestStoreUpdateAsset(t *testing.T) {
 							CreatedAt:   &ndExpTeamCreatedAt,
 							UpdatedAt:   &ndExpTeamUpdatedAt,
 						},
-						Identifier: "updated.vulcan.example.com",
+						Identifier:       "updated.vulcan.example.com",
+						AssetAnnotations: []*api.AssetAnnotation{},
 					},
 					DupAssets: 0,
 				},
@@ -534,8 +539,62 @@ func TestStoreUpdateAsset(t *testing.T) {
 			wantErr:     nil,
 			cleanOutbox: true,
 			expOutbox: expOutbox{
-				action:     opUpdateAsset,
-				notPresent: true,
+				action: opUpdateAsset,
+				dto: cdc.OpUpdateAssetDTO{
+					OldAsset: api.Asset{
+						ID:     "73e33dcb-d07c-41d1-bc32-80861b49941e",
+						TeamID: "ea686be5-be9b-473b-ab1b-621a4f575d51",
+						Team: &api.Team{
+							ID:          "ea686be5-be9b-473b-ab1b-621a4f575d51",
+							Name:        "DiscoveryMergeTeam",
+							Description: "Team used for testing the merge of discovered assets",
+							CreatedAt:   &ndExpTeamCreatedAt,
+							UpdatedAt:   &ndExpTeamUpdatedAt,
+						},
+						Identifier: "nonscannable.vulcan.example.com",
+						AssetAnnotations: []*api.AssetAnnotation{
+							{
+								Key:   "keywithoutprefix",
+								Value: "valuewithoutprefix",
+							},
+							{
+								Key:   "autodiscovery/security/keytoupdate",
+								Value: "valuetoupdate",
+							},
+							{
+								Key:   "autodiscovery/security/keytonotupdate",
+								Value: "valuetonotupdate",
+							},
+							{
+								Key:   "autodiscovery/security/keytodelete",
+								Value: "valuetodelete",
+							},
+						},
+					},
+					NewAsset: api.Asset{
+						ID:     "73e33dcb-d07c-41d1-bc32-80861b49941e",
+						TeamID: "ea686be5-be9b-473b-ab1b-621a4f575d51",
+						Team: &api.Team{
+							ID:          "ea686be5-be9b-473b-ab1b-621a4f575d51",
+							Name:        "DiscoveryMergeTeam",
+							Description: "Team used for testing the merge of discovered assets",
+							CreatedAt:   &ndExpTeamCreatedAt,
+							UpdatedAt:   &ndExpTeamUpdatedAt,
+						},
+						Identifier: "nonscannable.vulcan.example.com",
+						AssetAnnotations: []*api.AssetAnnotation{
+							{
+								Key:   "newkey",
+								Value: "newvalue",
+							},
+							{
+								Key:   "autodiscovery/security/keytoupdate",
+								Value: "updated",
+							},
+						},
+					},
+					DupAssets: 0,
+				},
 			},
 		},
 	}
@@ -784,6 +843,11 @@ func TestStoreDeleteAsset(t *testing.T) {
 						ROLFP:       api.DefaultROLFP,
 						Scannable:   &varTrue,
 						Options:     &opts,
+						AssetType: &api.AssetType{
+							ID:   "e2e4b23e-b72c-40a6-9f72-e6ade33a7b00",
+							Name: "DomainName",
+						},
+						AssetAnnotations: []*api.AssetAnnotation{},
 					},
 					DupAssets: 1,
 				},
@@ -814,6 +878,61 @@ func TestStoreDeleteAsset(t *testing.T) {
 						ROLFP:       api.DefaultROLFP,
 						Scannable:   &varTrue,
 						Options:     &opts,
+						AssetType: &api.AssetType{
+							ID:   "1937b564-bbc4-47f6-9722-b4a8c8ac0595",
+							Name: "Hostname",
+						},
+						AssetAnnotations: []*api.AssetAnnotation{},
+					},
+					DupAssets: 0,
+				},
+			},
+		},
+		{
+			name: "Send annotations to outbox",
+			asset: api.Asset{
+				ID:     "73e33dcb-d07c-41d1-bc32-80861b49941e",
+				TeamID: "ea686be5-be9b-473b-ab1b-621a4f575d51",
+			},
+			expOutbox: expOutbox{
+				action: opDeleteAsset,
+				dto: cdc.OpDeleteAssetDTO{
+					Asset: api.Asset{
+						ID:     "73e33dcb-d07c-41d1-bc32-80861b49941e",
+						TeamID: "ea686be5-be9b-473b-ab1b-621a4f575d51",
+						Team: &api.Team{
+							ID:          "ea686be5-be9b-473b-ab1b-621a4f575d51",
+							Name:        "DiscoveryMergeTeam",
+							Description: "Team used for testing the merge of discovered assets",
+						},
+						Identifier:        "nonscannable.vulcan.example.com",
+						Options:           strToPtr("{}"),
+						ROLFP:             api.DefaultROLFP,
+						Scannable:         boolToPtr(false),
+						AssetTypeID:       "1937b564-bbc4-47f6-9722-b4a8c8ac0595",
+						EnvironmentalCVSS: strToPtr("5"),
+						AssetType: &api.AssetType{
+							ID:   "1937b564-bbc4-47f6-9722-b4a8c8ac0595",
+							Name: "Hostname",
+						},
+						AssetAnnotations: []*api.AssetAnnotation{
+							{
+								Key:   "keywithoutprefix",
+								Value: "valuewithoutprefix",
+							},
+							{
+								Key:   "autodiscovery/security/keytoupdate",
+								Value: "valuetoupdate",
+							},
+							{
+								Key:   "autodiscovery/security/keytonotupdate",
+								Value: "valuetonotupdate",
+							},
+							{
+								Key:   "autodiscovery/security/keytodelete",
+								Value: "valuetodelete",
+							},
+						},
 					},
 					DupAssets: 0,
 				},
@@ -852,36 +971,71 @@ func TestStoreDeleteAsset(t *testing.T) {
 	}
 }
 
-func TestStoreDeleteAllAssets(t *testing.T) {
-	testStoreLocal, err := testutil.PrepareDatabaseLocal("../../../testdata/fixtures", NewDB)
+func TestStoreDeleteAssetsUnsafeTX(t *testing.T) {
+
+	testStore, err := testutil.PrepareDatabaseLocal("../../../testdata/fixtures", NewDB)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer testStoreLocal.Close()
-
-	expCreatedAt, _ := time.Parse("2006-01-02 15:04:05", "2017-01-01 12:30:12")
-	expUpdatedAt, _ := time.Parse("2006-01-02 15:04:05", "2017-01-01 12:30:12")
-
+	defer testStore.Close()
+	testStoreLocal := testStore.(vulcanitoStore)
 	tests := []struct {
 		name      string
 		teamID    string
+		assets    []api.Asset
 		expOutbox expOutbox
 		wantErr   error
 	}{
 		{
 			name:   "HappyPath",
-			teamID: "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
+			teamID: "ea686be5-be9b-473b-ab1b-621a4f575d51",
+			assets: []api.Asset{
+				{
+					ID:     "73e33dcb-d07c-41d1-bc32-80861b49941e",
+					TeamID: "ea686be5-be9b-473b-ab1b-621a4f575d51",
+				},
+			},
 			expOutbox: expOutbox{
-				action: opDeleteAllAssets,
-				dto: cdc.OpDeleteAllAssetsDTO{
-					Team: api.Team{
-						ID:          "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
-						Name:        "Foo Team",
-						Description: "Foo foo...",
-						Tag:         "team:foo-team",
-						CreatedAt:   &expCreatedAt,
-						UpdatedAt:   &expUpdatedAt,
+				action: opDeleteAsset,
+				dto: cdc.OpDeleteAssetDTO{
+					Asset: api.Asset{
+						ID:     "73e33dcb-d07c-41d1-bc32-80861b49941e",
+						TeamID: "ea686be5-be9b-473b-ab1b-621a4f575d51",
+						Team: &api.Team{
+							ID:          "ea686be5-be9b-473b-ab1b-621a4f575d51",
+							Name:        "DiscoveryMergeTeam",
+							Description: "Team used for testing the merge of discovered assets",
+						},
+						Identifier:  "nonscannable.vulcan.example.com",
+						Options:     strToPtr("{}"),
+						ROLFP:       api.DefaultROLFP,
+						Scannable:   boolToPtr(false),
+						AssetTypeID: "1937b564-bbc4-47f6-9722-b4a8c8ac0595",
+						AssetType: &api.AssetType{
+							ID:   "1937b564-bbc4-47f6-9722-b4a8c8ac0595",
+							Name: "Hostname",
+						},
+						EnvironmentalCVSS: strToPtr("5"),
+						AssetAnnotations: []*api.AssetAnnotation{
+							{
+								Key:   "keywithoutprefix",
+								Value: "valuewithoutprefix",
+							},
+							{
+								Key:   "autodiscovery/security/keytoupdate",
+								Value: "valuetoupdate",
+							},
+							{
+								Key:   "autodiscovery/security/keytonotupdate",
+								Value: "valuetonotupdate",
+							},
+							{
+								Key:   "autodiscovery/security/keytodelete",
+								Value: "valuetodelete",
+							},
+						},
 					},
+					DupAssets: 0,
 				},
 			},
 		},
@@ -890,7 +1044,146 @@ func TestStoreDeleteAllAssets(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			err := testStoreLocal.DeleteAllAssets("a14c7c65-66ab-4676-bcf6-0dea9719f5c6")
+			tx := testStoreLocal.Conn.Begin()
+			err := testStoreLocal.deleteAssetsUnsafeTX(tx, tt.teamID, tt.assets)
+			if err != tt.wantErr {
+				tx.Rollback()
+				t.Fatalf("got error != want error: %+v!=%+v", err, tt.wantErr)
+			}
+			tx.Commit()
+			type Result struct {
+				Count int
+			}
+			// Ensure all assets specified were actually deleted.
+			var result Result
+			for _, a := range tt.assets {
+				err = testStore.(vulcanitoStore).Conn.Raw(`
+					SELECT count(*) FROM assets a WHERE id = ?`, a.ID).
+					Scan(&result).Error
+				if err != nil {
+					tx.Rollback()
+					t.Fatal(err)
+				}
+				if result.Count != 0 {
+					tx.Rollback()
+					t.Fatalf("Asset %v was not deleted", tt.assets)
+				}
+			}
+			verifyOutbox(t, testStore, tt.expOutbox, nil)
+		})
+	}
+}
+
+func TestStoreDeleteAllAssets(t *testing.T) {
+	localStore, err := testutil.PrepareDatabaseLocal("../../../testdata/fixtures", NewDB)
+	if err != nil {
+		log.Fatal(err)
+	}
+	testStoreLocal := localStore.(vulcanitoStore)
+	defer testStoreLocal.Close()
+
+	expCreatedAt, _ := time.Parse("2006-01-02 15:04:05", "2017-01-01 12:30:12")
+	expUpdatedAt, _ := time.Parse("2006-01-02 15:04:05", "2017-01-01 12:30:12")
+	discoveryMergeTeamAssets := []api.Asset{}
+	var discoveryMergeTeamID = "a14c7c65-66ab-4676-bcf6-0dea9719f5c6"
+	err = testStoreLocal.Conn.
+		Preload("Team").
+		Preload("AssetType").
+		Preload("AssetAnnotations").
+		Where("team_id = ?", discoveryMergeTeamID).
+		Find(&discoveryMergeTeamAssets).Error
+	if err != nil {
+		t.Fatalf("error loading assets of the team %s: %+v", discoveryMergeTeamID, err)
+	}
+	tests := []struct {
+		name         string
+		teamID       string
+		expOutbox    []expOutbox
+		verifyOutBox func()
+		wantErr      error
+	}{
+		{
+			name:   "HappyPath",
+			teamID: "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
+			verifyOutBox: func() {
+				expDeletedAllAssets := expOutbox{
+					action: opDeleteAllAssets,
+					dto: cdc.OpDeleteAllAssetsDTO{
+						Team: api.Team{
+							ID:          "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
+							Name:        "Foo Team",
+							Description: "Foo foo...",
+							Tag:         "team:foo-team",
+							CreatedAt:   &expCreatedAt,
+							UpdatedAt:   &expUpdatedAt,
+						},
+					},
+				}
+				var gotOutbox []cdc.Outbox = make([]cdc.Outbox, 0)
+				db := testStoreLocal
+				err := db.Conn.Raw(`
+					SELECT * FROM outbox
+					ORDER BY created_at DESC`,
+				).Scan(&gotOutbox).Error
+				if err != nil {
+					t.Fatalf("error verifying outbox: %v", err)
+				}
+				expOutboxLen := len(discoveryMergeTeamAssets) + 1
+				if len(gotOutbox) != expOutboxLen {
+					t.Fatalf("error verifying outbox, expected %d records got %d", expOutboxLen, len(gotOutbox))
+				}
+				ignoreFields := map[string][]string{}
+				// We expect the last operation to be the delete all asset operation.
+				diff := expDeletedAllAssets.Compare(gotOutbox[expOutboxLen-1], ignoreFields)
+				if diff != "" {
+					t.Fatalf("error verifying outbox, expected last operation != got last operation, diff:\n %s", diff)
+				}
+				gotOutbox = gotOutbox[:expOutboxLen-1]
+				for _, exp := range discoveryMergeTeamAssets {
+					var gotDTO *cdc.OpDeleteAssetDTO
+					for z, a := range gotOutbox {
+						if a.Operation != opDeleteAsset {
+							fmtStr := "error verifying outbox, expected record in position to have operation %d to be: %s but is: %s"
+							t.Fatalf(fmtStr, z, opDeleteAsset, a.Operation)
+						}
+						var dto cdc.OpDeleteAssetDTO
+						err := json.Unmarshal(a.DTO, &dto)
+						if err != nil {
+							fmtStr := "error verifying outbox unmarshaling data from got outbox record: %s"
+							t.Fatalf(fmtStr, string(a.DTO))
+						}
+						if dto.Asset.ID == exp.ID {
+							gotDTO = &dto
+							break
+						}
+					}
+					if gotDTO == nil {
+						fmtStr := "error verifying outbox expected asset %+v, not found in outbox"
+						t.Fatalf(fmtStr, exp)
+					}
+					if gotDTO.DeleteAllAssetsOp != true {
+						fmtStr := "error verifying outbox expected DeletedAllAssets to be true, but is false in: %+v"
+						t.Fatalf(fmtStr, *gotDTO)
+					}
+					ignoreFieldsAsset := cmpopts.IgnoreFields(api.Asset{}, baseModelFieldNames...)
+					diff := cmp.Diff(exp, gotDTO.Asset, ignoreFieldsAsset, ignoreFieldsTeam)
+					if diff != "" {
+						t.Fatalf("error verifying outbox, DTO's do not match.\nDiff:\n%v", diff)
+					}
+				}
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			// We need to clean the outbox before each test.
+			err := testStoreLocal.Conn.Exec("DELETE FROM outbox").Error
+			if err != nil {
+				t.Fatalf("Error cleaning the outbox %+v", err)
+			}
+			err = testStoreLocal.DeleteAllAssets("a14c7c65-66ab-4676-bcf6-0dea9719f5c6")
 			if err != tt.wantErr {
 				t.Fatal(err)
 			}
@@ -901,8 +1194,9 @@ func TestStoreDeleteAllAssets(t *testing.T) {
 
 			var result Result
 
-			// do a raw query on database and ensure that there are no orphans asset group associations
-			err = testStoreLocal.(vulcanitoStore).Conn.Raw(`SELECT count(*) FROM asset_group ag WHERE ag.asset_id not in (select a.id from assets a)`).Scan(&result).Error
+			// Do a raw query on database and ensure that there are no orphans
+			// asset group associations.
+			err = testStoreLocal.Conn.Raw(`SELECT count(*) FROM asset_group ag WHERE ag.asset_id not in (select a.id from assets a)`).Scan(&result).Error
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -910,8 +1204,9 @@ func TestStoreDeleteAllAssets(t *testing.T) {
 			if result.Count != 0 {
 				t.Fatalf("Number of orphan asset group associations left on database is different than zero: %d", result.Count)
 			}
-
-			verifyOutbox(t, testStoreLocal, tt.expOutbox, nil)
+			if tt.verifyOutBox != nil {
+				tt.verifyOutBox()
+			}
 		})
 	}
 }
