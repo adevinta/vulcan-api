@@ -1388,7 +1388,7 @@ definitions:
         - Web
         - HTTP
         items:
-          example: Cumque enim totam ut perspiciatis.
+          example: Natus esse neque aliquid.
           type: string
         type: array
       recommendations:
@@ -1396,14 +1396,14 @@ definitions:
         example:
         - It is recommended to run DMARC
         items:
-          example: Illum ipsum tempora nemo corrupti sed.
+          example: Rerum deleniti aut sed illo porro.
           type: string
         type: array
       reference_links:
         description: Documentation reference for the issue
         example: []
         items:
-          example: Sint ratione.
+          example: Omnis perferendis.
           type: string
         type: array
       summary:
@@ -2167,7 +2167,7 @@ definitions:
         - Hostname
         - Port
         items:
-          example: Rerum deleniti aut sed illo porro.
+          example: Quas voluptatum sit eos illum ipsum tempora.
           type: string
         type: array
       name:
@@ -2182,7 +2182,7 @@ definitions:
         items:
           additionalProperties: true
           example:
-            Perferendis maxime natus esse.: Aliquid molestias velit.
+            Sed qui sint ratione perferendis cumque.: Totam ut perspiciatis.
           type: object
         type: array
     title: 'Mediatype identifier: resource; view=default'
@@ -2596,7 +2596,7 @@ definitions:
         example:
         - team:vulcan
         items:
-          example: Laborum quas voluptatum sit.
+          example: Velit quis.
           type: string
         type: array
     title: 'Mediatype identifier: target; view=default'

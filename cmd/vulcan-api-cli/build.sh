@@ -11,3 +11,5 @@ go run ./gen/main.go
 go install ./tool/vulcan-api-cli
 
 cp -p ../../swagger/swagger.json ../../docs/swagger.json
+
+jq < ../../docs/swagger.json > ../../swagger/swagger.json
