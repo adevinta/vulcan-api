@@ -519,7 +519,7 @@ func (db vulcanitoStore) pushDelAssetsToOutbox(tx *gorm.DB,
 
 		// The number of the asset types is low (less than 20) and it's
 		// expected to continue to be low, so we can consider this loop as fast
-		// as a lockup in a hashtable.
+		// as a lookup in a hashtable.
 		for _, at := range assetTypes {
 			if at.ID == asset.AssetTypeID {
 				at := at
