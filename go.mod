@@ -10,7 +10,7 @@ require (
 	github.com/adevinta/vulcan-report v0.0.0-20190503133936-d8a2d4cb18ff
 	github.com/adevinta/vulcan-scan-engine v0.0.0-20211011153901-f80146c81d43
 	github.com/adevinta/vulcan-types v0.0.0-20220310133120-53f000e5196f
-	github.com/adevinta/vulnerability-db-api v0.0.0-20211222100150-3406b653577e
+	github.com/adevinta/vulnerability-db-api v1.0.1-0.20220629151909-a95388cc9c12
 	github.com/aws/aws-sdk-go v1.40.59
 	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
 	github.com/go-kit/kit v0.12.0
@@ -38,6 +38,7 @@ require (
 	github.com/beevik/etree v1.1.0 // indirect
 	github.com/dimfeld/httppath v0.0.0-20170720192232-ee938bf73598 // indirect
 	github.com/dimfeld/httptreemux v5.0.1+incompatible // indirect
+	github.com/docker/distribution v2.7.1+incompatible // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/go-kit/log v0.2.0 // indirect
 	github.com/go-logfmt/logfmt v0.5.1 // indirect
