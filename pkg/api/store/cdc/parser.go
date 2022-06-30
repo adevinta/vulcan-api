@@ -117,7 +117,7 @@ func (p *AsyncTxParser) processDeleteTeam(data []byte) error {
 		return errInvalidData
 	}
 
-	err = p.VulnDBClient.DeleteTag(context.Background(), dto.Team.Tag, dto.Team.Tag)
+	err = p.VulnDBClient.DeleteTeamTag(context.Background(), dto.Team.ID, dto.Team.Tag, dto.Team.Tag)
 	if err != nil {
 		if errors.IsKind(err, errors.ErrNotFound) {
 			return nil

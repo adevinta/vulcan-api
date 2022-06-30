@@ -115,7 +115,7 @@ type mockVulnDBClient struct {
 	vulnerabilitydb.Client
 	targetsF         func(ctx context.Context, params api.TargetsParams, pagination api.Pagination) (*api.TargetsList, error)
 	createTargetF    func(ctx context.Context, payload api.CreateTarget) (*api.Target, error)
-	deleteTagF       func(ctx context.Context, authTag, tag string) error
+	deleteTeamTagF   func(ctx context.Context, authTag, teamID, tag string) error
 	deleteTargetTagF func(ctx context.Context, authTag, targetID, tag string) error
 	updateFindingF   func(ctx context.Context, findingID string, payload *api.UpdateFinding, tag string) (*api.Finding, error)
 }
@@ -126,8 +126,8 @@ func (m *mockVulnDBClient) Targets(ctx context.Context, params api.TargetsParams
 func (m *mockVulnDBClient) CreateTarget(ctx context.Context, payload api.CreateTarget) (*api.Target, error) {
 	return m.createTargetF(ctx, payload)
 }
-func (m *mockVulnDBClient) DeleteTag(ctx context.Context, authTag, tag string) error {
-	return m.deleteTagF(ctx, authTag, tag)
+func (m *mockVulnDBClient) DeleteTeamTag(ctx context.Context, authTag, teamID, tag string) error {
+	return m.deleteTeamTagF(ctx, authTag, teamID, tag)
 }
 func (m *mockVulnDBClient) DeleteTargetTag(ctx context.Context, authTag, targetID, tag string) error {
 	return m.deleteTargetTagF(ctx, authTag, targetID, tag)
@@ -213,7 +213,7 @@ func TestParse(t *testing.T) {
 					}}
 					return t, nil
 				},
-				deleteTagF: func(ctx context.Context, authTag, tag string) error {
+				deleteTeamTagF: func(ctx context.Context, authTag, teamID, tag string) error {
 					return nil
 				},
 				deleteTargetTagF: func(ctx context.Context, authTag, targetID, tag string) error {
@@ -254,7 +254,7 @@ func TestParse(t *testing.T) {
 				},
 			},
 			vulnDBClient: &mockVulnDBClient{
-				deleteTagF: func(ctx context.Context, authTag, tag string) error {
+				deleteTeamTagF: func(ctx context.Context, authTag, teamID, tag string) error {
 					return nil
 				},
 			},
@@ -275,7 +275,7 @@ func TestParse(t *testing.T) {
 				},
 			},
 			vulnDBClient: &mockVulnDBClient{
-				deleteTagF: func(ctx context.Context, authTag, tag string) error {
+				deleteTeamTagF: func(ctx context.Context, authTag, teamID, tag string) error {
 					return errors.NotFound("not found")
 				},
 				targetsF: func(ctx context.Context, params api.TargetsParams, pagination api.Pagination) (*api.TargetsList, error) {
