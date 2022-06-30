@@ -21,6 +21,7 @@ const (
 
 type StatsRequest struct {
 	TeamID      string  `json:"team_id" urlvar:"team_id"`
+	Teams       string  `urlquery:"teams"`
 	Tags        string  `urlquery:"tags"`
 	MinDate     string  `urlquery:"minDate"`
 	MaxDate     string  `urlquery:"maxDate"`
