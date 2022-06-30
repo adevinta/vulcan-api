@@ -47,7 +47,7 @@ type VulcanitoStore interface {
 	ListAssets(teamID string, asset Asset) ([]*Asset, error)
 	FindAsset(teamID, assetID string) (*Asset, error)
 	CreateAsset(asset Asset, groups []Group) (*Asset, error)
-	CreateAssets(assets []Asset, groups []Group, annotations []*AssetAnnotation) ([]Asset, error)
+	CreateAssets(assets []Asset, groups []Group) ([]Asset, error)
 	DeleteAsset(asset Asset) error
 	DeleteAllAssets(teamID string) error
 	UpdateAsset(asset Asset) (*Asset, error)

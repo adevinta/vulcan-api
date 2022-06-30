@@ -4,6 +4,13 @@ FROM golang:1.18.2-alpine3.15 as builder
 
 WORKDIR /app
 
+WORKDIR /app
+
+COPY go.mod .
+COPY go.sum .
+
+RUN go mod download
+
 COPY . .
 
 RUN cd cmd/vulcan-api && GOOS=linux GOARCH=amd64 go build . && cd -
@@ -14,7 +21,7 @@ WORKDIR /flyway
 
 RUN apk add --no-cache --update openjdk8-jre-base bash gettext libc6-compat
 
-ARG FLYWAY_VERSION=8.5.9
+ARG FLYWAY_VERSION=8.5.11
 
 RUN wget https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/${FLYWAY_VERSION}/flyway-commandline-${FLYWAY_VERSION}.tar.gz \
     && tar -xzf flyway-commandline-${FLYWAY_VERSION}.tar.gz --strip 1 \

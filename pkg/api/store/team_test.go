@@ -5,6 +5,7 @@ Copyright 2021 Adevinta
 package store
 
 import (
+	"encoding/json"
 	"errors"
 	"log"
 	"testing"
@@ -368,21 +369,100 @@ func TestStoreUpdateTeam(t *testing.T) {
 }
 
 func TestStoreDeleteTeam(t *testing.T) {
-	testStoreLocal, err := testutil.PrepareDatabaseLocal("../../../testdata/fixtures", NewDB)
+	localStore, err := testutil.PrepareDatabaseLocal("../../../testdata/fixtures", NewDB)
 	if err != nil {
 		log.Fatal(err)
 	}
+	testStoreLocal := localStore.(vulcanitoStore)
 	defer testStoreLocal.Close()
+	expCreatedAt, _ := time.Parse("2006-01-02 15:04:05", "2017-01-01 12:30:12")
+	expUpdatedAt, _ := time.Parse("2006-01-02 15:04:05", "2017-01-01 12:30:12")
+	discoveryMergeTeamAssets := []api.Asset{}
+	var discoveryMergeTeamID = "a14c7c65-66ab-4676-bcf6-0dea9719f5c6"
+	err = testStoreLocal.Conn.
+		Preload("Team").
+		Preload("AssetType").
+		Preload("AssetAnnotations").
+		Where("team_id = ?", discoveryMergeTeamID).
+		Find(&discoveryMergeTeamAssets).Error
 
 	tests := []struct {
-		name    string
-		teamID  string
-		wantErr error
+		name         string
+		teamID       string
+		expOutbox    []expOutbox
+		verifyOutBox func()
+		wantErr      error
 	}{
 		{
-			name:    "HappyPath",
-			teamID:  "0ef82297-e7c7-4c46-a852-ae3ffbecc4bc",
-			wantErr: nil,
+			name:   "HappyPath",
+			teamID: discoveryMergeTeamID,
+			verifyOutBox: func() {
+				expDeletedAllAssets := expOutbox{
+					action: opDeleteTeam,
+					dto: cdc.OpDeleteTeamDTO{
+						Team: api.Team{
+							ID:          discoveryMergeTeamID,
+							Name:        "Foo Team",
+							Description: "Foo foo...",
+							Tag:         "team:foo-team",
+							CreatedAt:   &expCreatedAt,
+							UpdatedAt:   &expUpdatedAt,
+						},
+					},
+				}
+				var gotOutbox []cdc.Outbox = make([]cdc.Outbox, 0)
+				db := testStoreLocal
+				err := db.Conn.Raw(`
+					SELECT * FROM outbox
+					ORDER BY created_at DESC`,
+				).Scan(&gotOutbox).Error
+				if err != nil {
+					t.Fatalf("error verifying outbox: %v", err)
+				}
+				expOutboxLen := len(discoveryMergeTeamAssets) + 1
+				if len(gotOutbox) != expOutboxLen {
+					t.Fatalf("error verifying outbox, expected %d records got %d", expOutboxLen, len(gotOutbox))
+				}
+				ignoreFields := map[string][]string{}
+				// We expect the last operation to be the delete all asset operation.
+				diff := expDeletedAllAssets.Compare(gotOutbox[expOutboxLen-1], ignoreFields)
+				if diff != "" {
+					t.Fatalf("error verifying outbox, expected last operation != got last operation, diff:\n %s", diff)
+				}
+				gotOutbox = gotOutbox[:expOutboxLen-1]
+				for _, exp := range discoveryMergeTeamAssets {
+					var gotDTO *cdc.OpDeleteAssetDTO
+					for z, a := range gotOutbox {
+						if a.Operation != opDeleteAsset {
+							fmtStr := "error verifying outbox, expected record in position to have operation %d to be: %s but is: %s"
+							t.Fatalf(fmtStr, z, opDeleteAsset, a.Operation)
+						}
+						var dto cdc.OpDeleteAssetDTO
+						err := json.Unmarshal(a.DTO, &dto)
+						if err != nil {
+							fmtStr := "error verifying outbox unmarshaling data from got outbox record: %s"
+							t.Fatalf(fmtStr, string(a.DTO))
+						}
+						if dto.Asset.ID == exp.ID {
+							gotDTO = &dto
+							break
+						}
+					}
+					if gotDTO == nil {
+						fmtStr := "error verifying outbox expected asset %+v, not found in outbox"
+						t.Fatalf(fmtStr, exp)
+					}
+					if gotDTO.DeleteAllAssetsOp != true {
+						fmtStr := "error verifying outbox expected DeletedAllAssets to be true, but is false in: %+v"
+						t.Fatalf(fmtStr, *gotDTO)
+					}
+					ignoreFieldsAsset := cmpopts.IgnoreFields(api.Asset{}, baseModelFieldNames...)
+					diff := cmp.Diff(exp, gotDTO.Asset, ignoreFieldsAsset, ignoreFieldsTeam)
+					if diff != "" {
+						t.Fatalf("error verifying outbox, DTO's do not match.\nDiff:\n%v", diff)
+					}
+				}
+			},
 		},
 		{
 			name:    "TeamNotFound",
@@ -399,30 +479,18 @@ func TestStoreDeleteTeam(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			err := testStoreLocal.DeleteTeam(tt.teamID)
+			// We need to clean the outbox before each test.
+			err := testStoreLocal.Conn.Exec("DELETE FROM outbox").Error
+			if err != nil {
+				t.Fatalf("Error cleaning the outbox %+v", err)
+			}
+			err = testStoreLocal.DeleteTeam(tt.teamID)
 			diff := cmp.Diff(errToStr(tt.wantErr), errToStr(err))
 			if diff != "" {
 				t.Fatal(diff)
 			}
-
-			if err != nil {
-				// Verify outbox data
-				expCreatedAt, _ := time.Parse("2006-01-02 15:04:05", "2018-01-01 12:30:12")
-				expUpdatedAt, _ := time.Parse("2006-01-02 15:04:05", "2018-01-01 12:30:12")
-				deleteDTO := cdc.OpDeleteTeamDTO{
-					Team: api.Team{
-						ID:          "0ef82297-e7c7-4c46-a852-ae3ffbecc4bc",
-						Name:        "Delete Team",
-						Description: "Team to be deleted",
-						CreatedAt:   &expCreatedAt,
-						UpdatedAt:   &expUpdatedAt,
-					},
-				}
-				expOutbox := expOutbox{
-					action: opDeleteTeam,
-					dto:    deleteDTO,
-				}
-				verifyOutbox(t, testStoreLocal, expOutbox, nil)
+			if tt.verifyOutBox != nil {
+				tt.verifyOutBox()
 			}
 		})
 	}

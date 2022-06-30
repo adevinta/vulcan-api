@@ -2,10 +2,10 @@ language: go
 dist: bionic
 env:
   global:
-    - FLYWAY_VERSION=8.5.9
+    - FLYWAY_VERSION=8.5.11
     - INPUT_BUILDARGS=FLYWAY_VERSION=$FLYWAY_VERSION
 go:
-  - 1.18.2
+  - 1.18.x
 services:
   - docker
 go_import_path: github.com/adevinta/vulcan-api

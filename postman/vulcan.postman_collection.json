@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "10d226f7-bbcc-416e-9a91-5a7e4ce580cf",
+		"_postman_id": "e181bd07-6e5f-477e-99e1-d92334ad2f1f",
 		"name": "vulcan",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6686087"
 	},
 	"item": [
 		{
@@ -1996,13 +1997,13 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"Status code is 404\", function () {",
-											"    pm.response.to.have.status(404);",
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403);",
 											"});",
 											"",
-											"pm.test(\"Response is correct\", function () {",
+											"pm.test(\"Forbidden\", function () {",
 											"    var jsonData = pm.response.json();",
-											"    pm.expect(jsonData.type).to.eql(\"Record not found\")",
+											"    pm.expect(jsonData.type).to.eql(\"Forbidden\")",
 											"});"
 										],
 										"type": "text/javascript"
@@ -2046,13 +2047,13 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"Status code is 404\", function () {",
-											"    pm.response.to.have.status(404);",
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403);",
 											"});",
 											"",
-											"pm.test(\"Response is correct\", function () {",
+											"pm.test(\"Forbidden\", function () {",
 											"    var jsonData = pm.response.json();",
-											"    pm.expect(jsonData.type).to.eql(\"Record not found\")",
+											"    pm.expect(jsonData.type).to.eql(\"Forbidden\")",
 											"});"
 										],
 										"type": "text/javascript"
@@ -2096,13 +2097,13 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"Status code is 404\", function () {",
-											"    pm.response.to.have.status(404);",
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403);",
 											"});",
 											"",
-											"pm.test(\"Response is correct\", function () {",
+											"pm.test(\"Forbidden\", function () {",
 											"    var jsonData = pm.response.json();",
-											"    pm.expect(jsonData.type).to.eql(\"Record not found\")",
+											"    pm.expect(jsonData.type).to.eql(\"Forbidden\")",
 											"});"
 										],
 										"type": "text/javascript"

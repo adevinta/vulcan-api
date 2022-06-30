@@ -152,7 +152,11 @@ func (p *AsyncTxParser) processDeleteAsset(data []byte) error {
 	if err != nil {
 		return errInvalidData
 	}
-
+	// By now, we don't process the assets deleted in a "delete all assets"
+	// operation.
+	if dto.DeleteAllAssetsOp {
+		return nil
+	}
 	if dto.DupAssets > 0 {
 		// If there are more assets with the same
 		// identifier and for the same team, do not
