@@ -6,8 +6,8 @@ package store
 
 import (
 	"github.com/adevinta/errors"
-	"github.com/jinzhu/gorm"
 	"github.com/adevinta/vulcan-api/pkg/api"
+	"github.com/jinzhu/gorm"
 )
 
 // CreateTeam inserts a new team in the database and includes the current user
@@ -74,22 +74,18 @@ func (db vulcanitoStore) UpdateTeam(team api.Team) (*api.Team, error) {
 }
 
 func (db vulcanitoStore) DeleteTeam(teamID string) error {
-	team := &api.Team{ID: teamID}
-
-	findTeam := team
-
-	res := db.Conn.Find(&findTeam)
+	tx := db.Conn.Begin()
+	if tx.Error != nil {
+		return db.logError(errors.Database(tx.Error))
+	}
+	deletedTeam := &api.Team{}
+	res := tx.Raw("SELECT * FROM teams WHERE id = ? FOR UPDATE", teamID).
+		Scan(&deletedTeam)
 	if res.Error != nil {
 		if db.NotFoundError(res.Error) {
 			return db.logError(errors.NotFound(res.Error))
 		}
 		return db.logError(errors.Database(res.Error))
-	}
-
-	// Begin transaction
-	tx := db.Conn.Begin()
-	if tx.Error != nil {
-		return db.logError(errors.Database(tx.Error))
 	}
 
 	// We are not going to delete Scans and Reports
@@ -124,13 +120,6 @@ func (db vulcanitoStore) DeleteTeam(teamID string) error {
 		return db.logError(errors.Delete(res.Error))
 	}
 
-	// Delete assets
-	res = tx.Delete(api.Asset{}, "team_id = ?", teamID)
-	if res.Error != nil {
-		tx.Rollback()
-		return db.logError(errors.Delete(res.Error))
-	}
-
 	// Delete programs
 	res = tx.Delete(api.Program{}, "team_id = ?", teamID)
 	if res.Error != nil {
@@ -145,22 +134,22 @@ func (db vulcanitoStore) DeleteTeam(teamID string) error {
 		return db.logError(errors.Delete(res.Error))
 	}
 
-	// Delete user team
-	res = tx.Delete(api.UserTeam{}, "team_id = ?", teamID)
-	if res.Error != nil {
+	// Push to outbox so distributed tx is processed
+	err := db.pushToOutbox(tx, opDeleteTeam, *deletedTeam)
+	if err != nil {
 		tx.Rollback()
-		return db.logError(errors.Delete(res.Error))
+		return err
 	}
 
-	// Push to outbox so distributed tx is processed
-	err := db.pushToOutbox(tx, opDeleteTeam, *findTeam)
+	// Delete assets
+	err = db.deleteAllAssetsTX(tx, *deletedTeam)
 	if err != nil {
 		tx.Rollback()
 		return err
 	}
 
 	// Delete team
-	res = tx.Delete(team)
+	res = tx.Delete(deletedTeam)
 	if res.Error != nil {
 		tx.Rollback()
 		return db.logError(errors.Delete(res.Error))
