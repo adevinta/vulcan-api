@@ -117,7 +117,15 @@ func (p *AsyncTxParser) processDeleteTeam(data []byte) error {
 		return errInvalidData
 	}
 
-	err = p.VulnDBClient.DeleteTeamTag(context.Background(), dto.Team.ID, dto.Team.Tag, dto.Team.Tag)
+	err = p.VulnDBClient.DeleteTeam(context.Background(), dto.Team.ID, dto.Team.ID)
+	if err != nil {
+		if errors.IsKind(err, errors.ErrNotFound) {
+			return nil
+		}
+		return err
+	}
+
+	err = p.VulnDBClient.DeleteTeamTag(context.Background(), dto.Team.ID, dto.Team.ID, dto.Team.Tag)
 	if err != nil {
 		if errors.IsKind(err, errors.ErrNotFound) {
 			return nil
@@ -138,6 +146,7 @@ func (p *AsyncTxParser) processCreateAsset(data []byte) error {
 	payload := api.CreateTarget{
 		Identifier: dto.Asset.Identifier,
 		Tags:       []string{dto.Asset.Team.Tag},
+		Teams:      []string{dto.Asset.Team.ID},
 	}
 
 	_, err = p.VulnDBClient.CreateTarget(context.Background(), payload)
@@ -191,14 +200,25 @@ func (p *AsyncTxParser) processDeleteAsset(data []byte) error {
 	}
 
 	target := ttList.Targets[0]
+	teamID := dto.Asset.Team.ID
 	tag := dto.Asset.Team.Tag
 
-	err = p.VulnDBClient.DeleteTargetTag(ctx, tag, target.ID, tag)
+	err = p.VulnDBClient.DeleteTargetTeam(ctx, teamID, target.ID, teamID)
 	if err != nil {
 		// If target is not found or if we get a 403 HTTP response status,
-		// which means that the tag is no longer associated with the target,
+		// which means that the team is no longer associated with the target,
 		// there is nothing to do, so return no error.
 		if errors.IsKind(err, errors.ErrNotFound) || errors.IsKind(err, errors.ErrForbidden) {
+			return nil
+		}
+		return err
+	}
+
+	err = p.VulnDBClient.DeleteTargetTag(ctx, teamID, target.ID, tag)
+	if err != nil {
+		// If target is not found there is nothing to do, so return no error.
+		// In this case, 403 HTTP response status is only returned on failed authorization.
+		if errors.IsKind(err, errors.ErrNotFound) {
 			return nil
 		}
 		return err
@@ -251,7 +271,15 @@ func (p *AsyncTxParser) processDeleteAllAssets(data []byte) error {
 		return errInvalidData
 	}
 
-	err = p.VulnDBClient.DeleteTeamTag(context.Background(), dto.Team.ID, dto.Team.Tag, dto.Team.Tag)
+	err = p.VulnDBClient.DeleteTeam(context.Background(), dto.Team.ID, dto.Team.ID)
+	if err != nil {
+		if errors.IsKind(err, errors.ErrNotFound) {
+			return nil
+		}
+		return err
+	}
+
+	err = p.VulnDBClient.DeleteTeamTag(context.Background(), dto.Team.ID, dto.Team.ID, dto.Team.Tag)
 	if err != nil {
 		if errors.IsKind(err, errors.ErrNotFound) {
 			return nil
