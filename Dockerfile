@@ -1,6 +1,6 @@
 # Copyright 2021 Adevinta
 
-FROM golang:1.18.2-alpine3.15 as builder
+FROM golang:1.18.3-alpine3.15 as builder
 
 WORKDIR /app
 
@@ -15,7 +15,7 @@ COPY . .
 
 RUN cd cmd/vulcan-api && GOOS=linux GOARCH=amd64 go build . && cd -
 
-FROM alpine:3.15
+FROM alpine:3.16.0
 
 WORKDIR /flyway
 
