@@ -1,5 +1,11 @@
 # vulcan-api
 
+This package implements the syncrhonous and the asynchronous APIs publicly
+exposed by Vulcan, the corresponding specifications are here:
+
+* [API](docs/swagger.json)
+* [Asynchronous API](docs/async/asyncapi.yml)
+
 ## Requirements
 
 ```sh
@@ -109,4 +115,14 @@ docker run --env PORT=8888  .........    ./local.env va
 
 # Use custom config.toml
 docker run -v `pwd`/custom.toml:/app/config.toml va
+```
+
+## Genrating the asynchronous API models
+
+The structures representing the data models of the async API in go are
+automatically generated. To update the models run this command in the root of
+the repository:
+
+```bash
+pkg/asyncapi/gen/gen.sh docs/async/asyncapi.yaml asyncapi > pkg/asyncapi/models.go
 ```
