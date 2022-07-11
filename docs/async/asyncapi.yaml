@@ -1,0 +1,106 @@
+asyncapi: 2.4.0
+info:
+  title: Vulcan
+  version: 0.0.1
+servers:
+  production:
+    url: broker.mycompany.com
+    protocol: kafka
+    description: Dummy server.
+defaultContentType: application/json
+channels:
+  assets:
+    description: CDC Events of the assets stored in Vulcan.
+    subscribe:
+      message:
+        $ref: '#/components/messages/asset'
+
+components:
+  messages:
+    asset:
+      name: Asset
+      title: Asset state
+      summary: |
+        Contains the exact state of an asset is was stored in a point
+        of time in Vulcan.
+      contentType: application/json
+      payload:
+        $ref: "#/components/schemas/assetPayload"
+
+  schemas:
+    assetPayload:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        team:
+          $ref: "#/components/schemas/team"
+        alias:
+          type: string
+        rolfp:
+          type: string
+        scannable:
+          type: boolean
+        asset_type:
+          $ref: "#/components/schemas/assetType"
+        identifier:
+          type: string
+        annotations:
+          type: array
+          items:
+            - $ref: "#/components/schemas/annotation"
+      required:
+        - id
+        - team
+        - alias
+        - rolfp
+        - scannable
+        - asset_type
+        - identifier
+        - annotations
+
+    assetType:
+      type: string
+      enum:
+        - IP
+        - DomainName
+        - Hostname
+        - AWSAccount
+        - IPRange
+        - DockerImage
+        - WebAddress
+        - GitRepository
+
+    annotation:
+      type: object
+      additionalProperties: false
+      properties:
+        key:
+          type: string
+        value:
+          type: string
+      required:
+        - key
+        - value
+
+
+    team:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        tag:
+          type: string
+      required:
+        - id
+        - name
+        - description
+        - tag
