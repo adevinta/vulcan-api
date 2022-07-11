@@ -85,7 +85,6 @@ components:
         - key
         - value
 
-
     team:
       type: object
       additionalProperties: false
