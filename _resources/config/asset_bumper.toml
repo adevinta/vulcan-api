@@ -1,0 +1,11 @@
+# This file contains a example configuration for the asset bumper cli.
+
+[db]
+connection_string = "host=localhost port=5432 user=vulcanito dbname=vulcanito password=vulcanito sslmode=disable"
+log_mode = false
+
+[kafka]
+user = "user"
+pass = "supersecret"
+broker = "localhost:9092"
+topics = {assets = "test-topic"}
