@@ -394,7 +394,7 @@ func TestStoreUpdateAsset(t *testing.T) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	testStoreLocal := testStore.(vulcanitoStore)
+	testStoreLocal := testStore.(Store)
 	defer testStoreLocal.Close()
 
 	hpExpTeamCreatedAt, _ := time.Parse("2006-01-02 15:04:05", "2017-01-01 12:30:12")
@@ -934,7 +934,7 @@ func TestStoreDeleteAsset(t *testing.T) {
 			var result Result
 
 			// do a raw query on database and ensure asset was deleted
-			err = testStoreLocal.(vulcanitoStore).Conn.Raw(`
+			err = testStoreLocal.(Store).Conn.Raw(`
 				SELECT count(*) FROM assets a WHERE id = ?`, tt.asset.ID).
 				Scan(&result).Error
 			if err != nil {
@@ -957,7 +957,7 @@ func TestStoreDeleteAssetsUnsafeTX(t *testing.T) {
 		log.Fatal(err)
 	}
 	defer testStore.Close()
-	testStoreLocal := testStore.(vulcanitoStore)
+	testStoreLocal := testStore.(Store)
 	tests := []struct {
 		name      string
 		teamID    string
@@ -1036,7 +1036,7 @@ func TestStoreDeleteAssetsUnsafeTX(t *testing.T) {
 			// Ensure all assets specified were actually deleted.
 			var result Result
 			for _, a := range tt.assets {
-				err = testStore.(vulcanitoStore).Conn.Raw(`
+				err = testStore.(Store).Conn.Raw(`
 					SELECT count(*) FROM assets a WHERE id = ?`, a.ID).
 					Scan(&result).Error
 				if err != nil {
@@ -1058,7 +1058,7 @@ func TestStoreDeleteAllAssets(t *testing.T) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	testStoreLocal := localStore.(vulcanitoStore)
+	testStoreLocal := localStore.(Store)
 	defer testStoreLocal.Close()
 
 	expCreatedAt, _ := time.Parse("2006-01-02 15:04:05", "2017-01-01 12:30:12")

@@ -59,7 +59,7 @@ func verifyOutbox(t *testing.T, store api.VulcanitoStore, exp expOutbox, ignoreF
 	expDTO := exp.dto
 	expNotPresent := exp.notPresent
 	var outbox cdc.Outbox
-	db := store.(vulcanitoStore)
+	db := store.(Store)
 	err := db.Conn.Raw(`
 		SELECT * FROM outbox
 		ORDER BY created_at DESC
