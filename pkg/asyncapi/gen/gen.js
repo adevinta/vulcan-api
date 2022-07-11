@@ -1,4 +1,8 @@
 
+/*
+Copyright 2022 Adevinta
+*/
+
 import { readFileSync } from 'fs';
 import { GoGenerator } from '@asyncapi/modelina';
 import parser from '@asyncapi/parser';

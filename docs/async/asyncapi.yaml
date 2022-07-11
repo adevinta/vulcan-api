@@ -1,3 +1,4 @@
+# Copyright 2022 Adevinta
 asyncapi: 2.4.0
 info:
   title: Vulcan

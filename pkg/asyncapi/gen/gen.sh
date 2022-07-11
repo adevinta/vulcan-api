@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Copyright 2022 Adevinta
+
 set -eu
 if [ $# -ne 2 ]; then
 	echo "usage: $0 <asyncdoc_path> <outputdir>" >&2
