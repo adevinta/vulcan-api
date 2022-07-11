@@ -36,6 +36,7 @@ require (
 	github.com/armon/go-metrics v0.3.10 // indirect
 	github.com/beevik/etree v1.1.0 // indirect
 	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
+	github.com/confluentinc/confluent-kafka-go v1.9.0 // indirect
 	github.com/dimfeld/httppath v0.0.0-20170720192232-ee938bf73598 // indirect
 	github.com/dimfeld/httptreemux v5.0.1+incompatible // indirect
 	github.com/docker/distribution v2.8.1+incompatible // indirect
