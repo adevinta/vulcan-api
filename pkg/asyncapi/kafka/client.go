@@ -20,6 +20,11 @@ var (
 	ErrEmptyPayload = errors.New("payload can't be empty")
 )
 
+const (
+	kafkaSecurityProtocol = "sasl_ssl"
+	kafkaSaslMechanisms   = "SCRAM-SHA-256"
+)
+
 // Client implements an EventStreamClient using Kafka as the event stream
 // system.
 type Client struct {
@@ -33,8 +38,8 @@ type Client struct {
 func NewClient(user string, password string, broker string, topics map[string]string) (Client, error) {
 	config := kafka.ConfigMap{
 		"bootstrap.servers": broker,
-		"security.protocol": "sasl_ssl",
-		"sasl.mechanisms":   "SCRAM-SHA-256",
+		"security.protocol": kafkaSecurityProtocol,
+		"sasl.mechanisms":   kafkaSaslMechanisms,
 		"sasl.username":     user,
 		"sasl.password":     password,
 	}

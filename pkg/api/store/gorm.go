@@ -6,6 +6,7 @@ package store
 
 import (
 	"fmt"
+	"regexp"
 	"runtime"
 	"strings"
 
@@ -22,6 +23,8 @@ import (
 const (
 	dialect = "postgres"
 )
+
+var forbiddenCharsRe = regexp.MustCompile(`[^a-z^A-Z^_^-]`)
 
 // DB is a postgres driver
 type vulcanitoStore struct {
@@ -93,6 +96,7 @@ func (db vulcanitoStore) logError(err error) error {
 // function can't use prepared statements.
 func (db vulcanitoStore) lockTablesUnchecked(tx *gorm.DB, tables ...string) error {
 	for _, t := range tables {
+		t = forbiddenCharsRe.ReplaceAllString(t, "-")
 		stm := fmt.Sprintf("LOCK TABLE ONLY %s IN EXCLUSIVE MODE", t)
 		result := tx.Exec(stm)
 		if result.Error != nil {
