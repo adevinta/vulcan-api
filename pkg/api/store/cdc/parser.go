@@ -303,7 +303,7 @@ func (p *AsyncTxParser) processFindingOverwrite(data []byte) error {
 		&api.UpdateFinding{
 			Status: &dto.FindingOverwrite.Status,
 		},
-		dto.FindingOverwrite.Tag)
+		dto.FindingOverwrite.TeamID)
 	if err != nil {
 		if errors.IsKind(err, errors.ErrNotFound) {
 			return nil

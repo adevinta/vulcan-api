@@ -365,8 +365,8 @@ type FindingOverwrite struct {
 	Status *string `form:"status,omitempty" json:"status,omitempty" yaml:"status,omitempty" xml:"status,omitempty"`
 	// The previous status for the finding referenced by the finding_id field
 	StatusPrevious *string `form:"status_previous,omitempty" json:"status_previous,omitempty" yaml:"status_previous,omitempty" xml:"status_previous,omitempty"`
-	// The tag associated to the user/team who requested this overwrite
-	Tag *string `form:"tag,omitempty" json:"tag,omitempty" yaml:"tag,omitempty" xml:"tag,omitempty"`
+	// The ID associated to the team who requested this overwrite
+	TeamID *string `form:"team_id,omitempty" json:"team_id,omitempty" yaml:"team_id,omitempty" xml:"team_id,omitempty"`
 	// User who requested the finding overwrite
 	User *string `form:"user,omitempty" json:"user,omitempty" yaml:"user,omitempty" xml:"user,omitempty"`
 }

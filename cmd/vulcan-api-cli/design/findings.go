@@ -409,7 +409,7 @@ var FindingOverwriteMedia = MediaType("finding_overwrite", func() {
 		Attribute("status", String, "The status requested for the finding referenced by the finding_id field", func() { Example("FALSE_POSITIVE") })
 		Attribute("status_previous", String, "The previous status for the finding referenced by the finding_id field", func() { Example("OPEN") })
 		Attribute("notes", String, "Complementary information", func() { Example("This finding is a false positive because...") })
-		Attribute("tag", String, "The tag associated to the user/team who requested this overwrite", func() { Example("team:security") })
+		Attribute("team_id", String, "The ID associated to the team who requested this overwrite", func() { Example("a9d33628-ddb0-467c-b482-474887097820") })
 		Attribute("created_at", DateTime, "Creation time", func() { Example("2021-03-27T00:26:43.211506Z") })
 	})
 	View("default", func() {
@@ -419,7 +419,7 @@ var FindingOverwriteMedia = MediaType("finding_overwrite", func() {
 		Attribute("status")
 		Attribute("status_previous")
 		Attribute("notes")
-		Attribute("tag")
+		Attribute("team_id")
 		Attribute("created_at")
 	})
 })

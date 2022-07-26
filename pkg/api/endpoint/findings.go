@@ -271,7 +271,7 @@ func makeCreateFindingOverwriteEndpoint(s api.VulcanitoService, logger kitlog.Lo
 			StatusPrevious: finding.Finding.Status,
 			Status:         r.Status,
 			Notes:          r.Notes,
-			Tag:            team.Tag,
+			TeamID:         team.ID,
 		}
 
 		if authorizedFindFindingRequest(finding.Finding.Target.Tags, team.Tag) {

@@ -16,7 +16,7 @@ type FindingOverwrite struct {
 	StatusPrevious string    `json:"status_previous" validate:"required"`
 	Status         string    `json:"status" validate:"required"`
 	Notes          string    `json:"notes" validate:"required"`
-	Tag            string    `json:"tag" validate:"required"`
+	TeamID         string    `json:"team_id" validate:"required"`
 	CreatedAt      time.Time `json:"-"`
 }
 
@@ -27,7 +27,7 @@ type FindingOverwriteResponse struct {
 	StatusPrevious string    `json:"status_previous"`
 	Status         string    `json:"status"`
 	Notes          string    `json:"notes"`
-	Tag            string    `json:"tag"`
+	TeamID         string    `json:"team_id"`
 	CreatedAt      time.Time `json:"created_at"`
 }
 
@@ -40,7 +40,7 @@ func (fr FindingOverwrite) ToResponse() FindingOverwriteResponse {
 	output.StatusPrevious = fr.StatusPrevious
 	output.Status = fr.Status
 	output.Notes = fr.Notes
-	output.Tag = fr.Tag
+	output.TeamID = fr.TeamID
 	output.CreatedAt = fr.CreatedAt
 
 	return output

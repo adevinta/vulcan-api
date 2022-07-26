@@ -91,7 +91,7 @@ var (
 		FindingOverwrite: api.FindingOverwrite{
 			FindingID: "f1",
 			Status:    "newstatus",
-			Tag:       "mockFindingOverwriteTag",
+			TeamID:    "mockFindingOverwriteTeamID",
 		},
 	}
 )
@@ -223,6 +223,7 @@ func TestParse(t *testing.T) {
 						ID:         "1",
 						Identifier: payload.Identifier,
 						Tags:       payload.Tags,
+						Teams:      payload.Teams,
 					}}
 					return t, nil
 				},
