@@ -16,6 +16,7 @@ import (
 	"github.com/adevinta/errors"
 	"github.com/go-kit/kit/log/level"
 
+	metrics "github.com/adevinta/vulcan-metrics-client"
 	types "github.com/adevinta/vulcan-types"
 
 	"github.com/adevinta/vulcan-api/pkg/api"
@@ -304,7 +305,74 @@ func (s vulcanitoService) MergeDiscoveredAssets(ctx context.Context, teamID stri
 		return err
 	}
 
-	return s.db.MergeAssets(ops)
+	mergedAssets := s.db.MergeAssets(ops)
+
+	s.pushDiscoveryMetrics(assets, ops)
+	return mergedAssets
+}
+
+// pushDicoveryMetrics pushes metrics related to the discovery process.
+func (s vulcanitoService) pushDiscoveryMetrics(assets []api.Asset, mergeOps api.AssetMergeOperations) {
+
+	componentTag := "component:api"
+
+	if len(mergeOps.Create) > 0 {
+		createdMetric := metrics.Metric{
+			Name:  "vulcan.discovery.created.count",
+			Typ:   metrics.Count,
+			Value: float64(len(mergeOps.Create)),
+			Tags:  []string{componentTag},
+		}
+		s.metricsClient.Push(createdMetric)
+	}
+
+	skippedAssets := len(assets) -
+		len(mergeOps.Create) -
+		len(mergeOps.Assoc) -
+		len(mergeOps.Update) -
+		len(mergeOps.Del) -
+		len(mergeOps.Deassoc)
+
+	if skippedAssets > 0 {
+		skippedMetric := metrics.Metric{
+			Name:  "vulcan.discovery.skipped.count",
+			Typ:   metrics.Count,
+			Value: float64(skippedAssets),
+			Tags:  []string{componentTag},
+		}
+		s.metricsClient.Push(skippedMetric)
+	}
+
+	if len(mergeOps.Update) > 0 {
+		updatedMetric := metrics.Metric{
+			Name:  "vulcan.discovery.updated.count",
+			Typ:   metrics.Count,
+			Value: float64(len(mergeOps.Update)),
+			Tags:  []string{componentTag},
+		}
+		s.metricsClient.Push(updatedMetric)
+	}
+
+	if len(mergeOps.Del) > 0 {
+		purgedMetric := metrics.Metric{
+			Name:  "vulcan.discovery.purged.count",
+			Typ:   metrics.Count,
+			Value: float64(len(mergeOps.Del)),
+			Tags:  []string{componentTag},
+		}
+		s.metricsClient.Push(purgedMetric)
+	}
+
+	if len(mergeOps.Deassoc) > 0 {
+		dissociatedMetric := metrics.Metric{
+			Name:  "vulcan.discovery.dissociated.count",
+			Typ:   metrics.Count,
+			Value: float64(len(mergeOps.Deassoc)),
+			Tags:  []string{componentTag},
+		}
+		s.metricsClient.Push(dissociatedMetric)
+	}
+
 }
 
 func (s vulcanitoService) calculateMergeOperations(ctx context.Context, teamID string, assets []api.Asset, group api.Group) (api.AssetMergeOperations, error) {
