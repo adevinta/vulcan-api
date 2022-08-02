@@ -311,7 +311,7 @@ func (s vulcanitoService) MergeDiscoveredAssets(ctx context.Context, teamID stri
 	return mergedAssets
 }
 
-// pushDicoveryMetrics pushes metrics related to the discovery process.
+// pushDiscoveryMetrics pushes metrics related to the discovery process.
 func (s vulcanitoService) pushDiscoveryMetrics(assets []api.Asset, mergeOps api.AssetMergeOperations) {
 
 	componentTag := "component:api"
