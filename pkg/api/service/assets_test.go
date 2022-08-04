@@ -18,11 +18,51 @@ import (
 	"github.com/adevinta/vulcan-api/pkg/api/store"
 	"github.com/adevinta/vulcan-api/pkg/common"
 	"github.com/adevinta/vulcan-api/pkg/testutil"
+	metrics "github.com/adevinta/vulcan-metrics-client"
 	"github.com/go-kit/kit/log"
 	kitlog "github.com/go-kit/kit/log"
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
 )
+
+type mockMetricsClient struct {
+	metrics.Client
+	metrics         []metrics.Metric
+	expectedMetrics []metrics.Metric
+}
+
+func (c *mockMetricsClient) Push(metric metrics.Metric) {
+	c.metrics = append(c.metrics, metric)
+}
+
+// Verify verifies the matching between mock client
+// expected metrics and the actual pushed metrics.
+func (c *mockMetricsClient) Verify() error {
+	nMetrics := len(c.metrics)
+	nExpectedMetrics := len(c.expectedMetrics)
+
+	if nMetrics != nExpectedMetrics {
+		return fmt.Errorf(
+			"Number of metrics do not match: Expected %d, but got %d",
+			nExpectedMetrics, nMetrics)
+	}
+
+	for _, m := range c.metrics {
+		var found bool
+		for _, em := range c.expectedMetrics {
+			if reflect.DeepEqual(m, em) {
+				found = true
+				break
+			}
+		}
+		if !found {
+			return fmt.Errorf("Metrics do not match: Expected %v, but got %v",
+				c.expectedMetrics, c.metrics)
+		}
+	}
+
+	return nil
+}
 
 func TestGetTypesFromIdentifier(t *testing.T) {
 	var tests = []struct {
@@ -197,6 +237,12 @@ func buildUserVulcanitoSrvWithAWSMock(mock AWSAccounts) VulcanitoServiceBuilder 
 		srv.awsAccounts = mock
 		return srv
 	}
+}
+
+func buildVulcanitoServiceWithMetricsClientMock(s api.VulcanitoStore, l log.Logger, m metrics.Client) api.VulcanitoService {
+	srv := buildDefaultVulcanitoSrv(s, l).(vulcanitoService)
+	srv.metricsClient = m
+	return srv
 }
 
 func TestVulcanitoService_CreateAssets(t *testing.T) {
@@ -1039,7 +1085,7 @@ func TestMergeDiscoveredAssetsGroupCreation(t *testing.T) {
 	}
 	defer testStore.Close()
 
-	testService := buildDefaultVulcanitoSrv(testStore, kitlog.NewNopLogger())
+	testService := buildVulcanitoServiceWithMetricsClientMock(testStore, kitlog.NewNopLogger(), &mockMetricsClient{})
 
 	oldAPIGroups, err := testService.ListGroups(context.Background(), teamID, "")
 	if err != nil {
@@ -1120,7 +1166,20 @@ func TestMergeDiscoveredAssetsCreated(t *testing.T) {
 	}
 	defer testStore.Close()
 
-	testService := buildDefaultVulcanitoSrv(testStore, kitlog.NewNopLogger())
+	expectedMetrics := []metrics.Metric{
+		{
+			Name:  "vulcan.discovery.created.count",
+			Typ:   metrics.Count,
+			Value: 1,
+			Tags:  []string{"component:api"},
+		},
+	}
+
+	mockClient := &mockMetricsClient{
+		expectedMetrics: expectedMetrics,
+	}
+
+	testService := buildVulcanitoServiceWithMetricsClientMock(testStore, kitlog.NewNopLogger(), mockClient)
 
 	oldAPIAssets, err := testService.ListAssets(context.Background(), teamID, api.Asset{})
 	if err != nil {
@@ -1215,6 +1274,10 @@ func TestMergeDiscoveredAssetsCreated(t *testing.T) {
 			t.Errorf("asset EnviromentalCVSS: want(%v) got(%v)", wantCVSS, *asset.EnvironmentalCVSS)
 		}
 	}
+
+	if err := mockClient.Verify(); err != nil {
+		t.Fatalf("Error verifying pushed metrics: %v", err)
+	}
 }
 
 func TestMergeDiscoveredAssetsAssociated(t *testing.T) {
@@ -1232,7 +1295,13 @@ func TestMergeDiscoveredAssetsAssociated(t *testing.T) {
 	}
 	defer testStore.Close()
 
-	testService := buildDefaultVulcanitoSrv(testStore, kitlog.NewNopLogger())
+	expectedMetrics := []metrics.Metric{}
+
+	mockClient := &mockMetricsClient{
+		expectedMetrics: expectedMetrics,
+	}
+
+	testService := buildVulcanitoServiceWithMetricsClientMock(testStore, kitlog.NewNopLogger(), mockClient)
 
 	oldAPIGroupAssets, err := testService.ListAssetGroup(context.Background(), api.AssetGroup{GroupID: groupID}, teamID)
 	if err != nil {
@@ -1270,6 +1339,10 @@ func TestMergeDiscoveredAssetsAssociated(t *testing.T) {
 	if id := newAPIGroupAssets[0].ID; id != assetID {
 		t.Fatalf("asset ID does not match: want(%v) got(%v)", assetID, id)
 	}
+
+	if err := mockClient.Verify(); err != nil {
+		t.Fatalf("Error verifying pushed metrics: %v", err)
+	}
 }
 
 func TestMergeDiscoveredAssetsUpdated(t *testing.T) {
@@ -1289,7 +1362,20 @@ func TestMergeDiscoveredAssetsUpdated(t *testing.T) {
 	}
 	defer testStore.Close()
 
-	testService := buildDefaultVulcanitoSrv(testStore, kitlog.NewNopLogger())
+	expectedMetrics := []metrics.Metric{
+		{
+			Name:  "vulcan.discovery.updated.count",
+			Typ:   metrics.Count,
+			Value: 2,
+			Tags:  []string{"component:api"},
+		},
+	}
+
+	mockClient := &mockMetricsClient{
+		expectedMetrics: expectedMetrics,
+	}
+
+	testService := buildVulcanitoServiceWithMetricsClientMock(testStore, kitlog.NewNopLogger(), mockClient)
 
 	oldAPIGroupAssets, err := testService.ListAssetGroup(context.Background(), api.AssetGroup{GroupID: groupID}, teamID)
 	if err != nil {
@@ -1402,6 +1488,10 @@ func TestMergeDiscoveredAssetsUpdated(t *testing.T) {
 			t.Fatalf("unexpected asset in the group: asset ID (%v)", asset.ID)
 		}
 	}
+
+	if err := mockClient.Verify(); err != nil {
+		t.Fatalf("Error verifying pushed metrics: %v", err)
+	}
 }
 
 func TestMergeDiscoveredAssetsCleared(t *testing.T) {
@@ -1421,7 +1511,26 @@ func TestMergeDiscoveredAssetsCleared(t *testing.T) {
 	}
 	defer testStore.Close()
 
-	testService := buildDefaultVulcanitoSrv(testStore, kitlog.NewNopLogger())
+	expectedMetrics := []metrics.Metric{
+		{
+			Name:  "vulcan.discovery.purged.count",
+			Typ:   metrics.Count,
+			Value: 1,
+			Tags:  []string{"component:api"},
+		},
+		{
+			Name:  "vulcan.discovery.dissociated.count",
+			Typ:   metrics.Count,
+			Value: 1,
+			Tags:  []string{"component:api"},
+		},
+	}
+
+	mockClient := &mockMetricsClient{
+		expectedMetrics: expectedMetrics,
+	}
+
+	testService := buildVulcanitoServiceWithMetricsClientMock(testStore, kitlog.NewNopLogger(), mockClient)
 
 	oldAPIAssets, err := testService.ListAssets(context.Background(), teamID, api.Asset{})
 	if err != nil {
@@ -1500,6 +1609,10 @@ func TestMergeDiscoveredAssetsCleared(t *testing.T) {
 			}
 		}
 	}
+
+	if err := mockClient.Verify(); err != nil {
+		t.Fatalf("Error verifying pushed metrics: %v", err)
+	}
 }
 
 func TestMergeDiscoveredAssetsDeduplicated(t *testing.T) {
@@ -1515,7 +1628,26 @@ func TestMergeDiscoveredAssetsDeduplicated(t *testing.T) {
 	}
 	defer testStore.Close()
 
-	testService := buildDefaultVulcanitoSrv(testStore, kitlog.NewNopLogger())
+	expectedMetrics := []metrics.Metric{
+		{
+			Name:  "vulcan.discovery.created.count",
+			Typ:   metrics.Count,
+			Value: 1,
+			Tags:  []string{"component:api"},
+		},
+		{
+			Name:  "vulcan.discovery.skipped.count",
+			Typ:   metrics.Count,
+			Value: 1,
+			Tags:  []string{"component:api"},
+		},
+	}
+
+	mockClient := &mockMetricsClient{
+		expectedMetrics: expectedMetrics,
+	}
+
+	testService := buildVulcanitoServiceWithMetricsClientMock(testStore, kitlog.NewNopLogger(), mockClient)
 
 	oldAPIAssets, err := testService.ListAssets(context.Background(), teamID, api.Asset{})
 	if err != nil {
@@ -1586,6 +1718,10 @@ func TestMergeDiscoveredAssetsDeduplicated(t *testing.T) {
 			t.Fatalf("asset type does not match: want(%s) got(%v)", wantType, asset.AssetType.Name)
 		}
 	}
+
+	if err := mockClient.Verify(); err != nil {
+		t.Fatalf("Error verifying pushed metrics: %v", err)
+	}
 }
 
 var (
@@ -1601,9 +1737,11 @@ func init() {
 
 func TestVulcanitoService_CreateAssetsGroup(t *testing.T) {
 	srv := vulcanitoService{
-		db:     nil,
-		logger: loggerAssets,
+		db:            nil,
+		logger:        loggerAssets,
+		metricsClient: &mockMetricsClient{},
 	}
+
 	group := api.Group{}
 	_, err := srv.CreateGroup(context.Background(), group)
 	if err == nil {
