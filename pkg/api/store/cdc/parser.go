@@ -125,7 +125,10 @@ func (p *AsyncTxParser) processDeleteTeam(data []byte) error {
 		return err
 	}
 
-	err = p.VulnDBClient.DeleteTeamTag(context.Background(), dto.Team.ID, dto.Team.ID, dto.Team.Tag)
+	// TODO: Get the TeamID from the Vulcan API of the teams with the same tag.
+
+	var excludedTeams []string
+	err = p.VulnDBClient.DeleteTag(context.Background(), dto.Team.ID, dto.Team.Tag, api.TargetsParams{ExceptTeams: excludedTeams})
 	if err != nil {
 		if errors.IsKind(err, errors.ErrNotFound) {
 			return nil
@@ -214,7 +217,10 @@ func (p *AsyncTxParser) processDeleteAsset(data []byte) error {
 		return err
 	}
 
-	err = p.VulnDBClient.DeleteTargetTag(ctx, teamID, target.ID, tag)
+	// TODO: Get the TeamID from the Vulcan API of the teams with the same tag.
+
+	var excludedTeams []string
+	err = p.VulnDBClient.DeleteTargetTag(ctx, teamID, target.ID, tag, api.TargetsParams{ExceptTeams: excludedTeams})
 	if err != nil {
 		// If target is not found there is nothing to do, so return no error.
 		// In this case, 403 HTTP response status is only returned on failed authorization.
@@ -223,6 +229,7 @@ func (p *AsyncTxParser) processDeleteAsset(data []byte) error {
 		}
 		return err
 	}
+
 	return nil
 }
 
