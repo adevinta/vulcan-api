@@ -3,8 +3,9 @@
 # Copyright 2022 Adevinta
 
 set -eu
+
 if [ $# -ne 2 ]; then
-	echo "usage: $0 <asyncdoc_path> <outputdir>" >&2
+	echo "usage: $0 <asyncdoc_path>" >&2
 	exit 2
 fi
 
@@ -27,5 +28,4 @@ docker run \
 	"node:18.3.0-alpine3.15" \
 	/bin/sh -c "
     npm install --silent &&
-    node gen.js ${SOURCE_FILE} ${GO_PACKAGE_NAME}
-"
+    node gen.js ${SOURCE_FILE} ${GO_PACKAGE_NAME}"

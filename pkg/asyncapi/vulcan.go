@@ -4,9 +4,12 @@ Copyright 2022 Adevinta
 
 package asyncapi
 
+//go:generate sh -c "_gen/gen.sh docs/async/asyncapi.yaml asyncapi > models.go && go fmt models.go"
+
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 )
 
 const assetsEntityName = "assets"
@@ -44,7 +47,10 @@ func (v *Vulcan) PushAsset(asset AssetPayload) error {
 	if err != nil {
 		return fmt.Errorf("error marshaling to json: %w", err)
 	}
-	err = v.client.Push(assetsEntityName, asset.Id, payload)
+	// Even though the asset_id is always different for every asset, the PK of
+	// an asset for the vulcan-api is the the asset_id plus the team_id.
+	id := strings.Join([]string{asset.Team.Id, asset.Id}, "/")
+	err = v.client.Push(assetsEntityName, id, payload)
 	if err != nil {
 		return fmt.Errorf("error sending pushing asset %v: %w", asset, err)
 	}

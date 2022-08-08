@@ -124,5 +124,5 @@ automatically generated. To update the models run this command in the root of
 the repository:
 
 ```bash
-pkg/asyncapi/gen/gen.sh docs/async/asyncapi.yaml asyncapi > pkg/asyncapi/models.go
+go generate pkg/asyncapi/vulcan.go
 ```

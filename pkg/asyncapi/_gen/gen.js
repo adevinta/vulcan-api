@@ -9,7 +9,7 @@ import parser from '@asyncapi/parser';
 
 let args = process.argv;
 if (args.length != 4) {
-  console.error("usage: node gen.js asyncapi_file dest_file go_package_name")
+  console.error("usage: node gen.js asyncapi_file go_package_name")
   process.exit(1)
 }
 const sourceFile = args[2];
