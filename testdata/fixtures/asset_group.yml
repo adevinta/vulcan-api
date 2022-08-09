@@ -45,6 +45,9 @@
 - asset_id: 6a521ca7-490e-4789-a716-c2baca750884 # disjoin4.adevinta.com
   group_id: 78ba0bb9-cce7-451d-8e17-ae6b3efbb788 # DisjoinB
 
+- asset_id: 5246d6ba-1cc8-4bbd-9581-635b9d2ec277 # disjoin5.adevinta.com
+  group_id: 1c0f00c1-5229-4ab6-a81a-eda76ec916a3 # DisjoinC
+
 # discovery merge tests
 - asset_id: 6ace4174-e704-4ea3-9c68-9096966a7e61 # default.vulcan.example.com
   group_id: dd4f7ee7-76de-4922-aeb3-1eade1233550 # Default
