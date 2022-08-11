@@ -457,6 +457,9 @@ func isAuthorizedTagsParam(ctx context.Context) (bool, error) {
 		(user.Observer != nil && *user.Observer), nil
 }
 
+// tagsToTeams takes a command separated list of tags, looks for the teams that
+// have any of those tags and returns a comma seperated list of those team
+// id's.
 func tagsToTeams(ctx context.Context, s api.VulcanitoService, tagsStr string) (string, error) {
 	tags := strings.Split(tagsStr, ",")
 	teams, err := s.FindTeamsByTags(ctx, tags)
