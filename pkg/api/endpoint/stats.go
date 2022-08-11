@@ -159,6 +159,8 @@ func makeGlobalStatsMTTREndpoint(s api.VulcanitoService, logger kitlog.Logger) e
 			if !authorized {
 				return nil, errors.Forbidden("User is not allowed to set Tags parameter")
 			}
+			// The findings are stored by team so we must translate the tags
+			// to team ids.
 			teams, err := tagsToTeams(ctx, s, r.Tags)
 			if err != nil {
 				return nil, err
@@ -200,6 +202,8 @@ func makeGlobalStatsExposureEndpoint(s api.VulcanitoService, logger kitlog.Logge
 			if !authorized {
 				return nil, errors.Forbidden("User is not allowed to set Tags parameter")
 			}
+			// The findings are stored by team so we must translate the tags
+			// to team ids.
 			teams, err := tagsToTeams(ctx, s, r.Tags)
 			if err != nil {
 				return nil, err
@@ -237,6 +241,8 @@ func makeGlobalStatsCurrentExposureEndpoint(s api.VulcanitoService, logger kitlo
 			if !authorized {
 				return nil, errors.Forbidden("User is not allowed to set Tags parameter")
 			}
+			// The findings are stored by team so we must translate the tags
+			// to team ids.
 			teams, err := tagsToTeams(ctx, s, r.Tags)
 			if err != nil {
 				return nil, err
@@ -274,6 +280,8 @@ func makeGlobalStatsOpenEndpoint(s api.VulcanitoService, logger kitlog.Logger) e
 			if !authorized {
 				return nil, errors.Forbidden("User is not allowed to set Tags parameter")
 			}
+			// The findings are stored by team so we must translate the tags
+			// to team ids.
 			teams, err := tagsToTeams(ctx, s, r.Tags)
 			if err != nil {
 				return nil, err
@@ -311,6 +319,8 @@ func makeGlobalStatsFixedEndpoint(s api.VulcanitoService, logger kitlog.Logger) 
 			if !authorized {
 				return nil, errors.Forbidden("User is not allowed to set Tags parameter")
 			}
+			// The findings are stored by team so we must translate the tags
+			// to team ids.
 			teams, err := tagsToTeams(ctx, s, r.Tags)
 			if err != nil {
 				return nil, err
@@ -348,6 +358,8 @@ func makeGlobalStatsAssetsEndpoint(s api.VulcanitoService, logger kitlog.Logger)
 			if !authorized {
 				return nil, errors.Forbidden("User is not allowed to set Tags parameter")
 			}
+			// The findings are stored by team so we must translate the tags
+			// to team ids.
 			teams, err := tagsToTeams(ctx, s, r.Tags)
 			if err != nil {
 				return nil, err
