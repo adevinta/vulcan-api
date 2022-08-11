@@ -50,8 +50,7 @@ var (
 			ID:         "a1",
 			Identifier: "example.com",
 			Team: &api.Team{
-				ID:  "t1",
-				Tag: "mockDeleteAssetTag",
+				ID: "t1",
 			},
 		},
 		DupAssets: 0,
@@ -222,7 +221,6 @@ func TestParse(t *testing.T) {
 					var t = &api.Target{Target: vulndb.Target{
 						ID:         "1",
 						Identifier: payload.Identifier,
-						Tags:       payload.Tags,
 						Teams:      payload.Teams,
 					}}
 					return t, nil

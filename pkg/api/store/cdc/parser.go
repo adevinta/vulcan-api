@@ -125,16 +125,6 @@ func (p *AsyncTxParser) processDeleteTeam(data []byte) error {
 		return err
 	}
 
-	// TODO: Get the TeamID from the Vulcan API of the teams with the same tag.
-
-	var excludedTeams []string
-	err = p.VulnDBClient.DeleteTag(context.Background(), dto.Team.ID, dto.Team.Tag, api.TargetsParams{ExceptTeams: excludedTeams})
-	if err != nil {
-		if errors.IsKind(err, errors.ErrNotFound) {
-			return nil
-		}
-		return err
-	}
 	return nil
 }
 
@@ -148,7 +138,6 @@ func (p *AsyncTxParser) processCreateAsset(data []byte) error {
 
 	payload := api.CreateTarget{
 		Identifier: dto.Asset.Identifier,
-		Tags:       []string{dto.Asset.Team.Tag},
 		Teams:      []string{dto.Asset.Team.ID},
 	}
 
@@ -204,7 +193,6 @@ func (p *AsyncTxParser) processDeleteAsset(data []byte) error {
 
 	target := ttList.Targets[0]
 	teamID := dto.Asset.Team.ID
-	tag := dto.Asset.Team.Tag
 
 	err = p.VulnDBClient.DeleteTargetTeam(ctx, teamID, target.ID, teamID)
 	if err != nil {
@@ -212,19 +200,6 @@ func (p *AsyncTxParser) processDeleteAsset(data []byte) error {
 		// which means that the team is no longer associated with the target,
 		// there is nothing to do, so return no error.
 		if errors.IsKind(err, errors.ErrNotFound) || errors.IsKind(err, errors.ErrForbidden) {
-			return nil
-		}
-		return err
-	}
-
-	// TODO: Get the TeamID from the Vulcan API of the teams with the same tag.
-
-	var excludedTeams []string
-	err = p.VulnDBClient.DeleteTargetTag(ctx, teamID, target.ID, tag, api.TargetsParams{ExceptTeams: excludedTeams})
-	if err != nil {
-		// If target is not found there is nothing to do, so return no error.
-		// In this case, 403 HTTP response status is only returned on failed authorization.
-		if errors.IsKind(err, errors.ErrNotFound) {
 			return nil
 		}
 		return err
@@ -286,13 +261,6 @@ func (p *AsyncTxParser) processDeleteAllAssets(data []byte) error {
 		return err
 	}
 
-	err = p.VulnDBClient.DeleteTeamTag(context.Background(), dto.Team.ID, dto.Team.ID, dto.Team.Tag)
-	if err != nil {
-		if errors.IsKind(err, errors.ErrNotFound) {
-			return nil
-		}
-		return err
-	}
 	return nil
 }
 

@@ -149,12 +149,12 @@ func AttachRoutes(e endpoint.Endpoints, logger kitlog.Logger) http.Handler {
 	r.Methods("GET").Path("/api/v1/teams/{team_id}/stats/exposure/current").Handler(newServer(e[endpoint.StatsCurrentExposure], endpoint.StatsRequest{}, logger, endpoint.StatsCurrentExposure))
 	r.Methods("GET").Path("/api/v1/teams/{team_id}/stats/open").Handler(newServer(e[endpoint.StatsOpen], endpoint.StatsRequest{}, logger, endpoint.StatsOpen))
 	r.Methods("GET").Path("/api/v1/teams/{team_id}/stats/fixed").Handler(newServer(e[endpoint.StatsFixed], endpoint.StatsRequest{}, logger, endpoint.StatsFixed))
-	r.Methods("GET").Path("/api/v1/stats/mttr").Handler(newServer(e[endpoint.GlobalStatsMTTR], endpoint.StatsRequest{}, logger, endpoint.GlobalStatsMTTR))
-	r.Methods("GET").Path("/api/v1/stats/exposure").Handler(newServer(e[endpoint.GlobalStatsExposure], endpoint.StatsRequest{}, logger, endpoint.GlobalStatsExposure))
-	r.Methods("GET").Path("/api/v1/stats/exposure/current").Handler(newServer(e[endpoint.GlobalStatsCurrentExposure], endpoint.StatsRequest{}, logger, endpoint.GlobalStatsCurrentExposure))
-	r.Methods("GET").Path("/api/v1/stats/open").Handler(newServer(e[endpoint.GlobalStatsOpen], endpoint.StatsRequest{}, logger, endpoint.GlobalStatsOpen))
-	r.Methods("GET").Path("/api/v1/stats/fixed").Handler(newServer(e[endpoint.GlobalStatsFixed], endpoint.StatsRequest{}, logger, endpoint.GlobalStatsFixed))
-	r.Methods("GET").Path("/api/v1/stats/assets").Handler(newServer(e[endpoint.GlobalStatsAssets], endpoint.StatsRequest{}, logger, endpoint.GlobalStatsAssets))
+	r.Methods("GET").Path("/api/v1/stats/mttr").Handler(newServer(e[endpoint.GlobalStatsMTTR], endpoint.GlobalStatsRequest{}, logger, endpoint.GlobalStatsMTTR))
+	r.Methods("GET").Path("/api/v1/stats/exposure").Handler(newServer(e[endpoint.GlobalStatsExposure], endpoint.GlobalStatsRequest{}, logger, endpoint.GlobalStatsExposure))
+	r.Methods("GET").Path("/api/v1/stats/exposure/current").Handler(newServer(e[endpoint.GlobalStatsCurrentExposure], endpoint.GlobalStatsRequest{}, logger, endpoint.GlobalStatsCurrentExposure))
+	r.Methods("GET").Path("/api/v1/stats/open").Handler(newServer(e[endpoint.GlobalStatsOpen], endpoint.GlobalStatsRequest{}, logger, endpoint.GlobalStatsOpen))
+	r.Methods("GET").Path("/api/v1/stats/fixed").Handler(newServer(e[endpoint.GlobalStatsFixed], endpoint.GlobalStatsRequest{}, logger, endpoint.GlobalStatsFixed))
+	r.Methods("GET").Path("/api/v1/stats/assets").Handler(newServer(e[endpoint.GlobalStatsAssets], endpoint.GlobalStatsRequest{}, logger, endpoint.GlobalStatsAssets))
 
 	return r
 }
