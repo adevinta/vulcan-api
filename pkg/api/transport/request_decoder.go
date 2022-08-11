@@ -34,9 +34,10 @@ func makeDecodeRequestFunc(req interface{}) kithttp.DecodeRequestFunc {
 // the fields using parameters taken from the request route path. For example:
 //
 // Given the request struct for finding teams by a user_id
-// type FindTeamsByUserJSONRequest struct {
-//	 UserID string `json:"user_id" urlvar:"user_id"`
-// }
+//
+//	type FindTeamsByUserJSONRequest struct {
+//		 UserID string `json:"user_id" urlvar:"user_id"`
+//	}
 //
 // The UserID will be loaded from the request route, in this case:
 // /v1/users/{user_id}/teams
@@ -66,10 +67,22 @@ func setRequestStructFields(req interface{}, r *http.Request) (interface{}, erro
 }
 
 func loadParametersFromQueryString(requestObject interface{}, v url.Values) interface{} {
-	obj := reflect.TypeOf(requestObject).Elem()
-
+	t := reflect.TypeOf(requestObject)
+	obj := t.Elem()
 	for i := 0; i < obj.NumField(); i++ {
-		tag := obj.Field(i).Tag.Get(queryStringTagName)
+		// If the field is a struct recurse to initialize the possible value of the fields
+		// of that struct.
+		field := obj.Field(i)
+		if field.Type.Kind() == reflect.Struct {
+			val := reflect.ValueOf(requestObject).Elem().Field(i)
+			// This should not happen never, but still...
+			if !val.CanAddr() {
+				continue
+			}
+			loadParametersFromQueryString(val.Addr().Interface(), v)
+			continue
+		}
+		tag := field.Tag.Get(queryStringTagName)
 
 		// Skip if tag is not defined or ignored
 		if tag == "" || tag == "-" {
@@ -109,7 +122,19 @@ func loadParametersFromRequestPath(requestObject interface{}, vars map[string]st
 	obj := reflect.TypeOf(requestObject).Elem()
 
 	for i := 0; i < obj.NumField(); i++ {
-		tag := obj.Field(i).Tag.Get(tagName)
+		// If the field is a struct recurse to initialize the possible value of the fields
+		// of that struct.
+		field := obj.Field(i)
+		if field.Type.Kind() == reflect.Struct {
+			val := reflect.ValueOf(requestObject).Elem().Field(i)
+			// This should not happen never, but still...
+			if !val.CanAddr() {
+				continue
+			}
+			loadParametersFromRequestPath(val.Addr().Interface(), vars)
+			continue
+		}
+		tag := field.Tag.Get(tagName)
 
 		// Skip if tag is not defined or ignored
 		if tag == "" || tag == "-" {
@@ -127,7 +152,17 @@ func loadParametersFromRequestHeaders(requestObject interface{}, headers http.He
 	obj := reflect.TypeOf(requestObject).Elem()
 
 	for i := 0; i < obj.NumField(); i++ {
-		tag := obj.Field(i).Tag.Get(headerTagName)
+		field := obj.Field(i)
+		if field.Type.Kind() == reflect.Struct {
+			val := reflect.ValueOf(requestObject).Elem().Field(i)
+			// This should not happen never, but still...
+			if !val.CanAddr() {
+				continue
+			}
+			loadParametersFromRequestHeaders(val.Addr().Interface(), headers)
+			continue
+		}
+		tag := field.Tag.Get(headerTagName)
 
 		// Skip if tag is not defined or ignored
 		if tag == "" || tag == "-" {
