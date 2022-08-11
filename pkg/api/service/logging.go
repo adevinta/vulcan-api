@@ -8,6 +8,7 @@ package service
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
@@ -236,6 +237,19 @@ func (middleware loggingMiddleware) FindTeamsByUser(ctx context.Context, userID 
 	}()
 
 	return middleware.next.FindTeamsByUser(ctx, userID)
+}
+
+func (middleware loggingMiddleware) FindTeamsByTags(ctx context.Context, tags []string) ([]*api.Team, error) {
+	defer func() {
+		XRequestID := ""
+		if ctx != nil {
+			XRequestID, _ = ctx.Value(kithttp.ContextKeyRequestXRequestID).(string)
+		}
+		fmtTasgs := strings.Join(tags, ",")
+		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "FindTeamsByTags", "tags", fmtTasgs)
+	}()
+
+	return middleware.next.FindTeamsByTags(ctx, tags)
 }
 
 func (middleware loggingMiddleware) FindTeamMember(ctx context.Context, teamID string, userID string) (*api.UserTeam, error) {

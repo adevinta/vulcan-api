@@ -32,6 +32,7 @@ type VulcanitoStore interface {
 	FindTeamsByUser(userID string) ([]*Team, error)
 	FindTeamByName(name string) (*Team, error)
 	FindTeamByTag(tag string) (*Team, error)
+	FindTeamsByTags(tags []string) ([]*Team, error)
 	FindTeamByProgram(programID string) (*Team, error)
 	DeleteTeam(teamID string) error
 	ListTeams() ([]*Team, error)

@@ -228,6 +228,9 @@ func (b *BrokerProxy) FindTeamByIDForUser(ID, userID string) (*api.UserTeam, err
 func (b *BrokerProxy) FindTeamsByUser(userID string) ([]*api.Team, error) {
 	return b.store.FindTeamsByUser(userID)
 }
+func (b *BrokerProxy) FindTeamsByTags(tags []string) ([]*api.Team, error) {
+	return b.store.FindTeamsByTags(tags)
+}
 func (b *BrokerProxy) FindTeamByName(name string) (*api.Team, error) {
 	return b.store.FindTeamByName(name)
 }

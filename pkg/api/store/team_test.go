@@ -542,6 +542,67 @@ func TestStoreListTeams(t *testing.T) {
 	}
 }
 
+func TestStoreFindTeamsByTags(t *testing.T) {
+	testStoreLocal, err := testutil.PrepareDatabaseLocal("../../../testdata/fixtures", NewDB)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer testStoreLocal.Close()
+
+	tests := []struct {
+		name    string
+		tags    []string
+		want    []*api.Team
+		wantErr error
+	}{
+		{
+			name: "HappyPath",
+			tags: []string{
+				"team:foo-team",
+				"a.b.c.5d3e3f0bc169",
+			},
+			want: []*api.Team{
+				{
+					ID:          "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
+					Name:        "Foo Team",
+					Description: "Foo foo...",
+					Tag:         "team:foo-team",
+				},
+				{
+					ID:          "d92e6a31-d889-425d-9a16-5d3e3f0bc169",
+					Name:        "Bar Team",
+					Description: "Bar bar...",
+					Tag:         "a.b.c.5d3e3f0bc169",
+				},
+			},
+			wantErr: nil,
+		},
+
+		{
+			name:    "NoTeamsFound",
+			tags:    []string{"inexistent"},
+			want:    []*api.Team{},
+			wantErr: nil,
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := testStoreLocal.FindTeamsByTags(tt.tags)
+			diff := cmp.Diff(errToStr(tt.wantErr), errToStr(err))
+			if diff != "" {
+				t.Fatalf("%v\n", diff)
+			}
+
+			diff = cmp.Diff(tt.want, got, cmp.Options{ignoreFieldsTeam, ignoreFieldsUser})
+			if diff != "" {
+				t.Errorf("%v\n", diff)
+			}
+		})
+	}
+}
+
 func errToStr(err error) string {
 	result := ""
 	if err != nil {
