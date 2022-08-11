@@ -212,11 +212,7 @@ func (db vulcanitoStore) FindTeamByTag(tag string) (*api.Team, error) {
 func (db vulcanitoStore) FindTeamsByTags(tags []string) ([]*api.Team, error) {
 	teams := []*api.Team{}
 	res := db.Conn.Find(&teams, "tag IN (?)", tags)
-
 	if res.Error != nil {
-		if db.NotFoundError(res.Error) {
-			return nil, db.logError(errors.NotFound(res.Error))
-		}
 		return nil, db.logError(errors.Database(res.Error))
 	}
 
