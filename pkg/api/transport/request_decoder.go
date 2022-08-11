@@ -75,7 +75,7 @@ func loadParametersFromQueryString(requestObject interface{}, v url.Values) inte
 		field := obj.Field(i)
 		if field.Type.Kind() == reflect.Struct {
 			val := reflect.ValueOf(requestObject).Elem().Field(i)
-			// This should not happen never, but still...
+			// This should never happen, but still...
 			if !val.CanAddr() {
 				continue
 			}
@@ -127,7 +127,7 @@ func loadParametersFromRequestPath(requestObject interface{}, vars map[string]st
 		field := obj.Field(i)
 		if field.Type.Kind() == reflect.Struct {
 			val := reflect.ValueOf(requestObject).Elem().Field(i)
-			// This should not happen never, but still...
+			// This should never happen, but still...
 			if !val.CanAddr() {
 				continue
 			}
@@ -155,7 +155,7 @@ func loadParametersFromRequestHeaders(requestObject interface{}, headers http.He
 		field := obj.Field(i)
 		if field.Type.Kind() == reflect.Struct {
 			val := reflect.ValueOf(requestObject).Elem().Field(i)
-			// This should not happen never, but still...
+			// This should never happen, but still...
 			if !val.CanAddr() {
 				continue
 			}
