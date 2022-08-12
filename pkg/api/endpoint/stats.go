@@ -166,7 +166,7 @@ func makeGlobalStatsMTTREndpoint(s api.VulcanitoService, logger kitlog.Logger) e
 				return nil, err
 			}
 			if len(teams) == 0 {
-				return nil, errors.NotFound("There are no teams with specified tags")
+				return nil, errors.NotFound("There are no teams with the specified tags")
 			}
 			teamsFilter = teams
 		}
@@ -209,7 +209,7 @@ func makeGlobalStatsExposureEndpoint(s api.VulcanitoService, logger kitlog.Logge
 				return nil, err
 			}
 			if len(teams) == 0 {
-				return nil, errors.NotFound("There are no teams with specified tags")
+				return nil, errors.NotFound("There are no teams with the specified tags")
 			}
 			teamsFilter = teams
 		}
@@ -248,7 +248,7 @@ func makeGlobalStatsCurrentExposureEndpoint(s api.VulcanitoService, logger kitlo
 				return nil, err
 			}
 			if len(teams) == 0 {
-				return nil, errors.NotFound("There are no teams with specified tags")
+				return nil, errors.NotFound("There are no teams with the specified tags")
 			}
 			teamsFilter = teams
 		}
@@ -287,7 +287,7 @@ func makeGlobalStatsOpenEndpoint(s api.VulcanitoService, logger kitlog.Logger) e
 				return nil, err
 			}
 			if len(teams) == 0 {
-				return nil, errors.NotFound("There are no teams with specified tags")
+				return nil, errors.NotFound("There are no teams with the specified tags")
 			}
 			teamsFilter = teams
 		}
@@ -326,7 +326,7 @@ func makeGlobalStatsFixedEndpoint(s api.VulcanitoService, logger kitlog.Logger) 
 				return nil, err
 			}
 			if len(teams) == 0 {
-				return nil, errors.NotFound("There are no teams with specified tags")
+				return nil, errors.NotFound("There are no teams with the specified tags")
 			}
 			teamsFilter = teams
 		}
@@ -365,7 +365,7 @@ func makeGlobalStatsAssetsEndpoint(s api.VulcanitoService, logger kitlog.Logger)
 				return nil, err
 			}
 			if len(teams) == 0 {
-				return nil, errors.NotFound("There are no teams with specified tags")
+				return nil, errors.NotFound("There are no teams with the specified tags")
 			}
 			teamsFilter = teams
 		}
@@ -466,9 +466,9 @@ func tagsToTeams(ctx context.Context, s api.VulcanitoService, tagsStr string) (s
 	if err != nil {
 		return "", err
 	}
-	IDs := []string{}
+	ids := []string{}
 	for _, t := range teams {
-		IDs = append(IDs, t.ID)
+		ids = append(ids, t.ID)
 	}
-	return strings.Join(IDs, ","), nil
+	return strings.Join(ids, ","), nil
 }
