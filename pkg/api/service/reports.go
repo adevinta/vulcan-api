@@ -110,7 +110,7 @@ func (s vulcanitoService) SendDigestReport(ctx context.Context, teamID string, s
 	}
 
 	params := api.StatsParams{
-		Tag: team.Tag,
+		Team: team.ID,
 	}
 
 	if dateToStr != "" {
@@ -124,7 +124,7 @@ func (s vulcanitoService) SendDigestReport(ctx context.Context, teamID string, s
 	}
 
 	diffStats, err := s.vulndbClient.StatsOpen(ctx, api.StatsParams{
-		Tag:     team.Tag,
+		Team:    team.ID,
 		MinDate: dateFromStr,
 		MaxDate: dateToStr,
 	})
@@ -134,7 +134,7 @@ func (s vulcanitoService) SendDigestReport(ctx context.Context, teamID string, s
 	}
 
 	fixedStats, err := s.vulndbClient.StatsFixed(ctx, api.StatsParams{
-		Tag:     team.Tag,
+		Team:    team.ID,
 		MinDate: dateFromStr,
 		MaxDate: dateToStr,
 	})

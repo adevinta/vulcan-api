@@ -12,7 +12,7 @@ import (
 // that can be used to customize the call to retrieve
 // the list of findings.
 type FindingsParams struct {
-	Tag             string
+	Team            string
 	Status          string
 	MinScore        float64
 	MaxScore        float64
@@ -70,14 +70,14 @@ type UpdateFinding struct {
 // create target endpoint.
 type CreateTarget struct {
 	Identifier string   `json:"identifier"`
-	Tags       []string `json:"tags"`
+	Teams      []string `json:"teams"`
 }
 
 // TargetsParams represents the group of parameters
 // that can be used to customize the call to retrieve
 // the list of targets.
 type TargetsParams struct {
-	Tag             string
+	Team            string
 	Identifier      string
 	IdentifierMatch bool
 }
@@ -99,8 +99,22 @@ type TargetsList struct {
 // that can be used to customize the call to retrieve
 // the statistics.
 type StatsParams struct {
-	Tag         string
-	Tags        string
+	Team        string
+	Teams       string
+	MinDate     string
+	MaxDate     string
+	AtDate      string
+	MinScore    float64
+	MaxScore    float64
+	Identifiers string
+	Labels      string
+}
+
+// GlobalStatsParams represents the group of parameters that can be used to
+// customize the call to retrieve the global statistics.
+type GlobalStatsParams struct {
+	Team        string
+	Teams       string
 	MinDate     string
 	MaxDate     string
 	AtDate      string

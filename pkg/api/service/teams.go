@@ -56,6 +56,13 @@ func (s vulcanitoService) FindTeamByTag(ctx context.Context, tag string) (*api.T
 	return s.db.FindTeamByTag(tag)
 }
 
+func (s vulcanitoService) FindTeamsByTags(ctx context.Context, tags []string) ([]*api.Team, error) {
+	if len(tags) == 0 {
+		return nil, errors.Validation(`No tags specified`)
+	}
+	return s.db.FindTeamsByTags(tags)
+}
+
 func (s vulcanitoService) FindTeamsByUser(ctx context.Context, userID string) ([]*api.Team, error) {
 	if userID == "" {
 		return nil, errors.Validation(`ID is empty`)

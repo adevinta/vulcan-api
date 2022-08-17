@@ -7,6 +7,7 @@ package endpoint
 import (
 	"context"
 	"regexp"
+	"strings"
 
 	"github.com/adevinta/errors"
 	"github.com/adevinta/vulcan-api/pkg/api"
@@ -21,7 +22,7 @@ const (
 
 type StatsRequest struct {
 	TeamID      string  `json:"team_id" urlvar:"team_id"`
-	Tags        string  `urlquery:"tags"`
+	Teams       string  `urlquery:"teams"`
 	MinDate     string  `urlquery:"minDate"`
 	MaxDate     string  `urlquery:"maxDate"`
 	AtDate      string  `urlquery:"atDate"`
@@ -29,6 +30,11 @@ type StatsRequest struct {
 	MaxScore    float64 `urlquery:"maxScore"`
 	Identifiers string  `urlquery:"identifiers"`
 	Labels      string  `urlquery:"labels"`
+}
+
+type GlobalStatsRequest struct {
+	Tags string `urlquery:"tags"`
+	StatsRequest
 }
 
 func makeStatsMTTREndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
@@ -42,15 +48,7 @@ func makeStatsMTTREndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoin
 			return nil, errors.Validation("Invalid query params")
 		}
 
-		team, err := s.FindTeam(ctx, r.TeamID)
-		if err != nil {
-			return nil, err
-		}
-		if team.Tag == "" {
-			return nil, errors.Validation("no tag defined for the team")
-		}
-
-		params := buildStatsParams(team.Tag, r)
+		params := buildStatsParams(r)
 
 		response, err = s.StatsMTTR(ctx, params)
 		if err != nil {
@@ -71,15 +69,7 @@ func makeStatsExposureEndpoint(s api.VulcanitoService, logger kitlog.Logger) end
 			return nil, errors.Validation("Invalid query params")
 		}
 
-		team, err := s.FindTeam(ctx, r.TeamID)
-		if err != nil {
-			return nil, err
-		}
-		if team.Tag == "" {
-			return nil, errors.Validation("no tag defined for the team")
-		}
-
-		params := buildStatsParams(team.Tag, r)
+		params := buildStatsParams(r)
 
 		response, err = s.StatsExposure(ctx, params)
 		if err != nil {
@@ -96,15 +86,7 @@ func makeStatsCurrentExposureEndpoint(s api.VulcanitoService, logger kitlog.Logg
 			return nil, errors.Assertion("Type assertion failed")
 		}
 
-		team, err := s.FindTeam(ctx, r.TeamID)
-		if err != nil {
-			return nil, err
-		}
-		if team.Tag == "" {
-			return nil, errors.Validation("no tag defined for the team")
-		}
-
-		params := buildStatsParams(team.Tag, r)
+		params := buildStatsParams(r)
 
 		response, err = s.StatsCurrentExposure(ctx, params)
 		if err != nil {
@@ -125,15 +107,7 @@ func makeStatsOpenEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoin
 			return nil, errors.Validation("Invalid query params")
 		}
 
-		team, err := s.FindTeam(ctx, r.TeamID)
-		if err != nil {
-			return nil, err
-		}
-		if team.Tag == "" {
-			return nil, errors.Validation("no tag defined for the team")
-		}
-
-		params := buildStatsParams(team.Tag, r)
+		params := buildStatsParams(r)
 
 		response, err = s.StatsOpen(ctx, params)
 		if err != nil {
@@ -154,15 +128,7 @@ func makeStatsFixedEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoi
 			return nil, errors.Validation("Invalid query params")
 		}
 
-		team, err := s.FindTeam(ctx, r.TeamID)
-		if err != nil {
-			return nil, err
-		}
-		if team.Tag == "" {
-			return nil, errors.Validation("no tag defined for the team")
-		}
-
-		params := buildStatsParams(team.Tag, r)
+		params := buildStatsParams(r)
 
 		response, err = s.StatsFixed(ctx, params)
 		if err != nil {
@@ -174,17 +140,17 @@ func makeStatsFixedEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoi
 
 func makeGlobalStatsMTTREndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
-		r, ok := request.(*StatsRequest)
+		r, ok := request.(*GlobalStatsRequest)
 		if !ok {
 			return nil, errors.Assertion("Type assertion failed")
 		}
 
-		if !isValidMTTRRequest(r) {
+		if !isValidMTTRRequest(&r.StatsRequest) {
 			return nil, errors.Validation("Invalid query params")
 		}
 
-		// Only admin and observer users
-		// can set Tags query parameter.
+		var teamsFilter string
+		// Only admin and observer users can set Tags query parameter.
 		if r.Tags != "" {
 			authorized, err := isAuthorizedTagsParam(ctx)
 			if err != nil {
@@ -193,12 +159,19 @@ func makeGlobalStatsMTTREndpoint(s api.VulcanitoService, logger kitlog.Logger) e
 			if !authorized {
 				return nil, errors.Forbidden("User is not allowed to set Tags parameter")
 			}
+			// The findings are stored by team so we must translate the tags
+			// to team ids.
+			teams, err := tagsToTeams(ctx, s, r.Tags)
+			if err != nil {
+				return nil, err
+			}
+			if len(teams) == 0 {
+				return nil, errors.NotFound("There are no teams with the specified tags")
+			}
+			teamsFilter = teams
 		}
 
-		// Build stats param with void tag
-		// so we get global metrics instead
-		// of specific team metrics.
-		params := buildStatsParams("", r)
+		params := buildGlobalStatsParams(teamsFilter, r)
 
 		response, err = s.StatsMTTR(ctx, params)
 		if err != nil {
@@ -210,17 +183,17 @@ func makeGlobalStatsMTTREndpoint(s api.VulcanitoService, logger kitlog.Logger) e
 
 func makeGlobalStatsExposureEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
-		r, ok := request.(*StatsRequest)
+		r, ok := request.(*GlobalStatsRequest)
 		if !ok {
 			return nil, errors.Assertion("Type assertion failed")
 		}
 
-		if !isValidExposureRequest(r) {
+		if !isValidExposureRequest(&r.StatsRequest) {
 			return nil, errors.Validation("Invalid query params")
 		}
 
-		// Only admin and observer users
-		// can set Tags query parameter.
+		var teamsFilter string
+		// Only admin and observer users can set Tags query parameter.
 		if r.Tags != "" {
 			authorized, err := isAuthorizedTagsParam(ctx)
 			if err != nil {
@@ -229,12 +202,19 @@ func makeGlobalStatsExposureEndpoint(s api.VulcanitoService, logger kitlog.Logge
 			if !authorized {
 				return nil, errors.Forbidden("User is not allowed to set Tags parameter")
 			}
+			// The findings are stored by team so we must translate the tags
+			// to team ids.
+			teams, err := tagsToTeams(ctx, s, r.Tags)
+			if err != nil {
+				return nil, err
+			}
+			if len(teams) == 0 {
+				return nil, errors.NotFound("There are no teams with the specified tags")
+			}
+			teamsFilter = teams
 		}
 
-		// Build stats param with void tag
-		// so we get global metrics instead
-		// of specific team metrics.
-		params := buildStatsParams("", r)
+		params := buildGlobalStatsParams(teamsFilter, r)
 
 		response, err = s.StatsExposure(ctx, params)
 		if err != nil {
@@ -246,13 +226,13 @@ func makeGlobalStatsExposureEndpoint(s api.VulcanitoService, logger kitlog.Logge
 
 func makeGlobalStatsCurrentExposureEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
-		r, ok := request.(*StatsRequest)
+		r, ok := request.(*GlobalStatsRequest)
 		if !ok {
 			return nil, errors.Assertion("Type assertion failed")
 		}
 
-		// Only admin and observer users
-		// can set Tags query parameter.
+		var teamsFilter string
+		// Only admin and observer users can set Tags query parameter.
 		if r.Tags != "" {
 			authorized, err := isAuthorizedTagsParam(ctx)
 			if err != nil {
@@ -261,12 +241,19 @@ func makeGlobalStatsCurrentExposureEndpoint(s api.VulcanitoService, logger kitlo
 			if !authorized {
 				return nil, errors.Forbidden("User is not allowed to set Tags parameter")
 			}
+			// The findings are stored by team so we must translate the tags
+			// to team ids.
+			teams, err := tagsToTeams(ctx, s, r.Tags)
+			if err != nil {
+				return nil, err
+			}
+			if len(teams) == 0 {
+				return nil, errors.NotFound("There are no teams with the specified tags")
+			}
+			teamsFilter = teams
 		}
 
-		// Build stats param with void tag
-		// so we get global metrics instead
-		// of specific team metrics.
-		params := buildStatsParams("", r)
+		params := buildGlobalStatsParams(teamsFilter, r)
 
 		response, err = s.StatsCurrentExposure(ctx, params)
 		if err != nil {
@@ -278,13 +265,13 @@ func makeGlobalStatsCurrentExposureEndpoint(s api.VulcanitoService, logger kitlo
 
 func makeGlobalStatsOpenEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
-		r, ok := request.(*StatsRequest)
+		r, ok := request.(*GlobalStatsRequest)
 		if !ok {
 			return nil, errors.Assertion("Type assertion failed")
 		}
 
-		// Only admin and observer users
-		// can set Tags query parameter.
+		var teamsFilter string
+		// Only admin and observer users can set Tags query parameter.
 		if r.Tags != "" {
 			authorized, err := isAuthorizedTagsParam(ctx)
 			if err != nil {
@@ -293,12 +280,19 @@ func makeGlobalStatsOpenEndpoint(s api.VulcanitoService, logger kitlog.Logger) e
 			if !authorized {
 				return nil, errors.Forbidden("User is not allowed to set Tags parameter")
 			}
+			// The findings are stored by team so we must translate the tags
+			// to team ids.
+			teams, err := tagsToTeams(ctx, s, r.Tags)
+			if err != nil {
+				return nil, err
+			}
+			if len(teams) == 0 {
+				return nil, errors.NotFound("There are no teams with the specified tags")
+			}
+			teamsFilter = teams
 		}
 
-		// Build stats param with void tag
-		// so we get global metrics instead
-		// of specific team metrics.
-		params := buildStatsParams("", r)
+		params := buildGlobalStatsParams(teamsFilter, r)
 
 		response, err = s.StatsOpen(ctx, params)
 		if err != nil {
@@ -310,13 +304,13 @@ func makeGlobalStatsOpenEndpoint(s api.VulcanitoService, logger kitlog.Logger) e
 
 func makeGlobalStatsFixedEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
-		r, ok := request.(*StatsRequest)
+		r, ok := request.(*GlobalStatsRequest)
 		if !ok {
 			return nil, errors.Assertion("Type assertion failed")
 		}
 
-		// Only admin and observer users
-		// can set Tags query parameter.
+		var teamsFilter string
+		// Only admin and observer users can set Tags query parameter.
 		if r.Tags != "" {
 			authorized, err := isAuthorizedTagsParam(ctx)
 			if err != nil {
@@ -325,12 +319,19 @@ func makeGlobalStatsFixedEndpoint(s api.VulcanitoService, logger kitlog.Logger) 
 			if !authorized {
 				return nil, errors.Forbidden("User is not allowed to set Tags parameter")
 			}
+			// The findings are stored by team so we must translate the tags
+			// to team ids.
+			teams, err := tagsToTeams(ctx, s, r.Tags)
+			if err != nil {
+				return nil, err
+			}
+			if len(teams) == 0 {
+				return nil, errors.NotFound("There are no teams with the specified tags")
+			}
+			teamsFilter = teams
 		}
 
-		// Build stats param with void tag
-		// so we get global metrics instead
-		// of specific team metrics.
-		params := buildStatsParams("", r)
+		params := buildGlobalStatsParams(teamsFilter, r)
 
 		response, err = s.StatsFixed(ctx, params)
 		if err != nil {
@@ -342,13 +343,13 @@ func makeGlobalStatsFixedEndpoint(s api.VulcanitoService, logger kitlog.Logger) 
 
 func makeGlobalStatsAssetsEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
-		r, ok := request.(*StatsRequest)
+		r, ok := request.(*GlobalStatsRequest)
 		if !ok {
 			return nil, errors.Assertion("Type assertion failed")
 		}
 
-		// Only admin and observer users
-		// can set Tags query parameter.
+		var teamsFilter string
+		// Only admin and observer users can set Tags query parameter.
 		if r.Tags != "" {
 			authorized, err := isAuthorizedTagsParam(ctx)
 			if err != nil {
@@ -357,12 +358,19 @@ func makeGlobalStatsAssetsEndpoint(s api.VulcanitoService, logger kitlog.Logger)
 			if !authorized {
 				return nil, errors.Forbidden("User is not allowed to set Tags parameter")
 			}
+			// The findings are stored by team so we must translate the tags
+			// to team ids.
+			teams, err := tagsToTeams(ctx, s, r.Tags)
+			if err != nil {
+				return nil, err
+			}
+			if len(teams) == 0 {
+				return nil, errors.NotFound("There are no teams with the specified tags")
+			}
+			teamsFilter = teams
 		}
 
-		// Build stats param with void tag
-		// so we get global metrics instead
-		// of specific team metrics.
-		params := buildStatsParams("", r)
+		params := buildGlobalStatsParams(teamsFilter, r)
 
 		response, err = s.StatsAssets(ctx, params)
 		if err != nil {
@@ -408,10 +416,22 @@ func isValidExposureRequest(r *StatsRequest) bool {
 	return r.AtDate == "" || isValidDate(r.AtDate)
 }
 
-func buildStatsParams(tag string, r *StatsRequest) api.StatsParams {
+func buildStatsParams(r *StatsRequest) api.StatsParams {
 	return api.StatsParams{
-		Tag:         tag,
-		Tags:        r.Tags,
+		Team:        r.TeamID,
+		MinDate:     r.MinDate,
+		MaxDate:     r.MaxDate,
+		AtDate:      r.AtDate,
+		MinScore:    r.MinScore,
+		MaxScore:    r.MaxScore,
+		Identifiers: r.Identifiers,
+		Labels:      r.Labels,
+	}
+}
+
+func buildGlobalStatsParams(teams string, r *GlobalStatsRequest) api.StatsParams {
+	return api.StatsParams{
+		Teams:       teams,
 		MinDate:     r.MinDate,
 		MaxDate:     r.MaxDate,
 		AtDate:      r.AtDate,
@@ -435,4 +455,20 @@ func isAuthorizedTagsParam(ctx context.Context) (bool, error) {
 	}
 	return (user.Admin != nil && *user.Admin) ||
 		(user.Observer != nil && *user.Observer), nil
+}
+
+// tagsToTeams takes a command separated list of tags, looks for the teams that
+// have any of those tags and returns a comma seperated list of those team
+// id's.
+func tagsToTeams(ctx context.Context, s api.VulcanitoService, tagsStr string) (string, error) {
+	tags := strings.Split(tagsStr, ",")
+	teams, err := s.FindTeamsByTags(ctx, tags)
+	if err != nil {
+		return "", err
+	}
+	ids := []string{}
+	for _, t := range teams {
+		ids = append(ids, t.ID)
+	}
+	return strings.Join(ids, ","), nil
 }

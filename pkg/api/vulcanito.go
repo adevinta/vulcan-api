@@ -34,6 +34,7 @@ type VulcanitoService interface {
 	DeleteTeam(ctx context.Context, teamID string) error
 	ListTeams(ctx context.Context) ([]*Team, error)
 	FindTeamsByUser(ctx context.Context, userID string) ([]*Team, error)
+	FindTeamsByTags(ctx context.Context, tags []string) ([]*Team, error)
 
 	// TeamMembers
 	FindTeamMember(ctx context.Context, teamID string, userID string) (*UserTeam, error)

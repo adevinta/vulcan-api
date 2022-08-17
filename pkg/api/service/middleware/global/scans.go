@@ -91,8 +91,7 @@ func buildScanTag(team *api.Team, program *api.Program) string {
 	if team.Tag == "" {
 		teamLabel = "unknown"
 	} else {
-		teamTagParts := strings.Split(team.Tag, ":")
-		teamLabel = teamTagParts[len(teamTagParts)-1]
+		teamLabel = team.Tag
 	}
 
 	if programLabel = program.ID; programLabel == "" {

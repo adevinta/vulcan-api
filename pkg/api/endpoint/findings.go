@@ -76,15 +76,7 @@ func makeListFindingsEndpoint(s api.VulcanitoService, logger kitlog.Logger) endp
 			return nil, errors.Validation("Invalid date format")
 		}
 
-		team, err := s.FindTeam(ctx, r.TeamID)
-		if err != nil {
-			return nil, err
-		}
-		if team.Tag == "" {
-			return nil, errors.Validation("no tag defined for the team")
-		}
-
-		params := buildFindingsParams(team.Tag, r)
+		params := buildFindingsParams(r)
 		pagination := api.Pagination{Page: r.Page, Size: r.Size}
 
 		response, err = s.ListFindings(ctx, params, pagination)
@@ -106,15 +98,7 @@ func makeListFindingsIssuesEndpoint(s api.VulcanitoService, logger kitlog.Logger
 			return nil, errors.Validation("Invalid request parameters")
 		}
 
-		team, err := s.FindTeam(ctx, r.TeamID)
-		if err != nil {
-			return nil, err
-		}
-		if team.Tag == "" {
-			return nil, errors.Validation("no tag defined for the team")
-		}
-
-		params := buildFindingsParams(team.Tag, r)
+		params := buildFindingsParams(r)
 		pagination := api.Pagination{Page: r.Page, Size: r.Size}
 
 		response, err = s.ListFindingsIssues(ctx, params, pagination)
@@ -132,15 +116,7 @@ func makeListFindingsByIssueEndpoint(s api.VulcanitoService, logger kitlog.Logge
 			return nil, errors.Assertion("Type assertion failed")
 		}
 
-		team, err := s.FindTeam(ctx, r.TeamID)
-		if err != nil {
-			return nil, err
-		}
-		if team.Tag == "" {
-			return nil, errors.Validation("no tag defined for the team")
-		}
-
-		params := buildFindingsByIssueParams(team.Tag, r)
+		params := buildFindingsByIssueParams(r)
 		pagination := api.Pagination{Page: r.Page, Size: r.Size}
 
 		response, err = s.ListFindingsByIssue(ctx, params, pagination)
@@ -162,15 +138,7 @@ func makeListFindingsTargetsEndpoint(s api.VulcanitoService, logger kitlog.Logge
 			return nil, errors.Validation("Invalid request parameters")
 		}
 
-		team, err := s.FindTeam(ctx, r.TeamID)
-		if err != nil {
-			return nil, err
-		}
-		if team.Tag == "" {
-			return nil, errors.Validation("no tag defined for the team")
-		}
-
-		params := buildFindingsParams(team.Tag, r)
+		params := buildFindingsParams(r)
 		pagination := api.Pagination{Page: r.Page, Size: r.Size}
 
 		response, err = s.ListFindingsTargets(ctx, params, pagination)
@@ -188,15 +156,7 @@ func makeListFindingsByTargetEndpoint(s api.VulcanitoService, logger kitlog.Logg
 			return nil, errors.Assertion("Type assertion failed")
 		}
 
-		team, err := s.FindTeam(ctx, r.TeamID)
-		if err != nil {
-			return nil, err
-		}
-		if team.Tag == "" {
-			return nil, errors.Validation("no tag defined for the team")
-		}
-
-		params := buildFindingsByTargetParams(team.Tag, r)
+		params := buildFindingsByTargetParams(r)
 		pagination := api.Pagination{Page: r.Page, Size: r.Size}
 
 		response, err = s.ListFindingsByTarget(ctx, params, pagination)
@@ -213,20 +173,13 @@ func makeFindFindingEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpo
 		if !ok {
 			return nil, errors.Assertion("Type assertion failed")
 		}
-		team, err := s.FindTeam(ctx, r.TeamID)
-		if err != nil {
-			return nil, err
-		}
-		if team.Tag == "" {
-			return nil, errors.Validation("no tag defined for the team")
-		}
 
 		finding, err := s.FindFinding(ctx, r.ID)
 		if err != nil {
 			return nil, err
 		}
 
-		if authorizedFindFindingRequest(finding.Finding.Target.Tags, team.Tag) {
+		if authorizedFindFindingRequest(finding.Finding.Target.Teams, r.TeamID) {
 			return Ok{finding.Finding}, nil
 		}
 
@@ -247,13 +200,6 @@ func makeCreateFindingOverwriteEndpoint(s api.VulcanitoService, logger kitlog.Lo
 		if !ok {
 			return nil, errors.Assertion("Type assertion failed")
 		}
-		team, err := s.FindTeam(ctx, r.TeamID)
-		if err != nil {
-			return nil, err
-		}
-		if team.Tag == "" {
-			return nil, errors.Validation("no tag defined for the team")
-		}
 
 		finding, err := s.FindFinding(ctx, r.FindingID)
 		if err != nil {
@@ -271,10 +217,10 @@ func makeCreateFindingOverwriteEndpoint(s api.VulcanitoService, logger kitlog.Lo
 			StatusPrevious: finding.Finding.Status,
 			Status:         r.Status,
 			Notes:          r.Notes,
-			Tag:            team.Tag,
+			TeamID:         r.TeamID,
 		}
 
-		if authorizedFindFindingRequest(finding.Finding.Target.Tags, team.Tag) {
+		if authorizedFindFindingRequest(finding.Finding.Target.Teams, r.TeamID) {
 			err := s.CreateFindingOverwrite(ctx, findingOverwrite)
 			if err != nil {
 				return nil, err
@@ -319,15 +265,7 @@ func makeListFindingsLabelsEndpoint(s api.VulcanitoService, logger kitlog.Logger
 			return nil, errors.Validation("Invalid date format")
 		}
 
-		team, err := s.FindTeam(ctx, r.TeamID)
-		if err != nil {
-			return nil, err
-		}
-		if team.Tag == "" {
-			return nil, errors.Validation("no tag defined for the team")
-		}
-
-		params := buildFindingsParams(team.Tag, r)
+		params := buildFindingsParams(r)
 
 		response, err = s.ListFindingsLabels(ctx, params)
 		if err != nil {
@@ -350,9 +288,9 @@ func isValidFindingsSummaryRequest(r *FindingsRequest) bool {
 		(r.AtDate == "" || isValidDate(r.AtDate))
 }
 
-func buildFindingsParams(tag string, r *FindingsRequest) api.FindingsParams {
+func buildFindingsParams(r *FindingsRequest) api.FindingsParams {
 	return api.FindingsParams{
-		Tag:             tag,
+		Team:            r.TeamID,
 		Status:          r.Status,
 		MinScore:        r.MinScore,
 		MaxScore:        r.MaxScore,
@@ -369,9 +307,9 @@ func buildFindingsParams(tag string, r *FindingsRequest) api.FindingsParams {
 	}
 }
 
-func buildFindingsByIssueParams(tag string, r *FindingsByIssueRequest) api.FindingsParams {
+func buildFindingsByIssueParams(r *FindingsByIssueRequest) api.FindingsParams {
 	return api.FindingsParams{
-		Tag:         tag,
+		Team:        r.TeamID,
 		Status:      r.Status,
 		MinScore:    r.MinScore,
 		MaxScore:    r.MaxScore,
@@ -385,9 +323,9 @@ func buildFindingsByIssueParams(tag string, r *FindingsByIssueRequest) api.Findi
 	}
 }
 
-func buildFindingsByTargetParams(tag string, r *FindingsByTargetRequest) api.FindingsParams {
+func buildFindingsByTargetParams(r *FindingsByTargetRequest) api.FindingsParams {
 	return api.FindingsParams{
-		Tag:         tag,
+		Team:        r.TeamID,
 		Status:      r.Status,
 		MinScore:    r.MinScore,
 		MaxScore:    r.MaxScore,
@@ -401,9 +339,9 @@ func buildFindingsByTargetParams(tag string, r *FindingsByTargetRequest) api.Fin
 	}
 }
 
-func authorizedFindFindingRequest(allowedTags []string, currentTag string) bool {
-	for _, v := range allowedTags {
-		if v == currentTag {
+func authorizedFindFindingRequest(allowedTeams []string, currentTeam string) bool {
+	for _, v := range allowedTeams {
+		if v == currentTeam {
 			return true
 		}
 	}

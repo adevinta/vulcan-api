@@ -208,6 +208,17 @@ func (db vulcanitoStore) FindTeamByTag(tag string) (*api.Team, error) {
 	return team, nil
 }
 
+// FindTeamByTags returns all teams with any of the specified tags.
+func (db vulcanitoStore) FindTeamsByTags(tags []string) ([]*api.Team, error) {
+	teams := []*api.Team{}
+	res := db.Conn.Find(&teams, "tag IN (?)", tags)
+	if res.Error != nil {
+		return nil, db.logError(errors.Database(res.Error))
+	}
+
+	return teams, nil
+}
+
 // FindTeamByProgram returns the team that the given Program belongs to.
 func (db vulcanitoStore) FindTeamByProgram(programID string) (*api.Team, error) {
 	program := &api.Program{ID: programID}

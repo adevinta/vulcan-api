@@ -1,4 +1,5 @@
 /*
+	deleteTargetTagF func(ctx context.Context, authTeam, targetID, tag string) error
 Copyright 2021 Adevinta
 */
 
@@ -37,6 +38,7 @@ var (
 			ID:         "a0",
 			Identifier: "somehost.com",
 			Team: &api.Team{
+				ID:  "t1",
 				Tag: "mockCreateAssetTag",
 			},
 		},
@@ -48,7 +50,7 @@ var (
 			ID:         "a1",
 			Identifier: "example.com",
 			Team: &api.Team{
-				Tag: "mockDeleteAssetTag",
+				ID: "t1",
 			},
 		},
 		DupAssets: 0,
@@ -60,6 +62,7 @@ var (
 			ID:         "aO",
 			Identifier: "exampleNew.com",
 			Team: &api.Team{
+				ID:  "t1",
 				Tag: "mockUpdateAssetTag",
 			},
 		},
@@ -67,6 +70,7 @@ var (
 			ID:         "aN",
 			Identifier: "exampleOld.com",
 			Team: &api.Team{
+				ID:  "t1",
 				Tag: "mockUpdateAssetTag",
 			},
 		},
@@ -86,7 +90,7 @@ var (
 		FindingOverwrite: api.FindingOverwrite{
 			FindingID: "f1",
 			Status:    "newstatus",
-			Tag:       "mockFindingOverwriteTag",
+			TeamID:    "mockFindingOverwriteTeamID",
 		},
 	}
 )
@@ -113,11 +117,13 @@ func (m *mockLoggr) verifyErr(targetErr error) bool {
 
 type mockVulnDBClient struct {
 	vulnerabilitydb.Client
-	targetsF         func(ctx context.Context, params api.TargetsParams, pagination api.Pagination) (*api.TargetsList, error)
-	createTargetF    func(ctx context.Context, payload api.CreateTarget) (*api.Target, error)
-	deleteTagF       func(ctx context.Context, authTag, tag string) error
-	deleteTargetTagF func(ctx context.Context, authTag, targetID, tag string) error
-	updateFindingF   func(ctx context.Context, findingID string, payload *api.UpdateFinding, tag string) (*api.Finding, error)
+	targetsF          func(ctx context.Context, params api.TargetsParams, pagination api.Pagination) (*api.TargetsList, error)
+	createTargetF     func(ctx context.Context, payload api.CreateTarget) (*api.Target, error)
+	deleteTeamF       func(ctx context.Context, authTeam, teamID string) error
+	deleteTeamTagF    func(ctx context.Context, authTeam, teamID, tag string) error
+	deleteTargetTeamF func(ctx context.Context, authTeam, targetID, teamID string) error
+	deleteTargetTagF  func(ctx context.Context, authTeam, targetID, tag string) error
+	updateFindingF    func(ctx context.Context, findingID string, payload *api.UpdateFinding, tag string) (*api.Finding, error)
 }
 
 func (m *mockVulnDBClient) Targets(ctx context.Context, params api.TargetsParams, pagination api.Pagination) (*api.TargetsList, error) {
@@ -126,11 +132,17 @@ func (m *mockVulnDBClient) Targets(ctx context.Context, params api.TargetsParams
 func (m *mockVulnDBClient) CreateTarget(ctx context.Context, payload api.CreateTarget) (*api.Target, error) {
 	return m.createTargetF(ctx, payload)
 }
-func (m *mockVulnDBClient) DeleteTag(ctx context.Context, authTag, tag string) error {
-	return m.deleteTagF(ctx, authTag, tag)
+func (m *mockVulnDBClient) DeleteTeam(ctx context.Context, authTeam, teamID string) error {
+	return m.deleteTeamF(ctx, authTeam, teamID)
 }
-func (m *mockVulnDBClient) DeleteTargetTag(ctx context.Context, authTag, targetID, tag string) error {
-	return m.deleteTargetTagF(ctx, authTag, targetID, tag)
+func (m *mockVulnDBClient) DeleteTeamTag(ctx context.Context, authTeam, teamID, tag string) error {
+	return m.deleteTeamTagF(ctx, authTeam, teamID, tag)
+}
+func (m *mockVulnDBClient) DeleteTargetTeam(ctx context.Context, authTeam, targetID, teamID string) error {
+	return m.deleteTargetTeamF(ctx, authTeam, targetID, teamID)
+}
+func (m *mockVulnDBClient) DeleteTargetTag(ctx context.Context, authTeam, targetID, tag string) error {
+	return m.deleteTargetTagF(ctx, authTeam, targetID, tag)
 }
 func (m *mockVulnDBClient) UpdateFinding(ctx context.Context, findingID string, payload *api.UpdateFinding, tag string) (*api.Finding, error) {
 	return m.updateFindingF(ctx, findingID, payload, tag)
@@ -209,14 +221,20 @@ func TestParse(t *testing.T) {
 					var t = &api.Target{Target: vulndb.Target{
 						ID:         "1",
 						Identifier: payload.Identifier,
-						Tags:       payload.Tags,
+						Teams:      payload.Teams,
 					}}
 					return t, nil
 				},
-				deleteTagF: func(ctx context.Context, authTag, tag string) error {
+				deleteTeamF: func(ctx context.Context, authTeam, teamID string) error {
 					return nil
 				},
-				deleteTargetTagF: func(ctx context.Context, authTag, targetID, tag string) error {
+				deleteTeamTagF: func(ctx context.Context, authTeam, teamID, tag string) error {
+					return nil
+				},
+				deleteTargetTeamF: func(ctx context.Context, authTeam, targetID, teamID string) error {
+					return nil
+				},
+				deleteTargetTagF: func(ctx context.Context, authTeam, targetID, tag string) error {
 					return nil
 				},
 				updateFindingF: func(ctx context.Context, findingID string, payload *api.UpdateFinding, tag string) (*api.Finding, error) {
@@ -254,7 +272,10 @@ func TestParse(t *testing.T) {
 				},
 			},
 			vulnDBClient: &mockVulnDBClient{
-				deleteTagF: func(ctx context.Context, authTag, tag string) error {
+				deleteTeamF: func(ctx context.Context, authTeam, teamID string) error {
+					return nil
+				},
+				deleteTeamTagF: func(ctx context.Context, authTeam, teamID, tag string) error {
 					return nil
 				},
 			},
@@ -275,7 +296,10 @@ func TestParse(t *testing.T) {
 				},
 			},
 			vulnDBClient: &mockVulnDBClient{
-				deleteTagF: func(ctx context.Context, authTag, tag string) error {
+				deleteTeamF: func(ctx context.Context, authTeam, teamID string) error {
+					return errors.NotFound("not found")
+				},
+				deleteTeamTagF: func(ctx context.Context, authTeam, teamID, tag string) error {
 					return errors.NotFound("not found")
 				},
 				targetsF: func(ctx context.Context, params api.TargetsParams, pagination api.Pagination) (*api.TargetsList, error) {
