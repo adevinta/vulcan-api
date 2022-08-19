@@ -219,7 +219,12 @@ func (p *AsyncTxParser) processUpdateAsset(data []byte) error {
 	if err != nil {
 		return errInvalidData
 	}
-
+	// By now, we don't need to process updates on the assets when the
+	// identifier has not changed because the VulnDB only cares about theese
+	// kind of changes.
+	if dto.NewAsset.Identifier == "" || dto.NewAsset.Identifier == dto.OldAsset.Identifier {
+		return nil
+	}
 	// Process asset deletion
 	delDTO := OpDeleteAssetDTO{
 		Asset:     dto.OldAsset,
@@ -229,6 +234,7 @@ func (p *AsyncTxParser) processUpdateAsset(data []byte) error {
 	if err != nil {
 		return errInvalidData
 	}
+
 	err = p.processDeleteAsset(delJSON)
 	if err != nil {
 		return err
