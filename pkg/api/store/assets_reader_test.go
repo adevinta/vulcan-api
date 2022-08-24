@@ -109,6 +109,22 @@ func TestAssetsReaderRead(t *testing.T) {
 			wantErr: ErrReadAssetsFinished,
 		},
 		{
+			name: "ReturnsAssetsWhenLimitMultNOfAssets",
+			readerCreator: func() (*AssetsReader, error) {
+				reader, err := store.NewAssetReader(true, 16)
+				if err != nil {
+					return nil, err
+				}
+				_, err = reader.Read()
+				if err != nil {
+					return nil, err
+				}
+				return &reader, nil
+			},
+			want:    mustGetFixtureAssets(t, &store)[16:17],
+			wantErr: ErrReadAssetsFinished,
+		},
+		{
 			name: "ReturnsAllAssetsInOnePage",
 			readerCreator: func() (*AssetsReader, error) {
 				reader, err := store.NewAssetReader(true, 20)

@@ -44,19 +44,8 @@ func (db vulcanitoStore) NewAssetReader(lock bool, pageSize int) (AssetsReader, 
 			return AssetsReader{}, db.logError(err)
 		}
 	}
-	var total int
-	var count = struct {
-		Total int
-	}{}
-	res := tx.Raw("SELECT count(*) as Total from assets").Scan(&count)
-	if res.Error != nil {
-		tx.Rollback()
-		err := fmt.Errorf("error counting assets: %w", res.Error)
-		return AssetsReader{}, err
-	}
 	reader := AssetsReader{
 		pageSize: pageSize,
-		total:    total,
 		tx:       tx,
 		more:     true,
 		lock:     lock,
@@ -71,7 +60,6 @@ type AssetsReader struct {
 	pageSize int
 	tx       *gorm.DB
 	more     bool
-	total    int
 	lock     bool
 }
 
