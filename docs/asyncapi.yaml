@@ -64,6 +64,7 @@ components:
 
     assetType:
       type: string
+      # Update when the assets types accepted by Vulcan are updated.
       enum:
         - IP
         - DomainName
