@@ -13,41 +13,41 @@ import (
 	"github.com/go-kit/kit/log/level"
 	"github.com/spf13/viper"
 
+	"github.com/adevinta/vulcan-api/pkg/api"
 	"github.com/adevinta/vulcan-api/pkg/api/store"
 	"github.com/adevinta/vulcan-api/pkg/asyncapi"
 	"github.com/adevinta/vulcan-api/pkg/asyncapi/kafka"
 )
 
 var description = `Bumps all the assets in the configured vulcan db to the configured kafka topic.
-The tool will lock all the teams, assets and annotations of the db, so the vulcan-api
-won't be able to work meanwhile this tool is running.`
+It locks for writing the tables: teams, assets and annotations of the vulcan-api database.`
 
 func main() {
-	flag.Usage = buildUsageFunc(flag.PrintDefaults)
+	flag.Usage = usage
 	configFile := flag.String("c", "", "path the config file")
-	logLevel := flag.String("l", "error", `log level valid values: "error", "warn" "debug"`)
+	logLevel := flag.String("l", "info", `log level valid values: "info", "error", "warn" "debug"`)
+	pageSize := flag.Uint("p", 10, `page size`)
 	flag.Parse()
 	if *configFile == "" {
 		flag.Usage()
 		os.Exit(1)
 	}
-	cfg := &config{}
+	cfg := config{}
 	viper.SetConfigFile(*configFile)
 	if err := viper.ReadInConfig(); err != nil {
-		fmt.Fprintf(os.Stderr, "error reading config %s:%+v", *configFile, err)
+		fmt.Fprintf(os.Stderr, "error reading config %s: %v", *configFile, err)
 		os.Exit(1)
 	}
 	if err := viper.Unmarshal(&cfg); err != nil {
-		fmt.Fprintf(os.Stderr, "error reading config file %s: %v", *configFile, err)
+		fmt.Fprintf(os.Stderr, "error parsing config file %s: %v", *configFile, err)
 		os.Exit(1)
 	}
 
-	var logger gokitlog.Logger
-	{
-		logger = gokitlog.NewLogfmtLogger(os.Stderr)
-		logger = level.NewFilter(logger, parseLogLevel(*logLevel))
-	}
-	store, err := store.NewStore("", cfg.DB.ConnString, logger, false, map[string][]string{})
+	storeLogger := gokitlog.NewLogfmtLogger(os.Stderr)
+	storeLogger = level.NewFilter(storeLogger, parseLogLevel(*logLevel))
+
+	l := levelLogger{storeLogger}
+	store, err := store.NewStore("", cfg.DB.ConnString, storeLogger, false, map[string][]string{})
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error creating the store: %v", err)
 		os.Exit(1)
@@ -58,25 +58,32 @@ func main() {
 		fmt.Fprintf(os.Stderr, "error creating the store: %v", err)
 		os.Exit(1)
 	}
-	apiLogger := asyncVulcanLogger{logger}
-	v := asyncapi.NewVulcan(&kclient, apiLogger)
-	err = bump(v, store, logger)
+	v := asyncapi.NewVulcan(&kclient, l)
+	err = bump(v, store, *pageSize, l)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error bumping assets: %v", err)
 		os.Exit(1)
 	}
 }
 
-func bump(v asyncapi.Vulcan, s store.Store, logger gokitlog.Logger) error {
-	r, err := s.NewAssetReader(true, 5)
+func bump(v asyncapi.Vulcan, s store.Store, psize uint, logger levelLogger) error {
+	r, err := s.NewAssetReader(true, int(psize))
 	if err != nil {
 		return err
 	}
 	defer r.Close()
+	logger.Infof("sending assets in bacthes of %d", psize)
+	page := 0
 	for err == nil {
-		assets, err := r.Read()
+		var assets []*api.Asset
+		assets, err = r.Read()
+		if len(assets) > 0 {
+			from := page*int(psize) + 1
+			to := from + len(assets) - 1
+			logger.Infof("sending batch of assets from %d to %d", from, to)
+		}
 		for _, a := range assets {
-			var annotations []*asyncapi.Annotation
+			annotations := []*asyncapi.Annotation{}
 			for _, an := range a.AssetAnnotations {
 				annotations = append(annotations, &asyncapi.Annotation{
 					Key:   an.Key,
@@ -84,19 +91,24 @@ func bump(v asyncapi.Vulcan, s store.Store, logger gokitlog.Logger) error {
 				})
 			}
 			payload := asyncapi.AssetPayload{
-				Id:          a.ID,
-				Team:        &asyncapi.Team{Id: a.Team.ID, Name: a.Team.Name, Description: a.Team.Description},
-				Alias:       a.Alias,
-				Rolfp:       a.ROLFP.String(),
-				Scannable:   *a.Scannable,
-				AssetType:   (*asyncapi.AssetType)(&a.AssetType.Name),
-				Identifier:  a.Identifier,
+				Id: a.ID,
+				Team: &asyncapi.Team{
+					Id:          a.Team.ID,
+					Name:        a.Team.Name,
+					Description: a.Team.Description,
+					Tag:         a.Team.Tag,
+				},
+				Alias:      a.Alias,
+				Rolfp:      a.ROLFP.String(),
+				Scannable:  *a.Scannable,
+				AssetType:  (*asyncapi.AssetType)(&a.AssetType.Name),
+				Identifier: a.Identifier,
+
 				Annotations: annotations,
 			}
-			if err = v.PushAsset(payload); err != nil {
-				return err
-			}
+			err = v.PushAsset(payload)
 		}
+		page++
 	}
 	if err == store.ErrReadAssetsFinished {
 		return nil
@@ -104,11 +116,9 @@ func bump(v asyncapi.Vulcan, s store.Store, logger gokitlog.Logger) error {
 	return err
 }
 
-func buildUsageFunc(defaultUsage func()) func() {
-	return func() {
-		fmt.Fprintln(os.Stderr, description)
-		defaultUsage()
-	}
+func usage() {
+	fmt.Fprintln(os.Stderr, description)
+	flag.PrintDefaults()
 }
 
 type config struct {
@@ -130,38 +140,38 @@ type kafkaConfig struct {
 	Topics map[string]string
 }
 
-type asyncVulcanLogger struct {
+type levelLogger struct {
 	gokitlog.Logger
 }
 
-func (a asyncVulcanLogger) ErrorF(s string, params ...any) {
+func (a levelLogger) Errorf(s string, params ...any) {
 	var v string
 	if len(params) == 0 {
 		v = s
 	} else {
-		v = fmt.Sprintf(s, a)
+		v = fmt.Sprintf(s, params...)
 	}
-	level.Error(a.Logger).Log(v)
+	level.Error(a.Logger).Log("log", v)
 }
 
-func (a asyncVulcanLogger) InfoF(s string, params ...any) {
+func (a levelLogger) Infof(s string, params ...any) {
 	var v string
 	if len(params) == 0 {
 		v = s
 	} else {
-		v = fmt.Sprintf(s, a)
+		v = fmt.Sprintf(s, params...)
 	}
-	level.Info(a.Logger).Log(v)
+	level.Info(a.Logger).Log("log", v)
 }
 
-func (a asyncVulcanLogger) DebugF(s string, params ...any) {
+func (a levelLogger) Debugf(s string, params ...any) {
 	var v string
 	if len(params) == 0 {
 		v = s
 	} else {
-		v = fmt.Sprintf(s, a)
+		v = fmt.Sprintf(s, params...)
 	}
-	level.Info(a.Logger).Log(v)
+	level.Debug(a.Logger).Log("log", v)
 }
 
 func parseLogLevel(l string) level.Option {
