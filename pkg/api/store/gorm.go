@@ -24,7 +24,7 @@ const (
 	dialect = "postgres"
 )
 
-var forbiddenCharsRe = regexp.MustCompile(`[^a-z^A-Z^_^-]`)
+var forbiddenCharsRe = regexp.MustCompile(`[^a-zA-Z_-]`)
 
 // DB is a postgres driver
 type vulcanitoStore struct {
@@ -105,4 +105,8 @@ func (db vulcanitoStore) lockTablesUnchecked(tx *gorm.DB, tables ...string) erro
 		}
 	}
 	return nil
+}
+
+func sanitizeTableName(name string) string {
+	return forbiddenCharsRe.ReplaceAllString(name, "-")
 }

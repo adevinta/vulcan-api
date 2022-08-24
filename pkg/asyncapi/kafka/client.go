@@ -12,10 +12,10 @@ import (
 )
 
 var (
-	// ErrUndefinedEntity is returned by the Push method of the Client when the
-	// given entity name is unknown by the client.
+	// ErrUndefinedEntity is returned by the Push method of the [Client] when the
+	// given entity name is unknown.
 	ErrUndefinedEntity = errors.New("undefined entity")
-	// ErrEmptyPayload is returned by the Push method of the Client when the
+	// ErrEmptyPayload is returned by the Push method of the [Client] when the
 	// given payload is empty.
 	ErrEmptyPayload = errors.New("payload can't be empty")
 )
@@ -25,11 +25,13 @@ const (
 	kafkaSaslMechanisms   = "SCRAM-SHA-256"
 )
 
-// Client implements an EventStreamClient using Kafka as the event stream
+// Client implements an [EventStreamClient] using Kafka as the event stream
 // system.
 type Client struct {
 	producer *kafka.Producer
-	topics   map[string]string
+	// Contains the mappings beetween the entity names and the corresponding
+	// underlaying kafka topics.
+	Topics map[string]string
 }
 
 // NewClient creates a new Kafka client connected to the a broker using the
@@ -38,10 +40,12 @@ type Client struct {
 func NewClient(user string, password string, broker string, topics map[string]string) (Client, error) {
 	config := kafka.ConfigMap{
 		"bootstrap.servers": broker,
-		"security.protocol": kafkaSecurityProtocol,
-		"sasl.mechanisms":   kafkaSaslMechanisms,
-		"sasl.username":     user,
-		"sasl.password":     password,
+	}
+	if password != "" {
+		config.SetKey("security.protocol", kafkaSecurityProtocol)
+		config.SetKey("sasl.mechanisms", kafkaSaslMechanisms)
+		config.SetKey("sasl.username", user)
+		config.SetKey("sasl.password", password)
 	}
 	p, err := kafka.NewProducer(&config)
 	if err != nil {
@@ -53,12 +57,12 @@ func NewClient(user string, password string, broker string, topics map[string]st
 // Push sends the payload of an entity, with the specified id, to corresponding
 // topic according to the specified entity, using the kafka broker the client
 // is connected to. The method waits until kafka confirm the message has been
-// stored in the topic. The payload can not be empty.
+// stored in the topic. The payload can't be empty.
 func (c *Client) Push(entity string, id string, payload []byte) error {
 	if len(payload) == 0 {
 		return ErrEmptyPayload
 	}
-	topic, ok := c.topics[entity]
+	topic, ok := c.Topics[entity]
 	if !ok {
 		return ErrUndefinedEntity
 	}
@@ -69,7 +73,7 @@ func (c *Client) Push(entity string, id string, payload []byte) error {
 			Topic:     &topic,
 			Partition: kafka.PartitionAny,
 		},
-		Key:   []byte(payload),
+		Key:   []byte(id),
 		Value: []byte(payload),
 	}
 	err := c.producer.Produce(&msg, delivered)

@@ -1,22 +1,27 @@
-# Starting a local database
+# Setup local persistence components
+
+## Starting a local database and Kafka
 
 ```sh
-./postgres-start.sh
+./persistence-start.sh
 ./flyway-migrate.sh
 ```
 
-# Stoping the database
+## Stoping Kafka and Postgres
 
 ```sh
-$ postgres-stop.sh
+./persistence-stop.sh
 ```
 
-# Cleaning a running database
+## Cleaning a running Postgres database
 
 ```sh
-$ flyway-clean-schema.sh
+./flyway-clean-schema.sh
 ```
 
-# Inspecting the database
+## Inspecting the local Postgres database
 
-A pgadmin container has been added to easily check the local database content. It can be accessed just browsing http://locahost:8000 after the local database has been started. To check the login credentials just see the `docker-compose.yml` file.
+A pgadmin container has been added to easily check the local database content.
+It can be accessed just browsing http://locahost:8000 after the local database
+has been started. To check the login credentials just see the
+`docker-compose.yml` file.

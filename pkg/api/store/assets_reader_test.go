@@ -95,6 +95,31 @@ func TestAssetsReaderRead(t *testing.T) {
 			want:    mustGetFixtureAssets(t, &store)[14:17],
 			wantErr: ErrReadAssetsFinished,
 		},
+		{
+			name: "ReturnsErrReadAssetsFinishedAndNoAssets",
+			readerCreator: func() (*AssetsReader, error) {
+				reader, err := store.NewAssetReader(true, 20)
+				if err != nil {
+					return nil, err
+				}
+				reader.Read()
+				return &reader, nil
+			},
+			want:    nil,
+			wantErr: ErrReadAssetsFinished,
+		},
+		{
+			name: "ReturnsAllAssetsInOnePage",
+			readerCreator: func() (*AssetsReader, error) {
+				reader, err := store.NewAssetReader(true, 20)
+				if err != nil {
+					return nil, err
+				}
+				return &reader, nil
+			},
+			want:    mustGetFixtureAssets(t, &store),
+			wantErr: ErrReadAssetsFinished,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
