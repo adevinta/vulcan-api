@@ -95,35 +95,3 @@ func (t topicsOpResult) Error() kafka.ErrorCode {
 	}
 	return kafka.ErrNoError
 }
-
-func ensureDeleted(topics []string, client *kafka.AdminClient) error {
-	// Deleting topics in Kafka is an asynchronous operation, wait until the
-	// topics are actually deleted.
-	waitDuration := time.Duration(time.Second * 60)
-	resources := []kafka.ConfigResource{}
-	for _, topic := range topics {
-		resource := kafka.ConfigResource{Type: kafka.ResourceTopic, Name: topic}
-		resources = append(resources, resource)
-	}
-	adminTimeout := kafka.SetAdminRequestTimeout(waitDuration)
-
-	found := true
-	for found {
-		configs, err := client.DescribeConfigs(context.Background(), resources, adminTimeout)
-		if err != nil {
-			return err
-		}
-		found = false
-		for _, c := range configs {
-			if c.Error.Code() != kafka.ErrNoError {
-				if c.Error.Code() == kafka.ErrUnknownTopicOrPart {
-					continue
-				}
-				return fmt.Errorf("error reading kafka topics %s", c.Error.Error())
-			}
-			found = true
-			break
-		}
-	}
-	return nil
-}
