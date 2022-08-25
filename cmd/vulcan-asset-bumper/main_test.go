@@ -84,7 +84,7 @@ func TestBump(t *testing.T) {
 	}
 }
 
-func TestBumpNoAssets(t *testing.T) {
+func TestNoAssets(t *testing.T) {
 	topics := map[string]string{asyncapi.AssetsEntityName: "assets"}
 	testTopics, err := testutil.PrepareKafka(topics)
 	if err != nil {
@@ -107,6 +107,11 @@ func TestBumpNoAssets(t *testing.T) {
 	testStore, err := store.NewStore("", dsn, glogger, false, map[string][]string{})
 	if err != nil {
 		t.Fatal(err)
+	}
+	// Ensure there are no assets in the DB.
+	res := testStore.Conn.Exec("DELETE FROM assets")
+	if res.Error != nil {
+		t.Fatal(res.Error)
 	}
 
 	vulcan := asyncapi.NewVulcan(&kclient, nullLogger)
@@ -181,14 +186,16 @@ func readAllAssetsTopic(topic string) ([]asyncapi.AssetPayload, error) {
 	config := confluentKafka.ConfigMap{
 		"go.events.channel.enable": true,
 		"bootstrap.servers":        broker,
-		"group.id":                 "test",
+		"group.id":                 "test_" + topic,
 		"enable.partition.eof":     true,
 		"auto.offset.reset":        "earliest",
+		"enable.auto.commit":       false,
 	}
 	c, err := confluentKafka.NewConsumer(&config)
 	if err != nil {
 		return nil, err
 	}
+	defer c.Close()
 	if err = c.Subscribe(topic, nil); err != nil {
 		return nil, err
 	}
@@ -215,6 +222,8 @@ LOOP:
 			if err != nil {
 				return nil, err
 			}
+		case confluentKafka.Error:
+			return nil, e
 		case confluentKafka.PartitionEOF:
 			break LOOP
 		default:
