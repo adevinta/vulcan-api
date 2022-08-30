@@ -321,7 +321,7 @@ func (db vulcanitoStore) UpdateAsset(asset api.Asset) (*api.Asset, error) {
 func (db vulcanitoStore) updateAssetTX(tx *gorm.DB, asset api.Asset, annotationsBehavior updateAnnotationsBehavior) (*api.Asset, error) {
 	// We don't allow the asset type to be modified.
 	if asset.AssetTypeID != "" {
-		return nil, db.logError(errors.Update("updating the asset type is forbidden"))
+		return nil, db.logError(errors.Validation("updating the asset type is forbidden"))
 	}
 
 	stm := `SELECT * FROM assets WHERE team_id = ? AND id = ? FOR UPDATE`
@@ -337,7 +337,7 @@ func (db vulcanitoStore) updateAssetTX(tx *gorm.DB, asset api.Asset, annotations
 
 	// We don't allow the asset identifier to be modified.
 	if asset.Identifier != "" && asset.Identifier != oldAsset.Identifier {
-		return nil, db.logError(errors.Update("updating the asset identifier is forbidden"))
+		return nil, db.logError(errors.Validation("updating the asset identifier is forbidden"))
 	}
 	asset.Identifier = oldAsset.Identifier
 
