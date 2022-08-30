@@ -339,6 +339,7 @@ func (db vulcanitoStore) updateAssetTX(tx *gorm.DB, asset api.Asset, annotations
 	if asset.Identifier != "" && asset.Identifier != oldAsset.Identifier {
 		return nil, db.logError(errors.Update("updating the asset identifier is forbidden"))
 	}
+	asset.Identifier = oldAsset.Identifier
 
 	assetInfo, err := db.getAssetInfoForUpdate(tx, asset.ID, asset.TeamID)
 	if err != nil {

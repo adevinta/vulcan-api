@@ -35,10 +35,6 @@ type OpDeleteAssetDTO struct {
 type OpUpdateAssetDTO struct {
 	OldAsset api.Asset `json:"old_asset"`
 	NewAsset api.Asset `json:"new_asset"`
-	// DupAssets is the number of assets
-	// which have the same identifier as
-	// OldAsset for the same team.
-	DupAssets int `json:"duplicates"`
 }
 
 // OpDeleteAllAssetsDTO represents the data to store

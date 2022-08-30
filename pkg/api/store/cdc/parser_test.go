@@ -74,7 +74,6 @@ var (
 				Tag: "mockUpdateAssetTag",
 			},
 		},
-		DupAssets: 0,
 	}
 
 	mockOpDeleteAllAssetsData []byte
