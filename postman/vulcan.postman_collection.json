@@ -4576,6 +4576,50 @@
 			"response": []
 		},
 		{
+			"name": "Should forbid asset identifier modification",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 422\", function () {",
+							"    pm.response.to.have.status(422);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"identifier\": \"modified.example.com\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/teams/{{team_id}}/assets/{{asset1}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"teams",
+						"{{team_id}}",
+						"assets",
+						"{{asset1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Create asset-group",
 			"event": [
 				{
