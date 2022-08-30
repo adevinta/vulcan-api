@@ -563,6 +563,15 @@ func TestStoreUpdateAsset(t *testing.T) {
 			},
 			wantErr: errors.New("updating the asset identifier is forbidden"),
 		},
+		{
+			name: "Should forbid asset type modification",
+			asset: api.Asset{
+				ID:          "49f90ed2-2f71-11e9-b210-d663bd873d93",
+				TeamID:      "5125225e-4912-4464-b22e-e2542410c352",
+				AssetTypeID: "e2e4b23e-b72c-40a6-9f72-e6ade33a7b00",
+			},
+			wantErr: errors.New("updating the asset type is forbidden"),
+		},
 	}
 
 	for _, tt := range tests {
