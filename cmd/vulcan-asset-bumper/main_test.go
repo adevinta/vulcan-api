@@ -201,7 +201,7 @@ func readAllAssetsTopic(topic string) ([]asyncapi.AssetPayload, error) {
 	}
 
 	var assets []asyncapi.AssetPayload
-LOOP:
+Loop:
 	for ev := range c.Events() {
 		switch e := ev.(type) {
 		case *confluentKafka.Message:
@@ -225,7 +225,7 @@ LOOP:
 		case confluentKafka.Error:
 			return nil, e
 		case confluentKafka.PartitionEOF:
-			break LOOP
+			break Loop
 		default:
 			return nil, fmt.Errorf("received unexpected message %v", e)
 		}

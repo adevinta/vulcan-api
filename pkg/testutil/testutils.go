@@ -158,7 +158,7 @@ func CreateTestDatabase(name string) (string, error) {
 
 // DBNameForFunc creates the name of a test DB for a function that is calling
 // this one the number of levels above in the calling tree equal to the
-// specified depth.For instance if a function named FuncA calls function,
+// specified depth. For instance if a function named FuncA calls function,
 // called FuncB that in turn makes the following call: DBNameForFunc(2), this
 // function will return the following name: vulcanito_FuncA_test.
 func DBNameForFunc(depth int) string {

@@ -4,7 +4,6 @@
     "description": "",
     "main": "gen.js",
     "author": "",
-    "license": "ISC",
     "type": "module",
     "dependencies": {
         "@asyncapi/modelina": "^0.59.2",

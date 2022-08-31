@@ -5,7 +5,6 @@ Copyright 2022 Adevinta
 package store
 
 import (
-	goerrors "errors"
 	"fmt"
 
 	"github.com/adevinta/errors"
@@ -13,11 +12,7 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-// ErrReadAssetsFinished is returned by the Read operation of an AssetReader
-// when there are no more assets to read.
-var ErrReadAssetsFinished = goerrors.New("no more assets")
-
-// NewAssetReader creates a new AssetReader with the given page size. If the
+// NewAssetReader creates a new [AssetsReader] with the given page size. If the
 // lock param is set to true it will lock for writing the following tables:
 // Assets, Teams and AssetAnnotations.
 func (db vulcanitoStore) NewAssetReader(lock bool, pageSize int) (AssetsReader, error) {
@@ -61,21 +56,23 @@ type AssetsReader struct {
 	tx       *gorm.DB
 	more     bool
 	lock     bool
+	assets   []*api.Asset
+	err      error
 }
 
 // Read returns the next page of the assets according to the page size of the
-// [AssetReader]. When there are no more assets to read it will return the the
-// error [ErrReadAssetsFinished].
-func (a *AssetsReader) Read() ([]*api.Asset, error) {
+// [*AssetsReader]. Returns true if the read operation was successful, in that
+// case the assets can be retrieved by calling [*AssetsReader.Assets].
+func (a *AssetsReader) Read() bool {
 	if !a.more {
-		return nil, ErrReadAssetsFinished
+		return false
 	}
 	// Check if this is the first call to read.
 	if a.next == "" {
 		return a.readFirst()
 	}
-
-	assets := make([]*api.Asset, 0)
+	// Clean the slice.
+	a.assets = a.assets[:0]
 	limit := a.pageSize + 1
 	next := a.next
 	tx := a.tx
@@ -86,38 +83,53 @@ func (a *AssetsReader) Read() ([]*api.Asset, error) {
 		Where("id >= ?", next).
 		Order("id", true).
 		Limit(limit).
-		Find(&assets)
+		Find(&a.assets)
 	if res.Error != nil {
 		tx.Rollback()
 		err := fmt.Errorf("error reading assets: %w", res.Error)
-		return nil, err
-	}
-	last := ""
-	more := false
-	if len(assets) == limit {
-		last = assets[len(assets)-1].ID
-		more = true
-		assets = assets[0 : len(assets)-1]
+		a.more = false
+		a.err = err
+		return false
 	}
 
-	a.next = last
-	a.more = more
-	if !more {
-		return assets, ErrReadAssetsFinished
+	// There are more assets to read.
+	if len(a.assets) == limit {
+		a.next = a.assets[len(a.assets)-1].ID
+		a.more = true
+		a.assets = a.assets[0 : len(a.assets)-1]
+		return true
 	}
-	return assets, nil
+
+	// No more assets.
+	a.next = ""
+	a.more = false
+	return len(a.assets) > 0
 }
 
 // Close closes the reader and unlocks the tables that were locked when it was
 // created.
 func (a *AssetsReader) Close() error {
-	// Notice the tables are automatically unlocked when the transaction is committed.
+	// Notice the tables are automatically unlocked when the transaction is
+	// committed.
 	return a.tx.Commit().Error
 }
 
-func (a *AssetsReader) readFirst() ([]*api.Asset, error) {
+// Err returns the error produced by the last call to [*AssetsReader.Read],
+// returns nil if the last call didn't produce any error.
+func (a *AssetsReader) Err() error {
+	// Notice the tables are automatically unlocked when the transaction is
+	// committed.
+	return a.tx.Commit().Error
+}
+
+// Assets returns the assets produced by the last call to [*AssetsReader.Read].
+func (a *AssetsReader) Assets() []*api.Asset {
+	return a.assets
+}
+
+func (a *AssetsReader) readFirst() bool {
 	tx := a.tx
-	assets := make([]*api.Asset, 0)
+	assets := make([]*api.Asset, 0, a.pageSize)
 	pageSize := a.pageSize
 	limit := pageSize + 1
 
@@ -129,20 +141,21 @@ func (a *AssetsReader) readFirst() ([]*api.Asset, error) {
 		Find(&assets)
 	if res.Error != nil {
 		tx.Rollback()
-		err := fmt.Errorf("error reading assets: %w", res.Error)
-		return nil, err
+		a.err = fmt.Errorf("error reading assets: %w", res.Error)
+		a.more = false
+		return false
 	}
-	last := ""
-	more := false
+	// There are more assets.
 	if len(assets) == limit {
-		last = assets[len(assets)-1].ID
-		more = true
+		a.next = assets[len(assets)-1].ID
+		a.more = true
 		assets = assets[0 : len(assets)-1]
+		a.assets = assets
+		return true
 	}
-	a.next = last
-	a.more = more
-	if !more {
-		return assets, ErrReadAssetsFinished
-	}
-	return assets, nil
+	// No more assets.
+	a.next = ""
+	a.more = false
+	a.assets = assets
+	return len(a.assets) > 0
 }

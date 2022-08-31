@@ -25,7 +25,7 @@ const (
 	kafkaSaslMechanisms   = "SCRAM-SHA-256"
 )
 
-// Client implements an [EventStreamClient] using Kafka as the event stream
+// Client implements an EventStreamClient using Kafka as the event stream
 // system.
 type Client struct {
 	producer *kafka.Producer
@@ -56,7 +56,7 @@ func NewClient(user string, password string, broker string, topics map[string]st
 
 // Push sends the payload of an entity, with the specified id, to corresponding
 // topic according to the specified entity, using the kafka broker the client
-// is connected to. The method waits until kafka confirm the message has been
+// is connected to. The method waits until kafka confirms the message has been
 // stored in the topic. The payload can't be empty.
 func (c *Client) Push(entity string, id string, payload []byte) error {
 	if len(payload) == 0 {

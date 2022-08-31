@@ -4,7 +4,7 @@ Copyright 2022 Adevinta
 
 package asyncapi
 
-//go:generate sh -c "_gen/gen.sh docs/asyncapi.yaml asyncapi > models.go && go fmt models.go"
+//go:generate sh -c "_gen/gen.sh ../../docs/asyncapi.yaml > models.go && go fmt models.go"
 
 import (
 	"encoding/json"
@@ -44,7 +44,7 @@ func NewVulcan(client EventStreamClient, log Logger) Vulcan {
 // PushAsset publishes the state of an asset in the current point of time
 // to the underlying [EventStreamClient].
 func (v *Vulcan) PushAsset(asset AssetPayload) error {
-	v.logger.Debugf("pushing asset %v", asset)
+	v.logger.Debugf("pushing asset %+v", asset)
 	payload, err := json.Marshal(asset)
 	if err != nil {
 		return fmt.Errorf("error marshaling to json: %w", err)

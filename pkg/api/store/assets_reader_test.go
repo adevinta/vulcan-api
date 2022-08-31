@@ -5,11 +5,11 @@ Copyright 2022 Adevinta
 package store
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/adevinta/vulcan-api/pkg/api"
 	"github.com/google/go-cmp/cmp"
-	"github.com/jinzhu/gorm"
 
 	"github.com/adevinta/vulcan-api/pkg/testutil"
 )
@@ -34,19 +34,11 @@ func TestAssetsReaderRead(t *testing.T) {
 	}
 	store := testStore.(Store)
 	defer store.Close()
-	type fields struct {
-		Total    int
-		next     string
-		pageSize int
-		tx       *gorm.DB
-		finished bool
-		total    int
-		lock     bool
-	}
 	tests := []struct {
 		name          string
 		readerCreator func() (*AssetsReader, error)
-		want          []*api.Asset
+		want          bool
+		wantAssets    []*api.Asset
 		wantErr       error
 	}{
 		{
@@ -58,7 +50,8 @@ func TestAssetsReaderRead(t *testing.T) {
 				}
 				return &reader, nil
 			},
-			want: mustGetFixtureAssets(t, &store)[:7],
+			want:       true,
+			wantAssets: mustGetFixtureAssets(t, &store)[:7],
 		},
 		{
 			name: "ReturnsSecondPage",
@@ -67,13 +60,12 @@ func TestAssetsReaderRead(t *testing.T) {
 				if err != nil {
 					return nil, err
 				}
-				_, err = reader.Read()
-				if err != nil {
-					return nil, err
-				}
+				_ = reader.Read()
+
 				return &reader, nil
 			},
-			want: mustGetFixtureAssets(t, &store)[7:14],
+			want:       true,
+			wantAssets: mustGetFixtureAssets(t, &store)[7:14],
 		},
 		{
 			name: "ReturnsThirdPage",
@@ -82,31 +74,27 @@ func TestAssetsReaderRead(t *testing.T) {
 				if err != nil {
 					return nil, err
 				}
-				_, err = reader.Read()
-				if err != nil {
-					return nil, err
-				}
-				_, err = reader.Read()
-				if err != nil {
-					return nil, err
-				}
+				reader.Read()
+				reader.Read()
 				return &reader, nil
 			},
-			want:    mustGetFixtureAssets(t, &store)[14:17],
-			wantErr: ErrReadAssetsFinished,
+			wantAssets: mustGetFixtureAssets(t, &store)[14:17],
+			want:       true,
 		},
 		{
-			name: "ReturnsErrReadAssetsFinishedAndNoAssets",
+			name: "ReturnsNoMoreAssets",
 			readerCreator: func() (*AssetsReader, error) {
-				reader, err := store.NewAssetReader(true, 20)
+				reader, err := store.NewAssetReader(true, 7)
 				if err != nil {
 					return nil, err
 				}
 				reader.Read()
+				reader.Read()
+				reader.Read()
 				return &reader, nil
 			},
-			want:    nil,
-			wantErr: ErrReadAssetsFinished,
+			wantAssets: nil,
+			want:       false,
 		},
 		{
 			name: "ReturnsAssetsWhenLimitMultNOfAssets",
@@ -115,14 +103,11 @@ func TestAssetsReaderRead(t *testing.T) {
 				if err != nil {
 					return nil, err
 				}
-				_, err = reader.Read()
-				if err != nil {
-					return nil, err
-				}
+				reader.Read()
 				return &reader, nil
 			},
-			want:    mustGetFixtureAssets(t, &store)[16:17],
-			wantErr: ErrReadAssetsFinished,
+			wantAssets: mustGetFixtureAssets(t, &store)[16:17],
+			want:       true,
 		},
 		{
 			name: "ReturnsAllAssetsInOnePage",
@@ -133,8 +118,22 @@ func TestAssetsReaderRead(t *testing.T) {
 				}
 				return &reader, nil
 			},
-			want:    mustGetFixtureAssets(t, &store),
-			wantErr: ErrReadAssetsFinished,
+			wantAssets: mustGetFixtureAssets(t, &store),
+			want:       true,
+		},
+		{
+			name: "ReturnsError",
+			readerCreator: func() (*AssetsReader, error) {
+				reader, err := store.NewAssetReader(true, 20)
+				if err != nil {
+					return nil, err
+				}
+				reader.tx.AddError(errors.New("simulated error"))
+				return &reader, nil
+			},
+			wantAssets: mustGetFixtureAssets(t, &store),
+			want:       false,
+			wantErr:    errors.New("simulated error; sql: transaction has already been committed or rolled back"),
 		},
 	}
 	for _, tt := range tests {
@@ -144,14 +143,25 @@ func TestAssetsReaderRead(t *testing.T) {
 				t.Fatalf("error creating AssetsReader %v", err)
 			}
 			defer a.Close()
-			got, err := a.Read()
-			if errToStr(err) != errToStr(tt.wantErr) {
-				t.Errorf("AssetsReader.Read() error = %v, wantErr %v", err, tt.wantErr)
+			got := a.Read()
+			if got != tt.want {
+				t.Errorf("go != want, got: %v, want: %v", got, tt.want)
 				return
 			}
-			diff := cmp.Diff(tt.want, got, cmp.Options{ignoreFieldsAsset}, cmp.Options{ignoreFieldsAnnotations})
+			err = a.Err()
+			if errToStr(err) != errToStr(tt.wantErr) {
+				t.Errorf("got error != want err, got: %v, want: %v", err, tt.wantErr)
+				return
+			}
+			// If we got false as return value in the last call to Read, the
+			// reader does not guarantee anything about the assets.
+			if got == false {
+				return
+			}
+			gotAssets := a.Assets()
+			diff := cmp.Diff(tt.wantAssets, gotAssets, cmp.Options{ignoreFieldsAsset}, cmp.Options{ignoreFieldsAnnotations})
 			if diff != "" {
-				t.Errorf("got != want. Diff: %s\n", diff)
+				t.Errorf("got assets != want assets. Diff: %s\n", diff)
 			}
 		})
 	}
