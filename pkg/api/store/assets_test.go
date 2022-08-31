@@ -411,7 +411,7 @@ func TestStoreUpdateAsset(t *testing.T) {
 		expOutbox   expOutbox
 	}{
 		{
-			name: "Should update alias and options",
+			name: "UpdatesAliasAndOptions",
 			asset: api.Asset{
 				ID:      "0f206826-14ec-4e85-a5a4-e2decdfbc193",
 				TeamID:  "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
@@ -555,7 +555,7 @@ func TestStoreUpdateAsset(t *testing.T) {
 			},
 		},
 		{
-			name: "Should forbid asset identifier modification",
+			name: "UpdatesAssetIdentifierReturnsError",
 			asset: api.Asset{
 				ID:         "49f90ed2-2f71-11e9-b210-d663bd873d93",
 				TeamID:     "5125225e-4912-4464-b22e-e2542410c352",
@@ -564,7 +564,7 @@ func TestStoreUpdateAsset(t *testing.T) {
 			wantErr: errors.New("updating the asset identifier is forbidden"),
 		},
 		{
-			name: "Should forbid asset type modification",
+			name: "UpdatesAssetTypeReturnsError",
 			asset: api.Asset{
 				ID:          "49f90ed2-2f71-11e9-b210-d663bd873d93",
 				TeamID:      "5125225e-4912-4464-b22e-e2542410c352",
