@@ -209,46 +209,13 @@ func (p *AsyncTxParser) processDeleteAsset(data []byte) error {
 }
 
 func (p *AsyncTxParser) processUpdateAsset(data []byte) error {
-	// An asset update where identifier has changed can imply 2 operations in VulnDB:
-	// - A delete of the asset association wih the team if team has no duplicates
-	//   for the same identifier.
-	// - A creation of the target with the new identifier.
+	// TODO: Due to constraints put in place in order to forbid the modification
+	// of the identifier on an asset update operation, there is no action to be
+	// propagated to the VulnDB.
+	// An action should be implemented here once we start pushing events generated
+	// from Vulcan API state changes.
 
-	var dto OpUpdateAssetDTO
-	err := json.Unmarshal(data, &dto)
-	if err != nil {
-		return errInvalidData
-	}
-	// By now, we don't need to process updates on the assets when the
-	// identifier has not changed because the VulnDB only cares about theese
-	// kind of changes.
-	if dto.NewAsset.Identifier == "" || dto.NewAsset.Identifier == dto.OldAsset.Identifier {
-		return nil
-	}
-	// Process asset deletion
-	delDTO := OpDeleteAssetDTO{
-		Asset:     dto.OldAsset,
-		DupAssets: dto.DupAssets,
-	}
-	delJSON, err := json.Marshal(delDTO)
-	if err != nil {
-		return errInvalidData
-	}
-
-	err = p.processDeleteAsset(delJSON)
-	if err != nil {
-		return err
-	}
-
-	// Process asset creation
-	createDTO := OpCreateAssetDTO{
-		Asset: dto.NewAsset,
-	}
-	createJSON, err := json.Marshal(createDTO)
-	if err != nil {
-		return errInvalidData
-	}
-	return p.processCreateAsset(createJSON)
+	return nil
 }
 
 func (p *AsyncTxParser) processDeleteAllAssets(data []byte) error {

@@ -302,7 +302,8 @@ var _ = Resource("assets", func() {
 	})
 
 	Action("update", func() {
-		Description("Update an asset.")
+		Description(`Update an asset.
+		Asset type and identifier can not be modified.`)
 		Routing(PATCH("/:asset_id"))
 		Params(func() {
 			Param("asset_id", String, "Asset ID")

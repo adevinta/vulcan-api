@@ -17,7 +17,7 @@ var APIKey = APIKeySecurity("Bearer", func() {
 var _ = API("Vulcan-API", func() {
 	Title("Vulcan API")
 	Description("Public API for Vulcan Vulnerability Scan Engine")
-	Version("1.1.1")
+	Version("1.1.2")
 	Scheme("https")
 	Host("www.vulcan.example.com")
 	BasePath("/api/v1")

@@ -148,8 +148,6 @@ func (db vulcanitoStore) buildDeleteAssetDTO(tx *gorm.DB, data ...interface{}) (
 }
 
 // buildUpdateAssetDTO builds a UpdateAsset action DTO for outbox.
-// This action should only be triggered when the asset update operation
-// changes the asset's identifier.
 // Expected input:
 //	- api.Asset (Old Asset)
 //  - api.Asset (New Asset)
@@ -172,21 +170,7 @@ func (db vulcanitoStore) buildUpdateAssetDTO(tx *gorm.DB, data ...interface{}) (
 		newAsset.Team = oldAsset.Team
 	}
 
-	// The data that we need to store for old asset is the same as for an
-	// asset delete operation, because we have to know if the identifier
-	// has duplicates or not in order to remove the association from the
-	// Vulnerability DB or not.
-	dto, err := db.buildDeleteAssetDTO(tx, oldAsset)
-	if err != nil {
-		return nil, err
-	}
-
-	delAssetDTO, ok := dto.(cdc.OpDeleteAssetDTO)
-	if !ok {
-		return nil, errs.New("error building intermediate DeleteAssetDTO for outbox UpdateAsset")
-	}
-
-	return cdc.OpUpdateAssetDTO{OldAsset: delAssetDTO.Asset, NewAsset: newAsset, DupAssets: delAssetDTO.DupAssets}, nil
+	return cdc.OpUpdateAssetDTO{OldAsset: oldAsset, NewAsset: newAsset}, nil
 }
 
 // buildDeleteAllAssetsDTO builds a DeleteAllAssets action DTO for outbox.

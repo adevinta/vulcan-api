@@ -320,6 +320,7 @@ func UpdateAssetsPath(teamID string, assetID string) string {
 }
 
 // Update an asset.
+// Asset type and identifier can not be modified.
 func (c *Client) UpdateAssets(ctx context.Context, path string, payload *AssetUpdatePayload) (*http.Response, error) {
 	req, err := c.NewUpdateAssetsRequest(ctx, path, payload)
 	if err != nil {

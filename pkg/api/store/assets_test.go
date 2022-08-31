@@ -411,16 +411,19 @@ func TestStoreUpdateAsset(t *testing.T) {
 		expOutbox   expOutbox
 	}{
 		{
-			name: "HappyPath",
+			name: "UpdatesAliasAndOptions",
 			asset: api.Asset{
-				ID:         "0f206826-14ec-4e85-a5a4-e2decdfbc193",
-				TeamID:     "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
-				Identifier: "vulcan.example.bis.com",
+				ID:      "0f206826-14ec-4e85-a5a4-e2decdfbc193",
+				TeamID:  "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
+				Alias:   "AnAlias",
+				Options: strToPtr("{\"opt\":\"optval\"}"),
 			},
 			want: &api.Asset{
 				ID:         "0f206826-14ec-4e85-a5a4-e2decdfbc193",
 				TeamID:     "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
-				Identifier: "vulcan.example.bis.com",
+				Identifier: "foo1.vulcan.example.com",
+				Alias:      "AnAlias",
+				Options:    strToPtr("{\"opt\":\"optval\"}"),
 			},
 			wantErr: nil,
 			expOutbox: expOutbox{
@@ -451,56 +454,11 @@ func TestStoreUpdateAsset(t *testing.T) {
 							CreatedAt:   &hpExpTeamCreatedAt,
 							UpdatedAt:   &hpExpTeamUpdatedAt,
 						},
-						Identifier:       "vulcan.example.bis.com",
+						Identifier:       "foo1.vulcan.example.com",
 						AssetAnnotations: []*api.AssetAnnotation{},
+						Alias:            "AnAlias",
+						Options:          strToPtr("{\"opt\":\"optval\"}"),
 					},
-					DupAssets: 1,
-				},
-			},
-		},
-		{
-			name: "Should report no duplicates",
-			asset: api.Asset{
-				ID:         "49f90ed2-2f71-11e9-b210-d663bd873d93",
-				TeamID:     "5125225e-4912-4464-b22e-e2542410c352",
-				Identifier: "updated.vulcan.example.com",
-			},
-			want: &api.Asset{
-				ID:         "49f90ed2-2f71-11e9-b210-d663bd873d93",
-				TeamID:     "5125225e-4912-4464-b22e-e2542410c352",
-				Identifier: "updated.vulcan.example.com",
-			},
-			wantErr: nil,
-			expOutbox: expOutbox{
-				action: opUpdateAsset,
-				dto: cdc.OpUpdateAssetDTO{
-					OldAsset: api.Asset{
-						ID:     "49f90ed2-2f71-11e9-b210-d663bd873d93",
-						TeamID: "5125225e-4912-4464-b22e-e2542410c352",
-						Team: &api.Team{
-							ID:          "5125225e-4912-4464-b22e-e2542410c352",
-							Name:        "TeamWithAssetsDefaultSensitive",
-							Description: "TeamWithAssetsDefaultSensitive",
-							CreatedAt:   &ndExpTeamCreatedAt,
-							UpdatedAt:   &ndExpTeamUpdatedAt,
-						},
-						Identifier:       "noscan.vulcan.example.com",
-						AssetAnnotations: []*api.AssetAnnotation{},
-					},
-					NewAsset: api.Asset{
-						ID:     "49f90ed2-2f71-11e9-b210-d663bd873d93",
-						TeamID: "5125225e-4912-4464-b22e-e2542410c352",
-						Team: &api.Team{
-							ID:          "5125225e-4912-4464-b22e-e2542410c352",
-							Name:        "TeamWithAssetsDefaultSensitive",
-							Description: "TeamWithAssetsDefaultSensitive",
-							CreatedAt:   &ndExpTeamCreatedAt,
-							UpdatedAt:   &ndExpTeamUpdatedAt,
-						},
-						Identifier:       "updated.vulcan.example.com",
-						AssetAnnotations: []*api.AssetAnnotation{},
-					},
-					DupAssets: 0,
 				},
 			},
 		},
@@ -593,9 +551,26 @@ func TestStoreUpdateAsset(t *testing.T) {
 							},
 						},
 					},
-					DupAssets: 0,
 				},
 			},
+		},
+		{
+			name: "UpdatesAssetIdentifierReturnsError",
+			asset: api.Asset{
+				ID:         "49f90ed2-2f71-11e9-b210-d663bd873d93",
+				TeamID:     "5125225e-4912-4464-b22e-e2542410c352",
+				Identifier: "modified.vulcan.example.com",
+			},
+			wantErr: errors.New("updating the asset identifier is forbidden"),
+		},
+		{
+			name: "UpdatesAssetTypeReturnsError",
+			asset: api.Asset{
+				ID:          "49f90ed2-2f71-11e9-b210-d663bd873d93",
+				TeamID:      "5125225e-4912-4464-b22e-e2542410c352",
+				AssetTypeID: "e2e4b23e-b72c-40a6-9f72-e6ade33a7b00",
+			},
+			wantErr: errors.New("updating the asset type is forbidden"),
 		},
 	}
 
@@ -608,9 +583,13 @@ func TestStoreUpdateAsset(t *testing.T) {
 				}
 			}
 			got, err := testStoreLocal.UpdateAsset(tt.asset)
-			if errToStr(err) != errToStr(tt.wantErr) {
-				t.Fatal(err)
+			if err != nil {
+				if errToStr(err) != errToStr(tt.wantErr) {
+					t.Fatal(err)
+				}
+				return
 			}
+
 			// UpdateAsset does not return the data related to asset being updated.
 			// So we must do it by hand.
 			annotations, err := testStoreLocal.ListAssetAnnotations(tt.asset.TeamID, tt.asset.ID)
