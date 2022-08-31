@@ -810,7 +810,7 @@ func (db vulcanitoStore) DisjoinAssetsInGroups(teamID, inGroupID string, notInGr
 	assets := []*api.Asset{}
 	res := db.Conn.Raw(`SELECT a.* FROM assets a
 			JOIN asset_group ag ON ag.asset_id=a.id JOIN asset_types t ON t.id=a.asset_type_id
-			WHERE a.scannable=true AND a.team_id=? AND ag.group_id=?
+			WHERE a.team_id=? AND ag.group_id=?
 			AND NOT EXISTS(SELECT 1 FROM asset_group ag2 JOIN assets a2 ON ag2.asset_id=a2.id WHERE ag2.asset_id=a.id AND a2.team_id=a.team_id AND ag2.group_id in (?))`,
 		teamID, inGroupID, notInGroupIDs).Scan(&assets)
 	if res.RecordNotFound() {

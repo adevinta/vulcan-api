@@ -71,7 +71,7 @@ type VulcanitoStore interface {
 	// FindGroupInfo returns the info of the specified group
 	// without loading the assets and teams associated to it.
 	FindGroupInfo(group Group) (*Group, error)
-	// DisjoinAssetsInGroups returns scanable assets belonging to a team that are in a given
+	// DisjoinAssetsInGroups returns assets belonging to a team that are in a given
 	// group but not in other groups.
 	DisjoinAssetsInGroups(teamID, inGroupID string, notInGroupIDs []string) ([]*Asset, error)
 
