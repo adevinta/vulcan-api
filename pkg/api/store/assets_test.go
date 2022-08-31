@@ -1353,6 +1353,17 @@ func Test_vulcanitoStore_DisjoinAssetsInGroups_Multiple(t *testing.T) {
 				"6c391632-89ea-4a99-9177-624f709351bb", // disjoin3.adevinta.com
 			},
 		},
+		{
+			name: "ReturnsGroupWithNonScannable",
+			args: args{
+				inGroupID:     "1c0f00c1-5229-4ab6-a81a-eda76ec916a3", // DisjoinC
+				notInGroupIDs: nil,
+				teamID:        "d335c30c-944f-4ab0-9b43-cffccdfbd848",
+			},
+			wantUUIDs: []string{
+				"5246d6ba-1cc8-4bbd-9581-635b9d2ec277", // disjoin5.adevinta.com
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -1440,6 +1451,16 @@ func Test_vulcanitoStore_CountAssetsInGroups(t *testing.T) {
 				teamID: "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", // Non-existent team
 			},
 			wantCount: 0,
+		},
+		{
+			name: "CountAssetsNonScannable",
+			args: args{
+				groupIDs: []string{
+					"1c0f00c1-5229-4ab6-a81a-eda76ec916a3", // DisjoinC
+				},
+				teamID: "d335c30c-944f-4ab0-9b43-cffccdfbd848",
+			},
+			wantCount: 1,
 		},
 	}
 

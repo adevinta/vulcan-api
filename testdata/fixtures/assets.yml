@@ -109,6 +109,14 @@
   environmental_cvss: 5
   options: {}
 
+- id: 5246d6ba-1cc8-4bbd-9581-635b9d2ec277
+  team_id: d335c30c-944f-4ab0-9b43-cffccdfbd848
+  identifier: disjoin5.adevinta.com
+  asset_type_id: 1937b564-bbc4-47f6-9722-b4a8c8ac0595
+  scannable: false
+  environmental_cvss: 5
+  options: {}
+
 # discovery merge tests
 - id: 6ace4174-e704-4ea3-9c68-9096966a7e61
   team_id: ea686be5-be9b-473b-ab1b-621a4f575d51
