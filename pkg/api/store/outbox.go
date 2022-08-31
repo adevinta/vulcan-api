@@ -164,11 +164,6 @@ func (db vulcanitoStore) buildUpdateAssetDTO(tx *gorm.DB, data ...interface{}) (
 		return nil, errInvalidParams
 	}
 
-	// If identifier is not filled for new
-	// asset, copy it from old asset
-	if newAsset.Identifier == "" {
-		newAsset.Identifier = oldAsset.Identifier
-	}
 	// If team data is not filled for new
 	// asset, copy it from old asset
 	if newAsset.Team == nil {
