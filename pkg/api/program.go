@@ -37,19 +37,12 @@ type Program struct {
 	UpdatedAt              *time.Time                `json:"-"`
 }
 
-// ValidateGroupsPolicies validates that at least one of the groups policies in
-// a program have, at least, one asset and one checktype.
+// ValidateGroupsPolicies validates that the program has at least one associated policy.
 func (p Program) ValidateGroupsPolicies() error {
 	if len(p.ProgramsGroupsPolicies) < 1 {
 		return vulcanerrors.Validation(fmt.Errorf("%w: %v ", ErrNoProgramsGroupsPolicies, p.ID))
 	}
-	var err error
-	for _, gp := range p.ProgramsGroupsPolicies {
-		if err = gp.Validate(); err == nil {
-			return nil
-		}
-	}
-	return err
+	return nil
 }
 
 // ProgramsGroupsPolicies defines the association between a group and a policy in a
@@ -61,20 +54,6 @@ type ProgramsGroupsPolicies struct {
 	Policy    *Policy
 	GroupID   string `gorm:"primary_key" json:"group_id" validate:"required"`
 	Group     *Group
-}
-
-// Validate that the ProgramsGroupsPolicies have, at least, one asset and one
-// checktype in the groups policies list.
-func (p ProgramsGroupsPolicies) Validate() error {
-
-	if p.Group == nil || len(p.Group.AssetGroup) < 1 {
-		return vulcanerrors.Validation(ErrInvalidProgramGroupPolicy)
-	}
-
-	if p.Policy == nil || len(p.Policy.ChecktypeSettings) < 1 {
-		return vulcanerrors.Validation(ErrInvalidProgramGroupPolicy)
-	}
-	return nil
 }
 
 type ProgramResponse struct {
