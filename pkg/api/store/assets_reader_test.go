@@ -77,7 +77,7 @@ func TestAssetsReaderRead(t *testing.T) {
 				reader.Read()
 				return &reader, nil
 			},
-			wantAssets: mustGetFixtureAssets(t, &store)[14:17],
+			wantAssets: mustGetFixtureAssets(t, &store)[14:18],
 			want:       true,
 		},
 		{
@@ -98,14 +98,14 @@ func TestAssetsReaderRead(t *testing.T) {
 		{
 			name: "ReturnsAssetsWhenLimitMultNOfAssets",
 			readerCreator: func() (*AssetsReader, error) {
-				reader, err := store.NewAssetReader(true, 16)
+				reader, err := store.NewAssetReader(true, 17)
 				if err != nil {
 					return nil, err
 				}
 				reader.Read()
 				return &reader, nil
 			},
-			wantAssets: mustGetFixtureAssets(t, &store)[16:17],
+			wantAssets: mustGetFixtureAssets(t, &store)[17:18],
 			want:       true,
 		},
 		{
