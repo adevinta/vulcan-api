@@ -60,8 +60,7 @@ func TestAssetsReaderRead(t *testing.T) {
 				if err != nil {
 					return nil, err
 				}
-				_ = reader.Read()
-
+				reader.Read()
 				return &reader, nil
 			},
 			want:       true,
@@ -133,7 +132,24 @@ func TestAssetsReaderRead(t *testing.T) {
 			},
 			wantAssets: mustGetFixtureAssets(t, &store),
 			want:       false,
-			wantErr:    errors.New("simulated error; sql: transaction has already been committed or rolled back"),
+			wantErr:    errors.New("error reading assets: simulated error"),
+		},
+		{
+			name: "ReturnsNoAssets",
+			readerCreator: func() (*AssetsReader, error) {
+				err := store.Conn.Exec("DELETE FROM assets").Error
+				if err != nil {
+					return nil, err
+				}
+
+				reader, err := store.NewAssetReader(true, 20)
+				if err != nil {
+					return nil, err
+				}
+				return &reader, nil
+			},
+			wantAssets: nil,
+			want:       false,
 		},
 	}
 	for _, tt := range tests {

@@ -123,7 +123,7 @@ func bump(v asyncapi.Vulcan, s store.Store, psize int, logger levelLogger) error
 
 func usage() {
 	fmt.Fprintln(os.Stderr, description)
-	fmt.Fprintf(os.Stderr, "Usage of %s:\n", os.Args[0])
+	fmt.Fprintf(os.Stderr, "usage: %s [flags]\n", os.Args[0])
 	flag.PrintDefaults()
 }
 
@@ -155,14 +155,14 @@ func (l levelLogger) Errorf(s string, params ...any) {
 	level.Error(l.Logger).Log("log", v)
 }
 
-func (a levelLogger) Infof(s string, params ...any) {
+func (l levelLogger) Infof(s string, params ...any) {
 	v := fmt.Sprintf(s, params...)
-	level.Info(a.Logger).Log("log", v)
+	level.Info(l.Logger).Log("log", v)
 }
 
-func (a levelLogger) Debugf(s string, params ...any) {
+func (l levelLogger) Debugf(s string, params ...any) {
 	v := fmt.Sprintf(s, params...)
-	level.Debug(a.Logger).Log("log", v)
+	level.Debug(l.Logger).Log("log", v)
 }
 
 func parseLogLevel(l string) (level.Option, error) {

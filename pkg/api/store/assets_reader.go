@@ -117,9 +117,7 @@ func (a *AssetsReader) Close() error {
 // Err returns the error produced by the last call to [*AssetsReader.Read],
 // returns nil if the last call didn't produce any error.
 func (a *AssetsReader) Err() error {
-	// Notice the tables are automatically unlocked when the transaction is
-	// committed.
-	return a.tx.Commit().Error
+	return a.err
 }
 
 // Assets returns the assets produced by the last call to [*AssetsReader.Read].
