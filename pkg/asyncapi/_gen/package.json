@@ -1,0 +1,12 @@
+{
+    "name": "gen",
+    "version": "0.0.1",
+    "description": "",
+    "main": "gen.js",
+    "author": "",
+    "type": "module",
+    "dependencies": {
+        "@asyncapi/modelina": "^0.59.2",
+        "@asyncapi/parser": "^1.15.1"
+    }
+}

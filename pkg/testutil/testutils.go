@@ -130,63 +130,81 @@ func LoadFixtures(fixturesDir string) error {
 	return fixtures.Load()
 }
 
-func PrepareDatabaseLocal(fixturesPath string, f func(pDialect, connectionString string, logger log.Logger, logMode bool, defaults map[string][]string) (api.VulcanitoStore, error)) (api.VulcanitoStore, error) {
+// CreateTestDatabase builds an empty database in the default local test
+// server. The name of the DB will be "vulcanito_<name>_test", where <name>
+// corresponds to the name of the function calling this one.
+func CreateTestDatabase(name string) (string, error) {
 	dialect := "postgres"
 	dsn := "host=localhost port=5432 user=vulcanito_test dbname=vulcanito_test password=vulcanito_test sslmode=disable"
 
-	// Open connection with the test database.
-	// Do NOT import fixtures in a production database!
-	// Existing data would be deleted
 	db, err := sql.Open(dialect, dsn)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 	defer db.Close()
 
-	pc, _, _, _ := runtime.Caller(1)
+	_, err = db.Exec(fmt.Sprintf("DROP DATABASE IF EXISTS %s;", name))
+	if err != nil {
+		return "", err
+	}
+	_, err = db.Exec(fmt.Sprintf("CREATE DATABASE %s WITH TEMPLATE vulcanito OWNER vulcanito_test;", name))
+	if err != nil {
+		return "", err
+	}
+	dsn = fmt.Sprintf("host=localhost port=5432 user=vulcanito_test dbname=%v password=vulcanito_test sslmode=disable", name)
+	return dsn, nil
+
+}
+
+// DBNameForFunc creates the name of a test DB for a function that is calling
+// this one the number of levels above in the calling tree equal to the
+// specified depth. For instance if a function named FuncA calls function,
+// called FuncB that in turn makes the following call: DBNameForFunc(2), this
+// function will return the following name: vulcanito_FuncA_test.
+func DBNameForFunc(depth int) string {
+	pc, _, _, _ := runtime.Caller(depth)
 	callerName := strings.Replace(runtime.FuncForPC(pc).Name(), ".", "_", -1)
 	callerName = strings.Replace(callerName, "-", "_", -1)
 	parts := strings.Split(callerName, "/")
-	dbName := strings.ToLower(fmt.Sprintf("vulcanito_%s_test", parts[len(parts)-1]))
-	_, err = db.Exec(fmt.Sprintf("DROP DATABASE IF EXISTS %s;", dbName))
+	return strings.ToLower(fmt.Sprintf("vulcanito_%s_test", parts[len(parts)-1]))
+}
+
+// PrepareDatabaseLocal creates a new local test database for the calling
+// function and populates it the fixtures in the specified path.
+func PrepareDatabaseLocal(fixturesPath string, f func(pDialect, connectionString string, logger log.Logger, logMode bool, defaults map[string][]string) (api.VulcanitoStore, error)) (api.VulcanitoStore, error) {
+	dbName := DBNameForFunc(2)
+	dsnLocal, err := CreateTestDatabase(dbName)
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = db.Exec(fmt.Sprintf("CREATE DATABASE %s WITH TEMPLATE vulcanito OWNER vulcanito_test;", dbName))
+	err = loadFixtures(fixturesPath, dsnLocal)
 	if err != nil {
 		return nil, err
 	}
 
-	dialectLocal := "postgres"
-	dsnLocal := fmt.Sprintf("host=localhost port=5432 user=vulcanito_test dbname=%v password=vulcanito_test sslmode=disable", dbName)
-
-	// Open connection with the test database.
-	// Do NOT import fixtures in a production database!
-	// Existing data would be deleted
-	dbLocal, errLocal := sql.Open(dialectLocal, dsnLocal)
-	if errLocal != nil {
+	testStoreLocal, err := f("postgres", dsnLocal, log.NewNopLogger(), false, map[string][]string{})
+	if err != nil {
 		return nil, err
+	}
+	return testStoreLocal, nil
+}
+
+// loadFixtures DESTROYS ALL THE DATA in the database pointed by the specified
+// dsn and loads the fixtures stored in the specified path into it.
+func loadFixtures(fixturesPath string, dsn string) error {
+	dbLocal, err := sql.Open("postgres", dsn)
+	if err != nil {
+		return err
 	}
 	defer dbLocal.Close()
 
-	// creating the context that hold the fixtures
-	// see about all compatible databases in this page below
 	fixturesLocal, err := testfixtures.NewFolder(dbLocal, &testfixtures.PostgreSQL{}, fixturesPath)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	testStoreLocal, err := f(dialectLocal, dsnLocal, log.NewNopLogger(), false, map[string][]string{})
-	if err != nil {
-		return nil, err
-	}
-
-	if err := fixturesLocal.Load(); err != nil {
-		return nil, err
-	}
-
-	return testStoreLocal, nil
+	return fixturesLocal.Load()
 }
 
 func ErrToStr(err error) string {

@@ -11,6 +11,7 @@ import (
 	"os"
 	"reflect"
 	"sort"
+	"strings"
 	"testing"
 
 	apierrors "github.com/adevinta/errors"
@@ -550,7 +551,17 @@ func TestVulcanitoService_CreateAssets(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			diff := cmp.Diff(tt.want, got, cmpopts.IgnoreFields(api.Asset{}, "ID", "Team", "AssetType", "CreatedAt", "UpdatedAt", "ClassifiedAt"))
+			sortSlices := cmpopts.SortSlices(func(a, b api.Asset) bool {
+				if a.TeamID != b.TeamID {
+					return strings.Compare(a.TeamID, b.TeamID) < 0
+				}
+				if a.Identifier != b.Identifier {
+					return strings.Compare(a.Identifier, b.Identifier) < 0
+				}
+				return strings.Compare(a.AssetTypeID, b.AssetTypeID) < 0
+			})
+			ignoreFields := cmpopts.IgnoreFields(api.Asset{}, "ID", "Team", "AssetType", "CreatedAt", "UpdatedAt", "ClassifiedAt")
+			diff := cmp.Diff(tt.want, got, ignoreFields, sortSlices)
 			if diff != "" {
 				t.Errorf("%v\n", diff)
 			}

@@ -13,7 +13,7 @@ RUN go mod download
 
 COPY . .
 
-RUN cd cmd/vulcan-api && GOOS=linux GOARCH=amd64 go build . && cd -
+RUN cd cmd/vulcan-api && GOOS=linux GOARCH=amd64 go build -tags musl . && cd -
 
 FROM alpine:3.16.2
 

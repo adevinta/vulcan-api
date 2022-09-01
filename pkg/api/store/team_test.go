@@ -373,7 +373,7 @@ func TestStoreDeleteTeam(t *testing.T) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	testStoreLocal := localStore.(vulcanitoStore)
+	testStoreLocal := localStore.(Store)
 	defer testStoreLocal.Close()
 	expCreatedAt, _ := time.Parse("2006-01-02 15:04:05", "2017-01-01 12:30:12")
 	expUpdatedAt, _ := time.Parse("2006-01-02 15:04:05", "2017-01-01 12:30:12")
