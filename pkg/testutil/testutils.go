@@ -104,6 +104,7 @@ func runFlywayCmd(dbDirPath, flywayCommand string) error {
 		"-password=" + TestDBPassword,
 		"-url=jdbc:postgresql://localhost:5432/" + TestDBName,
 		"-baselineOnMigrate=true",
+		"-cleanDisabled=false",
 		"-locations=filesystem:/scripts/",
 		flywayCommand}
 
