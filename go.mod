@@ -10,7 +10,7 @@ require (
 	github.com/adevinta/vulcan-report v1.0.0
 	github.com/adevinta/vulcan-scan-engine v1.1.1
 	github.com/adevinta/vulcan-types v1.0.0
-	github.com/adevinta/vulnerability-db-api v1.1.0
+	github.com/adevinta/vulnerability-db-api v1.1.1
 	github.com/aws/aws-sdk-go v1.44.19
 	github.com/confluentinc/confluent-kafka-go v1.9.0
 	github.com/go-kit/kit v0.12.0
