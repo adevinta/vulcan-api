@@ -64,8 +64,8 @@ github.com/adevinta/vulcan-metrics-client v1.0.0 h1:gkWoyVESQxG+Ms/DdvDPttu96ieh
 github.com/adevinta/vulcan-metrics-client v1.0.0/go.mod h1:v1lRugB/hInlu+2FC6Q7nXROve9CVAe1K3oza2tYBcQ=
 github.com/adevinta/vulcan-report v1.0.0 h1:44aICPZ+4svucgCSA5KmjlT3ZGzrvZXiSnkbnj6AC2k=
 github.com/adevinta/vulcan-report v1.0.0/go.mod h1:k34KaeoXc3H77WNMwI9F4F1G28hBjB95PeMUp9oHbEE=
-github.com/adevinta/vulcan-scan-engine v1.1.1 h1:C68l6Ax+zlQK8pm6MOvMzwPWBB7jVLRMOEom/J3HhrU=
-github.com/adevinta/vulcan-scan-engine v1.1.1/go.mod h1:rnSU/2nYLqfxLq8smALsZwZe1BkzWZNs26crleijdBM=
+github.com/adevinta/vulcan-scan-engine v1.1.2 h1:AXZDVebHCMG2GhIUQW31xTQ4RsbUX6sQWLBKuHGQ2mM=
+github.com/adevinta/vulcan-scan-engine v1.1.2/go.mod h1:37hfJ+jijKHIyuiyCtU4C2OQXi/cnQGqgaSqJPIq9Yg=
 github.com/adevinta/vulcan-types v1.0.0 h1:tjt59GA4+USJ0naCoAXFNBbIGXqoF+a21BV6rD8fLXc=
 github.com/adevinta/vulcan-types v1.0.0/go.mod h1:bf/j+YA20WO1IkqlPa5GgXUYdYUAfjOOJ9alsJDQ6t8=
 github.com/adevinta/vulnerability-db-api v1.1.1 h1:e7N4RAh6kBAprHCcI4xPLJIE8hs4dA82MwPWioifSOU=
@@ -755,8 +755,8 @@ golang.org/x/sys v0.0.0-20210630005230-0f9fa26af87c/go.mod h1:oPkhp1MJrh7nUepCBc
 golang.org/x/sys v0.0.0-20210806184541-e5e7981a1069/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.0.0-20210823070655-63515b42dcdf/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
-golang.org/x/sys v0.0.0-20220728004956-3c1f35247d10 h1:WIoqL4EROvwiPdUtaip4VcDdpZ4kha7wBWZrbVKCIZg=
-golang.org/x/sys v0.0.0-20220728004956-3c1f35247d10/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
+golang.org/x/sys v0.0.0-20220913175220-63ea55921009 h1:PuvuRMeLWqsf/ZdT1UUZz0syhioyv1mzuFZsXs4fvhw=
+golang.org/x/sys v0.0.0-20220913175220-63ea55921009/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/term v0.0.0-20201126162022-7de9c90e9dd1/go.mod h1:bj7SfCRtBDWHUb9snDiAeCFNEtKQo2Wmx5Cou7ajbmo=
 golang.org/x/term v0.0.0-20210927222741-03fcf44c2211/go.mod h1:jbD1KX2456YbFQfuXm/mYQcufACuNUgVhRMnK/tPxf8=
 golang.org/x/text v0.0.0-20170915032832-14c0d48ead0c/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
