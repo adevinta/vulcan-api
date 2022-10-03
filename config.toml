@@ -64,6 +64,13 @@ key = "$AWSCATALOGUE_KEY"
 retries = $AWSCATALOGUE_RETRIES
 retry_interval = $AWSCATALOGUE_RETRY_INTERVAL
 
+[kafka]
+user = "$KAFKA_USER"
+pass = "$KAFKA_PASS"
+broker = "$KAFKA_BROKER"
+topics = $KAFKA_TOPICS
+
+
 # Leave this entry at the end so run.sh can fill dynamically
 # global program policy configurations accordingly.
 [globalpolicy]

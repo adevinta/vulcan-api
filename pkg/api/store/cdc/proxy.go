@@ -316,19 +316,29 @@ func (b *BrokerProxy) ListAssetAnnotations(teamID string, assetID string) ([]*ap
 }
 
 func (b *BrokerProxy) CreateAssetAnnotations(teamID string, assetID string, annotations []*api.AssetAnnotation) ([]*api.AssetAnnotation, error) {
-	return b.store.CreateAssetAnnotations(teamID, assetID, annotations)
+	annotations, err := b.store.CreateAssetAnnotations(teamID, assetID, annotations)
+	go b.awakeBroker()
+	return annotations, err
+
 }
 
 func (b *BrokerProxy) UpdateAssetAnnotations(teamID string, assetID string, annotations []*api.AssetAnnotation) ([]*api.AssetAnnotation, error) {
-	return b.store.UpdateAssetAnnotations(teamID, assetID, annotations)
+	annotations, err := b.store.UpdateAssetAnnotations(teamID, assetID, annotations)
+	go b.awakeBroker()
+	return annotations, err
+
 }
 
 func (b *BrokerProxy) PutAssetAnnotations(teamID string, assetID string, annotations []*api.AssetAnnotation) ([]*api.AssetAnnotation, error) {
-	return b.store.PutAssetAnnotations(teamID, assetID, annotations)
+	annotations, err := b.store.PutAssetAnnotations(teamID, assetID, annotations)
+	go b.awakeBroker()
+	return annotations, err
 }
 
 func (b *BrokerProxy) DeleteAssetAnnotations(teamID string, assetID string, annotations []*api.AssetAnnotation) error {
-	return b.store.DeleteAssetAnnotations(teamID, assetID, annotations)
+	err := b.store.DeleteAssetAnnotations(teamID, assetID, annotations)
+	go b.awakeBroker()
+	return err
 }
 
 func (b *BrokerProxy) GetAssetType(assetTypeName string) (*api.AssetType, error) {

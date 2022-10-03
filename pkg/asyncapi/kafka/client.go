@@ -59,9 +59,6 @@ func NewClient(user string, password string, broker string, topics map[string]st
 // is connected to. The method waits until kafka confirms the message has been
 // stored in the topic. The payload can't be empty.
 func (c *Client) Push(entity string, id string, payload []byte) error {
-	if len(payload) == 0 {
-		return ErrEmptyPayload
-	}
 	topic, ok := c.Topics[entity]
 	if !ok {
 		return ErrUndefinedEntity

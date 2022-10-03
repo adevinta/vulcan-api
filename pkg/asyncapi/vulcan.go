@@ -10,7 +10,34 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
+
+	gokitlog "github.com/go-kit/kit/log"
+	"github.com/go-kit/kit/log/level"
 )
+
+// LevelLogger implements the logger used by the [Vulcan] async API using an
+// underlaying go-kit logger.
+type LevelLogger struct {
+	gokitlog.Logger
+}
+
+// Errorf logs an error message.
+func (l LevelLogger) Errorf(s string, params ...any) {
+	v := fmt.Sprintf(s, params...)
+	level.Error(l.Logger).Log("log", v)
+}
+
+// Infof logs an information message.
+func (l LevelLogger) Infof(s string, params ...any) {
+	v := fmt.Sprintf(s, params...)
+	level.Info(l.Logger).Log("log", v)
+}
+
+// Debugf logs a debug message.
+func (l LevelLogger) Debugf(s string, params ...any) {
+	v := fmt.Sprintf(s, params...)
+	level.Debug(l.Logger).Log("log", v)
+}
 
 // AssetsEntityName defines the key for the assets entity used by an [EventStreamClient] to
 // determine the topic where the assets are send.
@@ -37,8 +64,8 @@ type Logger interface {
 
 // NewVulcan returns a Vulcan async server that uses the given
 // [EventStreamClient] and [Logger].
-func NewVulcan(client EventStreamClient, log Logger) Vulcan {
-	return Vulcan{client, log}
+func NewVulcan(client EventStreamClient, log Logger) *Vulcan {
+	return &Vulcan{client, log}
 }
 
 // PushAsset publishes the state of an asset in the current point of time
@@ -54,8 +81,42 @@ func (v *Vulcan) PushAsset(asset AssetPayload) error {
 	id := strings.Join([]string{asset.Team.Id, asset.Id}, "/")
 	err = v.client.Push(AssetsEntityName, id, payload)
 	if err != nil {
-		return fmt.Errorf("error sending pushing asset %v: %w", asset, err)
+		return fmt.Errorf("error pushing asset %v: %w", asset, err)
 	}
 	v.logger.Debugf("asset pushed %+v", asset)
 	return err
+}
+
+// DeleteAsset publishes an event to the underlying [EventStreamClient]
+// indicating that an asset has been deleted.
+func (v *Vulcan) DeleteAsset(asset AssetPayload) error {
+	v.logger.Debugf("pushing asset deleted %+v", asset)
+	// Even though the asset_id is always different for every asset, the PK of
+	// an asset for the vulcan-api is the asset_id plus the team_id.
+	id := strings.Join([]string{asset.Team.Id, asset.Id}, "/")
+	err := v.client.Push(AssetsEntityName, id, nil)
+	if err != nil {
+		return fmt.Errorf("error sending a delete asset event for the asset %v: %w", asset, err)
+	}
+	v.logger.Debugf("delete asset pushed %+v", asset)
+	return err
+}
+
+// NullVulcan implements an Async Vulcan API interface that does not send the
+// events to any [EventStreamClient]. It's intended to be used when the async
+// API is disabled but other components still need to fullfill a dependency
+// with the Vulcan Async Server.
+type NullVulcan struct {
+}
+
+// DeleteAsset acepts an event indicating that an asset has been deleted and
+// just ignores it.
+func (v *NullVulcan) DeleteAsset(asset AssetPayload) error {
+	return nil
+}
+
+// PushAsset acepts an event indicating that an asset has been modified or
+// created and just ignores it.
+func (v *NullVulcan) PushAsset(asset AssetPayload) error {
+	return nil
 }

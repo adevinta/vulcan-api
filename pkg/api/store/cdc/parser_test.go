@@ -9,12 +9,19 @@ import (
 	"context"
 	"encoding/json"
 	errs "errors"
+	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/go-kit/kit/log"
+	"github.com/google/go-cmp/cmp"
+	"github.com/google/go-cmp/cmp/cmpopts"
 
 	"github.com/adevinta/errors"
 	"github.com/adevinta/vulcan-api/pkg/api"
+	"github.com/adevinta/vulcan-api/pkg/asyncapi"
+	"github.com/adevinta/vulcan-api/pkg/asyncapi/kafka"
+	"github.com/adevinta/vulcan-api/pkg/testutil"
 	"github.com/adevinta/vulcan-api/pkg/vulnerabilitydb"
 	vulndb "github.com/adevinta/vulnerability-db-api/pkg/model"
 )
@@ -37,6 +44,9 @@ var (
 		Asset: api.Asset{
 			ID:         "a0",
 			Identifier: "somehost.com",
+			AssetType: &api.AssetType{
+				Name: "DomainName",
+			},
 			Team: &api.Team{
 				ID:  "t1",
 				Tag: "mockCreateAssetTag",
@@ -49,6 +59,9 @@ var (
 		Asset: api.Asset{
 			ID:         "a1",
 			Identifier: "example.com",
+			AssetType: &api.AssetType{
+				Name: "DomainName",
+			},
 			Team: &api.Team{
 				ID: "t1",
 			},
@@ -61,6 +74,9 @@ var (
 		OldAsset: api.Asset{
 			ID:         "aO",
 			Identifier: "exampleNew.com",
+			AssetType: &api.AssetType{
+				Name: "DomainName",
+			},
 			Team: &api.Team{
 				ID:  "t1",
 				Tag: "mockUpdateAssetTag",
@@ -69,6 +85,9 @@ var (
 		NewAsset: api.Asset{
 			ID:         "aN",
 			Identifier: "exampleOld.com",
+			AssetType: &api.AssetType{
+				Name: "DomainName",
+			},
 			Team: &api.Team{
 				ID:  "t1",
 				Tag: "mockUpdateAssetTag",
@@ -177,12 +196,14 @@ func init() {
 
 func TestParse(t *testing.T) {
 	testCases := []struct {
-		name         string
-		log          []Event
-		vulnDBClient *mockVulnDBClient
-		loggr        *mockLoggr
-		wantNParsed  uint
-		wantErr      error
+		name            string
+		log             []Event
+		vulnDBClient    *mockVulnDBClient
+		asyncAPI        func() (*asyncapi.Vulcan, kafka.Client, error)
+		loggr           *mockLoggr
+		wantNParsed     uint
+		wantAsyncAssets []asyncapi.AssetPayload
+		wantErr         error
 	}{
 		{
 			name: "Happy path",
@@ -241,6 +262,30 @@ func TestParse(t *testing.T) {
 					return f, nil
 				},
 			},
+			asyncAPI: newTestAsyncAPI,
+			loggr:    &mockLoggr{},
+			wantAsyncAssets: []asyncapi.AssetPayload{
+				{
+					Id:         "a0",
+					Identifier: "somehost.com",
+					AssetType:  (*asyncapi.AssetType)(strToPtr(asyncapi.AssetTypeDomainName)),
+					Team: &asyncapi.Team{
+						Id:  "t1",
+						Tag: "mockCreateAssetTag",
+					},
+				},
+				// Tombstone of the asset deleted.
+				{},
+				{
+					Id:         "aN",
+					Identifier: "exampleOld.com",
+					AssetType:  (*asyncapi.AssetType)(strToPtr(asyncapi.AssetTypeDomainName)),
+					Team: &asyncapi.Team{
+						Id:  "t1",
+						Tag: "mockUpdateAssetTag",
+					},
+				},
+			},
 			wantNParsed: 6,
 		},
 		{
@@ -250,6 +295,7 @@ func TestParse(t *testing.T) {
 					Operation: "unknownAction",
 				},
 			},
+			asyncAPI:    newTestAsyncAPI,
 			loggr:       &mockLoggr{},
 			wantNParsed: 0,
 			wantErr:     errUnsupportedAction,
@@ -278,6 +324,7 @@ func TestParse(t *testing.T) {
 					return nil
 				},
 			},
+			asyncAPI:    newTestAsyncAPI,
 			loggr:       &mockLoggr{},
 			wantNParsed: 1,
 			wantErr:     errInvalidData,
@@ -305,7 +352,12 @@ func TestParse(t *testing.T) {
 					return &api.TargetsList{Targets: []vulndb.Target{}}, nil // Returning 0 targets
 				},
 			},
-			loggr:       &mockLoggr{},
+			asyncAPI: newTestAsyncAPI,
+			loggr:    &mockLoggr{},
+			wantAsyncAssets: []asyncapi.AssetPayload{
+				// Tombstone of the asset deleted.
+				{},
+			},
 			wantNParsed: 2,
 		},
 		{
@@ -324,7 +376,12 @@ func TestParse(t *testing.T) {
 					return &api.TargetsList{Targets: []vulndb.Target{{}, {}}}, nil // Returning 0 targets
 				},
 			},
-			loggr:       &mockLoggr{},
+			asyncAPI: newTestAsyncAPI,
+			loggr:    &mockLoggr{},
+			wantAsyncAssets: []asyncapi.AssetPayload{
+				// Tombstone of the asset deleted.
+				{},
+			},
 			wantNParsed: 0,
 			wantErr:     errTargetNotUnique,
 		},
@@ -332,11 +389,62 @@ func TestParse(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			parser := NewAsyncTxParser(tc.vulnDBClient, &api.JobsRunner{}, tc.loggr)
+			asyncAPI, kclient, err := tc.asyncAPI()
+			if err != nil {
+				t.Fatalf("error creating the Async API: %v", err)
+			}
+			parser := NewAsyncTxParser(tc.vulnDBClient, &api.JobsRunner{}, asyncAPI, tc.loggr)
 			nParsed := parser.Parse(tc.log)
 			if nParsed != tc.wantNParsed {
 				t.Fatalf("expected nParsed to be %d, but got %d", tc.wantNParsed, nParsed)
 			}
+			topic := kclient.Topics[asyncapi.AssetsEntityName]
+			gotAssets, err := testutil.ReadAllAssetsTopic(topic)
+			if err != nil {
+				t.Fatalf("error reading assets from kafka %v", err)
+			}
+			wantAssets := tc.wantAsyncAssets
+			sortOpts := cmpopts.SortSlices(func(a, b asyncapi.AssetPayload) bool {
+				return strings.Compare(a.Id, b.Id) < 0
+			})
+
+			diff := cmp.Diff(wantAssets, gotAssets, sortOpts)
+			if diff != "" {
+				t.Fatalf("want!=got, diff: %s", diff)
+			}
+
 		})
 	}
+}
+
+type nullLogger struct {
+}
+
+func (n nullLogger) Errorf(s string, params ...any) {
+}
+
+func (n nullLogger) Infof(s string, params ...any) {
+
+}
+
+func (n nullLogger) Debugf(s string, params ...any) {
+
+}
+
+func newTestAsyncAPI() (*asyncapi.Vulcan, kafka.Client, error) {
+	topics := map[string]string{asyncapi.AssetsEntityName: "assets"}
+	testTopics, err := testutil.PrepareKafka(topics)
+	if err != nil {
+		return nil, kafka.Client{}, fmt.Errorf("error creating test topics: %v", err)
+	}
+	kclient, err := kafka.NewClient("", "", testutil.KafkaTestBroker, testTopics)
+	if err != nil {
+		return nil, kafka.Client{}, fmt.Errorf("error creating the kafka client: %v", err)
+	}
+	vulcan := asyncapi.NewVulcan(&kclient, nullLogger{})
+	return vulcan, kclient, nil
+}
+
+func strToPtr(s string) *string {
+	return &s
 }
