@@ -5,12 +5,9 @@ Copyright 2022 Adevinta
 package main
 
 import (
-	"encoding/json"
-	"fmt"
 	"strings"
 	"testing"
 
-	confluentKafka "github.com/confluentinc/confluent-kafka-go/kafka"
 	gokitlog "github.com/go-kit/kit/log"
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
@@ -57,7 +54,7 @@ func TestBump(t *testing.T) {
 	vulcan := asyncapi.NewVulcan(&kclient, nullLogger{})
 
 	glogger := gokitlog.NewNopLogger()
-	nullLogger := levelLogger{glogger}
+	nullLogger := asyncapi.LevelLogger{Logger: glogger}
 
 	allAssets, err := readAllAssetsDB(testStore)
 	if err != nil {
@@ -70,7 +67,7 @@ func TestBump(t *testing.T) {
 		t.Fatalf("error bumping assets %v", err)
 	}
 	topic := kclient.Topics[asyncapi.AssetsEntityName]
-	gotAssets, err := readAllAssetsTopic(topic)
+	gotAssets, err := testutil.ReadAllAssetsTopic(topic)
 	if err != nil {
 		t.Fatalf("error reading assets from kafka %v", err)
 	}
@@ -102,7 +99,7 @@ func TestNoAssets(t *testing.T) {
 	}
 
 	glogger := gokitlog.NewNopLogger()
-	nullLogger := levelLogger{glogger}
+	nullLogger := asyncapi.LevelLogger{Logger: glogger}
 
 	testStore, err := store.NewStore("", dsn, glogger, false, map[string][]string{})
 	if err != nil {
@@ -120,7 +117,7 @@ func TestNoAssets(t *testing.T) {
 		t.Fatalf("error bumping assets %v", err)
 	}
 	topic := kclient.Topics[asyncapi.AssetsEntityName]
-	gotAssets, err := readAllAssetsTopic(topic)
+	gotAssets, err := testutil.ReadAllAssetsTopic(topic)
 	if err != nil {
 		t.Fatalf("error reading assets from kafka %v", err)
 	}
@@ -154,7 +151,7 @@ func DBAssetsToAsyncAssets(dbAssets []*api.Asset) []asyncapi.AssetPayload {
 			AssetType:  (*asyncapi.AssetType)(&asset.AssetType.Name),
 			Identifier: asset.Identifier,
 		}
-		annotations := []*asyncapi.Annotation{}
+		var annotations []*asyncapi.Annotation
 		for _, a := range asset.AssetAnnotations {
 			aAnnotation := &asyncapi.Annotation{
 				Key:   a.Key,
@@ -177,58 +174,6 @@ func readAllAssetsDB(s store.Store) ([]*api.Asset, error) {
 		Find(&assets)
 	if res.Error != nil {
 		return nil, res.Error
-	}
-	return assets, nil
-}
-
-func readAllAssetsTopic(topic string) ([]asyncapi.AssetPayload, error) {
-	broker := testutil.KafkaTestBroker
-	config := confluentKafka.ConfigMap{
-		"go.events.channel.enable": true,
-		"bootstrap.servers":        broker,
-		"group.id":                 "test_" + topic,
-		"enable.partition.eof":     true,
-		"auto.offset.reset":        "earliest",
-		"enable.auto.commit":       false,
-	}
-	c, err := confluentKafka.NewConsumer(&config)
-	if err != nil {
-		return nil, err
-	}
-	defer c.Close()
-	if err = c.Subscribe(topic, nil); err != nil {
-		return nil, err
-	}
-
-	var assets []asyncapi.AssetPayload
-Loop:
-	for ev := range c.Events() {
-		switch e := ev.(type) {
-		case *confluentKafka.Message:
-			data := e.Value
-			asset := asyncapi.AssetPayload{}
-			err = json.Unmarshal(data, &asset)
-			if err != nil {
-				return nil, err
-			}
-			assets = append(assets, asset)
-			_, err := c.CommitOffsets([]confluentKafka.TopicPartition{
-				{
-					Topic:     e.TopicPartition.Topic,
-					Partition: e.TopicPartition.Partition,
-					Offset:    e.TopicPartition.Offset + 1,
-				},
-			})
-			if err != nil {
-				return nil, err
-			}
-		case confluentKafka.Error:
-			return nil, e
-		case confluentKafka.PartitionEOF:
-			break Loop
-		default:
-			return nil, fmt.Errorf("received unexpected message %v", e)
-		}
 	}
 	return assets, nil
 }
