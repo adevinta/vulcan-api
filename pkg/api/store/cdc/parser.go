@@ -231,9 +231,9 @@ func (p *AsyncTxParser) processDeleteAsset(data []byte) error {
 
 func (p *AsyncTxParser) processUpdateAsset(data []byte) error {
 	// For an update operation we only need to publish an event to the Vulcan
-	// Async API, not for the VulnDB because it would be only interested in
-	// modifications in the identifier of and asset, but that operation is not
-	// allowed any more.
+	// Async API, because the Vulnerability DB it's only interested in
+	// modifications in the identifier of an asset which is currently not
+	// allowed.
 	var dto OpUpdateAssetDTO
 
 	err := json.Unmarshal(data, &dto)
