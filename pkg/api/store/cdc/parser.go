@@ -231,7 +231,7 @@ func (p *AsyncTxParser) processDeleteAsset(data []byte) error {
 
 func (p *AsyncTxParser) processUpdateAsset(data []byte) error {
 	// For an update operation we only need to publish an event to the Vulcan
-	// Async API, because the Vulnerability DB it's only interested in
+	// Async API, because the Vulnerability DB is only interested in
 	// modifications in the identifier of an asset which is currently not
 	// allowed.
 	var dto OpUpdateAssetDTO
@@ -367,12 +367,15 @@ func (p *AsyncTxParser) logErr(e Event, err error) {
 	)
 }
 
+// TODO: This function is duplicated here: cmd/vulcan-asset-bumper/main.go, we
+// should find a proper package to move it so we have only one function doing
+// the same thing.
 func assetToAsyncAsset(a api.Asset) asyncapi.AssetPayload {
 	var annotations []*asyncapi.Annotation
-	for _, a := range a.AssetAnnotations {
+	for _, asset := range a.AssetAnnotations {
 		annotations = append(annotations, &asyncapi.Annotation{
-			Key:   a.Key,
-			Value: a.Value,
+			Key:   asset.Key,
+			Value: asset.Value,
 		})
 	}
 	ROLFP := ""

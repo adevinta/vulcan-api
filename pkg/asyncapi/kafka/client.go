@@ -57,7 +57,7 @@ func NewClient(user string, password string, broker string, topics map[string]st
 // Push sends the payload of an entity, with the specified id, to corresponding
 // topic according to the specified entity, using the kafka broker the client
 // is connected to. The method waits until kafka confirms the message has been
-// stored in the topic. The payload can't be empty.
+// stored in the topic.
 func (c *Client) Push(entity string, id string, payload []byte) error {
 	topic, ok := c.Topics[entity]
 	if !ok {

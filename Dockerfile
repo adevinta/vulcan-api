@@ -3,7 +3,7 @@
 FROM golang:1.19.1-alpine3.15 as builder
 # Required because the dependency
 # https://github.com/confluentinc/confluent-kafka-go requires the gcc compiler.
-RUN apk add alpine-sdk
+RUN apk add gcc libc-dev
 
 WORKDIR /app
 

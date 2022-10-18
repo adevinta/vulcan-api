@@ -142,12 +142,15 @@ func parseLogLevel(l string) (level.Option, error) {
 	}
 }
 
+// TODO: This function is duplicated here: pkg/api/store/cdc/parser.go, we
+// should find a proper package to move it so we have only one function doing
+// the same thing.
 func assetToAsyncAsset(a api.Asset) asyncapi.AssetPayload {
 	var annotations []*asyncapi.Annotation
-	for _, a := range a.AssetAnnotations {
+	for _, asset := range a.AssetAnnotations {
 		annotations = append(annotations, &asyncapi.Annotation{
-			Key:   a.Key,
-			Value: a.Value,
+			Key:   asset.Key,
+			Value: asset.Value,
 		})
 	}
 	ROLFP := ""
