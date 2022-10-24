@@ -1,6 +1,6 @@
 # Copyright 2021 Adevinta
 
-FROM golang:1.19.1-alpine3.15 as builder
+FROM golang:1.19.2-alpine3.15 as builder
 # Required because the dependency
 # https://github.com/confluentinc/confluent-kafka-go requires the gcc compiler.
 RUN apk add gcc libc-dev
