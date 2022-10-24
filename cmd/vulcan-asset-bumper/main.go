@@ -15,6 +15,7 @@ import (
 	"github.com/go-kit/kit/log/level"
 	"github.com/spf13/viper"
 
+	"github.com/adevinta/vulcan-api/pkg/api"
 	"github.com/adevinta/vulcan-api/pkg/api/store"
 	"github.com/adevinta/vulcan-api/pkg/asyncapi"
 	"github.com/adevinta/vulcan-api/pkg/asyncapi/kafka"
@@ -56,7 +57,7 @@ func main() {
 	}
 	storeLogger = level.NewFilter(storeLogger, optionLevel)
 
-	l := levelLogger{storeLogger}
+	l := asyncapi.LevelLogger{storeLogger}
 	store, err := store.NewStore("", cfg.DB.ConnString, storeLogger, false, map[string][]string{})
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error creating the store: %v", err)
@@ -65,7 +66,7 @@ func main() {
 	kcfg := cfg.Kafka
 	kclient, err := kafka.NewClient(kcfg.User, kcfg.Pass, kcfg.Broker, kcfg.Topics)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "error creating the store: %v", err)
+		fmt.Fprintf(os.Stderr, "error creating the kafka client: %v", err)
 		os.Exit(1)
 	}
 	v := asyncapi.NewVulcan(&kclient, l)
@@ -75,7 +76,7 @@ func main() {
 	}
 }
 
-func bump(v asyncapi.Vulcan, s store.Store, psize int, logger levelLogger) error {
+func bump(v *asyncapi.Vulcan, s store.Store, psize int, logger asyncapi.LevelLogger) error {
 	r, err := s.NewAssetReader(true, psize)
 	if err != nil {
 		return err
@@ -89,28 +90,7 @@ func bump(v asyncapi.Vulcan, s store.Store, psize int, logger levelLogger) error
 		to := from + len(assets) - 1
 		logger.Infof("sending batch of assets from %d to %d", from, to)
 		for _, a := range assets {
-			annotations := []*asyncapi.Annotation{}
-			for _, an := range a.AssetAnnotations {
-				annotations = append(annotations, &asyncapi.Annotation{
-					Key:   an.Key,
-					Value: an.Value,
-				})
-			}
-			payload := asyncapi.AssetPayload{
-				Id: a.ID,
-				Team: &asyncapi.Team{
-					Id:          a.Team.ID,
-					Name:        a.Team.Name,
-					Description: a.Team.Description,
-					Tag:         a.Team.Tag,
-				},
-				Alias:       a.Alias,
-				Rolfp:       a.ROLFP.String(),
-				Scannable:   *a.Scannable,
-				AssetType:   (*asyncapi.AssetType)(&a.AssetType.Name),
-				Identifier:  a.Identifier,
-				Annotations: annotations,
-			}
+			payload := assetToAsyncAsset(*a)
 			err = v.PushAsset(payload)
 			if err != nil {
 				return err
@@ -146,25 +126,6 @@ type kafkaConfig struct {
 	Topics map[string]string
 }
 
-type levelLogger struct {
-	gokitlog.Logger
-}
-
-func (l levelLogger) Errorf(s string, params ...any) {
-	v := fmt.Sprintf(s, params...)
-	level.Error(l.Logger).Log("log", v)
-}
-
-func (l levelLogger) Infof(s string, params ...any) {
-	v := fmt.Sprintf(s, params...)
-	level.Info(l.Logger).Log("log", v)
-}
-
-func (l levelLogger) Debugf(s string, params ...any) {
-	v := fmt.Sprintf(s, params...)
-	level.Debug(l.Logger).Log("log", v)
-}
-
 func parseLogLevel(l string) (level.Option, error) {
 	switch l {
 	case "error":
@@ -179,4 +140,45 @@ func parseLogLevel(l string) (level.Option, error) {
 		err := errors.New("invalid level, the valid levels are: info, error, warn, debug")
 		return nil, err
 	}
+}
+
+// TODO: This function is duplicated here: pkg/api/store/cdc/parser.go, we
+// should find a proper package to move it so we have only one function doing
+// the same thing.
+func assetToAsyncAsset(a api.Asset) asyncapi.AssetPayload {
+	var annotations []*asyncapi.Annotation
+	for _, asset := range a.AssetAnnotations {
+		annotations = append(annotations, &asyncapi.Annotation{
+			Key:   asset.Key,
+			Value: asset.Value,
+		})
+	}
+	ROLFP := ""
+	if a.ROLFP != nil {
+		ROLFP = a.ROLFP.String()
+	}
+	scannable := false
+	if a.Scannable != nil {
+		scannable = *a.Scannable
+	}
+	assetType := ""
+	if a.AssetType != nil {
+		assetType = a.AssetType.Name
+	}
+	asyncAsset := asyncapi.AssetPayload{
+		Id: a.ID,
+		Team: &asyncapi.Team{
+			Id:          a.Team.ID,
+			Name:        a.Team.Name,
+			Description: a.Team.Description,
+			Tag:         a.Team.Tag,
+		},
+		Alias:       a.Alias,
+		Rolfp:       ROLFP,
+		Scannable:   scannable,
+		AssetType:   (*asyncapi.AssetType)(&assetType),
+		Identifier:  a.Identifier,
+		Annotations: annotations,
+	}
+	return asyncAsset
 }

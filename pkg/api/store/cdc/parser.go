@@ -14,6 +14,7 @@ import (
 
 	"github.com/adevinta/errors"
 	"github.com/adevinta/vulcan-api/pkg/api"
+	"github.com/adevinta/vulcan-api/pkg/asyncapi"
 	vulndb "github.com/adevinta/vulcan-api/pkg/vulnerabilitydb"
 )
 
@@ -50,19 +51,27 @@ type AsyncTxParser struct {
 	VulnDBClient vulndb.Client
 	JobsRunner   *api.JobsRunner
 	logger       log.Logger
+	asyncAPI     AsyncAPI
+}
+
+// AsyncAPI defines the methods of Vulcan Async API needed by the AyncTxParser.
+type AsyncAPI interface {
+	PushAsset(asset asyncapi.AssetPayload) error
+	DeleteAsset(asset asyncapi.AssetPayload) error
 }
 
 // NewAsyncTxParser builds a new CDC log parser to handle distributed
 // transactions for VulnDB and other API asynchronous jobs.
-func NewAsyncTxParser(vulnDBClient vulndb.Client, jobsRunner *api.JobsRunner, logger log.Logger) *AsyncTxParser {
+func NewAsyncTxParser(vulnDBClient vulndb.Client, jobsRunner *api.JobsRunner, asyncAPI AsyncAPI, logger log.Logger) *AsyncTxParser {
 	return &AsyncTxParser{
 		VulnDBClient: vulnDBClient,
 		JobsRunner:   jobsRunner,
 		logger:       logger,
+		asyncAPI:     asyncAPI,
 	}
 }
 
-// Parse parses the log secuentially processing each event based on its action
+// Parse parses the log sequentially processing each event based on its action
 // and returns the number of events that have been processed correctly.
 // If an error happens during processing of one event, and it is not a permanent
 // error, log processing is stopped.
@@ -136,6 +145,12 @@ func (p *AsyncTxParser) processCreateAsset(data []byte) error {
 		return errInvalidData
 	}
 
+	asyncAsset := assetToAsyncAsset(dto.Asset)
+	err = p.asyncAPI.PushAsset(asyncAsset)
+	if err != nil {
+		return err
+	}
+
 	payload := api.CreateTarget{
 		Identifier: dto.Asset.Identifier,
 		Teams:      []string{dto.Asset.Team.ID},
@@ -153,8 +168,14 @@ func (p *AsyncTxParser) processDeleteAsset(data []byte) error {
 	if err != nil {
 		return errInvalidData
 	}
-	// By now, we don't process the assets deleted in a "delete all assets"
-	// operation.
+	asyncAsset := assetToAsyncAsset(dto.Asset)
+	err = p.asyncAPI.DeleteAsset(asyncAsset)
+	if err != nil {
+		return err
+	}
+	// The assets deleted in a "delete all assets" operation only need to be
+	// published as a delete event through the Vulcan Async API, but not to the
+	// VulnDB.
 	if dto.DeleteAllAssetsOp {
 		return nil
 	}
@@ -209,11 +230,21 @@ func (p *AsyncTxParser) processDeleteAsset(data []byte) error {
 }
 
 func (p *AsyncTxParser) processUpdateAsset(data []byte) error {
-	// TODO: Due to constraints put in place in order to forbid the modification
-	// of the identifier on an asset update operation, there is no action to be
-	// propagated to the VulnDB.
-	// An action should be implemented here once we start pushing events generated
-	// from Vulcan API state changes.
+	// For an update operation we only need to publish an event to the Vulcan
+	// Async API, because the Vulnerability DB is only interested in
+	// modifications in the identifier of an asset which is currently not
+	// allowed.
+	var dto OpUpdateAssetDTO
+
+	err := json.Unmarshal(data, &dto)
+	if err != nil {
+		return errInvalidData
+	}
+	asyncAsset := assetToAsyncAsset(dto.NewAsset)
+	err = p.asyncAPI.PushAsset(asyncAsset)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -334,4 +365,45 @@ func (p *AsyncTxParser) logErr(e Event, err error) {
 	_ = level.Error(p.logger).Log(
 		"component", CDCLogTag, "error", err, "id", e.ID(), "action", e.Action(), "retries", e.ReadCount()+1,
 	)
+}
+
+// TODO: This function is duplicated here: cmd/vulcan-asset-bumper/main.go, we
+// should find a proper package to move it so we have only one function doing
+// the same thing.
+func assetToAsyncAsset(a api.Asset) asyncapi.AssetPayload {
+	var annotations []*asyncapi.Annotation
+	for _, asset := range a.AssetAnnotations {
+		annotations = append(annotations, &asyncapi.Annotation{
+			Key:   asset.Key,
+			Value: asset.Value,
+		})
+	}
+	ROLFP := ""
+	if a.ROLFP != nil {
+		ROLFP = a.ROLFP.String()
+	}
+	scannable := false
+	if a.Scannable != nil {
+		scannable = *a.Scannable
+	}
+	assetType := ""
+	if a.AssetType != nil {
+		assetType = a.AssetType.Name
+	}
+	asyncAsset := asyncapi.AssetPayload{
+		Id: a.ID,
+		Team: &asyncapi.Team{
+			Id:          a.Team.ID,
+			Name:        a.Team.Name,
+			Description: a.Team.Description,
+			Tag:         a.Team.Tag,
+		},
+		Alias:       a.Alias,
+		Rolfp:       ROLFP,
+		Scannable:   scannable,
+		AssetType:   (*asyncapi.AssetType)(&assetType),
+		Identifier:  a.Identifier,
+		Annotations: annotations,
+	}
+	return asyncAsset
 }

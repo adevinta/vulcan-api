@@ -96,7 +96,10 @@ Those are the variables you have to setup:
 |GPC_${i}_ALLOWED_CHECKS|Specify an array of allowed checks for the specified global policy. Optional.|["vulcan-zap","vulcan-burp"]|
 |GPC_${i}_BLOCKED_CHECKS|Specify an array of blocked checks for the specified global policy. Optional.|["vulcan-masscan"]|
 |GPC_${i}_EXCLUDING_SUFFIXES|Specify an array of suffixes for checks to be excluded. Optional.|["experimental"]|
-
+|KAFKA_USER||user|
+|KAFKA_PASS||supersecret|
+|KAFKA_BROKER|if set to empty the Async API will be disabled|kafka.example.com:9094|
+|KAFKA_TOPICS|Contains a map, using toml format, mapping entities in the Vulcan async API to the kafka topics they wil be pushed to, by now the only available entity is ``assets`` |[assets = "assets-topic"]| 
 First we have to build the `vulcan-api` because the build only copies the file.
 
 We need to provide `linux` compiled binary to the docker build command. This won't be necessary when this component has been open sourced.

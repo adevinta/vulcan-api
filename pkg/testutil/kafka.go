@@ -2,11 +2,15 @@ package testutil
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"runtime"
 	"strings"
 	"time"
 
+	confluentKafka "github.com/confluentinc/confluent-kafka-go/kafka"
+
+	"github.com/adevinta/vulcan-api/pkg/asyncapi"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 )
 
@@ -94,4 +98,59 @@ func (t topicsOpResult) Error() kafka.ErrorCode {
 		}
 	}
 	return kafka.ErrNoError
+}
+
+func ReadAllAssetsTopic(topic string) ([]asyncapi.AssetPayload, error) {
+	broker := KafkaTestBroker
+	config := confluentKafka.ConfigMap{
+		"go.events.channel.enable": true,
+		"bootstrap.servers":        broker,
+		"group.id":                 "test_" + topic,
+		"enable.partition.eof":     true,
+		"auto.offset.reset":        "earliest",
+		"enable.auto.commit":       false,
+	}
+	c, err := confluentKafka.NewConsumer(&config)
+	if err != nil {
+		return nil, err
+	}
+	defer c.Close()
+	if err = c.Subscribe(topic, nil); err != nil {
+		return nil, err
+	}
+
+	var assets []asyncapi.AssetPayload
+Loop:
+	for ev := range c.Events() {
+		switch e := ev.(type) {
+		case *confluentKafka.Message:
+			data := e.Value
+			asset := asyncapi.AssetPayload{}
+			// The data will be empty in case the event is a tombstone.
+			if len(data) > 0 {
+				err = json.Unmarshal(data, &asset)
+				if err != nil {
+					return nil, err
+				}
+			}
+			assets = append(assets, asset)
+			_, err := c.CommitOffsets([]confluentKafka.TopicPartition{
+				{
+					Topic:     e.TopicPartition.Topic,
+					Partition: e.TopicPartition.Partition,
+					Offset:    e.TopicPartition.Offset + 1,
+				},
+			})
+			if err != nil {
+				return nil, err
+			}
+		case confluentKafka.Error:
+			return nil, e
+		case confluentKafka.PartitionEOF:
+			break Loop
+		default:
+			return nil, fmt.Errorf("received unexpected message %v", e)
+		}
+	}
+	return assets, nil
 }

@@ -29,6 +29,8 @@ import (
 	"github.com/adevinta/vulcan-api/pkg/api/store/cdc"
 	"github.com/adevinta/vulcan-api/pkg/api/store/global"
 	"github.com/adevinta/vulcan-api/pkg/api/transport"
+	"github.com/adevinta/vulcan-api/pkg/asyncapi"
+	"github.com/adevinta/vulcan-api/pkg/asyncapi/kafka"
 	"github.com/adevinta/vulcan-api/pkg/awscatalogue"
 	awscatalogueclient "github.com/adevinta/vulcan-api/pkg/awscatalogue/client"
 	"github.com/adevinta/vulcan-api/pkg/checktypes"
@@ -93,6 +95,15 @@ type dbConfig struct {
 	LogMode    bool   `mapstructure:"log_mode"`
 }
 
+// kafkaConfig stores the configuration needed to push the events of the
+// async API to Kafka topics.
+type kafkaConfig struct {
+	User   string            `mapstructure:"user"`
+	Pass   string            `mapstructure:"pass"`
+	Broker string            `mapstructure:"broker"`
+	Topics map[string]string `mapstructure:"topics"`
+}
+
 type logConfig struct {
 	Level string `mapstructure:"level"`
 }
@@ -144,6 +155,7 @@ type config struct {
 	VulnerabilityDB    vulnerabilityDBConfig
 	Metrics            metricsConfig
 	AWSCatalogue       awsCatalogueConfig
+	Kafka              kafkaConfig               `mapstructure:"kafka"`
 	GlobalPolicyConfig global.GlobalPolicyConfig `mapstructure:"globalpolicy"`
 }
 
@@ -618,7 +630,22 @@ func createVulcanitoDeps(cfg config, l log.Logger, vulnDBClient vulnerabilitydb.
 		err = fmt.Errorf("Error opening DB connection: %v", err)
 		return nil, nil, err
 	}
-	cdcProxy := cdc.NewBrokerProxy(l, cdcDB, db, cdc.NewAsyncTxParser(vulnDBClient, jobsRunner, l))
+	kcfg := cfg.Kafka
+	kclient, err := kafka.NewClient(kcfg.User, kcfg.Pass, kcfg.Broker, kcfg.Topics)
+	if err != nil {
+		err = fmt.Errorf("error creating the kafka client: %v", err)
+		return nil, nil, err
+	}
+	var asyncAPI cdc.AsyncAPI
+	// If there is no Kafka broker specified in the configuration we consider
+	// the Async API to be disabled.
+	if cfg.Kafka.Broker != "" {
+		asyncAPILogger := asyncapi.LevelLogger{Logger: l}
+		asyncAPI = asyncapi.NewVulcan(&kclient, asyncAPILogger)
+	} else {
+		asyncAPI = &asyncapi.NullVulcan{}
+	}
+	cdcProxy := cdc.NewBrokerProxy(l, cdcDB, db, cdc.NewAsyncTxParser(vulnDBClient, jobsRunner, asyncAPI, l))
 	s := schedule.NewClient(cfg.Scheduler)
 	return cdcProxy, s, nil
 }
