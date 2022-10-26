@@ -100,7 +100,12 @@ func (t topicsOpResult) Error() kafka.ErrorCode {
 	return kafka.ErrNoError
 }
 
-func ReadAllAssetsTopic(topic string) ([]asyncapi.AssetPayload, error) {
+type AssetTopicData struct {
+	Payload asyncapi.AssetPayload
+	Headers map[string][]byte
+}
+
+func ReadAllAssetsTopic(topic string) ([]AssetTopicData, error) {
 	broker := KafkaTestBroker
 	config := confluentKafka.ConfigMap{
 		"go.events.channel.enable": true,
@@ -119,7 +124,7 @@ func ReadAllAssetsTopic(topic string) ([]asyncapi.AssetPayload, error) {
 		return nil, err
 	}
 
-	var assets []asyncapi.AssetPayload
+	var topicAssetsData []AssetTopicData
 Loop:
 	for ev := range c.Events() {
 		switch e := ev.(type) {
@@ -133,7 +138,15 @@ Loop:
 					return nil, err
 				}
 			}
-			assets = append(assets, asset)
+			headers := map[string][]byte{}
+			for _, v := range e.Headers {
+				headers[v.Key] = v.Value
+			}
+			topicData := AssetTopicData{
+				Payload: asset,
+				Headers: headers,
+			}
+			topicAssetsData = append(topicAssetsData, topicData)
 			_, err := c.CommitOffsets([]confluentKafka.TopicPartition{
 				{
 					Topic:     e.TopicPartition.Topic,
@@ -152,5 +165,5 @@ Loop:
 			return nil, fmt.Errorf("received unexpected message %v", e)
 		}
 	}
-	return assets, nil
+	return topicAssetsData, nil
 }

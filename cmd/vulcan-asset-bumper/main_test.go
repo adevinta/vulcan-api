@@ -72,8 +72,8 @@ func TestBump(t *testing.T) {
 		t.Fatalf("error reading assets from kafka %v", err)
 	}
 
-	sortOpts := cmpopts.SortSlices(func(a, b asyncapi.AssetPayload) bool {
-		return strings.Compare(a.Id, b.Id) < 0
+	sortOpts := cmpopts.SortSlices(func(a, b testutil.AssetTopicData) bool {
+		return strings.Compare(a.Payload.Id, b.Payload.Id) < 0
 	})
 	diff := cmp.Diff(wantAssets, gotAssets, sortOpts)
 	if diff != "" {
@@ -122,10 +122,10 @@ func TestNoAssets(t *testing.T) {
 		t.Fatalf("error reading assets from kafka %v", err)
 	}
 
-	var wantAssets []asyncapi.AssetPayload
+	var wantAssets []testutil.AssetTopicData
 
-	sortOpts := cmpopts.SortSlices(func(a, b asyncapi.AssetPayload) bool {
-		return strings.Compare(a.Id, b.Id) < 0
+	sortOpts := cmpopts.SortSlices(func(a, b testutil.AssetTopicData) bool {
+		return strings.Compare(a.Payload.Id, b.Payload.Id) < 0
 	})
 
 	diff := cmp.Diff(wantAssets, gotAssets, sortOpts)
@@ -134,8 +134,24 @@ func TestNoAssets(t *testing.T) {
 	}
 }
 
-func DBAssetsToAsyncAssets(dbAssets []*api.Asset) []asyncapi.AssetPayload {
-	var assets []asyncapi.AssetPayload
+func DBAssetToMetadata(asset api.Asset) map[string][]byte {
+	return map[string][]byte{
+		"identifier": []byte(asset.Identifier),
+		"type":       []byte(asset.AssetType.Name),
+		"version":    []byte(asyncapi.Version),
+	}
+}
+
+func AsyncAssetToMetadata(asset asyncapi.AssetPayload) map[string][]byte {
+	return map[string][]byte{
+		"identifier": []byte(asset.Identifier),
+		"type":       []byte(*asset.AssetType),
+		"version":    []byte(asyncapi.Version),
+	}
+}
+
+func DBAssetsToAsyncAssets(dbAssets []*api.Asset) []testutil.AssetTopicData {
+	var assets []testutil.AssetTopicData
 	for _, asset := range dbAssets {
 		aAsset := asyncapi.AssetPayload{
 			Id: asset.ID,
@@ -160,7 +176,11 @@ func DBAssetsToAsyncAssets(dbAssets []*api.Asset) []asyncapi.AssetPayload {
 			annotations = append(annotations, aAnnotation)
 		}
 		aAsset.Annotations = annotations
-		assets = append(assets, aAsset)
+		data := testutil.AssetTopicData{
+			Payload: aAsset,
+			Headers: DBAssetToMetadata(*asset),
+		}
+		assets = append(assets, data)
 	}
 	return assets
 

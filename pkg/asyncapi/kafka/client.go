@@ -58,20 +58,28 @@ func NewClient(user string, password string, broker string, topics map[string]st
 // topic according to the specified entity, using the kafka broker the client
 // is connected to. The method waits until kafka confirms the message has been
 // stored in the topic.
-func (c *Client) Push(entity string, id string, payload []byte) error {
+func (c *Client) Push(entity string, id string, payload []byte, metadata map[string][]byte) error {
 	topic, ok := c.Topics[entity]
 	if !ok {
 		return ErrUndefinedEntity
 	}
 	delivered := make(chan kafka.Event)
 	defer close(delivered)
+	var headers []kafka.Header
+	for k, v := range metadata {
+		headers = append(headers, kafka.Header{
+			Key:   k,
+			Value: v,
+		})
+	}
 	msg := kafka.Message{
 		TopicPartition: kafka.TopicPartition{
 			Topic:     &topic,
 			Partition: kafka.PartitionAny,
 		},
-		Key:   []byte(id),
-		Value: []byte(payload),
+		Key:     []byte(id),
+		Value:   []byte(payload),
+		Headers: headers,
 	}
 	err := c.producer.Produce(&msg, delivered)
 	if err != nil {

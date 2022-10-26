@@ -2,7 +2,7 @@
 asyncapi: 2.4.0
 info:
   title: Vulcan
-  version: 0.0.1
+  version: 0.0.2
 servers:
   production:
     url: broker.example.com
@@ -24,11 +24,29 @@ components:
       summary: |
         Contains the state of an asset as it was stored in a point
         of time in Vulcan.
+      headers: 
+        $ref: "#/components/schemas/assetMetadata"
       contentType: application/json
       payload:
         $ref: "#/components/schemas/assetPayload"
 
   schemas:
+    assetMetadata:
+        type: object
+        additionalProperties: false
+        properties:
+          identifier:
+            type: string
+          type: 
+            type: string
+          version:
+            type: string
+            description: The value of this field is equal to the value of the field info.version of this document.
+        required:
+          - identifier
+          - type
+          - version
+            
     assetPayload:
       type: object
       additionalProperties: false

@@ -14,8 +14,10 @@ import (
 )
 
 var assetFixtures = map[string]AssetPayload{
-	"Asset1": AssetPayload{
-		Id: "Asset1",
+	"Asset1": {
+		Id:         "Asset1",
+		Identifier: "example.com",
+		AssetType:  (*AssetType)(strToPtr(AssetTypeDomainName)),
 		Team: &Team{
 			Id:          "Team1",
 			Name:        "Team1",
@@ -40,20 +42,22 @@ func (n nullLogger) Debugf(s string, params ...any) {
 }
 
 type streamPayload struct {
-	ID      string
-	Entity  string
-	Content []byte
+	ID       string
+	Entity   string
+	Content  []byte
+	Metadata map[string][]byte
 }
 
 type inMemStreamClient struct {
 	payloads []streamPayload
 }
 
-func (i *inMemStreamClient) Push(entity string, id string, payload []byte) error {
+func (i *inMemStreamClient) Push(entity string, id string, payload []byte, metadata map[string][]byte) error {
 	i.payloads = append(i.payloads, streamPayload{
-		ID:      id,
-		Entity:  entity,
-		Content: payload,
+		ID:       id,
+		Entity:   entity,
+		Content:  payload,
+		Metadata: metadata,
 	})
 	return nil
 }
@@ -76,9 +80,10 @@ func TestVulcan_PushAsset(t *testing.T) {
 			asset:  assetFixtures["Asset1"],
 			want: []streamPayload{
 				{
-					ID:      assetFixtures["Asset1"].Team.Id + "/" + assetFixtures["Asset1"].Id,
-					Entity:  AssetsEntityName,
-					Content: mustJSONMarshal(assetFixtures["Asset1"]),
+					ID:       assetFixtures["Asset1"].Team.Id + "/" + assetFixtures["Asset1"].Id,
+					Entity:   AssetsEntityName,
+					Content:  mustJSONMarshal(assetFixtures["Asset1"]),
+					Metadata: metadata(assetFixtures["Asset1"]),
 				},
 			},
 		},
@@ -110,4 +115,8 @@ func mustJSONMarshal(assset AssetPayload) []byte {
 		panic(err)
 	}
 	return content
+}
+
+func strToPtr(v string) *string {
+	return &v
 }
