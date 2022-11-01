@@ -142,14 +142,6 @@ func DBAssetToMetadata(asset api.Asset) map[string][]byte {
 	}
 }
 
-func AsyncAssetToMetadata(asset asyncapi.AssetPayload) map[string][]byte {
-	return map[string][]byte{
-		"identifier": []byte(asset.Identifier),
-		"type":       []byte(*asset.AssetType),
-		"version":    []byte(asyncapi.Version),
-	}
-}
-
 func DBAssetsToAsyncAssets(dbAssets []*api.Asset) []testutil.AssetTopicData {
 	var assets []testutil.AssetTopicData
 	for _, asset := range dbAssets {

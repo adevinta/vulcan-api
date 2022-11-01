@@ -38,7 +38,7 @@ components:
           identifier:
             type: string
           type: 
-            type: string
+            $ref: "#/components/schemas/assetType"
           version:
             type: string
             description: The value of this field is equal to the value of the field info.version of this document.
