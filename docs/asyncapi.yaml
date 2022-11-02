@@ -2,7 +2,7 @@
 asyncapi: 2.4.0
 info:
   title: Vulcan
-  version: 0.0.2
+  version: v0.0.2
 servers:
   production:
     url: broker.example.com
