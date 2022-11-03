@@ -52,7 +52,7 @@ type Vulcan struct {
 // EventStreamClient represent a client of an event stream system, like Kafka
 // or AWS FIFO SQS queues.
 type EventStreamClient interface {
-	Push(entity string, id string, payload []byte) error
+	Push(entity string, id string, payload []byte, metadata map[string][]byte) error
 }
 
 // Logger defines the required methods to log info by the Vulcan async server.
@@ -79,7 +79,8 @@ func (v *Vulcan) PushAsset(asset AssetPayload) error {
 	// Even though the asset_id is always different for every asset, the PK of
 	// an asset for the vulcan-api is the asset_id plus the team_id.
 	id := strings.Join([]string{asset.Team.Id, asset.Id}, "/")
-	err = v.client.Push(AssetsEntityName, id, payload)
+	metadata := metadata(asset)
+	err = v.client.Push(AssetsEntityName, id, payload, metadata)
 	if err != nil {
 		return fmt.Errorf("error pushing asset %v: %w", asset, err)
 	}
@@ -94,7 +95,8 @@ func (v *Vulcan) DeleteAsset(asset AssetPayload) error {
 	// Even though the asset_id is always different for every asset, the PK of
 	// an asset for the vulcan-api is the asset_id plus the team_id.
 	id := strings.Join([]string{asset.Team.Id, asset.Id}, "/")
-	err := v.client.Push(AssetsEntityName, id, nil)
+	metadata := metadata(asset)
+	err := v.client.Push(AssetsEntityName, id, nil, metadata)
 	if err != nil {
 		return fmt.Errorf("error sending a delete asset event for the asset %v: %w", asset, err)
 	}
@@ -119,4 +121,13 @@ func (v *NullVulcan) DeleteAsset(asset AssetPayload) error {
 // created and just ignores it.
 func (v *NullVulcan) PushAsset(asset AssetPayload) error {
 	return nil
+}
+
+func metadata(asset AssetPayload) map[string][]byte {
+	// The asset type can't be nil.
+	return map[string][]byte{
+		"identifier": []byte(asset.Identifier),
+		"type":       []byte(*asset.AssetType),
+		"version":    []byte(Version),
+	}
 }

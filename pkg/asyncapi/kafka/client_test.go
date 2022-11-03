@@ -25,25 +25,36 @@ func TestClient_Push(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	tests := []struct {
-		name    string
-		client  Client
-		entity  string
-		id      string
-		payload []byte
-		want    []kafka.Message
-		wantErr bool
+		name     string
+		client   Client
+		entity   string
+		id       string
+		payload  []byte
+		metadata map[string][]byte
+		want     []kafka.Message
+		wantErr  bool
 	}{
 		{
 			name:    "PushesAssetsToKafka",
 			client:  client,
 			entity:  "assets",
 			payload: []byte("payload"),
-			id:      "id1",
+			metadata: map[string][]byte{
+				"key1": []byte("value"),
+			},
+			id: "id1",
 			want: []kafka.Message{
 				{
 					Key:   []byte("id1"),
 					Value: []byte("payload"),
+					Headers: []kafka.Header{
+						{
+							Key:   "key1",
+							Value: []byte("value"),
+						},
+					},
 				},
 			},
 		},
@@ -51,7 +62,7 @@ func TestClient_Push(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			c := tt.client
-			if err := c.Push(tt.entity, tt.id, tt.payload); (err != nil) != tt.wantErr {
+			if err := c.Push(tt.entity, tt.id, tt.payload, tt.metadata); (err != nil) != tt.wantErr {
 				t.Errorf("Client.Push() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			got, err := readAllTopic(testTopics["assets"])

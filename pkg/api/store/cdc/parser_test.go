@@ -202,7 +202,7 @@ func TestParse(t *testing.T) {
 		asyncAPI        func() (*asyncapi.Vulcan, kafka.Client, error)
 		loggr           *mockLoggr
 		wantNParsed     uint
-		wantAsyncAssets []asyncapi.AssetPayload
+		wantAsyncAssets []testutil.AssetTopicData
 		wantErr         error
 	}{
 		{
@@ -264,25 +264,46 @@ func TestParse(t *testing.T) {
 			},
 			asyncAPI: newTestAsyncAPI,
 			loggr:    &mockLoggr{},
-			wantAsyncAssets: []asyncapi.AssetPayload{
+			wantAsyncAssets: []testutil.AssetTopicData{
 				{
-					Id:         "a0",
-					Identifier: "somehost.com",
-					AssetType:  (*asyncapi.AssetType)(strToPtr(asyncapi.AssetTypeDomainName)),
-					Team: &asyncapi.Team{
-						Id:  "t1",
-						Tag: "mockCreateAssetTag",
+					Payload: asyncapi.AssetPayload{
+
+						Id:         "a0",
+						Identifier: "somehost.com",
+						AssetType:  (*asyncapi.AssetType)(strToPtr(asyncapi.AssetTypeDomainName)),
+						Team: &asyncapi.Team{
+							Id:  "t1",
+							Tag: "mockCreateAssetTag",
+						},
+					},
+					Headers: map[string][]byte{
+						"identifier": []byte("somehost.com"),
+						"type":       []byte(asyncapi.AssetTypeDomainName),
+						"version":    []byte(asyncapi.Version),
 					},
 				},
 				// Tombstone of the asset deleted.
-				{},
 				{
-					Id:         "aN",
-					Identifier: "exampleOld.com",
-					AssetType:  (*asyncapi.AssetType)(strToPtr(asyncapi.AssetTypeDomainName)),
-					Team: &asyncapi.Team{
-						Id:  "t1",
-						Tag: "mockUpdateAssetTag",
+					Headers: map[string][]byte{
+						"identifier": []byte("example.com"),
+						"type":       []byte(asyncapi.AssetTypeDomainName),
+						"version":    []byte(asyncapi.Version),
+					},
+				},
+				{
+					Payload: asyncapi.AssetPayload{
+						Id:         "aN",
+						Identifier: "exampleOld.com",
+						AssetType:  (*asyncapi.AssetType)(strToPtr(asyncapi.AssetTypeDomainName)),
+						Team: &asyncapi.Team{
+							Id:  "t1",
+							Tag: "mockUpdateAssetTag",
+						},
+					},
+					Headers: map[string][]byte{
+						"identifier": []byte("exampleOld.com"),
+						"type":       []byte(asyncapi.AssetTypeDomainName),
+						"version":    []byte(asyncapi.Version),
 					},
 				},
 			},
@@ -354,14 +375,20 @@ func TestParse(t *testing.T) {
 			},
 			asyncAPI: newTestAsyncAPI,
 			loggr:    &mockLoggr{},
-			wantAsyncAssets: []asyncapi.AssetPayload{
+			wantAsyncAssets: []testutil.AssetTopicData{
 				// Tombstone of the asset deleted.
-				{},
+				{
+					Headers: map[string][]byte{
+						"identifier": []byte("example.com"),
+						"type":       []byte(asyncapi.AssetTypeDomainName),
+						"version":    []byte(asyncapi.Version),
+					},
+				},
 			},
 			wantNParsed: 2,
 		},
 		{
-			name: "Should verify identifiermatching param and return multiple targets", // This should never happen, but just in case
+			name: "Should verify identifier matching param and return multiple targets", // This should never happen, but just in case
 			log: []Event{
 				Outbox{
 					Operation: opDeleteAsset,
@@ -378,9 +405,15 @@ func TestParse(t *testing.T) {
 			},
 			asyncAPI: newTestAsyncAPI,
 			loggr:    &mockLoggr{},
-			wantAsyncAssets: []asyncapi.AssetPayload{
+			wantAsyncAssets: []testutil.AssetTopicData{
 				// Tombstone of the asset deleted.
-				{},
+				{
+					Headers: map[string][]byte{
+						"identifier": []byte("example.com"),
+						"type":       []byte(asyncapi.AssetTypeDomainName),
+						"version":    []byte(asyncapi.Version),
+					},
+				},
 			},
 			wantNParsed: 0,
 			wantErr:     errTargetNotUnique,
@@ -404,11 +437,10 @@ func TestParse(t *testing.T) {
 				t.Fatalf("error reading assets from kafka %v", err)
 			}
 			wantAssets := tc.wantAsyncAssets
-			sortOpts := cmpopts.SortSlices(func(a, b asyncapi.AssetPayload) bool {
-				return strings.Compare(a.Id, b.Id) < 0
+			sortSlices := cmpopts.SortSlices(func(a, b testutil.AssetTopicData) bool {
+				return strings.Compare(a.Payload.Id, b.Payload.Id) < 0
 			})
-
-			diff := cmp.Diff(wantAssets, gotAssets, sortOpts)
+			diff := cmp.Diff(wantAssets, gotAssets, sortSlices)
 			if diff != "" {
 				t.Fatalf("want!=got, diff: %s", diff)
 			}
