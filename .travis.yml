@@ -2,7 +2,7 @@ language: go
 dist: bionic
 env:
   global:
-    - FLYWAY_VERSION=9.1.4
+    - FLYWAY_VERSION=9.4.0
     - INPUT_BUILDARGS=FLYWAY_VERSION=$FLYWAY_VERSION
 go:
   - 1.19.x
