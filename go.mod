@@ -22,8 +22,8 @@ require (
 	github.com/lestrrat-go/backoff v1.0.0
 	github.com/lib/pq v1.10.3
 	github.com/robfig/cron v1.2.0
-	github.com/russellhaering/gosaml2 v0.6.1-0.20210909214743-8b2881755b86
-	github.com/russellhaering/goxmldsig v1.1.1
+	github.com/russellhaering/gosaml2 v0.8.1
+	github.com/russellhaering/goxmldsig v1.2.0
 	github.com/satori/go.uuid v1.2.1-0.20181028125025-b2ce2384e17b
 	github.com/spf13/cobra v1.2.1
 	github.com/spf13/viper v1.9.0
@@ -56,7 +56,7 @@ require (
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
-	github.com/jonboulle/clockwork v0.2.2 // indirect
+	github.com/jonboulle/clockwork v0.3.0 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/magiconair/properties v1.8.5 // indirect
 	github.com/manveru/faker v0.0.0-20171103152722-9fbc68a78c4d // indirect
