@@ -40,6 +40,7 @@ import (
 	saml "github.com/adevinta/vulcan-api/pkg/saml"
 	"github.com/adevinta/vulcan-api/pkg/scanengine"
 	"github.com/adevinta/vulcan-api/pkg/schedule"
+	"github.com/adevinta/vulcan-api/pkg/securitygraph"
 	"github.com/adevinta/vulcan-api/pkg/vulnerabilitydb"
 	vulcancore "github.com/adevinta/vulcan-core-cli/vulcan-core/client"
 	metrics "github.com/adevinta/vulcan-metrics-client"
@@ -156,6 +157,7 @@ type config struct {
 	Metrics            metricsConfig
 	AWSCatalogue       awsCatalogueConfig
 	Kafka              kafkaConfig               `mapstructure:"kafka"`
+	SecurityGraph      securitygraph.Config      `mapstructure:"security_graph"`
 	GlobalPolicyConfig global.GlobalPolicyConfig `mapstructure:"globalpolicy"`
 }
 

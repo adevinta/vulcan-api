@@ -156,5 +156,13 @@ func AttachRoutes(e endpoint.Endpoints, logger kitlog.Logger) http.Handler {
 	r.Methods("GET").Path("/api/v1/stats/fixed").Handler(newServer(e[endpoint.GlobalStatsFixed], endpoint.GlobalStatsRequest{}, logger, endpoint.GlobalStatsFixed))
 	r.Methods("GET").Path("/api/v1/stats/assets").Handler(newServer(e[endpoint.GlobalStatsAssets], endpoint.GlobalStatsRequest{}, logger, endpoint.GlobalStatsAssets))
 
+	// Optional routes.
+	var optional http.HandlerFunc = func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("hello world"))
+	}
+
+	r.Methods("GET").Path("/api/v1/security-graph/blast-radius/").Handler(optional)
+
 	return r
 }
