@@ -70,7 +70,7 @@ pass = "$KAFKA_PASS"
 broker = "$KAFKA_BROKER"
 topics = $KAFKA_TOPICS
 
-# This section enables an optional feature, if it exists Vulcan will include
+# This section an optional feature, if it exists Vulcan will include
 # the features that the Security Graph enables.
 [security-graph]
 intel_api = $"SECURITY_GRAPH_INTEL_API"

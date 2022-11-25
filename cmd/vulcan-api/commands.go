@@ -157,7 +157,7 @@ type config struct {
 	Metrics            metricsConfig
 	AWSCatalogue       awsCatalogueConfig
 	Kafka              kafkaConfig               `mapstructure:"kafka"`
-	SecurityGraph      securitygraph.Config      `mapstructure:"security_graph"`
+	SecurityGraph      securitygraph.Config      `mapstructure:"security-graph"`
 	GlobalPolicyConfig global.GlobalPolicyConfig `mapstructure:"globalpolicy"`
 }
 
@@ -266,7 +266,12 @@ func startServer() error {
 	// Add global middleware to the vulcanito service.
 	vulcanitoService = globalMiddleware(vulcanitoService)
 
-	endpoints := endpoint.MakeEndpoints(vulcanitoService, logger)
+	intelClient, err := securitygraph.NewIntelAPIClient(cfg.SecurityGraph)
+	if err != nil {
+		return err
+	}
+
+	endpoints := endpoint.MakeEndpoints(vulcanitoService, intelClient, logger)
 
 	endpoints = addAuthorizationMiddleware(endpoints, db, logger)
 	endpoints = addWhitelistingMiddleware(endpoints, logger)

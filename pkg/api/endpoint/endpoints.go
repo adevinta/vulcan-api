@@ -123,6 +123,7 @@ const (
 	GlobalStatsOpen            = "GlobalStatsOpen"
 	GlobalStatsFixed           = "GlobalStatsFixed"
 	GlobalStatsAssets          = "GlobalStatsAssets"
+	SecurityGraphBlastRadius   = "SecurityGraphBlastRadius"
 )
 
 // Endpoints contains all available endpoints for this api
@@ -131,7 +132,7 @@ type Endpoints map[string]endpoint.Endpoint
 var endpoints = make(Endpoints)
 
 // MakeEndpoints initialize endpoints using the given service
-func MakeEndpoints(s api.VulcanitoService, logger log.Logger) Endpoints {
+func MakeEndpoints(s api.VulcanitoService, intelClient IntelAPIClient, logger log.Logger) Endpoints {
 	endpoints[Healthcheck] = makeHealthcheckEndpoint(s, logger)
 
 	endpoints[FindJob] = makeFindJobEndpoint(s, logger)
@@ -239,6 +240,7 @@ func MakeEndpoints(s api.VulcanitoService, logger log.Logger) Endpoints {
 	endpoints[GlobalStatsOpen] = makeGlobalStatsOpenEndpoint(s, logger)
 	endpoints[GlobalStatsFixed] = makeGlobalStatsFixedEndpoint(s, logger)
 	endpoints[GlobalStatsAssets] = makeGlobalStatsAssetsEndpoint(s, logger)
+	endpoints[SecurityGraphBlastRadius] = makeBlastRadiusEndpoint(intelClient, logger)
 
 	return endpoints
 }

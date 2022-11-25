@@ -14,9 +14,8 @@ import (
 	kitlog "github.com/go-kit/kit/log"
 )
 
-// IntelAPIClient defines the interface of the Security Graph Intel API client
-// needed by the intel API endpoints exposed by the Vulcan API as an API
-// Gateway.
+// IntelAPIClient defines the interface of the Intel API client
+// needed by the Vulcan API to expose them acting as a Gateway.
 type IntelAPIClient interface {
 	BlastRadius(req securitygraph.BlastRadiusRequest) (securitygraph.BlastRadiusResponse, error)
 }

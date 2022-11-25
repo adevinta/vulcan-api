@@ -7,15 +7,9 @@ package securitygraph
 import (
 	"crypto/tls"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
-)
-
-var (
-	ErrAssetDoesNotExists   = errors.New("asset does not exists in the security graph")
-	ErrNotEnoughInformation = errors.New("the security graph does not have enough info")
 )
 
 // HttpStatusError is returned by the method [IntelAPIClient.BlastRadius] when
@@ -26,7 +20,7 @@ type HttpStatusError struct {
 }
 
 func (h HttpStatusError) Error() string {
-	msg := fmt.Sprintf("invalid http status received from the intel API: %d, details: %s", h.Status, h.Msg)
+	msg := fmt.Sprintf("invalid http status code received from the intel API: %d, details: %s", h.Status, h.Msg)
 	return msg
 }
 
@@ -56,7 +50,7 @@ type IntelAPIClient struct {
 	endpoint *url.URL
 }
 
-// Returns IntelAPIClient that uses the given config parameters.
+// Returns an IntelAPIClient that uses the given config parameters.
 func NewIntelAPIClient(cfg Config) (*IntelAPIClient, error) {
 	insecure := cfg.InsecureTLS == "1"
 	tr := &http.Transport{
@@ -78,7 +72,7 @@ func (i *IntelAPIClient) urlBlastRadius(identifier string, asset_type string) st
 	u := i.endpoint.JoinPath("/v1/blast-radius")
 	q := u.Query()
 	if identifier != "" {
-		q.Set("team_identifier", identifier)
+		q.Set("asset_identifier", identifier)
 	}
 	if asset_type != "" {
 		q.Set("asset_type", asset_type)
