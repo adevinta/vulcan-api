@@ -15,7 +15,7 @@ export AWSCATALOGUE_RETRY_INTERVAL=${AWSCATALOGUE_RETRY_INTERVAL:-2}
 export KAFKA_USER=${KAFKA_USER:-""}
 export KAFKA_PASS=${KAFKA_PASS:-""}
 export KAFKA_BROKER=${KAFKA_BROKER:-""}
-export KAFKA_TOPICS=${KAFKA_TOPICS:-"\{\}"}
+export KAFKA_TOPICS=${KAFKA_TOPICS:-"{}"}
 
 envsubst < config.toml > run.toml
 
