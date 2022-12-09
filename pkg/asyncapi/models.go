@@ -43,3 +43,64 @@ type Annotation struct {
 	Key   string
 	Value string
 }
+
+// FindingPayload represents a FindingPayload model.
+type FindingPayload struct {
+	AffectedResource     string
+	CurrentExposure      int
+	Details              string
+	Id                   string
+	ImpactDetails        string
+	Issue                *StoreIssueLabels
+	Resources            []interface{}
+	Score                float64
+	Source               *StoreSource
+	Status               string
+	Target               *StoreTargetTeams
+	TotalExposure        int
+	AdditionalProperties map[string][]interface{}
+}
+
+// StoreIssueLabels represents a StoreIssueLabels model.
+type StoreIssueLabels struct {
+	CweId                int
+	Description          string
+	Id                   string
+	Labels               []interface{}
+	Recommendations      []interface{}
+	ReferenceLinks       []interface{}
+	Summary              string
+	AdditionalProperties map[string][]interface{}
+}
+
+// StoreResourceGroup represents a StoreResourceGroup model.
+type StoreResourceGroup struct {
+	Attributes           []interface{}
+	Name                 string
+	Resources            []interface{}
+	AdditionalProperties map[string][]interface{}
+}
+
+// AnonymousSchema33 represents a AnonymousSchema33 model.
+type AnonymousSchema33 struct {
+	AdditionalProperties map[string]string
+}
+
+// StoreSource represents a StoreSource model.
+type StoreSource struct {
+	Component            string
+	Id                   string
+	Instance             string
+	Name                 string
+	Options              string
+	Time                 string
+	AdditionalProperties map[string][]interface{}
+}
+
+// StoreTargetTeams represents a StoreTargetTeams model.
+type StoreTargetTeams struct {
+	Id                   string
+	Identifier           string
+	Teams                []interface{}
+	AdditionalProperties map[string][]interface{}
+}

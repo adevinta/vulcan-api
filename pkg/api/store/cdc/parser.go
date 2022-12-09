@@ -58,6 +58,7 @@ type AsyncTxParser struct {
 type AsyncAPI interface {
 	PushAsset(asset asyncapi.AssetPayload) error
 	DeleteAsset(asset asyncapi.AssetPayload) error
+	PushFinding(finding asyncapi.FindingPayload) error
 }
 
 // NewAsyncTxParser builds a new CDC log parser to handle distributed
@@ -241,12 +242,7 @@ func (p *AsyncTxParser) processUpdateAsset(data []byte) error {
 		return errInvalidData
 	}
 	asyncAsset := assetToAsyncAsset(dto.NewAsset)
-	err = p.asyncAPI.PushAsset(asyncAsset)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return p.asyncAPI.PushAsset(asyncAsset)
 }
 
 func (p *AsyncTxParser) processDeleteAllAssets(data []byte) error {
@@ -276,6 +272,7 @@ func (p *AsyncTxParser) processFindingOverwrite(data []byte) error {
 		return errInvalidData
 	}
 
+	// Update finding in vulndb
 	_, err = p.VulnDBClient.UpdateFinding(
 		context.Background(),
 		dto.FindingOverwrite.FindingID,
@@ -289,7 +286,20 @@ func (p *AsyncTxParser) processFindingOverwrite(data []byte) error {
 		}
 		return err
 	}
-	return nil
+
+	// Retrieve current finding status and push event
+	f, err := p.VulnDBClient.Finding(context.Background(), dto.FindingOverwrite.FindingID)
+	if err != nil {
+		if errors.IsKind(err, errors.ErrNotFound) {
+			// This should not happen as distributed txs from API to VulnDB are single
+			// threaded and we already verified the finding existence in the previous step
+			return nil
+		}
+	}
+	// TODO: Can we have a conflict in relation with possible concurrent finding state
+	// changes from API finding overwrite and check processing from vulndb consumer?
+	asyncFinding := findingToAsyncFinding(f)
+	return p.asyncAPI.PushFinding(asyncFinding)
 }
 
 // processMergeDiscoveredAssets performs the following actions:
@@ -406,4 +416,40 @@ func assetToAsyncAsset(a api.Asset) asyncapi.AssetPayload {
 		Annotations: annotations,
 	}
 	return asyncAsset
+}
+
+func findingToAsyncFinding(f *api.Finding) asyncapi.FindingPayload {
+	return asyncapi.FindingPayload{
+		AffectedResource: f.Finding.AffectedResource,
+		CurrentExposure:  int(f.Finding.CurrentExposure),
+		Details:          f.Finding.Details,
+		Id:               f.Finding.ID,
+		ImpactDetails:    f.Finding.ImpactDetails,
+		Issue: &asyncapi.StoreIssueLabels{
+			CweId:           f.Finding.Issue.CWEID,
+			Description:     f.Finding.Issue.Description,
+			Id:              f.Finding.Issue.ID,
+			Labels:          []interface{}{f.Finding.Issue.Labels},
+			Recommendations: []interface{}{f.Finding.Issue.Recommendations},
+			ReferenceLinks:  []interface{}{f.Finding.Issue.ReferenceLinks},
+			Summary:         f.Finding.Issue.Summary,
+		},
+		Resources: []interface{}{f.Finding.Resources},
+		Score:     float64(f.Finding.Score),
+		Source: &asyncapi.StoreSource{
+			Component: f.Finding.Source.Component,
+			Id:        f.Finding.Source.ID,
+			Instance:  f.Finding.Source.Instance,
+			Name:      f.Finding.Source.Name,
+			Options:   f.Finding.Source.Options,
+			Time:      f.Finding.Source.Time,
+		},
+		Status: f.Finding.Status,
+		Target: &asyncapi.StoreTargetTeams{
+			Id:         f.Finding.Target.ID,
+			Identifier: f.Finding.Target.Identifier,
+			Teams:      []interface{}{f.Finding.Target.Teams},
+		},
+		TotalExposure: int(f.Finding.TotalExposure),
+	}
 }

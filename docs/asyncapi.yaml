@@ -15,6 +15,10 @@ channels:
     subscribe:
       message:
         $ref: '#/components/messages/asset'
+  findings:
+    subscribe:
+      message:
+        $ref: '#/components/messages/FindingPayload'
 
 components:
   messages:
@@ -29,6 +33,21 @@ components:
       contentType: application/json
       payload:
         $ref: "#/components/schemas/assetPayload"
+    FindingPayload:
+      contentType: application/json
+      headers:
+        properties:
+          version:
+            description: schema version header
+            type: string
+        required:
+        - version
+        type: object
+      payload:
+        $ref: '#/components/schemas/FindingPayload'
+      summary: Events generated from Vulnerability DB findings state changes
+      name: Finding
+      title: Findings state
 
   schemas:
     assetMetadata:
@@ -123,3 +142,113 @@ components:
         - name
         - description
         - tag
+    
+    FindingPayload:
+      properties:
+        affected_resource:
+          type: string
+        current_exposure:
+          type: integer
+        details:
+          type: string
+        id:
+          type: string
+        impact_details:
+          type: string
+        issue:
+          $ref: '#/components/schemas/StoreIssueLabels'
+        resources:
+          $ref: '#/components/schemas/StoreResources'
+        score:
+          type: number
+        source:
+          $ref: '#/components/schemas/StoreSource'
+        status:
+          type: string
+        target:
+          $ref: '#/components/schemas/StoreTargetTeams'
+        total_exposure:
+          type: integer
+      type: object
+    PqStringArray:
+      items:
+        type: string
+      type:
+      - array
+      - "null"
+    StoreIssueLabels:
+      properties:
+        cwe_id:
+          minimum: 0
+          type: integer
+        description:
+          type: string
+        id:
+          type: string
+        labels:
+          items:
+            type: string
+          type:
+          - array
+          - "null"
+        recommendations:
+          $ref: '#/components/schemas/PqStringArray'
+        reference_links:
+          $ref: '#/components/schemas/PqStringArray'
+        summary:
+          type: string
+      type: object
+    StoreResourceGroup:
+      properties:
+        attributes:
+          items:
+            type: string
+          type:
+          - array
+          - "null"
+        name:
+          type: string
+        resources:
+          items:
+            additionalProperties:
+              type: string
+            type: object
+          type:
+          - array
+          - "null"
+      type: object
+    StoreResources:
+      items:
+        $ref: '#/components/schemas/StoreResourceGroup'
+      type:
+      - array
+      - "null"
+    StoreSource:
+      properties:
+        component:
+          type: string
+        id:
+          type: string
+        instance:
+          type: string
+        name:
+          type: string
+        options:
+          type: string
+        time:
+          format: date-time
+          type: string
+      type: object
+    StoreTargetTeams:
+      properties:
+        id:
+          type: string
+        identifier:
+          type: string
+        teams:
+          items:
+            type: string
+          type:
+          - array
+          - "null"
+      type: object

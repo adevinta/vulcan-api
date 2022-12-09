@@ -58,6 +58,12 @@ key = "a key"
 retries = 4
 retry_interval = 2 # seconds
 
+[kafka]
+user = "user"
+pass = "supersecret"
+broker = "kafka.example.com:9094"
+topics = '{assets = "assets-topic", findings = "findings-topic"}'
+
 [globalpolicy]
 # This config policy emulates code policy definition.
 [globalpolicy.web-scanning-global]
