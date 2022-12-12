@@ -7,6 +7,7 @@ package kafka
 import (
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 )
@@ -23,6 +24,8 @@ var (
 const (
 	kafkaSecurityProtocol = "sasl_ssl"
 	kafkaSaslMechanisms   = "SCRAM-SHA-256"
+
+	maxDeliveryWait = 30 * time.Second
 )
 
 // Client implements an EventStreamClient using Kafka as the event stream
@@ -63,8 +66,10 @@ func (c *Client) Push(entity string, id string, payload []byte, metadata map[str
 	if !ok {
 		return ErrUndefinedEntity
 	}
+
 	delivered := make(chan kafka.Event)
 	defer close(delivered)
+
 	var headers []kafka.Header
 	for k, v := range metadata {
 		headers = append(headers, kafka.Header{
@@ -72,6 +77,7 @@ func (c *Client) Push(entity string, id string, payload []byte, metadata map[str
 			Value: v,
 		})
 	}
+
 	msg := kafka.Message{
 		TopicPartition: kafka.TopicPartition{
 			Topic:     &topic,
@@ -85,7 +91,14 @@ func (c *Client) Push(entity string, id string, payload []byte, metadata map[str
 	if err != nil {
 		return fmt.Errorf("error producing message: %w", err)
 	}
-	e := <-delivered
+
+	var e kafka.Event
+	select {
+	case <-time.After(maxDeliveryWait):
+		return fmt.Errorf("error time out waiting for mssg delivery confirmation")
+	case e = <-delivered:
+	}
+
 	m := e.(*kafka.Message)
 	if m.TopicPartition.Error != nil {
 		return fmt.Errorf("error delivering message: %w", m.TopicPartition.Error)

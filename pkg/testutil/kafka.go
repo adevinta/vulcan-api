@@ -24,6 +24,7 @@ const KafkaTestBroker = "localhost:29092"
 // with the entities remapped to new topics created.
 func PrepareKafka(topics map[string]string) (map[string]string, error) {
 	// Generate a unique deterministic topic name for the caller of this function.
+	tRef := time.Now().Unix()
 	newTopics := map[string]string{}
 	var newTopicNames []string
 	for entity, topic := range topics {
@@ -31,7 +32,7 @@ func PrepareKafka(topics map[string]string) (map[string]string, error) {
 		callerName := strings.Replace(runtime.FuncForPC(pc).Name(), ".", "_", -1)
 		callerName = strings.Replace(callerName, "-", "_", -1)
 		parts := strings.Split(callerName, "/")
-		name := strings.ToLower(fmt.Sprintf("%s_%s_test", topic, parts[len(parts)-1]))
+		name := strings.ToLower(fmt.Sprintf("%s_%s_%d_test", topic, parts[len(parts)-1], tRef))
 		newTopics[entity] = name
 		newTopicNames = append(newTopicNames, name)
 	}
@@ -82,7 +83,7 @@ func createTopics(names []string) error {
 			break
 		}
 		if tResults.Error() == kafka.ErrTopicAlreadyExists {
-			continue
+			return fmt.Errorf("error creating topics: topic already exists")
 		}
 		return fmt.Errorf("error creating topics: %s", tResults.Error())
 	}
