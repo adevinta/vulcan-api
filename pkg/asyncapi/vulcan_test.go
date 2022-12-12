@@ -34,7 +34,7 @@ var findingFixtures = map[string]FindingPayload{
 		Details:          "Details1",
 		Id:               "FindingId1",
 		ImpactDetails:    "ImpactDetails1",
-		Issue: &StoreIssueLabels{
+		Issue: &Issue{
 			CweId:       1,
 			Description: "Description1",
 			Id:          "IssueId1",
@@ -53,7 +53,7 @@ var findingFixtures = map[string]FindingPayload{
 			Summary: "Summary1",
 		},
 		Score: 7.0,
-		Source: &StoreSource{
+		Source: &Source{
 			Component: "Component1",
 			Id:        "SourceId1",
 			Instance:  "SourceInstance1",
@@ -62,7 +62,7 @@ var findingFixtures = map[string]FindingPayload{
 			Time:      "SourceTime1",
 		},
 		Status: "OPEN",
-		Target: &StoreTargetTeams{
+		Target: &Target{
 			Id:         "TargetId1",
 			Identifier: "TargetIdentifier1",
 			Teams: []interface{}{[]string{

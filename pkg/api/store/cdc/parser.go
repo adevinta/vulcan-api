@@ -291,13 +291,21 @@ func (p *AsyncTxParser) processFindingOverwrite(data []byte) error {
 	f, err := p.VulnDBClient.Finding(context.Background(), dto.FindingOverwrite.FindingID)
 	if err != nil {
 		if errors.IsKind(err, errors.ErrNotFound) {
-			// This should not happen as distributed txs from API to VulnDB are single
-			// threaded and we already verified the finding existence in the previous step
 			return nil
 		}
 	}
-	// TODO: Can we have a conflict in relation with possible concurrent finding state
-	// changes from API finding overwrite and check processing from vulndb consumer?
+	// TODO: There can be a race condition here between two concurrent state changes for a
+	// finding between this finding overwrite and a related check processing from vulndb side.
+	// Currently this can only generate a conflict if the two concurrent events are a "mark as
+	// false positive" action initiated from Vulcan API and a finding detection event from the
+	// vulndb side which contains a fingerprint variation, as in that situation the FALSE POSITIVE
+	// state "preference" does not apply.
+	// Example:
+	// API 		-> 		mark as false positive 		-> VulnDB API
+	// API		-> 		retrieve finding state		-> VulnDB API
+	// VulnDB 	-> 		check processing 			-> Reopen false positive finding
+	// VulnDB 	-> 		push reopened finding		-> Kafka
+	// API		-> 		push false positive finding -> Kafka
 	asyncFinding := findingToAsyncFinding(f)
 	return p.asyncAPI.PushFinding(asyncFinding)
 }
@@ -419,13 +427,12 @@ func assetToAsyncAsset(a api.Asset) asyncapi.AssetPayload {
 }
 
 func findingToAsyncFinding(f *api.Finding) asyncapi.FindingPayload {
-	return asyncapi.FindingPayload{
+	findingPayload := asyncapi.FindingPayload{
 		AffectedResource: f.Finding.AffectedResource,
-		CurrentExposure:  int(f.Finding.CurrentExposure),
 		Details:          f.Finding.Details,
 		Id:               f.Finding.ID,
 		ImpactDetails:    f.Finding.ImpactDetails,
-		Issue: &asyncapi.StoreIssueLabels{
+		Issue: &asyncapi.Issue{
 			CweId:           f.Finding.Issue.CWEID,
 			Description:     f.Finding.Issue.Description,
 			Id:              f.Finding.Issue.ID,
@@ -436,7 +443,7 @@ func findingToAsyncFinding(f *api.Finding) asyncapi.FindingPayload {
 		},
 		Resources: []interface{}{f.Finding.Resources},
 		Score:     float64(f.Finding.Score),
-		Source: &asyncapi.StoreSource{
+		Source: &asyncapi.Source{
 			Component: f.Finding.Source.Component,
 			Id:        f.Finding.Source.ID,
 			Instance:  f.Finding.Source.Instance,
@@ -445,11 +452,15 @@ func findingToAsyncFinding(f *api.Finding) asyncapi.FindingPayload {
 			Time:      f.Finding.Source.Time,
 		},
 		Status: f.Finding.Status,
-		Target: &asyncapi.StoreTargetTeams{
+		Target: &asyncapi.Target{
 			Id:         f.Finding.Target.ID,
 			Identifier: f.Finding.Target.Identifier,
 			Teams:      []interface{}{f.Finding.Target.Teams},
 		},
 		TotalExposure: int(f.Finding.TotalExposure),
 	}
+	if f.Finding.OpenFinding != nil {
+		findingPayload.CurrentExposure = int(f.Finding.OpenFinding.CurrentExposure)
+	}
+	return findingPayload
 }

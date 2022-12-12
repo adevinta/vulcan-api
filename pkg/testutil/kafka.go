@@ -24,6 +24,7 @@ const KafkaTestBroker = "localhost:29092"
 // with the entities remapped to new topics created.
 func PrepareKafka(topics map[string]string) (map[string]string, error) {
 	// Generate a unique deterministic topic name for the caller of this function.
+	tRef := time.Now().Unix()
 	newTopics := map[string]string{}
 	var newTopicNames []string
 	for entity, topic := range topics {
@@ -31,7 +32,7 @@ func PrepareKafka(topics map[string]string) (map[string]string, error) {
 		callerName := strings.Replace(runtime.FuncForPC(pc).Name(), ".", "_", -1)
 		callerName = strings.Replace(callerName, "-", "_", -1)
 		parts := strings.Split(callerName, "/")
-		name := strings.ToLower(fmt.Sprintf("%s_%s_test", topic, parts[len(parts)-1]))
+		name := strings.ToLower(fmt.Sprintf("%s_%s_%d_test", topic, parts[len(parts)-1], tRef))
 		newTopics[entity] = name
 		newTopicNames = append(newTopicNames, name)
 	}
@@ -166,4 +167,72 @@ Loop:
 		}
 	}
 	return topicAssetsData, nil
+}
+
+type FindingTopicData struct {
+	Payload asyncapi.FindingPayload
+	Headers map[string][]byte
+}
+
+func ReadAllFindingsTopic(topic string) ([]FindingTopicData, error) {
+	broker := KafkaTestBroker
+	config := confluentKafka.ConfigMap{
+		"go.events.channel.enable": true,
+		"bootstrap.servers":        broker,
+		"group.id":                 "test_" + topic,
+		"enable.partition.eof":     true,
+		"auto.offset.reset":        "earliest",
+		"enable.auto.commit":       false,
+	}
+	c, err := confluentKafka.NewConsumer(&config)
+	if err != nil {
+		return nil, err
+	}
+	defer c.Close()
+	if err = c.Subscribe(topic, nil); err != nil {
+		return nil, err
+	}
+
+	var topicFindingsData []FindingTopicData
+Loop:
+	for ev := range c.Events() {
+		switch e := ev.(type) {
+		case *confluentKafka.Message:
+			data := e.Value
+			finding := asyncapi.FindingPayload{}
+			// The data will be empty in case the event is a tombstone.
+			if len(data) > 0 {
+				err = json.Unmarshal(data, &finding)
+				if err != nil {
+					return nil, err
+				}
+			}
+			headers := map[string][]byte{}
+			for _, v := range e.Headers {
+				headers[v.Key] = v.Value
+			}
+			topicData := FindingTopicData{
+				Payload: finding,
+				Headers: headers,
+			}
+			topicFindingsData = append(topicFindingsData, topicData)
+			_, err := c.CommitOffsets([]confluentKafka.TopicPartition{
+				{
+					Topic:     e.TopicPartition.Topic,
+					Partition: e.TopicPartition.Partition,
+					Offset:    e.TopicPartition.Offset + 1,
+				},
+			})
+			if err != nil {
+				return nil, err
+			}
+		case confluentKafka.Error:
+			return nil, e
+		case confluentKafka.PartitionEOF:
+			break Loop
+		default:
+			return nil, fmt.Errorf("received unexpected message %v", e)
+		}
+	}
+	return topicFindingsData, nil
 }

@@ -14,11 +14,11 @@ channels:
     description: CDC Events of the assets stored in Vulcan.
     subscribe:
       message:
-        $ref: '#/components/messages/asset'
+        $ref: "#/components/messages/asset"
   findings:
     subscribe:
       message:
-        $ref: '#/components/messages/FindingPayload'
+        $ref: "#/components/messages/finding"
 
 components:
   messages:
@@ -33,18 +33,12 @@ components:
       contentType: application/json
       payload:
         $ref: "#/components/schemas/assetPayload"
-    FindingPayload:
+    finding:
+      headers: 
+        $ref: "#/components/schemas/findingMetadata"
       contentType: application/json
-      headers:
-        properties:
-          version:
-            description: schema version header
-            type: string
-        required:
-        - version
-        type: object
       payload:
-        $ref: '#/components/schemas/FindingPayload'
+        $ref: "#/components/schemas/findingPayload"
       summary: Events generated from Vulnerability DB findings state changes
       name: Finding
       title: Findings state
@@ -143,7 +137,7 @@ components:
         - description
         - tag
     
-    FindingPayload:
+    findingPayload:
       properties:
         affected_resource:
           type: string
@@ -156,27 +150,40 @@ components:
         impact_details:
           type: string
         issue:
-          $ref: '#/components/schemas/StoreIssueLabels'
+          $ref: '#/components/schemas/issue'
         resources:
-          $ref: '#/components/schemas/StoreResources'
+          $ref: '#/components/schemas/resources'
         score:
           type: number
         source:
-          $ref: '#/components/schemas/StoreSource'
+          $ref: '#/components/schemas/source'
         status:
           type: string
         target:
-          $ref: '#/components/schemas/StoreTargetTeams'
+          $ref: '#/components/schemas/target'
         total_exposure:
           type: integer
       type: object
-    PqStringArray:
+      additionalProperties: false
+    
+    findingMetadata:
+      type: object
+      additionalProperties: false
+      properties:
+        version:
+          type: string
+          description: The value of this field is equal to the value of the field info.version of this document.
+      required:
+        - version
+    
+    stringArray:
       items:
         type: string
       type:
       - array
       - "null"
-    StoreIssueLabels:
+    
+    issue:
       properties:
         cwe_id:
           minimum: 0
@@ -192,13 +199,15 @@ components:
           - array
           - "null"
         recommendations:
-          $ref: '#/components/schemas/PqStringArray'
+          $ref: '#/components/schemas/stringArray'
         reference_links:
-          $ref: '#/components/schemas/PqStringArray'
+          $ref: '#/components/schemas/stringArray'
         summary:
           type: string
       type: object
-    StoreResourceGroup:
+      additionalProperties: false
+    
+    resourceGroup:
       properties:
         attributes:
           items:
@@ -217,13 +226,16 @@ components:
           - array
           - "null"
       type: object
-    StoreResources:
+      additionalProperties: false
+
+    resources:
       items:
-        $ref: '#/components/schemas/StoreResourceGroup'
+        $ref: '#/components/schemas/resourceGroup'
       type:
       - array
       - "null"
-    StoreSource:
+
+    source:
       properties:
         component:
           type: string
@@ -239,7 +251,9 @@ components:
           format: date-time
           type: string
       type: object
-    StoreTargetTeams:
+      additionalProperties: false
+
+    target:
       properties:
         id:
           type: string
@@ -252,3 +266,4 @@ components:
           - array
           - "null"
       type: object
+      additionalProperties: false
