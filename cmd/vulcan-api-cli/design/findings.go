@@ -33,12 +33,14 @@ var TargetMedia = MediaType("target", func() {
 	Attributes(func() {
 		Attribute("id", String, "Target ID", func() { Example("f8129c7f-7abf-41ba-ab1f-c97090bb3db4") })
 		Attribute("identifier", String, "Target identifier", func() { Example("www.test.com") })
-		Attribute("tags", ArrayOf(String), "List of tags associated with target", func() { Example([]string{"team:vulcan"}) })
+		Attribute("teams", ArrayOf(String), "List of TeamIDs associated with target", func() {
+			Example([]string{"a9d33628-ddb0-467c-b482-474887097820", "9cb0bb2b-ca36-4877-acad-9dde23880595"})
+		})
 	})
 	View("default", func() {
 		Attribute("id")
 		Attribute("identifier")
-		Attribute("tags")
+		Attribute("teams")
 	})
 })
 
