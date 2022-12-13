@@ -1246,8 +1246,8 @@ type Target struct {
 	ID *string `form:"id,omitempty" json:"id,omitempty" yaml:"id,omitempty" xml:"id,omitempty"`
 	// Target identifier
 	Identifier *string `form:"identifier,omitempty" json:"identifier,omitempty" yaml:"identifier,omitempty" xml:"identifier,omitempty"`
-	// List of tags associated with target
-	Tags []string `form:"tags,omitempty" json:"tags,omitempty" yaml:"tags,omitempty" xml:"tags,omitempty"`
+	// List of TeamIDs associated with target
+	Teams []string `form:"teams,omitempty" json:"teams,omitempty" yaml:"teams,omitempty" xml:"teams,omitempty"`
 }
 
 // DecodeTarget decodes the Target instance encoded in resp body.

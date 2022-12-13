@@ -705,8 +705,9 @@ definitions:
       target:
         id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
         identifier: www.test.com
-        tags:
-        - team:vulcan
+        teams:
+        - a9d33628-ddb0-467c-b482-474887097820
+        - 9cb0bb2b-ca36-4877-acad-9dde23880595
       total_exposure: 4631
     properties:
       affected_resource:
@@ -917,8 +918,9 @@ definitions:
       target:
         id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
         identifier: www.test.com
-        tags:
-        - team:vulcan
+        teams:
+        - a9d33628-ddb0-467c-b482-474887097820
+        - 9cb0bb2b-ca36-4877-acad-9dde23880595
       total_exposure: 4631
     items:
       $ref: '#/definitions/Finding'
@@ -1095,8 +1097,9 @@ definitions:
         target:
           id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
           identifier: www.test.com
-          tags:
-          - team:vulcan
+          teams:
+          - a9d33628-ddb0-467c-b482-474887097820
+          - 9cb0bb2b-ca36-4877-acad-9dde23880595
         total_exposure: 4631
       - affected_resource: ""
         attachments:
@@ -1151,8 +1154,9 @@ definitions:
         target:
           id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
           identifier: www.test.com
-          tags:
-          - team:vulcan
+          teams:
+          - a9d33628-ddb0-467c-b482-474887097820
+          - 9cb0bb2b-ca36-4877-acad-9dde23880595
         total_exposure: 4631
       - affected_resource: ""
         attachments:
@@ -1207,8 +1211,9 @@ definitions:
         target:
           id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
           identifier: www.test.com
-          tags:
-          - team:vulcan
+          teams:
+          - a9d33628-ddb0-467c-b482-474887097820
+          - 9cb0bb2b-ca36-4877-acad-9dde23880595
         total_exposure: 4631
       pagination:
         limit: 0.04495248178158175
@@ -1462,7 +1467,7 @@ definitions:
         - Web
         - HTTP
         items:
-          example: Quas voluptatum sit eos illum ipsum tempora.
+          example: Enim totam ut perspiciatis quia.
           type: string
         type: array
       recommendations:
@@ -1995,34 +2000,6 @@ definitions:
           settings_count: 12
       schedule:
         cron: 0 7 1 * *
-    - autosend: false
-      disabled: false
-      global: true
-      id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
-      name: Every midnight
-      policy_groups:
-      - group:
-          assets_count: 1
-          description: All newly created assets are added to the Default group
-          id: f6360346-77a5-4f97-b919-331363b3af26
-          name: Default group
-          options: '{"timeout":60}'
-        policy:
-          id: af36818a-0f30-412c-9692-d37716075861
-          name: Sample Policy
-          settings_count: 12
-      - group:
-          assets_count: 1
-          description: All newly created assets are added to the Default group
-          id: f6360346-77a5-4f97-b919-331363b3af26
-          name: Default group
-          options: '{"timeout":60}'
-        policy:
-          id: af36818a-0f30-412c-9692-d37716075861
-          name: Sample Policy
-          settings_count: 12
-      schedule:
-        cron: 0 7 1 * *
     items:
       $ref: '#/definitions/Program'
     title: 'Mediatype identifier: program; type=collection; view=default'
@@ -2120,7 +2097,6 @@ definitions:
       view)
     example:
     - email: john.doe@vulcan.example.com
-    - email: john.doe@vulcan.example.com
     items:
       $ref: '#/definitions/Recipient'
     title: 'Mediatype identifier: recipient; type=collection; view=default'
@@ -2137,7 +2113,7 @@ definitions:
         - john.doe@vulcan.example.com
         - jane.doe@vulcan.example.com
         items:
-          example: Doloribus placeat voluptatem ratione corrupti.
+          example: Autem doloribus placeat voluptatem ratione corrupti soluta.
           type: string
         type: array
     required:
@@ -2208,7 +2184,7 @@ definitions:
         - Hostname
         - Port
         items:
-          example: Illo porro placeat omnis.
+          example: Velit quis.
           type: string
         type: array
       name:
@@ -2223,7 +2199,7 @@ definitions:
         items:
           additionalProperties: true
           example:
-            Natus esse neque aliquid.: Velit quis.
+            Placeat omnis perferendis.: Natus esse neque aliquid.
           type: object
         type: array
     title: 'Mediatype identifier: resource; view=default'
@@ -2313,6 +2289,43 @@ definitions:
   ScanCollection:
     description: ScanCollection is the media type for an array of Scan (default view)
     example:
+    - checks_count: 20
+      end_time: "2018-09-07T10:40:52Z"
+      id: 23e7034f-8180-4895-8e7f-73f2f7d90631
+      program:
+        autosend: false
+        disabled: false
+        global: true
+        id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
+        name: Every midnight
+        policy_groups:
+        - group:
+            assets_count: 1
+            description: All newly created assets are added to the Default group
+            id: f6360346-77a5-4f97-b919-331363b3af26
+            name: Default group
+            options: '{"timeout":60}'
+          policy:
+            id: af36818a-0f30-412c-9692-d37716075861
+            name: Sample Policy
+            settings_count: 12
+        - group:
+            assets_count: 1
+            description: All newly created assets are added to the Default group
+            id: f6360346-77a5-4f97-b919-331363b3af26
+            name: Default group
+            options: '{"timeout":60}'
+          policy:
+            id: af36818a-0f30-412c-9692-d37716075861
+            name: Sample Policy
+            settings_count: 12
+        schedule:
+          cron: 0 7 1 * *
+      progress: 1
+      requested_by: john.doe@vulcan.example.com
+      scheduled_time: "2018-09-07T10:40:52Z"
+      start_time: "2018-09-07T10:40:52Z"
+      status: FINISHED
     - checks_count: 20
       end_time: "2018-09-07T10:40:52Z"
       id: 23e7034f-8180-4895-8e7f-73f2f7d90631
@@ -2621,8 +2634,9 @@ definitions:
     example:
       id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
       identifier: www.test.com
-      tags:
-      - team:vulcan
+      teams:
+      - a9d33628-ddb0-467c-b482-474887097820
+      - 9cb0bb2b-ca36-4877-acad-9dde23880595
     properties:
       id:
         description: Target ID
@@ -2632,12 +2646,13 @@ definitions:
         description: Target identifier
         example: www.test.com
         type: string
-      tags:
-        description: List of tags associated with target
+      teams:
+        description: List of TeamIDs associated with target
         example:
-        - team:vulcan
+        - a9d33628-ddb0-467c-b482-474887097820
+        - 9cb0bb2b-ca36-4877-acad-9dde23880595
         items:
-          example: Enim totam ut perspiciatis quia.
+          example: Quas voluptatum sit eos illum ipsum tempora.
           type: string
         type: array
     title: 'Mediatype identifier: target; view=default'
@@ -2671,6 +2686,10 @@ definitions:
   TeamCollection:
     description: TeamCollection is the media type for an array of Team (default view)
     example:
+    - description: Security Team
+      id: ff74a33c-e683-4612-a62f-a9cf385f6522
+      name: Security
+      tag: team:security
     - description: Security Team
       id: ff74a33c-e683-4612-a62f-a9cf385f6522
       name: Security
