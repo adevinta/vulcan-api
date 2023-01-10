@@ -94,7 +94,6 @@ func CreateMultiStatusAssetsPath(teamID string) string {
 // · For each asset detected from the ones with no type indicated which their creation produced an error, returns one AssetResponse indicating the failure for its creation specifying its detected type.
 // In the case of all assets being successfully created, this endpoint will return status code 201-Created.
 // Otherwise, it will return a 207-MultiStatus code, indicating that at least one of the requested operations failed.
-//
 func (c *Client) CreateMultiStatusAssets(ctx context.Context, path string, payload *CreateAssetPayload) (*http.Response, error) {
 	req, err := c.NewCreateMultiStatusAssetsRequest(ctx, path, payload)
 	if err != nil {
