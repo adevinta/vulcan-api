@@ -64,8 +64,8 @@ github.com/adevinta/vulcan-scan-engine v1.1.4 h1:cLx+GmMARtX2S8CRueGV+4/qc/Nt1jZ
 github.com/adevinta/vulcan-scan-engine v1.1.4/go.mod h1:1nWdfdXTscrOY3UTpe14waKzOLXjYSog/Nrjtzh8mOA=
 github.com/adevinta/vulcan-types v1.0.0 h1:tjt59GA4+USJ0naCoAXFNBbIGXqoF+a21BV6rD8fLXc=
 github.com/adevinta/vulcan-types v1.0.0/go.mod h1:bf/j+YA20WO1IkqlPa5GgXUYdYUAfjOOJ9alsJDQ6t8=
-github.com/adevinta/vulnerability-db-api v1.1.4 h1:0aou5JX0jcCxG1hP5TADBgtHfWEKt8z7bOCLbyqNIK8=
-github.com/adevinta/vulnerability-db-api v1.1.4/go.mod h1:dKirJlLD2XpgneBGIjGCSZpiw+FF6YPo+Grb6ZFVY3A=
+github.com/adevinta/vulnerability-db-api v1.1.5 h1:G+326XcPadlJuGm/9MZNTCg03b/42ei0UaGSJU/FSGc=
+github.com/adevinta/vulnerability-db-api v1.1.5/go.mod h1:dKirJlLD2XpgneBGIjGCSZpiw+FF6YPo+Grb6ZFVY3A=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
 github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
 github.com/alecthomas/units v0.0.0-20151022065526-2efee857e7cf/go.mod h1:ybxpYRFXyAe+OPACYpWeL0wqObRcbAqCMya13uyzqw0=
