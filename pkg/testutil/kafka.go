@@ -65,28 +65,30 @@ func createTopics(names []string) error {
 		return fmt.Errorf("error deleting topic %s", tResults.Error())
 	}
 
-	var topics []kafka.TopicSpecification
 	for _, name := range names {
 		topic := kafka.TopicSpecification{
 			Topic:         name,
 			NumPartitions: 1,
 		}
-		topics = append(topics, topic)
+		// Retry the create topic operation until in does not return an error
+		// indicating that the topic already exits, at which point we have a
+		// clean new topic created.
+		for {
+			results, err = client.CreateTopics(context.Background(), []kafka.TopicSpecification{topic}, opTimeout)
+			if err != nil {
+				return err
+			}
+			tResults = topicsOpResult(results)
+			if tResults.Error() == kafka.ErrNoError {
+				break
+			}
+			if tResults.Error() == kafka.ErrTopicAlreadyExists {
+				continue
+			}
+			return fmt.Errorf("error creating topics: %s", tResults.Error())
+		}
 	}
-	for {
-		results, err = client.CreateTopics(context.Background(), topics, opTimeout)
-		if err != nil {
-			return err
-		}
-		tResults = topicsOpResult(results)
-		if tResults.Error() == kafka.ErrNoError {
-			break
-		}
-		if tResults.Error() == kafka.ErrTopicAlreadyExists {
-			return fmt.Errorf("error creating topics: topic already exists")
-		}
-		return fmt.Errorf("error creating topics: %s", tResults.Error())
-	}
+
 	return nil
 }
 
