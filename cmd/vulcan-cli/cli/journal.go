@@ -5,9 +5,11 @@ Copyright 2021 Adevinta
 package cli
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 
+	types "github.com/adevinta/vulcan-types"
 	"github.com/google/go-cmp/cmp"
 )
 
@@ -169,7 +171,7 @@ func (o CreateAssetOp) String() string {
 func (o CreateAssetOp) Apply() error {
 	createdAssets, err := o.cli.CreateAsset(o.Team.ID, o.NewAsset.Target, o.NewAsset.AssetType, o.NewAsset.Rolfp, o.NewAsset.Alias)
 	if err != nil {
-		return err
+		return fmt.Errorf("error applying operation: %s, error: %w", o, err)
 	}
 	// For 'normal assets' we will only have one created asset returned from API.
 	// For assets created usign smart capability we can have N assets created,
@@ -416,6 +418,7 @@ func (j *Journal) Apply() error {
 
 	for _, op := range j.NewAssets {
 		if err := op.Apply(); err != nil {
+
 			return err
 		}
 	}
@@ -702,20 +705,72 @@ func (j *Journal) GuessAssetsToCreate() ([]CreateAssetOp, error) {
 
 		for _, lg := range lt.Groups {
 			for _, la := range lg.Assets {
-				if la.ID == "" {
-					a := CreateAssetOp{
-						NewAsset: la,
-						Group:    lg,
-						Team:     lt,
-					}
-					a.cli = j.cli
-					as = append(as, a)
+				if la.ID != "" {
+					continue
 				}
+				if err := validateAsset(*la); err != nil {
+					fmt.Printf("invalid asset: %s, with type: %s, skipping its creation\n", la.Target, la.AssetType)
+					continue
+				}
+				a := CreateAssetOp{
+					NewAsset: la,
+					Group:    lg,
+					Team:     lt,
+				}
+				a.cli = j.cli
+				as = append(as, a)
 			}
 		}
 	}
 
 	return as, nil
+}
+
+func validateAsset(a Asset) error {
+	switch a.AssetType {
+	case "Hostname":
+		if !types.IsHostname(a.Target) {
+			return errors.New("identifier is not a valid Hostname")
+		}
+	case "AWSAccount":
+		if !types.IsAWSARN(a.Target) {
+			return errors.New("identifier is not a valid AWSAccount")
+		}
+	case "DockerImage":
+		if !types.IsDockerImage(a.Target) {
+			return errors.New("identifier is not a valid DockerImage")
+		}
+	case "GitRepository":
+		if !types.IsGitRepository(a.Target) {
+			return errors.New("identifier is not a valid GitRepository")
+		}
+	case "IP":
+		if strings.HasSuffix(a.Target, "/32") {
+			if !types.IsHost(a.Target) {
+				return errors.New("identifier is not a valid Host")
+			}
+		} else {
+			if !types.IsIP(a.Target) {
+				return errors.New("identifier is not a valid IP")
+			}
+		}
+	case "IPRange":
+		if !types.IsCIDR(a.Target) {
+			return errors.New("identifier is not a valid CIDR block")
+		}
+	case "WebAddress":
+		if !types.IsWebAddress(a.Target) {
+			return errors.New("identifier is not a valid WebAddress")
+		}
+	case "DomainName":
+		if ok, _ := types.IsDomainName(a.Target); !ok {
+			return errors.New("identifier is not a valid DomainName")
+		}
+	default:
+		// If none of the previous case match, force a validation error
+		return errors.New("Asset type not supported")
+	}
+	return nil
 }
 
 func (j *Journal) GuessAssetsToUpdate() ([]UpdateAssetOp, error) {
