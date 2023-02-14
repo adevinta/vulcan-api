@@ -40,17 +40,21 @@ func init() {
 
 func runAssets(args []string, apiClient *cli.CLI) error {
 	path := args[0]
-	if !force {
-		_, err := os.Stat(path)
-		if err != nil && errors.Is(err, fs.ErrExist) {
-			return ErrOutputAlreadyExists
-		}
+	// We check for the existence of the file before performing the calls to
+	// the vulcan api to avoid the user to wait just to see the command fail.
+	exists, err := fileExists(path)
+	if err != nil {
+		return err
 	}
-
+	if exists && !force {
+		return ErrOutputAlreadyExists
+	}
 	assets, err := getAssets(apiClient, assetTypes)
 	if err != nil {
 		return err
 	}
+	// We accept that, if the destination file was created after we checked for
+	// its existence above and now, the file will be overwritten.
 	fs, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.ModePerm)
 	if err != nil {
 		return err
@@ -60,6 +64,17 @@ func runAssets(args []string, apiClient *cli.CLI) error {
 		fmt.Fprintf(fs, "%s;%s\n", a.Identifier, a.AssetType)
 	}
 	return nil
+}
+
+func fileExists(path string) (bool, error) {
+	_, err := os.Stat(path)
+	if errors.Is(err, fs.ErrNotExist) {
+		return false, nil
+	}
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }
 
 type assetInfo struct {
