@@ -328,6 +328,8 @@ type Finding struct {
 	Target *Target `form:"target,omitempty" json:"target,omitempty" yaml:"target,omitempty" xml:"target,omitempty"`
 	// Total exposure (hours)
 	TotalExposure *float64 `form:"total_exposure,omitempty" json:"total_exposure,omitempty" yaml:"total_exposure,omitempty" xml:"total_exposure,omitempty"`
+	// Link to the ticket
+	URLTracker *string `form:"url_tracker,omitempty" json:"url_tracker,omitempty" yaml:"url_tracker,omitempty" xml:"url_tracker,omitempty"`
 }
 
 // DecodeFinding decodes the Finding instance encoded in resp body.
@@ -388,6 +390,29 @@ func (c *Client) DecodeFindingOverwriteCollection(resp *http.Response) (FindingO
 	var decoded FindingOverwriteCollection
 	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
 	return decoded, err
+}
+
+// Finding Ticket Creation (default view)
+//
+// Identifier: finding_ticketcreation; view=default
+type FindingTicketcreation struct {
+	// The previous status for the finding referenced by the finding_id field
+	Description *string `form:"description,omitempty" json:"description,omitempty" yaml:"description,omitempty" xml:"description,omitempty"`
+	// Finding ID
+	FindingID *string `form:"finding_id,omitempty" json:"finding_id,omitempty" yaml:"finding_id,omitempty" xml:"finding_id,omitempty"`
+	// The summary of the ticket
+	Summary *string `form:"summary,omitempty" json:"summary,omitempty" yaml:"summary,omitempty" xml:"summary,omitempty"`
+	// The ID associated to the team who requested this ticket creation
+	TeamID *string `form:"team_id,omitempty" json:"team_id,omitempty" yaml:"team_id,omitempty" xml:"team_id,omitempty"`
+	// Link to the ticket
+	URLTracker *string `form:"url_tracker,omitempty" json:"url_tracker,omitempty" yaml:"url_tracker,omitempty" xml:"url_tracker,omitempty"`
+}
+
+// DecodeFindingTicketcreation decodes the FindingTicketcreation instance encoded in resp body.
+func (c *Client) DecodeFindingTicketcreation(resp *http.Response) (*FindingTicketcreation, error) {
+	var decoded FindingTicketcreation
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return &decoded, err
 }
 
 // Findings by Issue (default view)

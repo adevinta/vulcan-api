@@ -15,7 +15,7 @@ require (
 	github.com/confluentinc/confluent-kafka-go v1.9.0
 	github.com/go-kit/kit v0.12.0
 	github.com/goadesign/goa v1.4.3
-	github.com/golang-jwt/jwt/v4 v4.1.0
+	github.com/golang-jwt/jwt/v4 v4.4.2
 	github.com/google/go-cmp v0.5.9
 	github.com/gorilla/mux v1.8.0
 	github.com/jinzhu/gorm v1.9.12
@@ -34,6 +34,7 @@ require (
 require (
 	github.com/DataDog/datadog-go v4.8.3+incompatible // indirect
 	github.com/Microsoft/go-winio v0.5.2 // indirect
+	github.com/adevinta/vulcan-tracker v0.0.0-20221213154212-d67dad0d149b
 	github.com/armon/go-metrics v0.4.0 // indirect
 	github.com/beevik/etree v1.1.0 // indirect
 	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
@@ -85,3 +86,4 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
+

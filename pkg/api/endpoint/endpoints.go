@@ -112,6 +112,7 @@ const (
 	CreateFindingOverwrite     = "CreateFindingOverwrite"
 	ListFindingOverwrites      = "ListFindingOverwrites"
 	ListFindingsLabels         = "ListFindingsLabels"
+	CreateFindingTicket        = "CreateFindingTicket"
 	StatsMTTR                  = "StatsMTTR"
 	StatsExposure              = "StatsExposure"
 	StatsCurrentExposure       = "StatsCurrentExposure"
@@ -227,6 +228,7 @@ func MakeEndpoints(s api.VulcanitoService, logger log.Logger) Endpoints {
 	endpoints[FindFinding] = makeFindFindingEndpoint(s, logger)
 	endpoints[CreateFindingOverwrite] = makeCreateFindingOverwriteEndpoint(s, logger)
 	endpoints[ListFindingOverwrites] = makeListFindingOverwritesEndpoint(s, logger)
+	endpoints[CreateFindingTicket] = makeCreateFindingTicketEndpoint(s, logger)
 	endpoints[ListFindingsLabels] = makeListFindingsLabelsEndpoint(s, logger)
 	endpoints[StatsMTTR] = makeStatsMTTREndpoint(s, logger)
 	endpoints[StatsExposure] = makeStatsExposureEndpoint(s, logger)

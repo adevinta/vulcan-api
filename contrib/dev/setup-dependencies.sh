@@ -10,8 +10,8 @@ cd ../keycloak/
 
 ./start-keycloak.sh
 
-while [ "`docker inspect -f {{.State.Health.Status}} keycloak`" != "healthy" ]; do     
-    sleep 2; 
+while [ "`docker inspect -f {{.State.Health.Status}} keycloak`" != "healthy" ]; do
+    sleep 2;
 done
 
 echo "--> Keycloak ready.
@@ -23,8 +23,8 @@ cd ../../db
 
 ./persistence-start.sh
 
-while [ "`docker inspect -f {{.State.Health.Status}} vulcanito_db`" != "healthy" ]; do     
-    sleep 2; 
+while [ "`docker inspect -f {{.State.Health.Status}} vulcanito_db`" != "healthy" ]; do
+    sleep 2;
 done
 
 echo "--> Postgres ready.

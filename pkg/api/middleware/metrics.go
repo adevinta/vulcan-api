@@ -137,6 +137,7 @@ var (
 		endpoint.CreateFindingOverwrite: entityFinding,
 		endpoint.ListFindingOverwrites:  entityFinding,
 		endpoint.ListFindingsLabels:     entityFinding,
+		endpoint.CreateFindingTicket:    entityFinding,
 		// Stats
 		endpoint.StatsCoverage:              entityStats,
 		endpoint.StatsMTTR:                  entityStats,

@@ -179,6 +179,15 @@ func makeFindFindingEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpo
 			return nil, err
 		}
 
+		findingTicket, err := s.GetFindingTicket(ctx, finding.Finding.ID, r.TeamID)
+		if err != nil {
+			// TODO: we need to decide if we should ignore errors getting tickets from vulcan-tracker
+			logger.Log("error retrieving a ticket from vulcan tracker", err)
+			//return nil, err
+		} else {
+			finding.Finding.TicketURL = findingTicket.Ticket.URLTracker
+		}
+
 		if authorizedFindFindingRequest(finding.Finding.Target.Teams, r.TeamID) {
 			return Ok{finding.Finding}, nil
 		}
@@ -251,6 +260,44 @@ func makeListFindingOverwritesEndpoint(s api.VulcanitoService, logger kitlog.Log
 		}
 
 		return Ok{output}, nil
+	}
+}
+
+type FindingCreateTicketRequest struct {
+	FindingID   string `json:"finding_id" urlvar:"finding_id"`
+	TeamID      string `json:"team_id" urlvar:"team_id"`
+	Summary     string `json:"summary"`
+	Description string `json:"description"`
+}
+
+func makeCreateFindingTicketEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		r, ok := request.(*FindingCreateTicketRequest)
+		if !ok {
+			return nil, errors.Assertion("Type assertion failed")
+		}
+
+		finding, err := s.FindFinding(ctx, r.FindingID)
+		if err != nil {
+			return nil, err
+		}
+
+		ticketCreate := api.FindingTicketCreate{
+			FindingID:   r.FindingID,
+			TeamID:      r.TeamID,
+			Summary:     r.Summary,
+			Description: r.Description,
+		}
+
+		if authorizedFindFindingRequest(finding.Finding.Target.Teams, r.TeamID) {
+			ticket, err := s.CreateFindingTicket(ctx, ticketCreate)
+			if err != nil {
+				return nil, err
+			}
+			return Ok{ticket.ToResponse()}, nil
+		}
+
+		return Forbidden{}, nil
 	}
 }
 

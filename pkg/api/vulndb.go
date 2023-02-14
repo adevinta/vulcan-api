@@ -49,10 +49,15 @@ type FindingsTargetsList struct {
 	Pagination PaginationInfo         `json:"pagination"`
 }
 
+type FindingExpanded struct {
+	vulndb.FindingExpanded
+	TicketURL string `json:"url_tracker"`
+}
+
 // Finding represents the response data returned from the vulnerability DB for
 // the get finding request.
 type Finding struct {
-	Finding vulndb.FindingExpanded `json:"finding"`
+	Finding FindingExpanded `json:"finding"`
 }
 
 // FindingsLabels represents the response data returned from the vulnerability DB
