@@ -8,7 +8,6 @@ package service
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
@@ -240,13 +239,13 @@ func (middleware loggingMiddleware) FindTeamsByUser(ctx context.Context, userID 
 }
 
 func (middleware loggingMiddleware) FindTeamsByTags(ctx context.Context, tags []string) ([]*api.Team, error) {
+
 	defer func() {
 		XRequestID := ""
 		if ctx != nil {
 			XRequestID, _ = ctx.Value(kithttp.ContextKeyRequestXRequestID).(string)
 		}
-		fmtTasgs := strings.Join(tags, ",")
-		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "FindTeamsByTags", "tags", fmtTasgs)
+		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "FindTeamsByTags", "tags", mySprintf(tags))
 	}()
 
 	return middleware.next.FindTeamsByTags(ctx, tags)
@@ -1225,4 +1224,30 @@ func (middleware loggingMiddleware) StatsAssets(ctx context.Context, params api.
 	}()
 
 	return middleware.next.StatsAssets(ctx, params)
+}
+
+func (middleware loggingMiddleware) CreateFindingTicket(ctx context.Context, ticket api.FindingTicketCreate) (*api.Ticket, error) {
+
+	defer func() {
+		XRequestID := ""
+		if ctx != nil {
+			XRequestID, _ = ctx.Value(kithttp.ContextKeyRequestXRequestID).(string)
+		}
+		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "CreateFindingTicket", "ticket", mySprintf(ticket))
+	}()
+
+	return middleware.next.CreateFindingTicket(ctx, ticket)
+}
+
+func (middleware loggingMiddleware) GetFindingTicket(ctx context.Context, findingID string, teamID string) (*api.Ticket, error) {
+
+	defer func() {
+		XRequestID := ""
+		if ctx != nil {
+			XRequestID, _ = ctx.Value(kithttp.ContextKeyRequestXRequestID).(string)
+		}
+		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "GetFindingTicket", "findingID", mySprintf(findingID), "teamID", mySprintf(teamID))
+	}()
+
+	return middleware.next.GetFindingTicket(ctx, findingID, teamID)
 }

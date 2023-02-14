@@ -132,4 +132,8 @@ type VulcanitoService interface {
 	StatsOpen(ctx context.Context, params StatsParams) (*StatsOpen, error)
 	StatsFixed(ctx context.Context, params StatsParams) (*StatsFixed, error)
 	StatsAssets(ctx context.Context, params StatsParams) (*StatsAssets, error)
+
+	// TicketTracker
+	CreateFindingTicket(ctx context.Context, ticket FindingTicketCreate) (*Ticket, error)
+	GetFindingTicket(ctx context.Context, findingID, teamID string) (*Ticket, error)
 }

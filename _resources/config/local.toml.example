@@ -51,6 +51,10 @@ host = "persistence.vulcan.example.com"
 url = "http://localhost:8083"
 insecure_tls = true
 
+[vulcantracker]
+url = "http://localhost:8084"
+insecure_tls = true
+
 [awscatalogue]
 kind = "None"
 url = "https://catalogue.example.com"

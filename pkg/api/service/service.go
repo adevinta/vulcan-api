@@ -12,6 +12,7 @@ import (
 	"github.com/adevinta/vulcan-api/pkg/reports"
 	"github.com/adevinta/vulcan-api/pkg/scanengine"
 	"github.com/adevinta/vulcan-api/pkg/schedule"
+	"github.com/adevinta/vulcan-api/pkg/vulcantracker"
 	"github.com/adevinta/vulcan-api/pkg/vulnerabilitydb"
 	metrics "github.com/adevinta/vulcan-metrics-client"
 )
@@ -24,16 +25,17 @@ type AWSAccounts interface {
 
 // vulcanitoService implements VulcanitoService
 type vulcanitoService struct {
-	jwtConfig        jwt.Config
-	db               api.VulcanitoStore
-	logger           log.Logger
-	programScheduler schedule.ScanScheduler
-	scanEngineConfig scanengine.Config
-	reportsConfig    reports.Config
-	vulndbClient     vulnerabilitydb.Client
-	reportsClient    reports.Client
-	metricsClient    metrics.Client
-	awsAccounts      AWSAccounts
+	jwtConfig           jwt.Config
+	db                  api.VulcanitoStore
+	logger              log.Logger
+	programScheduler    schedule.ScanScheduler
+	scanEngineConfig    scanengine.Config
+	reportsConfig       reports.Config
+	vulndbClient        vulnerabilitydb.Client
+	vulcantrackerClient vulcantracker.Client
+	reportsClient       reports.Client
+	metricsClient       metrics.Client
+	awsAccounts         AWSAccounts
 }
 
 //go:generate impl -output logging.go -stub templates/logging/impl.tmpl -header templates/logging/header.tmpl "middleware loggingMiddleware" api.VulcanitoService
@@ -42,21 +44,22 @@ type vulcanitoService struct {
 // New returns a basic Service with all of the expected middlewares wired in.
 func New(logger log.Logger, db api.VulcanitoStore, jwtConfig jwt.Config,
 	scanEngineConfig scanengine.Config, programScheduler schedule.ScanScheduler, reportsConfig reports.Config,
-	vulndbClient vulnerabilitydb.Client, reportsClient reports.Client, metricsClient metrics.Client,
-	awsAccounts AWSAccounts) api.VulcanitoService {
+	vulndbClient vulnerabilitydb.Client, vulcantrackerClient vulcantracker.Client, reportsClient reports.Client,
+	metricsClient metrics.Client, awsAccounts AWSAccounts) api.VulcanitoService {
 
 	var svc api.VulcanitoService
 	{
 		svc = vulcanitoService{db: db,
-			jwtConfig:        jwtConfig,
-			logger:           logger,
-			scanEngineConfig: scanEngineConfig,
-			programScheduler: programScheduler,
-			reportsConfig:    reportsConfig,
-			vulndbClient:     vulndbClient,
-			reportsClient:    reportsClient,
-			metricsClient:    metricsClient,
-			awsAccounts:      awsAccounts,
+			jwtConfig:           jwtConfig,
+			logger:              logger,
+			scanEngineConfig:    scanEngineConfig,
+			programScheduler:    programScheduler,
+			reportsConfig:       reportsConfig,
+			vulndbClient:        vulndbClient,
+			vulcantrackerClient: vulcantrackerClient,
+			reportsClient:       reportsClient,
+			metricsClient:       metricsClient,
+			awsAccounts:         awsAccounts,
 		}
 	}
 	return LoggingMiddleware(logger)(svc)

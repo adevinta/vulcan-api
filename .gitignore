@@ -16,6 +16,7 @@ cmd/vulcan-api/vulcan-api
 
 .idea/
 .vscode/
+.history/
 vendor
 
 # VIM

@@ -135,6 +135,8 @@ var FindingMedia = MediaType("finding", func() {
 		Attribute("total_exposure", Number, "Total exposure (hours)", func() { Example(4631) })
 		Attribute("resources", ArrayOf(ResourceMedia), "Resources")
 		Attribute("attachments", ArrayOf(AttachmentMedia), "Attachments")
+		Attribute("url_tracker", String, "Link to the ticket", func() { Example("https://jiraserver.example.com/browse/TEST-123") })
+
 	})
 	View("default", func() {
 		Attribute("id")
@@ -150,6 +152,7 @@ var FindingMedia = MediaType("finding", func() {
 		Attribute("total_exposure")
 		Attribute("resources")
 		Attribute("attachments")
+		Attribute("url_tracker")
 	})
 })
 
@@ -392,6 +395,18 @@ var _ = Resource("findings", func() {
 		Security("Bearer")
 		Response(OK, CollectionOf(FindingOverwriteMedia))
 	})
+
+	Action("Submit a Finding Ticket Creation", func() {
+		Description("Create a ticket associated with the finding in a ticket tracker tool.")
+		Routing(POST("/:finding_id/ticketcreation"))
+		Params(func() {
+			Param("team_id", String, "Team ID")
+			Param("finding_id", String, "Finding ID")
+		})
+		Payload(FindingTicketCreationPayload)
+		Security("Bearer")
+		Response(OK, FindingTicketCreationMedia)
+	})
 })
 
 var FindingOverwritePayload = Type("FindingOverwritePayload", func() {
@@ -424,4 +439,29 @@ var FindingOverwriteMedia = MediaType("finding_overwrite", func() {
 		Attribute("team_id")
 		Attribute("created_at")
 	})
+})
+
+var FindingTicketCreationMedia = MediaType("finding_ticketcreation", func() {
+	Description("Finding Ticket Creation")
+	Attributes(func() {
+		Attribute("finding_id", String, "Finding ID", func() { Example("3c7d7003-c53d-4ccc-80e7-f21da241b2d4") })
+		Attribute("team_id", String, "The ID associated to the team who requested this ticket creation", func() { Example("a9d33628-ddb0-467c-b482-474887097820") })
+		Attribute("summary", String, "The summary of the ticket", func() { Example("PHP Unsupported Version Detection") })
+		Attribute("description", String, "The previous status for the finding referenced by the finding_id field", func() { Example("Very long desciption explaining the ticket.") })
+		Attribute("url_tracker", String, "Link to the ticket", func() { Example("https://jiraserver.example.com/browse/TEST-123") })
+	})
+	View("default", func() {
+		Attribute("finding_id")
+		Attribute("team_id")
+		Attribute("summary")
+		Attribute("description")
+		Attribute("url_tracker")
+	})
+})
+
+// FindingTicketCreationPayload
+var FindingTicketCreationPayload = Type("FindingTicketCreationPayload", func() {
+	Attribute("summary", String, "Summary", func() { Example("Dockerfile Security Check - Image user should not be 'root'") })
+	Attribute("description", String, "Description", func() { Example("A text with a custom description about the finding.") })
+	Required("summary")
 })
