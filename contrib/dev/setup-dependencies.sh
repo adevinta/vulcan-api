@@ -21,7 +21,7 @@ Setting up postgres...
 
 cd ../../db
 
-./postgres-start.sh
+./persistence-start.sh
 
 while [ "`docker inspect -f {{.State.Health.Status}} vulcanito_db`" != "healthy" ]; do     
     sleep 2; 
