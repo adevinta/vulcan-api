@@ -9,9 +9,10 @@ require (
 	github.com/adevinta/vulcan-metrics-client v1.0.0
 	github.com/adevinta/vulcan-report v1.0.0
 	github.com/adevinta/vulcan-scan-engine v1.1.5
+	github.com/adevinta/vulcan-tracker v0.0.0-20230303081502-5332b1cd95b3
 	github.com/adevinta/vulcan-types v1.0.0
 	github.com/adevinta/vulnerability-db-api v1.1.5
-	github.com/aws/aws-sdk-go v1.44.98
+	github.com/aws/aws-sdk-go v1.44.213
 	github.com/confluentinc/confluent-kafka-go v1.9.0
 	github.com/go-kit/kit v0.12.0
 	github.com/goadesign/goa v1.4.3
@@ -34,7 +35,6 @@ require (
 require (
 	github.com/DataDog/datadog-go v4.8.3+incompatible // indirect
 	github.com/Microsoft/go-winio v0.5.2 // indirect
-	github.com/adevinta/vulcan-tracker v0.0.0-20221213154212-d67dad0d149b
 	github.com/armon/go-metrics v0.4.0 // indirect
 	github.com/beevik/etree v1.1.0 // indirect
 	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
@@ -75,7 +75,7 @@ require (
 	github.com/subosito/gotenv v1.4.1 // indirect
 	github.com/zach-klippenstein/goregen v0.0.0-20160303162051-795b5e3961ea // indirect
 	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
-	golang.org/x/net v0.6.0 // indirect
+	golang.org/x/net v0.7.0 // indirect
 	golang.org/x/sys v0.5.0 // indirect
 	golang.org/x/text v0.7.0 // indirect
 	golang.org/x/tools v0.1.12 // indirect
@@ -86,4 +86,3 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
-
