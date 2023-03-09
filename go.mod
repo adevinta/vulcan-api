@@ -8,10 +8,11 @@ require (
 	github.com/adevinta/vulcan-groupie v1.0.0
 	github.com/adevinta/vulcan-metrics-client v1.0.1
 	github.com/adevinta/vulcan-report v1.0.0
-	github.com/adevinta/vulcan-scan-engine v1.1.10
+	github.com/adevinta/vulcan-scan-engine v1.1.5
+	github.com/adevinta/vulcan-tracker v0.0.0-20230417150856-bd185601910a
 	github.com/adevinta/vulcan-types v1.0.0
 	github.com/adevinta/vulnerability-db-api v1.1.5
-	github.com/aws/aws-sdk-go v1.44.98
+	github.com/aws/aws-sdk-go v1.44.226
 	github.com/confluentinc/confluent-kafka-go v1.9.0
 	github.com/go-kit/kit v0.12.0
 	github.com/goadesign/goa v1.4.3
@@ -22,8 +23,8 @@ require (
 	github.com/lestrrat-go/backoff v1.0.0
 	github.com/lib/pq v1.10.3
 	github.com/robfig/cron v1.2.0
-	github.com/russellhaering/gosaml2 v0.9.1
-	github.com/russellhaering/goxmldsig v1.3.0
+	github.com/russellhaering/gosaml2 v0.8.1
+	github.com/russellhaering/goxmldsig v1.2.0
 	github.com/satori/go.uuid v1.2.1-0.20181028125025-b2ce2384e17b
 	github.com/spf13/cobra v1.2.1
 	github.com/spf13/viper v1.14.0
