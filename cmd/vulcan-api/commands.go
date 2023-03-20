@@ -127,9 +127,11 @@ type vulnerabilityDBConfig struct {
 }
 
 type vulcantrackerConfig struct {
-	URL         string `mapstructure:"url"`
-	InsecureTLS bool   `mapstructure:"insecure_tls"`
+	URL            string   `mapstructure:"url"`
+	InsecureTLS    bool     `mapstructure:"insecure_tls"`
+	OnboardedTeams []string `mapstructure:"onboarded_teams"`
 }
+
 type metricsConfig struct {
 	Enabled bool
 }
@@ -209,7 +211,7 @@ func startServer() error {
 	vulnerabilityDBClient := vulnerabilitydb.NewClient(nil, cfg.VulnerabilityDB.URL, cfg.VulnerabilityDB.InsecureTLS)
 
 	// Build vulcantracker client.
-	vulcantrackerClient := vulcantracker.NewClient(nil, cfg.VulcanTracker.URL, cfg.VulcanTracker.InsecureTLS)
+	vulcantrackerClient := vulcantracker.NewClient(nil, cfg.VulcanTracker.URL, cfg.VulcanTracker.InsecureTLS, cfg.VulcanTracker.OnboardedTeams)
 
 	// Build reports client.
 	reportsClient, err := reports.NewClient(cfg.Reports)

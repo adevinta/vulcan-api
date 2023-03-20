@@ -54,6 +54,7 @@ insecure_tls = true
 [vulcantracker]
 url = "http://localhost:8084"
 insecure_tls = true
+onboarded_teams =["ba2f2a9b-1ea8-4a28-9519-eab4ed290866"]
 
 [awscatalogue]
 kind = "None"

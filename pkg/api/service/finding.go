@@ -81,11 +81,3 @@ func isValidFindingStatus(status string) bool {
 	_, existsInSet := validStatus[status]
 	return existsInSet
 }
-
-func (s vulcanitoService) CreateFindingTicket(ctx context.Context, ticket api.FindingTicketCreate) (*api.Ticket, error) {
-	return s.vulcantrackerClient.CreateTicket(ctx, ticket)
-}
-
-func (s vulcanitoService) GetFindingTicket(ctx context.Context, findingID, teamID string) (*api.Ticket, error) {
-	return s.vulcantrackerClient.GetFindingTicket(ctx, findingID, teamID)
-}
