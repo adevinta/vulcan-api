@@ -133,7 +133,8 @@ type VulcanitoService interface {
 	StatsFixed(ctx context.Context, params StatsParams) (*StatsFixed, error)
 	StatsAssets(ctx context.Context, params StatsParams) (*StatsAssets, error)
 
-	// TicketTracker
+	// Vulcan Tracker
 	CreateFindingTicket(ctx context.Context, ticket FindingTicketCreate) (*Ticket, error)
 	GetFindingTicket(ctx context.Context, findingID, teamID string) (*Ticket, error)
+	IsATeamOnboardedInVulcanTracker(ctx context.Context, teamID string) bool // feature flag.
 }

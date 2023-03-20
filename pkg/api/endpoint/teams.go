@@ -106,11 +106,12 @@ func makeFindTeamEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint
 		if !ok {
 			return nil, errors.Assertion("Type assertion failed")
 		}
-
 		team, err := s.FindTeam(ctx, requestBody.ID)
 		if err != nil {
 			return nil, err
 		}
+
+		team.IsOnboardedInVulcanTracker = s.IsATeamOnboardedInVulcanTracker(ctx, requestBody.ID) // feature flag.
 		return Ok{team.ToResponse()}, nil
 	}
 }

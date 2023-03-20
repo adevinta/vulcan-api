@@ -32,7 +32,7 @@ Run the commands bellow to launch the Docker containers we need:
 - PgAdmin
 
 ```sh
-# navigate to the contri/dev folder
+# navigate to the contrib/dev folder
 cd contrib/dev
 
 # launch dependencies

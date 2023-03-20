@@ -25,18 +25,21 @@ const (
 	noAuth     = ""
 )
 
+// Client represents a vulcan tracker client.
 type Client interface {
 	CreateTicket(ctx context.Context, payload api.FindingTicketCreate) (*api.Ticket, error)
 	GetFindingTicket(ctx context.Context, findingID, teamID string) (*api.Ticket, error)
+	IsATeamOnboardedInVulcanTracker(ctx context.Context, teamID string) bool // feature flag.
 }
 
 type client struct {
-	baseURL    string
-	httpClient *http.Client
+	baseURL        string
+	httpClient     *http.Client
+	onboardedTeams []string // feature flag.
 }
 
 // NewClient returns a new vulcantracker client with the given config and httpClient.
-func NewClient(httpClient *http.Client, baseURL string, insecureTLS bool) Client {
+func NewClient(httpClient *http.Client, baseURL string, insecureTLS bool, onboardedTeams []string) Client {
 	if httpClient == nil {
 		httpClient = &http.Client{
 			Transport: &http.Transport{
@@ -47,8 +50,9 @@ func NewClient(httpClient *http.Client, baseURL string, insecureTLS bool) Client
 		}
 	}
 	return &client{
-		httpClient: httpClient,
-		baseURL:    baseURL,
+		httpClient:     httpClient,
+		baseURL:        baseURL,
+		onboardedTeams: onboardedTeams,
 	}
 }
 
@@ -91,9 +95,18 @@ func (c *client) performRequest(ctx context.Context, method, path, authTeam stri
 	return io.ReadAll(resp.Body)
 }
 
+// IsATeamOnboardedInVulcanTracker return if a team is onboarded in vulcan tracker.
+func (c *client) IsATeamOnboardedInVulcanTracker(ctx context.Context, teamID string) bool {
+	for _, team := range c.onboardedTeams {
+		if team == teamID {
+			return true
+		}
+	}
+	return false
+}
+
 // CreateTicket requests the creation of a ticket in the ticket tracker server configurated for the team.
 func (c *client) CreateTicket(ctx context.Context, payload api.FindingTicketCreate) (*api.Ticket, error) {
-
 	data, err := json.Marshal(payload)
 	if err != nil {
 		return nil, err
