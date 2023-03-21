@@ -73,7 +73,7 @@ definitions:
         - annotation/1
         - annotation/2
         items:
-          example: Ducimus sit odio tenetur consequatur.
+          example: Ipsam ducimus sit odio tenetur consequatur quibusdam.
           type: string
         type: array
     title: AssetAnnotationDeleteRequest
@@ -96,6 +96,34 @@ definitions:
     description: AssetCollection is the media type for an array of Asset (default
       view)
     example:
+    - alias: AnAlias
+      annotations:
+        annotation/1: value/1
+        annotation/2: value/2
+      classified_at: "2020-09-03T15:00:42.112975Z"
+      environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+      id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      identifier: vulcan.example.com
+      options: '{"timeout":60}'
+      rolfp: R:1/O:1/L:0/F:0/P:0+S:1
+      scannable: true
+      type:
+        id: 29f83d16-09c4-4be5-8cae-e232d41f388a
+        name: Hostname
+    - alias: AnAlias
+      annotations:
+        annotation/1: value/1
+        annotation/2: value/2
+      classified_at: "2020-09-03T15:00:42.112975Z"
+      environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+      id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      identifier: vulcan.example.com
+      options: '{"timeout":60}'
+      rolfp: R:1/O:1/L:0/F:0/P:0+S:1
+      scannable: true
+      type:
+        id: 29f83d16-09c4-4be5-8cae-e232d41f388a
+        name: Hostname
     - alias: AnAlias
       annotations:
         annotation/1: value/1
@@ -370,6 +398,21 @@ definitions:
       type:
         id: 29f83d16-09c4-4be5-8cae-e232d41f388a
         name: Hostname
+    - alias: AnAlias
+      classified_at: "2020-09-03T15:00:42.112975Z"
+      environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+      id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      identifier: vulcan.example.com
+      options: '{"timeout":60}'
+      rolfp: R:1/O:1/L:0/F:0/P:0+S:1
+      scannable: true
+      status:
+        code: 3944598920153519998
+        error: Quo placeat magni harum ea.
+        type: Voluptatum mollitia consequuntur dignissimos.
+      type:
+        id: 29f83d16-09c4-4be5-8cae-e232d41f388a
+        name: Hostname
     items:
       $ref: '#/definitions/Assetresponse'
     title: 'Mediatype identifier: assetresponse; type=collection; view=default'
@@ -478,7 +521,7 @@ definitions:
         - a14c7c65-66ab-4676-bcf6-0dea9719f5c6
         - 9f7a0c78-b752-4126-aa6d-0f286ada7b8f
         items:
-          example: Voluptate est.
+          example: Magni id et vero in.
           type: string
         type: array
     required:
@@ -1486,14 +1529,6 @@ definitions:
       id: f6360346-77a5-4f97-b919-331363b3af26
       name: Default group
       options: '{"timeout":60}'
-    - description: All newly created assets are added to the Default group
-      id: f6360346-77a5-4f97-b919-331363b3af26
-      name: Default group
-      options: '{"timeout":60}'
-    - description: All newly created assets are added to the Default group
-      id: f6360346-77a5-4f97-b919-331363b3af26
-      name: Default group
-      options: '{"timeout":60}'
     items:
       $ref: '#/definitions/GroupWithoutAssetsCount'
     title: 'Mediatype identifier: group; type=collection; view=default'
@@ -1542,7 +1577,7 @@ definitions:
         - Web
         - HTTP
         items:
-          example: Natus esse neque aliquid.
+          example: Est est illo et corrupti rerum deleniti.
           type: string
         type: array
       recommendations:
@@ -1550,14 +1585,14 @@ definitions:
         example:
         - It is recommended to run DMARC
         items:
-          example: Rerum deleniti aut sed illo porro.
+          example: Sed illo porro placeat omnis.
           type: string
         type: array
       reference_links:
         description: Documentation reference for the issue
         example: []
         items:
-          example: Omnis perferendis.
+          example: Maxime natus esse neque aliquid.
           type: string
         type: array
       summary:
@@ -1720,33 +1755,6 @@ definitions:
       type:
         id: 29f83d16-09c4-4be5-8cae-e232d41f388a
         name: Hostname
-    - alias: AnAlias
-      annotations:
-        annotation/1: value/1
-        annotation/2: value/2
-      classified_at: "2020-09-03T15:00:42.112975Z"
-      environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
-      groups:
-      - description: All newly created assets are added to the Default group
-        id: f6360346-77a5-4f97-b919-331363b3af26
-        name: Default group
-        options: '{"timeout":60}'
-      - description: All newly created assets are added to the Default group
-        id: f6360346-77a5-4f97-b919-331363b3af26
-        name: Default group
-        options: '{"timeout":60}'
-      - description: All newly created assets are added to the Default group
-        id: f6360346-77a5-4f97-b919-331363b3af26
-        name: Default group
-        options: '{"timeout":60}'
-      id: a8720503-0284-45fd-9cf4-5bb6c500966f
-      identifier: vulcan.example.com
-      options: '{"timeout":60}'
-      rolfp: R:1/O:1/L:0/F:0/P:0+S:1
-      scannable: true
-      type:
-        id: 29f83d16-09c4-4be5-8cae-e232d41f388a
-        name: Hostname
     items:
       $ref: '#/definitions/Listassetentry'
     title: 'Mediatype identifier: listassetentry; type=collection; view=default'
@@ -1821,12 +1829,6 @@ definitions:
     description: PolicyCollection is the media type for an array of Policy (default
       view)
     example:
-    - id: af36818a-0f30-412c-9692-d37716075861
-      name: Sample Policy
-      settings_count: 12
-    - id: af36818a-0f30-412c-9692-d37716075861
-      name: Sample Policy
-      settings_count: 12
     - id: af36818a-0f30-412c-9692-d37716075861
       name: Sample Policy
       settings_count: 12
@@ -1913,6 +1915,9 @@ definitions:
     description: PolicysettingCollection is the media type for an array of Policysetting
       (default view)
     example:
+    - checktype_name: vulcan-tls
+      id: 5e51174d-3755-48b2-98bf-37e37cb07f6e
+      options: '{"timeout":60}'
     - checktype_name: vulcan-tls
       id: 5e51174d-3755-48b2-98bf-37e37cb07f6e
       options: '{"timeout":60}'
@@ -2054,62 +2059,6 @@ definitions:
           settings_count: 12
       schedule:
         cron: 0 7 1 * *
-    - autosend: false
-      disabled: false
-      global: true
-      id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
-      name: Every midnight
-      policy_groups:
-      - group:
-          assets_count: 1
-          description: All newly created assets are added to the Default group
-          id: f6360346-77a5-4f97-b919-331363b3af26
-          name: Default group
-          options: '{"timeout":60}'
-        policy:
-          id: af36818a-0f30-412c-9692-d37716075861
-          name: Sample Policy
-          settings_count: 12
-      - group:
-          assets_count: 1
-          description: All newly created assets are added to the Default group
-          id: f6360346-77a5-4f97-b919-331363b3af26
-          name: Default group
-          options: '{"timeout":60}'
-        policy:
-          id: af36818a-0f30-412c-9692-d37716075861
-          name: Sample Policy
-          settings_count: 12
-      schedule:
-        cron: 0 7 1 * *
-    - autosend: false
-      disabled: false
-      global: true
-      id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
-      name: Every midnight
-      policy_groups:
-      - group:
-          assets_count: 1
-          description: All newly created assets are added to the Default group
-          id: f6360346-77a5-4f97-b919-331363b3af26
-          name: Default group
-          options: '{"timeout":60}'
-        policy:
-          id: af36818a-0f30-412c-9692-d37716075861
-          name: Sample Policy
-          settings_count: 12
-      - group:
-          assets_count: 1
-          description: All newly created assets are added to the Default group
-          id: f6360346-77a5-4f97-b919-331363b3af26
-          name: Default group
-          options: '{"timeout":60}'
-        policy:
-          id: af36818a-0f30-412c-9692-d37716075861
-          name: Sample Policy
-          settings_count: 12
-      schedule:
-        cron: 0 7 1 * *
     items:
       $ref: '#/definitions/Program'
     title: 'Mediatype identifier: program; type=collection; view=default'
@@ -2207,6 +2156,8 @@ definitions:
       view)
     example:
     - email: john.doe@vulcan.example.com
+    - email: john.doe@vulcan.example.com
+    - email: john.doe@vulcan.example.com
     items:
       $ref: '#/definitions/Recipient'
     title: 'Mediatype identifier: recipient; type=collection; view=default'
@@ -2223,7 +2174,7 @@ definitions:
         - john.doe@vulcan.example.com
         - jane.doe@vulcan.example.com
         items:
-          example: Architecto sapiente voluptatum deserunt at ut ea.
+          example: Placeat voluptatem.
           type: string
         type: array
     required:
@@ -2399,43 +2350,6 @@ definitions:
   ScanCollection:
     description: ScanCollection is the media type for an array of Scan (default view)
     example:
-    - checks_count: 20
-      end_time: "2018-09-07T10:40:52Z"
-      id: 23e7034f-8180-4895-8e7f-73f2f7d90631
-      program:
-        autosend: false
-        disabled: false
-        global: true
-        id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
-        name: Every midnight
-        policy_groups:
-        - group:
-            assets_count: 1
-            description: All newly created assets are added to the Default group
-            id: f6360346-77a5-4f97-b919-331363b3af26
-            name: Default group
-            options: '{"timeout":60}'
-          policy:
-            id: af36818a-0f30-412c-9692-d37716075861
-            name: Sample Policy
-            settings_count: 12
-        - group:
-            assets_count: 1
-            description: All newly created assets are added to the Default group
-            id: f6360346-77a5-4f97-b919-331363b3af26
-            name: Default group
-            options: '{"timeout":60}'
-          policy:
-            id: af36818a-0f30-412c-9692-d37716075861
-            name: Sample Policy
-            settings_count: 12
-        schedule:
-          cron: 0 7 1 * *
-      progress: 1
-      requested_by: john.doe@vulcan.example.com
-      scheduled_time: "2018-09-07T10:40:52Z"
-      start_time: "2018-09-07T10:40:52Z"
-      status: FINISHED
     - checks_count: 20
       end_time: "2018-09-07T10:40:52Z"
       id: 23e7034f-8180-4895-8e7f-73f2f7d90631
@@ -2809,6 +2723,7 @@ definitions:
     example:
       description: Security Team
       id: ff74a33c-e683-4612-a62f-a9cf385f6522
+      is_onboarded_vulcan_tracker: true
       name: Security
       tag: team:security
     properties:
@@ -2820,6 +2735,10 @@ definitions:
         description: Team ID
         example: ff74a33c-e683-4612-a62f-a9cf385f6522
         type: string
+      is_onboarded_vulcan_tracker:
+        description: Is Onboarded in Vulcan Tracker
+        example: true
+        type: boolean
       name:
         description: Name
         example: Security
@@ -2835,14 +2754,7 @@ definitions:
     example:
     - description: Security Team
       id: ff74a33c-e683-4612-a62f-a9cf385f6522
-      name: Security
-      tag: team:security
-    - description: Security Team
-      id: ff74a33c-e683-4612-a62f-a9cf385f6522
-      name: Security
-      tag: team:security
-    - description: Security Team
-      id: ff74a33c-e683-4612-a62f-a9cf385f6522
+      is_onboarded_vulcan_tracker: true
       name: Security
       tag: team:security
     items:
@@ -2958,16 +2870,6 @@ definitions:
         last_login: "2018-09-07T10:40:52Z"
         lastname: Doe
         observer: true
-    - role: owner
-      user:
-        active: true
-        admin: true
-        email: john.doe@vulcan.example.com
-        firstname: John
-        id: 967d9966-b561-4233-bd6f-cac603fd8320
-        last_login: "2018-09-07T10:40:52Z"
-        lastname: Doe
-        observer: true
     items:
       $ref: '#/definitions/Teammember'
     title: 'Mediatype identifier: teammember; type=collection; view=default'
@@ -3048,14 +2950,6 @@ definitions:
   UserCollection:
     description: UserCollection is the media type for an array of User (default view)
     example:
-    - active: true
-      admin: true
-      email: john.doe@vulcan.example.com
-      firstname: John
-      id: 967d9966-b561-4233-bd6f-cac603fd8320
-      last_login: "2018-09-07T10:40:52Z"
-      lastname: Doe
-      observer: true
     - active: true
       admin: true
       email: john.doe@vulcan.example.com
