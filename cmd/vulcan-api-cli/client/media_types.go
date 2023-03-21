@@ -1290,6 +1290,8 @@ type Team struct {
 	Description *string `form:"description,omitempty" json:"description,omitempty" yaml:"description,omitempty" xml:"description,omitempty"`
 	// Team ID
 	ID *string `form:"id,omitempty" json:"id,omitempty" yaml:"id,omitempty" xml:"id,omitempty"`
+	// Is Onboarded in Vulcan Tracker
+	IsOnboardedVulcanTracker *bool `form:"is_onboarded_vulcan_tracker,omitempty" json:"is_onboarded_vulcan_tracker,omitempty" yaml:"is_onboarded_vulcan_tracker,omitempty" xml:"is_onboarded_vulcan_tracker,omitempty"`
 	// Name
 	Name *string `form:"name,omitempty" json:"name,omitempty" yaml:"name,omitempty" xml:"name,omitempty"`
 	// tag
