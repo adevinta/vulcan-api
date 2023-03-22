@@ -90,6 +90,7 @@ Those are the variables you have to setup:
 |REPORTS_API_URL||http://localhost:8084|
 |PERSISTENCE_HOST||persistence.vulcan.example.com|
 |VULNERABILITYDB_URL||http://localhost:8083|
+|VULCANTRACKER_URL||http://localhost:808|
 |SCAN_REDIRECT_URL|Redirecting URL for reports, OPTIONAL|https://insights-redirect.vulcan.s3-xxx.amazonaws.com/index.html?reportUrl=|
 |VULCAN_UI_URL|Vulcan UI base URL for Digest report link|http://localhost:1234|
 |GPC_${i}_NAME|Specify the name of the global policy that the ${i} ALLOW/BLOCK list will apply. Rquired if any ALLOW/BLOCK list is specified.|web-scanning-global|
