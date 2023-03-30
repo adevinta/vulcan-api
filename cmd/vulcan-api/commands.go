@@ -12,6 +12,7 @@ import (
 	"os"
 	"os/signal"
 	"os/user"
+	"strings"
 	"syscall"
 
 	"github.com/go-kit/kit/log"
@@ -40,7 +41,7 @@ import (
 	saml "github.com/adevinta/vulcan-api/pkg/saml"
 	"github.com/adevinta/vulcan-api/pkg/scanengine"
 	"github.com/adevinta/vulcan-api/pkg/schedule"
-	"github.com/adevinta/vulcan-api/pkg/vulcantracker"
+	"github.com/adevinta/vulcan-api/pkg/tickets"
 	"github.com/adevinta/vulcan-api/pkg/vulnerabilitydb"
 	vulcancore "github.com/adevinta/vulcan-core-cli/vulcan-core/client"
 	metrics "github.com/adevinta/vulcan-metrics-client"
@@ -127,9 +128,9 @@ type vulnerabilityDBConfig struct {
 }
 
 type vulcantrackerConfig struct {
-	URL            string   `mapstructure:"url"`
-	InsecureTLS    bool     `mapstructure:"insecure_tls"`
-	OnboardedTeams []string `mapstructure:"onboarded_teams"`
+	URL            string `mapstructure:"url"`
+	InsecureTLS    bool   `mapstructure:"insecure_tls"`
+	OnboardedTeams string `mapstructure:"onboarded_teams"`
 }
 
 type metricsConfig struct {
@@ -210,8 +211,8 @@ func startServer() error {
 	// Build vulndb client.
 	vulnerabilityDBClient := vulnerabilitydb.NewClient(nil, cfg.VulnerabilityDB.URL, cfg.VulnerabilityDB.InsecureTLS)
 
-	// Build vulcantracker client.
-	vulcantrackerClient := vulcantracker.NewClient(nil, cfg.VulcanTracker.URL, cfg.VulcanTracker.InsecureTLS, cfg.VulcanTracker.OnboardedTeams)
+	// Build tickets client.
+	vulcantrackerClient := tickets.NewClient(nil, cfg.VulcanTracker.URL, cfg.VulcanTracker.InsecureTLS)
 
 	// Build reports client.
 	reportsClient, err := reports.NewClient(cfg.Reports)
@@ -259,8 +260,9 @@ func startServer() error {
 	}
 
 	// Build service layer.
+	onBoardedTeamsVT := strings.Split(cfg.VulcanTracker.OnboardedTeams, ",")
 	vulcanitoService := service.New(logger, db, jwtConfig, cfg.ScanEngine, schedulerClient, cfg.Reports,
-		vulnerabilityDBClient, vulcantrackerClient, reportsClient, metricsClient, awsAccounts)
+		vulnerabilityDBClient, vulcantrackerClient, reportsClient, metricsClient, awsAccounts, onBoardedTeamsVT)
 
 	// Second, inject the service layer to the CDC parser JobsRunner.
 	jobsRunner.Client = vulcanitoService

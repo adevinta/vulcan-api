@@ -53,7 +53,6 @@ func makeListTeamsEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoin
 
 		elements := []*api.TeamResponse{}
 		for _, team := range teams {
-			team.IsOnboardedInVulcanTracker = s.IsATeamOnboardedInVulcanTracker(ctx, team.ID) // feature flag.
 			elements = append(elements, team.ToResponse())
 		}
 		return Ok{elements}, nil
@@ -97,7 +96,6 @@ func makeCreateTeamEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoi
 			}
 		}
 
-		team.IsOnboardedInVulcanTracker = s.IsATeamOnboardedInVulcanTracker(ctx, requestBody.ID) // feature flag.
 		return Created{team.ToResponse()}, nil
 	}
 }
@@ -112,8 +110,6 @@ func makeFindTeamEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint
 		if err != nil {
 			return nil, err
 		}
-
-		team.IsOnboardedInVulcanTracker = s.IsATeamOnboardedInVulcanTracker(ctx, requestBody.ID) // feature flag.
 		return Ok{team.ToResponse()}, nil
 	}
 }
@@ -147,7 +143,6 @@ func makeUpdateTeamEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoi
 			//TODO: log internal err
 			return nil, err
 		}
-		team.IsOnboardedInVulcanTracker = s.IsATeamOnboardedInVulcanTracker(ctx, requestBody.ID) // feature flag.
 		return Ok{team.ToResponse()}, nil
 	}
 }

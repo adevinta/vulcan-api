@@ -8,7 +8,8 @@ exposed by Vulcan, the corresponding specifications are here:
 
 ## Requirements
 
-If you are a macOS user you'll need to install `coreutils` before the following commands.
+If you are a macOS user you will need to have the `realpath` command installed before executing the following instructions.
+You can install the command as part of the `coreutils` homebrew formula or using MacPorts.
 
 ```sh
 go install github.com/filewalkwithme/impl@latest

@@ -528,25 +528,25 @@ func (ut *FindingOverwritePayload) Validate() (err error) {
 	return
 }
 
-// findingTicketCreationPayload user type.
-type findingTicketCreationPayload struct {
+// findingTicketPayload user type.
+type findingTicketPayload struct {
 	// Description
 	Description *string `form:"description,omitempty" json:"description,omitempty" yaml:"description,omitempty" xml:"description,omitempty"`
 	// Summary
 	Summary *string `form:"summary,omitempty" json:"summary,omitempty" yaml:"summary,omitempty" xml:"summary,omitempty"`
 }
 
-// Validate validates the findingTicketCreationPayload type instance.
-func (ut *findingTicketCreationPayload) Validate() (err error) {
+// Validate validates the findingTicketPayload type instance.
+func (ut *findingTicketPayload) Validate() (err error) {
 	if ut.Summary == nil {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "summary"))
 	}
 	return
 }
 
-// Publicize creates FindingTicketCreationPayload from findingTicketCreationPayload
-func (ut *findingTicketCreationPayload) Publicize() *FindingTicketCreationPayload {
-	var pub FindingTicketCreationPayload
+// Publicize creates FindingTicketPayload from findingTicketPayload
+func (ut *findingTicketPayload) Publicize() *FindingTicketPayload {
+	var pub FindingTicketPayload
 	if ut.Description != nil {
 		pub.Description = ut.Description
 	}
@@ -556,16 +556,16 @@ func (ut *findingTicketCreationPayload) Publicize() *FindingTicketCreationPayloa
 	return &pub
 }
 
-// FindingTicketCreationPayload user type.
-type FindingTicketCreationPayload struct {
+// FindingTicketPayload user type.
+type FindingTicketPayload struct {
 	// Description
 	Description *string `form:"description,omitempty" json:"description,omitempty" yaml:"description,omitempty" xml:"description,omitempty"`
 	// Summary
 	Summary string `form:"summary" json:"summary" yaml:"summary" xml:"summary"`
 }
 
-// Validate validates the FindingTicketCreationPayload type instance.
-func (ut *FindingTicketCreationPayload) Validate() (err error) {
+// Validate validates the FindingTicketPayload type instance.
+func (ut *FindingTicketPayload) Validate() (err error) {
 	if ut.Summary == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "summary"))
 	}

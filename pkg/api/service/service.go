@@ -12,7 +12,7 @@ import (
 	"github.com/adevinta/vulcan-api/pkg/reports"
 	"github.com/adevinta/vulcan-api/pkg/scanengine"
 	"github.com/adevinta/vulcan-api/pkg/schedule"
-	"github.com/adevinta/vulcan-api/pkg/vulcantracker"
+	"github.com/adevinta/vulcan-api/pkg/tickets"
 	"github.com/adevinta/vulcan-api/pkg/vulnerabilitydb"
 	metrics "github.com/adevinta/vulcan-metrics-client"
 )
@@ -32,10 +32,11 @@ type vulcanitoService struct {
 	scanEngineConfig    scanengine.Config
 	reportsConfig       reports.Config
 	vulndbClient        vulnerabilitydb.Client
-	vulcantrackerClient vulcantracker.Client
+	vulcantrackerClient tickets.Client
 	reportsClient       reports.Client
 	metricsClient       metrics.Client
 	awsAccounts         AWSAccounts
+	allowedTrackerTeams []string // feature flag.
 }
 
 //go:generate impl -output logging.go -stub templates/logging/impl.tmpl -header templates/logging/header.tmpl "middleware loggingMiddleware" api.VulcanitoService
@@ -44,8 +45,8 @@ type vulcanitoService struct {
 // New returns a basic Service with all of the expected middlewares wired in.
 func New(logger log.Logger, db api.VulcanitoStore, jwtConfig jwt.Config,
 	scanEngineConfig scanengine.Config, programScheduler schedule.ScanScheduler, reportsConfig reports.Config,
-	vulndbClient vulnerabilitydb.Client, vulcantrackerClient vulcantracker.Client, reportsClient reports.Client,
-	metricsClient metrics.Client, awsAccounts AWSAccounts) api.VulcanitoService {
+	vulndbClient vulnerabilitydb.Client, vulcantrackerClient tickets.Client, reportsClient reports.Client,
+	metricsClient metrics.Client, awsAccounts AWSAccounts, allowedTrackerTeams []string) api.VulcanitoService {
 
 	var svc api.VulcanitoService
 	{
@@ -60,6 +61,7 @@ func New(logger log.Logger, db api.VulcanitoStore, jwtConfig jwt.Config,
 			reportsClient:       reportsClient,
 			metricsClient:       metricsClient,
 			awsAccounts:         awsAccounts,
+			allowedTrackerTeams: allowedTrackerTeams,
 		}
 	}
 	return LoggingMiddleware(logger)(svc)

@@ -6,11 +6,6 @@ package common
 
 import (
 	"encoding/json"
-	"fmt"
-	"net/http"
-	"strings"
-
-	"github.com/adevinta/errors"
 )
 
 func IsValidJSON(str *string) bool {
@@ -37,36 +32,4 @@ func StringValue(v *string) string {
 		return *v
 	}
 	return ""
-}
-
-func IsHttpStatusOk(status int) bool {
-	return status >= http.StatusOK && status < http.StatusMultipleChoices
-}
-
-func BuildQueryFilter(filters map[string]string) string {
-	filterParts := []string{}
-	for key, value := range filters {
-		part := fmt.Sprintf("%s=%s", key, value)
-		filterParts = append(filterParts, part)
-	}
-	return strings.Join(filterParts, "&")
-}
-
-func ParseHttpErr(statusCode int, mssg string) error {
-	switch statusCode {
-	case http.StatusBadRequest:
-		return errors.Assertion(mssg)
-	case http.StatusUnauthorized:
-		return errors.Unauthorized(mssg)
-	case http.StatusForbidden:
-		return errors.Forbidden(mssg)
-	case http.StatusNotFound:
-		return errors.NotFound(mssg)
-	case http.StatusMethodNotAllowed:
-		return errors.MethodNotAllowed(mssg)
-	case http.StatusUnprocessableEntity:
-		return errors.Validation(mssg)
-	default:
-		return errors.Default(mssg)
-	}
 }

@@ -16,7 +16,3 @@ func (s vulcanitoService) CreateFindingTicket(ctx context.Context, ticket api.Fi
 func (s vulcanitoService) GetFindingTicket(ctx context.Context, findingID, teamID string) (*api.Ticket, error) {
 	return s.vulcantrackerClient.GetFindingTicket(ctx, findingID, teamID)
 }
-
-func (s vulcanitoService) IsATeamOnboardedInVulcanTracker(ctx context.Context, teamID string) bool {
-	return s.vulcantrackerClient.IsATeamOnboardedInVulcanTracker(ctx, teamID)
-}
