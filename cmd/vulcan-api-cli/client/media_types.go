@@ -392,25 +392,17 @@ func (c *Client) DecodeFindingOverwriteCollection(resp *http.Response) (FindingO
 	return decoded, err
 }
 
-// Finding Ticket Creation (default view)
+// Finding Ticket (default view)
 //
-// Identifier: finding_ticketcreation; view=default
-type FindingTicketcreation struct {
-	// The previous status for the finding referenced by the finding_id field
-	Description *string `form:"description,omitempty" json:"description,omitempty" yaml:"description,omitempty" xml:"description,omitempty"`
-	// Finding ID
-	FindingID *string `form:"finding_id,omitempty" json:"finding_id,omitempty" yaml:"finding_id,omitempty" xml:"finding_id,omitempty"`
-	// The summary of the ticket
-	Summary *string `form:"summary,omitempty" json:"summary,omitempty" yaml:"summary,omitempty" xml:"summary,omitempty"`
-	// The ID associated to the team who requested this ticket creation
-	TeamID *string `form:"team_id,omitempty" json:"team_id,omitempty" yaml:"team_id,omitempty" xml:"team_id,omitempty"`
+// Identifier: finding_ticket; view=default
+type FindingTicket struct {
 	// Link to the ticket
 	URLTracker *string `form:"url_tracker,omitempty" json:"url_tracker,omitempty" yaml:"url_tracker,omitempty" xml:"url_tracker,omitempty"`
 }
 
-// DecodeFindingTicketcreation decodes the FindingTicketcreation instance encoded in resp body.
-func (c *Client) DecodeFindingTicketcreation(resp *http.Response) (*FindingTicketcreation, error) {
-	var decoded FindingTicketcreation
+// DecodeFindingTicket decodes the FindingTicket instance encoded in resp body.
+func (c *Client) DecodeFindingTicket(resp *http.Response) (*FindingTicket, error) {
+	var decoded FindingTicket
 	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
 	return &decoded, err
 }
@@ -1290,12 +1282,12 @@ type Team struct {
 	Description *string `form:"description,omitempty" json:"description,omitempty" yaml:"description,omitempty" xml:"description,omitempty"`
 	// Team ID
 	ID *string `form:"id,omitempty" json:"id,omitempty" yaml:"id,omitempty" xml:"id,omitempty"`
-	// Is Onboarded in Vulcan Tracker
-	IsOnboardedVulcanTracker *bool `form:"is_onboarded_vulcan_tracker,omitempty" json:"is_onboarded_vulcan_tracker,omitempty" yaml:"is_onboarded_vulcan_tracker,omitempty" xml:"is_onboarded_vulcan_tracker,omitempty"`
 	// Name
 	Name *string `form:"name,omitempty" json:"name,omitempty" yaml:"name,omitempty" xml:"name,omitempty"`
 	// tag
 	Tag *string `form:"tag,omitempty" json:"tag,omitempty" yaml:"tag,omitempty" xml:"tag,omitempty"`
+	// If the team is Onboarded in Vulcan Tracker
+	UsingTracker *bool `form:"using_tracker,omitempty" json:"using_tracker,omitempty" yaml:"using_tracker,omitempty" xml:"using_tracker,omitempty"`
 }
 
 // DecodeTeam decodes the Team instance encoded in resp body.

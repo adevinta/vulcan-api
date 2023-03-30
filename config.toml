@@ -57,6 +57,8 @@ insecure_tls = true
 [vulcantracker]
 url = "$VULCANTRACKER_URL"
 insecure_tls = true
+onboarded_teams = "$VULCANTRACKER_TEAMS"
+
 
 [metrics]
 enabled = $DOGSTATSD_ENABLED

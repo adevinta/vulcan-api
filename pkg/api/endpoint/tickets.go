@@ -14,8 +14,8 @@ import (
 	"github.com/adevinta/vulcan-api/pkg/api"
 )
 
-// FindingCreateTicketRequest represents a request to Vulcan Tracker that create a relationship
-// between findings and tickets.
+// FindingCreateTicketRequest represents a request to Vulcan Tracker that create
+// a relationship between findings and tickets.
 type FindingCreateTicketRequest struct {
 	FindingID   string `json:"finding_id" urlvar:"finding_id"`
 	TeamID      string `json:"team_id" urlvar:"team_id"`
@@ -23,8 +23,10 @@ type FindingCreateTicketRequest struct {
 	Description string `json:"description"`
 }
 
-func makeCreateFindingTicketEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
-	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+func makeCreateFindingTicketEndpoint(s api.VulcanitoService,
+	logger kitlog.Logger) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{},
+		err error) {
 		r, ok := request.(*FindingCreateTicketRequest)
 		if !ok {
 			return nil, errors.Assertion("Type assertion failed")

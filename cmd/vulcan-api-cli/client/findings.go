@@ -338,11 +338,11 @@ func SubmitAFindingTicketCreationFindingsPath(teamID string, findingID string) s
 	param0 := teamID
 	param1 := findingID
 
-	return fmt.Sprintf("/api/v1/teams/%s/findings/%s/ticketcreation", param0, param1)
+	return fmt.Sprintf("/api/v1/teams/%s/findings/%s/ticket", param0, param1)
 }
 
 // Create a ticket associated with the finding in a ticket tracker tool.
-func (c *Client) SubmitAFindingTicketCreationFindings(ctx context.Context, path string, payload *FindingTicketCreationPayload) (*http.Response, error) {
+func (c *Client) SubmitAFindingTicketCreationFindings(ctx context.Context, path string, payload *FindingTicketPayload) (*http.Response, error) {
 	req, err := c.NewSubmitAFindingTicketCreationFindingsRequest(ctx, path, payload)
 	if err != nil {
 		return nil, err
@@ -351,7 +351,7 @@ func (c *Client) SubmitAFindingTicketCreationFindings(ctx context.Context, path 
 }
 
 // NewSubmitAFindingTicketCreationFindingsRequest create the request corresponding to the Submit a Finding Ticket Creation action endpoint of the findings resource.
-func (c *Client) NewSubmitAFindingTicketCreationFindingsRequest(ctx context.Context, path string, payload *FindingTicketCreationPayload) (*http.Request, error) {
+func (c *Client) NewSubmitAFindingTicketCreationFindingsRequest(ctx context.Context, path string, payload *FindingTicketPayload) (*http.Request, error) {
 	var body bytes.Buffer
 	err := c.Encoder.Encode(payload, &body, "*/*")
 	if err != nil {

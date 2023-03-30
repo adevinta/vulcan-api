@@ -8,6 +8,7 @@ import (
 	vulcantracker "github.com/adevinta/vulcan-tracker/pkg/model"
 )
 
+// FindingTicketCreate represents the data needed to create a ticket.
 type FindingTicketCreate struct {
 	FindingID   string `json:"finding_id" validate:"required"`
 	TeamID      string `json:"team_id" validate:"required"`
@@ -16,12 +17,10 @@ type FindingTicketCreate struct {
 	URLTracker  string `json:"url_tracker"`
 }
 
+// FindingTicketCreateResponse represents a response when request a ticket
+// creation.
 type FindingTicketCreateResponse struct {
-	FindingID   string `json:"finding_id"`
-	TeamID      string `json:"team_id"`
-	Summary     string `json:"summary"`
-	Description string `json:"description"`
-	URLTracker  string `json:"url_tracker"`
+	URLTracker string `json:"url_tracker"`
 }
 
 // Ticket represents the response data returned from the vulcan tracker service for
@@ -30,13 +29,9 @@ type Ticket struct {
 	Ticket vulcantracker.Ticket `json:"ticket"`
 }
 
+// ToResponse transforms a ticket model into a response.
 func (t Ticket) ToResponse() FindingTicketCreateResponse {
 	output := FindingTicketCreateResponse{}
-
-	output.TeamID = t.Ticket.TeamID
-	output.FindingID = t.Ticket.FindingID
-	output.Summary = t.Ticket.Summary
-	output.Description = t.Ticket.Description
 	output.URLTracker = t.Ticket.URLTracker
 
 	return output

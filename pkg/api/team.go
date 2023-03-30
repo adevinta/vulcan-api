@@ -9,16 +9,16 @@ import (
 )
 
 type Team struct {
-	ID                         string      `gorm:"primary_key;AUTO_INCREMENT" json:"id" sql:"DEFAULT:gen_random_uuid()"`
-	Name                       string      `json:"name" validate:"required"`
-	Description                string      `json:"description"`
-	Tag                        string      `json:"tag" validate:"required"`
-	CreatedAt                  *time.Time  `json:"-"`
-	UpdatedAt                  *time.Time  `json:"-"`
-	Assets                     []*Asset    `json:"assets"`    // This line is infered from other tables.
-	UserTeam                   []*UserTeam `json:"user_team"` // This line is infered from other tables.
-	Groups                     []*Group
-	IsOnboardedInVulcanTracker bool `json:"is_onboarded_vulcan_tracker" sql:"-"` // feature flag.
+	ID           string      `gorm:"primary_key;AUTO_INCREMENT" json:"id" sql:"DEFAULT:gen_random_uuid()"`
+	Name         string      `json:"name" validate:"required"`
+	Description  string      `json:"description"`
+	Tag          string      `json:"tag" validate:"required"`
+	CreatedAt    *time.Time  `json:"-"`
+	UpdatedAt    *time.Time  `json:"-"`
+	Assets       []*Asset    `json:"assets"`    // This line is infered from other tables.
+	UserTeam     []*UserTeam `json:"user_team"` // This line is infered from other tables.
+	Groups       []*Group
+	UsingTracker bool `json:"using_tracker" sql:"-"` // feature flag.
 }
 
 func (t Team) ToResponse() *TeamResponse {
@@ -27,14 +27,14 @@ func (t Team) ToResponse() *TeamResponse {
 	response.Name = t.Name
 	response.Description = t.Description
 	response.Tag = t.Tag
-	response.IsOnboardedInVulcanTracker = t.IsOnboardedInVulcanTracker
+	response.UsingTracker = t.UsingTracker
 	return response
 }
 
 type TeamResponse struct {
-	ID                         string `json:"id"`
-	Name                       string `json:"name"`
-	Description                string `json:"description"`
-	Tag                        string `json:"tag"`
-	IsOnboardedInVulcanTracker bool   `json:"is_onboarded_vulcan_tracker"` // feature flag.
+	ID           string `json:"id"`
+	Name         string `json:"name"`
+	Description  string `json:"description"`
+	Tag          string `json:"tag"`
+	UsingTracker bool   `json:"using_tracker"` // feature flag.
 }

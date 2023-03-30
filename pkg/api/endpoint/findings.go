@@ -181,12 +181,10 @@ func makeFindFindingEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpo
 
 		findingTicket, err := s.GetFindingTicket(ctx, finding.Finding.ID, r.TeamID)
 		if err != nil {
-			// TODO: we need to decide if we should ignore errors getting tickets from vulcan-tracker
-			logger.Log("error retrieving a ticket from vulcan tracker", err)
-			//return nil, err
-		} else {
-			finding.Finding.TicketURL = findingTicket.Ticket.URLTracker
+			return nil, err
 		}
+
+		finding.Finding.TicketURL = findingTicket.Ticket.URLTracker
 
 		if authorizedFindFindingRequest(finding.Finding.Target.Teams, r.TeamID) {
 			return Ok{finding.Finding}, nil

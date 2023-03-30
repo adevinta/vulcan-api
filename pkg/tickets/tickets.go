@@ -1,7 +1,7 @@
 /*
 Copyright 2023 Adevinta
 */
-package vulcantracker
+package tickets
 
 import (
 	"bytes"
@@ -9,12 +9,13 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
+	"github.com/adevinta/errors"
 	"io"
 	"net/http"
 	"net/url"
+	"strings"
 
 	"github.com/adevinta/vulcan-api/pkg/api"
-	"github.com/adevinta/vulcan-api/pkg/common"
 )
 
 const (
@@ -29,17 +30,15 @@ const (
 type Client interface {
 	CreateTicket(ctx context.Context, payload api.FindingTicketCreate) (*api.Ticket, error)
 	GetFindingTicket(ctx context.Context, findingID, teamID string) (*api.Ticket, error)
-	IsATeamOnboardedInVulcanTracker(ctx context.Context, teamID string) bool // feature flag.
 }
 
 type client struct {
-	baseURL        string
-	httpClient     *http.Client
-	onboardedTeams []string // feature flag.
+	baseURL    string
+	httpClient *http.Client
 }
 
-// NewClient returns a new vulcantracker client with the given config and httpClient.
-func NewClient(httpClient *http.Client, baseURL string, insecureTLS bool, onboardedTeams []string) Client {
+// NewClient returns a new tickets client with the given config and httpClient.
+func NewClient(httpClient *http.Client, baseURL string, insecureTLS bool) Client {
 	if httpClient == nil {
 		httpClient = &http.Client{
 			Transport: &http.Transport{
@@ -50,9 +49,8 @@ func NewClient(httpClient *http.Client, baseURL string, insecureTLS bool, onboar
 		}
 	}
 	return &client{
-		httpClient:     httpClient,
-		baseURL:        baseURL,
-		onboardedTeams: onboardedTeams,
+		httpClient: httpClient,
+		baseURL:    baseURL,
 	}
 }
 
@@ -62,7 +60,7 @@ func (c *client) performRequest(ctx context.Context, method, path, authTeam stri
 		return nil, err
 	}
 	u.Path = path
-	u.RawQuery = common.BuildQueryFilter(params)
+	u.RawQuery = BuildQueryFilter(params)
 
 	req, err := http.NewRequest(method, u.String(), bytes.NewBuffer(payload))
 	if err != nil {
@@ -83,26 +81,16 @@ func (c *client) performRequest(ctx context.Context, method, path, authTeam stri
 		return nil, err
 	}
 
-	if !common.IsHttpStatusOk(resp.StatusCode) {
+	if !IsHTTPStatusOk(resp.StatusCode) {
 		content, err := io.ReadAll(resp.Body)
 		if err != nil {
 			return nil, err
 		}
 
-		return nil, common.ParseHttpErr(resp.StatusCode, string(content))
+		return nil, ParseHTTPErr(resp.StatusCode, string(content))
 	}
 
 	return io.ReadAll(resp.Body)
-}
-
-// IsATeamOnboardedInVulcanTracker return if a team is onboarded in vulcan tracker.
-func (c *client) IsATeamOnboardedInVulcanTracker(ctx context.Context, teamID string) bool {
-	for _, team := range c.onboardedTeams {
-		if team == teamID {
-			return true
-		}
-	}
-	return false
 }
 
 // CreateTicket requests the creation of a ticket in the ticket tracker server configurated for the team.
@@ -123,6 +111,7 @@ func (c *client) CreateTicket(ctx context.Context, payload api.FindingTicketCrea
 	return &ticketResponse, err
 }
 
+// GetFindingTicket makes a request to vulcan tracker to find a ticket.
 func (c *client) GetFindingTicket(ctx context.Context, findingID, teamID string) (*api.Ticket, error) {
 	path := fmt.Sprintf(findingTicketPath, teamID, findingID)
 
@@ -134,4 +123,40 @@ func (c *client) GetFindingTicket(ctx context.Context, findingID, teamID string)
 	err = json.Unmarshal(resp, &ticketResponse)
 
 	return &ticketResponse, err
+}
+
+// IsHTTPStatusOk determines if a status code is an OK or not.
+func IsHTTPStatusOk(status int) bool {
+	return status >= http.StatusOK && status < http.StatusMultipleChoices
+}
+
+// BuildQueryFilter builds the query params string to be added to a request.
+func BuildQueryFilter(filters map[string]string) string {
+	filterParts := []string{}
+	for key, value := range filters {
+		part := fmt.Sprintf("%s=%s", key, value)
+		filterParts = append(filterParts, part)
+	}
+	return strings.Join(filterParts, "&")
+}
+
+// ParseHTTPErr wraps and transform an HTTP error into a custom error
+// using github.com/adevinta/errors fro that
+func ParseHTTPErr(statusCode int, mssg string) error {
+	switch statusCode {
+	case http.StatusBadRequest:
+		return errors.Assertion(mssg)
+	case http.StatusUnauthorized:
+		return errors.Unauthorized(mssg)
+	case http.StatusForbidden:
+		return errors.Forbidden(mssg)
+	case http.StatusNotFound:
+		return errors.NotFound(mssg)
+	case http.StatusMethodNotAllowed:
+		return errors.MethodNotAllowed(mssg)
+	case http.StatusUnprocessableEntity:
+		return errors.Validation(mssg)
+	default:
+		return errors.Default(mssg)
+	}
 }
