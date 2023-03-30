@@ -81,12 +81,14 @@ func (c *client) performRequest(ctx context.Context, method, path, authTeam stri
 		return nil, err
 	}
 
-	if !IsHTTPStatusOk(resp.StatusCode) {
+	switch {
+	case resp.StatusCode == http.StatusNotFound:
+		return io.ReadAll(resp.Body)
+	case !IsHTTPStatusOk(resp.StatusCode):
 		content, err := io.ReadAll(resp.Body)
 		if err != nil {
 			return nil, err
 		}
-
 		return nil, ParseHTTPErr(resp.StatusCode, string(content))
 	}
 
