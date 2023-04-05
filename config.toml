@@ -57,6 +57,7 @@ insecure_tls = true
 [vulcantracker]
 url = "$VULCANTRACKER_URL"
 insecure_tls = true
+# comma separated list of teams ids
 onboarded_teams = "$VULCANTRACKER_TEAMS"
 
 
