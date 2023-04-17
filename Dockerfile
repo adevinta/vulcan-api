@@ -18,7 +18,7 @@ COPY . .
 
 RUN cd cmd/vulcan-api && GOOS=linux GOARCH=amd64 go build -tags musl . && cd -
 
-FROM alpine:3.17.2
+FROM alpine:3.17.3
 
 WORKDIR /flyway
 
