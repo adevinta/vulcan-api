@@ -20,7 +20,7 @@ require (
 	github.com/gorilla/mux v1.8.0
 	github.com/jinzhu/gorm v1.9.12
 	github.com/lestrrat-go/backoff v1.0.0
-	github.com/lib/pq v1.10.3
+	github.com/lib/pq v1.10.8
 	github.com/robfig/cron v1.2.0
 	github.com/russellhaering/gosaml2 v0.8.1
 	github.com/russellhaering/goxmldsig v1.2.0
