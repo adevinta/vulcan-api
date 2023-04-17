@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/adevinta/errors v1.0.0
-	github.com/adevinta/vulcan-core-cli v1.0.1
+	github.com/adevinta/vulcan-core-cli v1.0.2
 	github.com/adevinta/vulcan-groupie v1.0.0
 	github.com/adevinta/vulcan-metrics-client v1.0.1
 	github.com/adevinta/vulcan-report v1.0.0
