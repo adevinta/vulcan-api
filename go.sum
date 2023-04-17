@@ -52,8 +52,8 @@ github.com/PuerkitoBio/purell v1.1.1/go.mod h1:c11w/QuzBsJSee3cPx9rAFu61PvFxuPbt
 github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578/go.mod h1:uGdkoq3SwY9Y+13GIhn11/XLaGBb4BfwItxLd5jeuXE=
 github.com/adevinta/errors v1.0.0 h1:AWSk4/FPscfTUWSV7tw5Gj5+9pjvDLF/+rhv97dSRPU=
 github.com/adevinta/errors v1.0.0/go.mod h1:wzlA5WqVWJnAbHve26Io48+aAvmKLWDPBprJPWeuZNI=
-github.com/adevinta/vulcan-core-cli v1.0.1 h1:X8srZ/YR8VH82dJRfGQh5C4rMART9wvv77fHw8rzkEk=
-github.com/adevinta/vulcan-core-cli v1.0.1/go.mod h1:DBiZc/kZ4dKAjWQV5RZ5QVtkKRce81sKwy6XbFj/s7U=
+github.com/adevinta/vulcan-core-cli v1.0.2 h1:HrwMZTGddiJ4difC+RdRv0J6escwkx3bk88y48/TOtQ=
+github.com/adevinta/vulcan-core-cli v1.0.2/go.mod h1:DBiZc/kZ4dKAjWQV5RZ5QVtkKRce81sKwy6XbFj/s7U=
 github.com/adevinta/vulcan-groupie v1.0.0 h1:I02jze7rGpmwHQxrjHziULj4Ub2AWFXKHs/1TW8O8vs=
 github.com/adevinta/vulcan-groupie v1.0.0/go.mod h1:37AoKMHsUlspA3HAaDjURwnOghqoQl2TczEMz8Zp0jk=
 github.com/adevinta/vulcan-metrics-client v1.0.1 h1:BAugnnRWvkA3vnuCX77W04PWhneZyenkrXtf9YgtZQk=
