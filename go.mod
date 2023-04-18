@@ -8,7 +8,7 @@ require (
 	github.com/adevinta/vulcan-groupie v1.0.0
 	github.com/adevinta/vulcan-metrics-client v1.0.1
 	github.com/adevinta/vulcan-report v1.0.0
-	github.com/adevinta/vulcan-scan-engine v1.1.5
+	github.com/adevinta/vulcan-scan-engine v1.1.8
 	github.com/adevinta/vulcan-types v1.0.0
 	github.com/adevinta/vulnerability-db-api v1.1.5
 	github.com/aws/aws-sdk-go v1.44.98
@@ -41,7 +41,7 @@ require (
 	github.com/dimfeld/httptreemux v5.0.1+incompatible // indirect
 	github.com/docker/distribution v2.8.1+incompatible // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
-	github.com/go-kit/log v0.2.0 // indirect
+	github.com/go-kit/log v0.2.1 // indirect
 	github.com/go-logfmt/logfmt v0.5.1 // indirect
 	github.com/go-openapi/analysis v0.21.3 // indirect
 	github.com/go-openapi/spec v0.20.6 // indirect
