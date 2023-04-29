@@ -58,6 +58,7 @@ type AsyncTxParser struct {
 type AsyncAPI interface {
 	PushAsset(asset asyncapi.AssetPayload) error
 	DeleteAsset(asset asyncapi.AssetPayload) error
+	PushFinding(finding asyncapi.FindingPayload) error
 }
 
 // NewAsyncTxParser builds a new CDC log parser to handle distributed
@@ -241,12 +242,7 @@ func (p *AsyncTxParser) processUpdateAsset(data []byte) error {
 		return errInvalidData
 	}
 	asyncAsset := assetToAsyncAsset(dto.NewAsset)
-	err = p.asyncAPI.PushAsset(asyncAsset)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return p.asyncAPI.PushAsset(asyncAsset)
 }
 
 func (p *AsyncTxParser) processDeleteAllAssets(data []byte) error {
@@ -276,6 +272,7 @@ func (p *AsyncTxParser) processFindingOverwrite(data []byte) error {
 		return errInvalidData
 	}
 
+	// Update finding in vulndb
 	_, err = p.VulnDBClient.UpdateFinding(
 		context.Background(),
 		dto.FindingOverwrite.FindingID,
@@ -289,7 +286,28 @@ func (p *AsyncTxParser) processFindingOverwrite(data []byte) error {
 		}
 		return err
 	}
-	return nil
+
+	// Retrieve current finding status and push event
+	f, err := p.VulnDBClient.Finding(context.Background(), dto.FindingOverwrite.FindingID)
+	if err != nil {
+		if errors.IsKind(err, errors.ErrNotFound) {
+			return nil
+		}
+	}
+	// TODO: There can be a race condition here between two concurrent state changes for a
+	// finding between this finding overwrite and a related check processing from vulndb side.
+	// Currently this can only generate a conflict if the two concurrent events are a "mark as
+	// false positive" action initiated from Vulcan API and a finding detection event from the
+	// vulndb side which contains a fingerprint variation, as in that situation the FALSE POSITIVE
+	// state "preference" does not apply.
+	// Example:
+	// API 		-> 		mark as false positive 		-> VulnDB API
+	// API		-> 		retrieve finding state		-> VulnDB API
+	// VulnDB 	-> 		check processing 			-> Reopen false positive finding
+	// VulnDB 	-> 		push reopened finding		-> Kafka
+	// API		-> 		push false positive finding -> Kafka
+	asyncFinding := findingToAsyncFinding(f)
+	return p.asyncAPI.PushFinding(asyncFinding)
 }
 
 // processMergeDiscoveredAssets performs the following actions:
@@ -406,4 +424,43 @@ func assetToAsyncAsset(a api.Asset) asyncapi.AssetPayload {
 		Annotations: annotations,
 	}
 	return asyncAsset
+}
+
+func findingToAsyncFinding(f *api.Finding) asyncapi.FindingPayload {
+	findingPayload := asyncapi.FindingPayload{
+		AffectedResource: f.Finding.AffectedResource,
+		Details:          f.Finding.Details,
+		Id:               f.Finding.ID,
+		ImpactDetails:    f.Finding.ImpactDetails,
+		Issue: &asyncapi.Issue{
+			CweId:           f.Finding.Issue.CWEID,
+			Description:     f.Finding.Issue.Description,
+			Id:              f.Finding.Issue.ID,
+			Labels:          []interface{}{f.Finding.Issue.Labels},
+			Recommendations: []interface{}{f.Finding.Issue.Recommendations},
+			ReferenceLinks:  []interface{}{f.Finding.Issue.ReferenceLinks},
+			Summary:         f.Finding.Issue.Summary,
+		},
+		Resources: []interface{}{f.Finding.Resources},
+		Score:     float64(f.Finding.Score),
+		Source: &asyncapi.Source{
+			Component: f.Finding.Source.Component,
+			Id:        f.Finding.Source.ID,
+			Instance:  f.Finding.Source.Instance,
+			Name:      f.Finding.Source.Name,
+			Options:   f.Finding.Source.Options,
+			Time:      f.Finding.Source.Time,
+		},
+		Status: f.Finding.Status,
+		Target: &asyncapi.Target{
+			Id:         f.Finding.Target.ID,
+			Identifier: f.Finding.Target.Identifier,
+			Teams:      []interface{}{f.Finding.Target.Teams},
+		},
+		TotalExposure: int(f.Finding.TotalExposure),
+	}
+	if f.Finding.OpenFinding != nil {
+		findingPayload.CurrentExposure = int(f.Finding.OpenFinding.CurrentExposure)
+	}
+	return findingPayload
 }

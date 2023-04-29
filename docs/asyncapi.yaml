@@ -14,7 +14,11 @@ channels:
     description: CDC Events of the assets stored in Vulcan.
     subscribe:
       message:
-        $ref: '#/components/messages/asset'
+        $ref: "#/components/messages/asset"
+  findings:
+    subscribe:
+      message:
+        $ref: "#/components/messages/finding"
 
 components:
   messages:
@@ -29,6 +33,15 @@ components:
       contentType: application/json
       payload:
         $ref: "#/components/schemas/assetPayload"
+    finding:
+      headers: 
+        $ref: "#/components/schemas/findingMetadata"
+      contentType: application/json
+      payload:
+        $ref: "#/components/schemas/findingPayload"
+      summary: Events generated from Vulnerability DB findings state changes
+      name: Finding
+      title: Findings state
 
   schemas:
     assetMetadata:
@@ -123,3 +136,134 @@ components:
         - name
         - description
         - tag
+    
+    findingPayload:
+      properties:
+        affected_resource:
+          type: string
+        current_exposure:
+          type: integer
+        details:
+          type: string
+        id:
+          type: string
+        impact_details:
+          type: string
+        issue:
+          $ref: '#/components/schemas/issue'
+        resources:
+          $ref: '#/components/schemas/resources'
+        score:
+          type: number
+        source:
+          $ref: '#/components/schemas/source'
+        status:
+          type: string
+        target:
+          $ref: '#/components/schemas/target'
+        total_exposure:
+          type: integer
+      type: object
+      additionalProperties: false
+    
+    findingMetadata:
+      type: object
+      additionalProperties: false
+      properties:
+        version:
+          type: string
+          description: The value of this field is equal to the value of the field info.version of this document.
+      required:
+        - version
+    
+    stringArray:
+      items:
+        type: string
+      type:
+      - array
+      - "null"
+    
+    issue:
+      properties:
+        cwe_id:
+          minimum: 0
+          type: integer
+        description:
+          type: string
+        id:
+          type: string
+        labels:
+          items:
+            type: string
+          type:
+          - array
+          - "null"
+        recommendations:
+          $ref: '#/components/schemas/stringArray'
+        reference_links:
+          $ref: '#/components/schemas/stringArray'
+        summary:
+          type: string
+      type: object
+      additionalProperties: false
+    
+    resourceGroup:
+      properties:
+        attributes:
+          items:
+            type: string
+          type:
+          - array
+          - "null"
+        name:
+          type: string
+        resources:
+          items:
+            additionalProperties:
+              type: string
+            type: object
+          type:
+          - array
+          - "null"
+      type: object
+      additionalProperties: false
+
+    resources:
+      items:
+        $ref: '#/components/schemas/resourceGroup'
+      type:
+      - array
+      - "null"
+
+    source:
+      properties:
+        component:
+          type: string
+        id:
+          type: string
+        instance:
+          type: string
+        name:
+          type: string
+        options:
+          type: string
+        time:
+          format: date-time
+          type: string
+      type: object
+      additionalProperties: false
+
+    target:
+      properties:
+        id:
+          type: string
+        identifier:
+          type: string
+        teams:
+          items:
+            type: string
+          type:
+          - array
+          - "null"
+      type: object
+      additionalProperties: false

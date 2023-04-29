@@ -27,3 +27,7 @@ docker run \
 	/bin/sh -c "
     npm install --silent &&
     node gen.js "${SOURCE_FILE}" "${GO_PACKAGE_NAME}""
+
+# Add JSON tags
+go install github.com/betacraft/easytags@v1.0.2
+easytags models.go

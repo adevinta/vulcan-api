@@ -170,3 +170,71 @@ Loop:
 	}
 	return topicAssetsData, nil
 }
+
+type FindingTopicData struct {
+	Payload asyncapi.FindingPayload
+	Headers map[string][]byte
+}
+
+func ReadAllFindingsTopic(topic string) ([]FindingTopicData, error) {
+	broker := KafkaTestBroker
+	config := confluentKafka.ConfigMap{
+		"go.events.channel.enable": true,
+		"bootstrap.servers":        broker,
+		"group.id":                 "test_" + topic,
+		"enable.partition.eof":     true,
+		"auto.offset.reset":        "earliest",
+		"enable.auto.commit":       false,
+	}
+	c, err := confluentKafka.NewConsumer(&config)
+	if err != nil {
+		return nil, err
+	}
+	defer c.Close()
+	if err = c.Subscribe(topic, nil); err != nil {
+		return nil, err
+	}
+
+	var topicFindingsData []FindingTopicData
+Loop:
+	for ev := range c.Events() {
+		switch e := ev.(type) {
+		case *confluentKafka.Message:
+			data := e.Value
+			finding := asyncapi.FindingPayload{}
+			// The data will be empty in case the event is a tombstone.
+			if len(data) > 0 {
+				err = json.Unmarshal(data, &finding)
+				if err != nil {
+					return nil, err
+				}
+			}
+			headers := map[string][]byte{}
+			for _, v := range e.Headers {
+				headers[v.Key] = v.Value
+			}
+			topicData := FindingTopicData{
+				Payload: finding,
+				Headers: headers,
+			}
+			topicFindingsData = append(topicFindingsData, topicData)
+			_, err := c.CommitOffsets([]confluentKafka.TopicPartition{
+				{
+					Topic:     e.TopicPartition.Topic,
+					Partition: e.TopicPartition.Partition,
+					Offset:    e.TopicPartition.Offset + 1,
+				},
+			})
+			if err != nil {
+				return nil, err
+			}
+		case confluentKafka.Error:
+			return nil, e
+		case confluentKafka.PartitionEOF:
+			break Loop
+		default:
+			return nil, fmt.Errorf("received unexpected message %v", e)
+		}
+	}
+	return topicFindingsData, nil
+}

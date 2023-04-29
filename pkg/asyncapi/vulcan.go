@@ -39,9 +39,15 @@ func (l LevelLogger) Debugf(s string, params ...any) {
 	level.Debug(l.Logger).Log("log", v)
 }
 
-// AssetsEntityName defines the key for the assets entity used by an [EventStreamClient] to
-// determine the topic where the assets are send.
-const AssetsEntityName = "assets"
+const (
+	// AssetsEntityName defines the key for the assets entity used by an [EventStreamClient] to
+	// determine the topic where the assets are sent.
+	AssetsEntityName = "assets"
+
+	// FindingsEntityName defines the key for the findings entity used by an [EventStreamClient] to
+	// determine the topic where the findings are sent.
+	FindingsEntityName = "findings"
+)
 
 // Vulcan implements the asynchorus API of Vulcan.
 type Vulcan struct {
@@ -104,6 +110,25 @@ func (v *Vulcan) DeleteAsset(asset AssetPayload) error {
 	return err
 }
 
+// PushFinding publishes the state of a finding in the current point of time
+// to the underlying [EventStreamClient].
+func (v *Vulcan) PushFinding(finding FindingPayload) error {
+	v.logger.Debugf("pushing finding %+v", finding)
+	payload, err := json.Marshal(finding)
+	if err != nil {
+		return fmt.Errorf("error marshaling to json: %w", err)
+	}
+	metadata := map[string][]byte{
+		"version": []byte(Version),
+	}
+	err = v.client.Push(FindingsEntityName, finding.Id, payload, metadata)
+	if err != nil {
+		return fmt.Errorf("error pushing finding %v: %w", finding, err)
+	}
+	v.logger.Debugf("finding pushed %+v", finding)
+	return nil
+}
+
 // NullVulcan implements an Async Vulcan API interface that does not send the
 // events to any [EventStreamClient]. It's intended to be used when the async
 // API is disabled but other components still need to fullfill a dependency
@@ -120,6 +145,12 @@ func (v *NullVulcan) DeleteAsset(asset AssetPayload) error {
 // PushAsset acepts an event indicating that an asset has been modified or
 // created and just ignores it.
 func (v *NullVulcan) PushAsset(asset AssetPayload) error {
+	return nil
+}
+
+// PushFinding acepts an event indicating that a finding has been modified or
+// created and just ignores it.
+func (v *NullVulcan) PushFinding(finding FindingPayload) error {
 	return nil
 }
 

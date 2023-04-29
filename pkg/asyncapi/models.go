@@ -6,22 +6,22 @@ const Version = "v0.0.2"
 
 // AssetPayload represents a AssetPayload model.
 type AssetPayload struct {
-	Id          string
-	Team        *Team
-	Alias       string
-	Rolfp       string
-	Scannable   bool
-	AssetType   *AssetType
-	Identifier  string
-	Annotations []*Annotation
+	Id          string        `json:"id"`
+	Team        *Team         `json:"team"`
+	Alias       string        `json:"alias"`
+	Rolfp       string        `json:"rolfp"`
+	Scannable   bool          `json:"scannable"`
+	AssetType   *AssetType    `json:"asset_type"`
+	Identifier  string        `json:"identifier"`
+	Annotations []*Annotation `json:"annotations"`
 }
 
 // Team represents a Team model.
 type Team struct {
-	Id          string
-	Name        string
-	Description string
-	Tag         string
+	Id          string `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Tag         string `json:"tag"`
 }
 
 // AssetType represents an enum of string.
@@ -40,6 +40,62 @@ const (
 
 // Annotation represents a Annotation model.
 type Annotation struct {
-	Key   string
-	Value string
+	Key   string `json:"key"`
+	Value string `json:"value"`
+}
+
+// FindingPayload represents a FindingPayload model.
+type FindingPayload struct {
+	AffectedResource string        `json:"affected_resource"`
+	CurrentExposure  int           `json:"current_exposure"`
+	Details          string        `json:"details"`
+	Id               string        `json:"id"`
+	ImpactDetails    string        `json:"impact_details"`
+	Issue            *Issue        `json:"issue"`
+	Resources        []interface{} `json:"resources"`
+	Score            float64       `json:"score"`
+	Source           *Source       `json:"source"`
+	Status           string        `json:"status"`
+	Target           *Target       `json:"target"`
+	TotalExposure    int           `json:"total_exposure"`
+}
+
+// Issue represents a Issue model.
+type Issue struct {
+	CweId           int           `json:"cwe_id"`
+	Description     string        `json:"description"`
+	Id              string        `json:"id"`
+	Labels          []interface{} `json:"labels"`
+	Recommendations []interface{} `json:"recommendations"`
+	ReferenceLinks  []interface{} `json:"reference_links"`
+	Summary         string        `json:"summary"`
+}
+
+// ResourceGroup represents a ResourceGroup model.
+type ResourceGroup struct {
+	Attributes []interface{} `json:"attributes"`
+	Name       string        `json:"name"`
+	Resources  []interface{} `json:"resources"`
+}
+
+// AnonymousSchema32 represents a AnonymousSchema32 model.
+type AnonymousSchema32 struct {
+	AdditionalProperties map[string]string `json:"additional_properties"`
+}
+
+// Source represents a Source model.
+type Source struct {
+	Component string `json:"component"`
+	Id        string `json:"id"`
+	Instance  string `json:"instance"`
+	Name      string `json:"name"`
+	Options   string `json:"options"`
+	Time      string `json:"time"`
+}
+
+// Target represents a Target model.
+type Target struct {
+	Id         string        `json:"id"`
+	Identifier string        `json:"identifier"`
+	Teams      []interface{} `json:"teams"`
 }

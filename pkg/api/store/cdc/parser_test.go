@@ -141,6 +141,7 @@ type mockVulnDBClient struct {
 	deleteTeamTagF    func(ctx context.Context, authTeam, teamID, tag string) error
 	deleteTargetTeamF func(ctx context.Context, authTeam, targetID, teamID string) error
 	deleteTargetTagF  func(ctx context.Context, authTeam, targetID, tag string) error
+	getFindingF       func(ctx context.Context, findingID string) (*api.Finding, error)
 	updateFindingF    func(ctx context.Context, findingID string, payload *api.UpdateFinding, tag string) (*api.Finding, error)
 }
 
@@ -161,6 +162,9 @@ func (m *mockVulnDBClient) DeleteTargetTeam(ctx context.Context, authTeam, targe
 }
 func (m *mockVulnDBClient) DeleteTargetTag(ctx context.Context, authTeam, targetID, tag string) error {
 	return m.deleteTargetTagF(ctx, authTeam, targetID, tag)
+}
+func (m *mockVulnDBClient) Finding(ctx context.Context, findingID string) (*api.Finding, error) {
+	return m.getFindingF(ctx, findingID)
 }
 func (m *mockVulnDBClient) UpdateFinding(ctx context.Context, findingID string, payload *api.UpdateFinding, tag string) (*api.Finding, error) {
 	return m.updateFindingF(ctx, findingID, payload, tag)
@@ -196,14 +200,15 @@ func init() {
 
 func TestParse(t *testing.T) {
 	testCases := []struct {
-		name            string
-		log             []Event
-		vulnDBClient    *mockVulnDBClient
-		asyncAPI        func() (*asyncapi.Vulcan, kafka.Client, error)
-		loggr           *mockLoggr
-		wantNParsed     uint
-		wantAsyncAssets []testutil.AssetTopicData
-		wantErr         error
+		name              string
+		log               []Event
+		vulnDBClient      *mockVulnDBClient
+		asyncAPI          func() (*asyncapi.Vulcan, kafka.Client, error)
+		loggr             *mockLoggr
+		wantNParsed       uint
+		wantAsyncAssets   []testutil.AssetTopicData
+		wantAsyncFindings []testutil.FindingTopicData
+		wantErr           error
 	}{
 		{
 			name: "Happy path",
@@ -257,6 +262,12 @@ func TestParse(t *testing.T) {
 				deleteTargetTagF: func(ctx context.Context, authTeam, targetID, tag string) error {
 					return nil
 				},
+				getFindingF: func(ctx context.Context, findingID string) (*api.Finding, error) {
+					return &api.Finding{
+						Finding: vulndb.FindingExpanded{
+							Finding: vulndb.Finding{ID: "1"}},
+					}, nil
+				},
 				updateFindingF: func(ctx context.Context, findingID string, payload *api.UpdateFinding, tag string) (*api.Finding, error) {
 					var f = &api.Finding{}
 					return f, nil
@@ -304,6 +315,26 @@ func TestParse(t *testing.T) {
 						"identifier": []byte("exampleOld.com"),
 						"type":       []byte(asyncapi.AssetTypeDomainName),
 						"version":    []byte(asyncapi.Version),
+					},
+				},
+			},
+			wantAsyncFindings: []testutil.FindingTopicData{
+				{
+					Payload: asyncapi.FindingPayload{
+						Id: "1",
+						Issue: &asyncapi.Issue{
+							Recommendations: []any{nil},
+							ReferenceLinks:  []any{nil},
+							Labels:          []any{nil},
+						},
+						Source: &asyncapi.Source{},
+						Target: &asyncapi.Target{
+							Teams: []any{nil},
+						},
+						Resources: []any{nil},
+					},
+					Headers: map[string][]byte{
+						"version": []byte(asyncapi.Version),
 					},
 				},
 			},
@@ -431,6 +462,8 @@ func TestParse(t *testing.T) {
 			if nParsed != tc.wantNParsed {
 				t.Fatalf("expected nParsed to be %d, but got %d", tc.wantNParsed, nParsed)
 			}
+
+			// Verify async assets
 			topic := kclient.Topics[asyncapi.AssetsEntityName]
 			gotAssets, err := testutil.ReadAllAssetsTopic(topic)
 			if err != nil {
@@ -445,6 +478,20 @@ func TestParse(t *testing.T) {
 				t.Fatalf("want!=got, diff: %s", diff)
 			}
 
+			// Verify async findings
+			topic = kclient.Topics[asyncapi.FindingsEntityName]
+			gotFindings, err := testutil.ReadAllFindingsTopic(topic)
+			if err != nil {
+				t.Fatalf("error reading findings from kafka %v", err)
+			}
+			wantFindings := tc.wantAsyncFindings
+			sortSlices = cmpopts.SortSlices(func(a, b testutil.FindingTopicData) bool {
+				return strings.Compare(a.Payload.Id, b.Payload.Id) < 0
+			})
+			diff = cmp.Diff(wantFindings, gotFindings, sortSlices)
+			if diff != "" {
+				t.Fatalf("want!=got, diff: %s", diff)
+			}
 		})
 	}
 }
@@ -464,7 +511,10 @@ func (n nullLogger) Debugf(s string, params ...any) {
 }
 
 func newTestAsyncAPI() (*asyncapi.Vulcan, kafka.Client, error) {
-	topics := map[string]string{asyncapi.AssetsEntityName: "assets"}
+	topics := map[string]string{
+		asyncapi.AssetsEntityName:   "assets",
+		asyncapi.FindingsEntityName: "findings",
+	}
 	testTopics, err := testutil.PrepareKafka(topics)
 	if err != nil {
 		return nil, kafka.Client{}, fmt.Errorf("error creating test topics: %v", err)
