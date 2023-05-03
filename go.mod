@@ -22,8 +22,8 @@ require (
 	github.com/lestrrat-go/backoff v1.0.0
 	github.com/lib/pq v1.10.3
 	github.com/robfig/cron v1.2.0
-	github.com/russellhaering/gosaml2 v0.8.1
-	github.com/russellhaering/goxmldsig v1.2.0
+	github.com/russellhaering/gosaml2 v0.9.1
+	github.com/russellhaering/goxmldsig v1.3.0
 	github.com/satori/go.uuid v1.2.1-0.20181028125025-b2ce2384e17b
 	github.com/spf13/cobra v1.2.1
 	github.com/spf13/viper v1.14.0
