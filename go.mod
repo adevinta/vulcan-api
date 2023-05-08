@@ -14,7 +14,7 @@ require (
 	github.com/aws/aws-sdk-go v1.44.98
 	github.com/confluentinc/confluent-kafka-go v1.9.0
 	github.com/go-kit/kit v0.12.0
-	github.com/goadesign/goa v1.4.3
+	github.com/goadesign/goa v2.2.5+incompatible
 	github.com/golang-jwt/jwt/v4 v4.1.0
 	github.com/google/go-cmp v0.5.9
 	github.com/gorilla/mux v1.8.0
@@ -34,24 +34,15 @@ require (
 require (
 	github.com/DataDog/datadog-go v4.8.3+incompatible // indirect
 	github.com/Microsoft/go-winio v0.5.2 // indirect
-	github.com/armon/go-metrics v0.4.0 // indirect
 	github.com/beevik/etree v1.1.0 // indirect
 	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
-	github.com/dimfeld/httppath v0.0.0-20170720192232-ee938bf73598 // indirect
-	github.com/dimfeld/httptreemux v5.0.1+incompatible // indirect
 	github.com/docker/distribution v2.8.1+incompatible // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/go-kit/log v0.2.1 // indirect
 	github.com/go-logfmt/logfmt v0.5.1 // indirect
-	github.com/go-openapi/analysis v0.21.3 // indirect
-	github.com/go-openapi/spec v0.20.6 // indirect
-	github.com/go-openapi/swag v0.21.1 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
-	github.com/gofrs/uuid v4.1.0+incompatible // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
-	github.com/hashicorp/go-immutable-radix v1.3.1 // indirect
-	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
@@ -59,7 +50,6 @@ require (
 	github.com/jonboulle/clockwork v0.3.0 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect
-	github.com/manveru/faker v0.0.0-20171103152722-9fbc68a78c4d // indirect
 	github.com/mattermost/xml-roundtrip-validator v0.1.0 // indirect
 	github.com/miekg/dns v1.1.49 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
@@ -72,7 +62,6 @@ require (
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/subosito/gotenv v1.4.1 // indirect
-	github.com/zach-klippenstein/goregen v0.0.0-20160303162051-795b5e3961ea // indirect
 	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
 	golang.org/x/net v0.7.0 // indirect
 	golang.org/x/sys v0.7.0 // indirect
