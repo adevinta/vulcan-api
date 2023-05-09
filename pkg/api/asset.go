@@ -7,6 +7,7 @@ package api
 import (
 	"database/sql/driver"
 	"fmt"
+	"regexp"
 	"strings"
 	"time"
 
@@ -43,6 +44,15 @@ type Asset struct {
 	ClassifiedAt      *time.Time         `json:"classified_at"`
 }
 
+func validateAWSARN(arn string) bool {
+	// This is a regular expression that matches AWS ARNs.
+	arnRegex := regexp.MustCompile(`^arn:(aws|aws-cn|aws-us-gov):([a-z0-9-]+):([a-z\d-]*):([0-9]*):([a-zA-Z0-9_-]*)(//?[a-zA-Z0-9_-]+)*(//.*)?.*$`)
+
+	// Check if the ARN matches the regular expression.
+	return arnRegex.MatchString(arn)
+}
+
+// Validate checks if an asset is valid.
 func (a Asset) Validate() error {
 	err := validator.New().Struct(a)
 	if err != nil {
@@ -58,7 +68,7 @@ func (a Asset) Validate() error {
 			return errors.Validation("Identifier is not a valid Hostname")
 		}
 	case "AWSAccount":
-		if !types.IsAWSARN(a.Identifier) {
+		if !validateAWSARN(a.Identifier) || !types.IsAWSARN(a.Identifier) {
 			return errors.Validation("Identifier is not a valid AWSAccount")
 		}
 	case "DockerImage":
