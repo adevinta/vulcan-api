@@ -46,8 +46,11 @@ type Asset struct {
 
 func validateAWSARN(arn string) bool {
 	// This is a regular expression that matches AWS ARNs.
-	arnRegex := regexp.MustCompile(`^arn:(aws|aws-cn|aws-us-gov):([a-z0-9-]+):([a-z\d-]*):([0-9]*):([a-zA-Z0-9_-]*)(//?[a-zA-Z0-9_-]+)*(//.*)?.*$`)
-
+	arnRegex, err := regexp.Compile(`^arn:(aws|aws-cn|aws-us-gov):([a-z0-9-]+):([a-z\d-]*):([0-9]*):([a-zA-Z0-9_-]*)(//?[a-zA-Z0-9_-]+)*(//.*)?.*$`)
+	if err != nil {
+		// Return false if there has been an error compiling the string.
+		return false
+	}
 	// Check if the ARN matches the regular expression.
 	return arnRegex.MatchString(arn)
 }
