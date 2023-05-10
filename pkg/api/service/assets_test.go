@@ -539,6 +539,52 @@ func TestVulcanitoService_CreateAssets(t *testing.T) {
 			},
 			wantErr: nil,
 		},
+		{
+			name: "Malformed ARN format",
+			srvBuilder: VulcanitoServiceTestArgs{
+				BuildSrv: buildUserVulcanitoSrvWithAWSMock(cgCatalogueMock{
+					accounts: map[string]string{
+						"123456789012": "alias1",
+					},
+				}),
+			},
+			assets: []api.Asset{
+				api.Asset{
+					TeamID:     "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
+					Identifier: "arn:aws:iam:: 123456789011:root",
+					AssetType:  &api.AssetType{Name: "AWSAccount"},
+					Options:    common.String(""),
+					Scannable:  common.Bool(true),
+					ROLFP:      &api.ROLFP{IsEmpty: true},
+				},
+			},
+			groups:  []api.Group{},
+			want:    []api.Asset(nil),
+			wantErr: errors.New("Identifier is not a valid AWSAccount"),
+		},
+		{
+			name: "Malformed ARN format asset type not provided",
+			srvBuilder: VulcanitoServiceTestArgs{
+				BuildSrv: buildUserVulcanitoSrvWithAWSMock(cgCatalogueMock{
+					accounts: map[string]string{
+						"123456789012": "alias1",
+					},
+				}),
+			},
+			assets: []api.Asset{
+				api.Asset{
+					TeamID:     "a14c7c65-66ab-4676-bcf6-0dea9719f5c6",
+					Identifier: "arn:aws:iam:: 123456789011:root",
+					AssetType:  &api.AssetType{Name: ""},
+					Options:    common.String(""),
+					Scannable:  common.Bool(true),
+					ROLFP:      &api.ROLFP{IsEmpty: true},
+				},
+			},
+			groups:  []api.Group{},
+			want:    []api.Asset(nil),
+			wantErr: errors.New("[asset][arn:aws:iam:: 123456789011:root][] Identifier is not a valid AWSAccount"),
+		},
 	}
 
 	for _, tt := range tests {

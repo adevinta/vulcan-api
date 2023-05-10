@@ -4,7 +4,18 @@ Copyright 2021 Adevinta
 
 package api
 
-import "testing"
+import (
+	"errors"
+	"testing"
+)
+
+func errToStr(err error) string {
+	result := ""
+	if err != nil {
+		result = err.Error()
+	}
+	return result
+}
 
 func TestROLFP_String(t *testing.T) {
 	tests := []struct {
@@ -37,6 +48,52 @@ func TestROLFP_String(t *testing.T) {
 
 			if got := tt.ROLFP.String(); got != tt.want {
 				t.Errorf("ROLFP.String() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestAssetValidate(t *testing.T) {
+	tests := []struct {
+		name    string
+		asset   Asset
+		wantErr error
+	}{
+		{
+			name: "Correct AWS ARN",
+			asset: Asset{
+				TeamID:      "TeamID",
+				AssetTypeID: "AssetTypeID",
+				AssetType:   &AssetType{Name: "AWSAccount"},
+				Identifier:  "arn:aws:iam::012345678900:root",
+			},
+			wantErr: nil,
+		},
+		{
+			name: "Correct Complete AWS ARN",
+			asset: Asset{
+				TeamID:      "TeamID",
+				AssetTypeID: "AssetTypeID",
+				AssetType:   &AssetType{Name: "AWSAccount"},
+				Identifier:  "arn:aws:iam:us-east-1:123456789012:user/Development/product_1234/*",
+			},
+		},
+		{
+			name: "Malformed AWS ARN with whitespaces",
+			asset: Asset{
+				TeamID:      "TeamID",
+				AssetTypeID: "AssetTypeID",
+				AssetType:   &AssetType{Name: "AWSAccount"},
+				Identifier:  "arn:aws:iam:: 012345678900:root",
+			},
+			wantErr: errors.New("Identifier is not a valid AWSAccount"),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := tt.asset.Validate()
+			if errToStr(err) != errToStr(tt.wantErr) {
+				t.Fatal(err)
 			}
 		})
 	}
