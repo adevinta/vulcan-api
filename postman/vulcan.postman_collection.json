@@ -2656,7 +2656,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n\t\"assets\": [\n\t\t{\n\t\t\t\"type\": \"Hostname\",\n\t\t\t\"identifier\": \"example2.com\",\n\t\t\t\"scannable\": true\n\t\t},\n\t\t{\n\t\t\t\"type\": \"DomainName\",\n\t\t\t\"identifier\": \"example2.com\",\n\t\t\t\"scannable\": true\n\t\t}\n\t],\n    \"annotations\": {\n        \"embed/1\": \"ms1\",\n        \"embed/2\": \"ms2\"\n    }\n}"
+											"raw": "{\n\t\"assets\": [\n\t\t{\n\t\t\t\"type\": \"Hostname\",\n\t\t\t\"identifier\": \"www.example.com\",\n\t\t\t\"scannable\": true\n\t\t},\n\t\t{\n\t\t\t\"type\": \"DomainName\",\n\t\t\t\"identifier\": \"www.example.com\",\n\t\t\t\"scannable\": true\n\t\t}\n\t],\n    \"annotations\": {\n        \"embed/1\": \"ms1\",\n        \"embed/2\": \"ms2\"\n    }\n}"
 										},
 										"url": {
 											"raw": "{{host}}/api/v1/teams/{{an_team1_id}}/assets/multistatus",
