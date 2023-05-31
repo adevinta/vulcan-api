@@ -10,7 +10,7 @@ import "time"
 // parameters for report related actions.
 type Config struct {
 	SNSARN          string `mapstructure:"sns_arn"`
-	SNSEndpoint     string `mapstructure:"sns_endpint"`
+	SNSEndpoint     string `mapstructure:"sns_endpoint"`
 	APIBaseURL      string `mapstructure:"api_base_url"`
 	InsecureTLS     bool   `mapstructure:"insecure_tls"`
 	ScanRedirectURL string `mapstructure:"scan_redirect_url"`
