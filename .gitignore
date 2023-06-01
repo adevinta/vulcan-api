@@ -15,6 +15,7 @@ cmd/vulcan-api/vulcan-api
 .glide/
 
 .idea/
+.vscode/
 vendor
 
 # VIM
