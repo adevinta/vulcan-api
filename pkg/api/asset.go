@@ -105,8 +105,8 @@ func (a Asset) Validate() error {
 			return errors.Validation("Identifier is not a valid DomainName")
 		}
 	default:
-		// If none of the previous case match, force a validation error
-		return errors.Validation("Asset type not supported")
+		// If none of the previous case match, should be fine.
+		return nil
 	}
 
 	return nil

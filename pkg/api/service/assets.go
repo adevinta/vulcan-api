@@ -73,13 +73,12 @@ func (s vulcanitoService) CreateAssets(ctx context.Context, assets []api.Asset, 
 
 		// Asset type provided by the user in the request.
 		if asset.AssetType != nil && asset.AssetType.Name != "" {
-			if !api.ValidAssetType(asset.AssetType.Name) {
-				return nil, errors.Validation("Asset type not found", "asset", asset.Identifier, asset.AssetType.Name)
-			}
-
 			// Retrieve asset type from its name.
 			assetTypeObj, err := s.GetAssetType(ctx, asset.AssetType.Name)
 			if err != nil {
+				if errors.IsKind(err, errors.ErrNotFound) {
+					return nil, errors.Validation("Asset type not found", "asset", asset.Identifier, asset.AssetType.Name)
+				}
 				return nil, err
 			}
 
@@ -179,18 +178,14 @@ func (s vulcanitoService) CreateAssetsMultiStatus(ctx context.Context, assets []
 
 		// If user specified the asset type.
 		if asset.AssetType != nil && asset.AssetType.Name != "" {
-			// If the asset type is invalid, abort the asset creation.
-			if !api.ValidAssetType(asset.AssetType.Name) {
-				response.Status = errors.Validation("Asset type not found", "asset", asset.Identifier, asset.AssetType.Name)
-				responses = append(responses, response)
-				continue
-			}
-
 			// Retrieve asset type from its name.
 			assetTypeObj, err := s.GetAssetType(ctx, asset.AssetType.Name)
 			if err != nil {
 				// If there is an error retrieiving the asset type information, abort the asset creation.
 				response.Status = err
+				if errors.IsKind(err, errors.ErrNotFound) {
+					response.Status = errors.Validation("Asset type not found", "asset", asset.Identifier, asset.AssetType.Name)
+				}
 				responses = append(responses, response)
 				continue
 			}
@@ -541,13 +536,12 @@ func (s vulcanitoService) detectAssets(ctx context.Context, asset api.Asset) ([]
 	for _, a := range assets {
 		asset := asset
 
-		if !api.ValidAssetType(a.assetType) {
-			return nil, errors.Default("invalid asset type returned by auto-detection routine")
-		}
-
 		// Retrieve asset type from its name.
 		assetTypeObj, err := s.GetAssetType(ctx, a.assetType)
 		if err != nil {
+			if errors.IsKind(err, errors.ErrNotFound) {
+				return nil, errors.Default("invalid asset type returned by auto-detection routine")
+			}
 			return nil, err
 		}
 
