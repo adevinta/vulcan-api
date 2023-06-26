@@ -53,7 +53,11 @@ func (s vulcanitoService) FindTeam(ctx context.Context, id string) (*api.Team, e
 	if err != nil {
 		return team, err
 	}
-	team.UsingTracker = isATeamOnboardedInVulcanTracker(id, s.allowedTrackerTeams)
+	if s.vulcantrackerClient == nil {
+		team.UsingTracker = false
+	} else {
+		team.UsingTracker = isATeamOnboardedInVulcanTracker(id, s.allowedTrackerTeams)
+	}
 	return team, nil
 }
 
@@ -72,7 +76,11 @@ func (s vulcanitoService) FindTeamByTag(ctx context.Context, tag string) (*api.T
 	if err != nil {
 		return team, err
 	}
+	if s.vulcantrackerClient == nil {
+		return team, nil
+	}
 	team.UsingTracker = isATeamOnboardedInVulcanTracker(team.ID, s.allowedTrackerTeams)
+
 	return team, nil
 }
 
@@ -101,6 +109,9 @@ func (s vulcanitoService) ListTeams(ctx context.Context) ([]*api.Team, error) {
 	teams, err := s.db.ListTeams()
 	if err != nil {
 		return teams, err
+	}
+	if s.vulcantrackerClient == nil {
+		return teams, nil
 	}
 	for _, team := range teams {
 		team.UsingTracker = isATeamOnboardedInVulcanTracker(team.ID, s.allowedTrackerTeams)

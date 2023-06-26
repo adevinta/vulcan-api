@@ -116,7 +116,6 @@ func (c *client) CreateTicket(ctx context.Context, payload api.FindingTicketCrea
 // GetFindingTicket makes a request to vulcan tracker to find a ticket.
 func (c *client) GetFindingTicket(ctx context.Context, findingID, teamID string) (*api.Ticket, error) {
 	path := fmt.Sprintf(findingTicketPath, teamID, findingID)
-
 	resp, err := c.performRequest(ctx, http.MethodGet, path, noAuth, nil, nil)
 	if err != nil {
 		return nil, err

@@ -49,6 +49,9 @@ func makeCreateFindingTicketEndpoint(s api.VulcanitoService,
 			if err != nil {
 				return nil, err
 			}
+			if ticket == nil {
+				return ServerDown{}, nil
+			}
 			return Ok{ticket.ToResponse()}, nil
 		}
 

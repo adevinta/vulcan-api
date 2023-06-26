@@ -212,7 +212,10 @@ func startServer() error {
 	vulnerabilityDBClient := vulnerabilitydb.NewClient(nil, cfg.VulnerabilityDB.URL, cfg.VulnerabilityDB.InsecureTLS)
 
 	// Build tickets client.
-	vulcantrackerClient := tickets.NewClient(nil, cfg.VulcanTracker.URL, cfg.VulcanTracker.InsecureTLS)
+	var vulcantrackerClient tickets.Client
+	if cfg.VulcanTracker.URL != "" { // This is an optional component.
+		vulcantrackerClient = tickets.NewClient(nil, cfg.VulcanTracker.URL, cfg.VulcanTracker.InsecureTLS)
+	}
 
 	// Build reports client.
 	reportsClient, err := reports.NewClient(cfg.Reports)
