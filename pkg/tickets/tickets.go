@@ -95,7 +95,7 @@ func (c *client) performRequest(ctx context.Context, method, path, authTeam stri
 	return io.ReadAll(resp.Body)
 }
 
-// CreateTicket requests the creation of a ticket in the ticket tracker server configurated for the team.
+// CreateTicket requests the creation of a ticket in the ticket tracker server configured for the team.
 func (c *client) CreateTicket(ctx context.Context, payload api.FindingTicketCreate) (*api.Ticket, error) {
 	data, err := json.Marshal(payload)
 	if err != nil {

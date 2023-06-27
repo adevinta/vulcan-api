@@ -55,7 +55,7 @@ url = "$VULNERABILITYDB_URL"
 insecure_tls = true
 
 [vulcantracker]
-# leave the url empty if you don't want to configurate the vulcan-tracker component.
+# leave the url empty if you don't want to configure the vulcan-tracker component.
 url = "$VULCANTRACKER_URL"
 insecure_tls = true
 # comma separated list of teams ids

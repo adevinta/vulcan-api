@@ -52,7 +52,7 @@ url = "http://localhost:8083"
 insecure_tls = true
 
 [vulcantracker]
-# leave the url empty if you don't want to configurate the vulcan-tracker component.
+# leave the url empty if you don't want to configure the vulcan-tracker component.
 url = "http://localhost:8085"
 insecure_tls = true
 # comma separated list of teams ids
