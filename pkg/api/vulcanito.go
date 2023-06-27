@@ -136,4 +136,5 @@ type VulcanitoService interface {
 	// Vulcan Tracker
 	CreateFindingTicket(ctx context.Context, ticket FindingTicketCreate) (*Ticket, error)
 	GetFindingTicket(ctx context.Context, findingID, teamID string) (*Ticket, error)
+	IsATeamOnboardedInVulcanTracker(ctx context.Context, teamID string, onboardedTeams []string) bool
 }

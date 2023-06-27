@@ -12,9 +12,6 @@ import (
 // CreateFindingTicket requests the creation of a ticket in the ticket tracker
 // with the values stored in the argument ticket.
 func (s vulcanitoService) CreateFindingTicket(ctx context.Context, ticket api.FindingTicketCreate) (*api.Ticket, error) {
-	if s.vulcantrackerClient == nil {
-		return nil, nil
-	}
 	return s.vulcantrackerClient.CreateTicket(ctx, ticket)
 }
 
@@ -24,4 +21,17 @@ func (s vulcanitoService) GetFindingTicket(ctx context.Context, findingID, teamI
 		return nil, nil
 	}
 	return s.vulcantrackerClient.GetFindingTicket(ctx, findingID, teamID)
+}
+
+// IsATeamOnboardedInVulcanTracker return if a team is onboarded in vulcan tracker.
+func (s vulcanitoService) IsATeamOnboardedInVulcanTracker(ctx context.Context, teamID string, onboardedTeams []string) bool {
+	if s.vulcantrackerClient == nil {
+		return false
+	}
+	for _, team := range onboardedTeams {
+		if team == teamID {
+			return true
+		}
+	}
+	return false
 }

@@ -281,7 +281,7 @@ func startServer() error {
 	// Add global middleware to the vulcanito service.
 	vulcanitoService = globalMiddleware(vulcanitoService)
 
-	endpoints := endpoint.MakeEndpoints(vulcanitoService, logger)
+	endpoints := endpoint.MakeEndpoints(vulcanitoService, vulcantrackerClient != nil, logger)
 
 	endpoints = addAuthorizationMiddleware(endpoints, db, logger)
 	endpoints = addWhitelistingMiddleware(endpoints, logger)

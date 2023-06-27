@@ -132,7 +132,7 @@ type Endpoints map[string]endpoint.Endpoint
 var endpoints = make(Endpoints)
 
 // MakeEndpoints initialize endpoints using the given service
-func MakeEndpoints(s api.VulcanitoService, logger log.Logger) Endpoints {
+func MakeEndpoints(s api.VulcanitoService, isJiraIntEnabled bool, logger log.Logger) Endpoints {
 	endpoints[Healthcheck] = makeHealthcheckEndpoint(s, logger)
 
 	endpoints[FindJob] = makeFindJobEndpoint(s, logger)
@@ -228,7 +228,9 @@ func MakeEndpoints(s api.VulcanitoService, logger log.Logger) Endpoints {
 	endpoints[FindFinding] = makeFindFindingEndpoint(s, logger)
 	endpoints[CreateFindingOverwrite] = makeCreateFindingOverwriteEndpoint(s, logger)
 	endpoints[ListFindingOverwrites] = makeListFindingOverwritesEndpoint(s, logger)
-	endpoints[CreateFindingTicket] = makeCreateFindingTicketEndpoint(s, logger)
+	if isJiraIntEnabled {
+		endpoints[CreateFindingTicket] = makeCreateFindingTicketEndpoint(s, logger)
+	}
 	endpoints[ListFindingsLabels] = makeListFindingsLabelsEndpoint(s, logger)
 	endpoints[StatsMTTR] = makeStatsMTTREndpoint(s, logger)
 	endpoints[StatsExposure] = makeStatsExposureEndpoint(s, logger)

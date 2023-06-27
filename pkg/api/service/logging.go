@@ -1251,3 +1251,16 @@ func (middleware loggingMiddleware) GetFindingTicket(ctx context.Context, findin
 
 	return middleware.next.GetFindingTicket(ctx, findingID, teamID)
 }
+
+func (middleware loggingMiddleware) IsATeamOnboardedInVulcanTracker(ctx context.Context, teamID string, onboardedTeams []string) bool {
+
+	defer func() {
+		XRequestID := ""
+		if ctx != nil {
+			XRequestID, _ = ctx.Value(kithttp.ContextKeyRequestXRequestID).(string)
+		}
+		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "IsATeamOnboardedInVulcanTracker", "teamID", mySprintf(teamID), "onboardedTeams", mySprintf(onboardedTeams))
+	}()
+
+	return middleware.next.IsATeamOnboardedInVulcanTracker(ctx, teamID, onboardedTeams)
+}
