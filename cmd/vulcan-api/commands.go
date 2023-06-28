@@ -12,6 +12,7 @@ import (
 	"os"
 	"os/signal"
 	"os/user"
+	"strings"
 	"syscall"
 
 	"github.com/go-kit/kit/log"
@@ -40,6 +41,7 @@ import (
 	saml "github.com/adevinta/vulcan-api/pkg/saml"
 	"github.com/adevinta/vulcan-api/pkg/scanengine"
 	"github.com/adevinta/vulcan-api/pkg/schedule"
+	"github.com/adevinta/vulcan-api/pkg/tickets"
 	"github.com/adevinta/vulcan-api/pkg/vulnerabilitydb"
 	vulcancore "github.com/adevinta/vulcan-core-cli/vulcan-core/client"
 	metrics "github.com/adevinta/vulcan-metrics-client"
@@ -125,6 +127,12 @@ type vulnerabilityDBConfig struct {
 	InsecureTLS bool   `mapstructure:"insecure_tls"`
 }
 
+type vulcantrackerConfig struct {
+	URL            string `mapstructure:"url"`
+	InsecureTLS    bool   `mapstructure:"insecure_tls"`
+	OnboardedTeams string `mapstructure:"onboarded_teams"`
+}
+
 type metricsConfig struct {
 	Enabled bool
 }
@@ -153,6 +161,7 @@ type config struct {
 	Reports            reports.Config
 	VulcanCore         vulcanCoreConfig
 	VulnerabilityDB    vulnerabilityDBConfig
+	VulcanTracker      vulcantrackerConfig
 	Metrics            metricsConfig
 	AWSCatalogue       awsCatalogueConfig
 	Kafka              kafkaConfig               `mapstructure:"kafka"`
@@ -201,6 +210,13 @@ func startServer() error {
 
 	// Build vulndb client.
 	vulnerabilityDBClient := vulnerabilitydb.NewClient(nil, cfg.VulnerabilityDB.URL, cfg.VulnerabilityDB.InsecureTLS)
+
+	// Build tickets client.
+	var vulcantrackerClient tickets.Client
+	if cfg.VulcanTracker.URL != "" { // This is an optional component.
+		vulcantrackerClient = tickets.NewClient(nil, cfg.VulcanTracker.URL, cfg.VulcanTracker.InsecureTLS)
+	}
+
 	// Build reports client.
 	reportsClient, err := reports.NewClient(cfg.Reports)
 	if err != nil {
@@ -247,8 +263,9 @@ func startServer() error {
 	}
 
 	// Build service layer.
+	onBoardedTeamsVT := strings.Split(cfg.VulcanTracker.OnboardedTeams, ",")
 	vulcanitoService := service.New(logger, db, jwtConfig, cfg.ScanEngine, schedulerClient, cfg.Reports,
-		vulnerabilityDBClient, reportsClient, metricsClient, awsAccounts)
+		vulnerabilityDBClient, vulcantrackerClient, reportsClient, metricsClient, awsAccounts, onBoardedTeamsVT)
 
 	// Second, inject the service layer to the CDC parser JobsRunner.
 	jobsRunner.Client = vulcanitoService
@@ -264,7 +281,7 @@ func startServer() error {
 	// Add global middleware to the vulcanito service.
 	vulcanitoService = globalMiddleware(vulcanitoService)
 
-	endpoints := endpoint.MakeEndpoints(vulcanitoService, logger)
+	endpoints := endpoint.MakeEndpoints(vulcanitoService, vulcantrackerClient != nil, logger)
 
 	endpoints = addAuthorizationMiddleware(endpoints, db, logger)
 	endpoints = addWhitelistingMiddleware(endpoints, logger)
@@ -595,6 +612,7 @@ func addWhitelistingMiddleware(endpoints endpoint.Endpoints, logger log.Logger) 
 		endpoint.CreateFindingOverwrite: true,
 		endpoint.ListFindingOverwrites:  true,
 		endpoint.ListFindingsLabels:     true,
+		endpoint.CreateFindingTicket:    true,
 		// Metrics access.
 		endpoint.StatsMTTR:                  true,
 		endpoint.StatsExposure:              true,

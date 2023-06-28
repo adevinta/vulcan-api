@@ -17,12 +17,14 @@ var TeamMedia = MediaType("team", func() {
 		Attribute("name", String, "Name", func() { Example("Security") })
 		Attribute("description", String, "Description", func() { Example("Security Team") })
 		Attribute("tag", String, "tag", func() { Example("team:security") })
+		Attribute("using_tracker", Boolean, "If the team is Onboarded in Vulcan Tracker", func() { Example(true) }) // feature flag.
 	})
 	View("default", func() {
 		Attribute("id")
 		Attribute("name")
 		Attribute("description")
 		Attribute("tag")
+		Attribute("using_tracker") // feature flag.
 	})
 })
 

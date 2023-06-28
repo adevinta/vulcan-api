@@ -179,6 +179,14 @@ func makeFindFindingEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpo
 			return nil, err
 		}
 
+		findingTicket, err := s.GetFindingTicket(ctx, finding.Finding.ID, r.TeamID)
+		if err != nil {
+			return nil, err
+		}
+		if findingTicket != nil {
+			finding.Finding.TicketURL = findingTicket.Ticket.URLTracker
+		}
+
 		if authorizedFindFindingRequest(finding.Finding.Target.Teams, r.TeamID) {
 			return Ok{finding.Finding}, nil
 		}

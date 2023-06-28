@@ -32,6 +32,102 @@ type (
 		PrettyPrint bool
 	}
 
+	// CreateAssetGroupCommand is the command line data structure for the create action of asset-group
+	CreateAssetGroupCommand struct {
+		Payload     string
+		ContentType string
+		// Group ID
+		GroupID string
+		// Team ID
+		TeamID      string
+		PrettyPrint bool
+	}
+
+	// DeleteAssetGroupCommand is the command line data structure for the delete action of asset-group
+	DeleteAssetGroupCommand struct {
+		// Asset ID
+		AssetID string
+		// Group ID
+		GroupID string
+		// Team ID
+		TeamID      string
+		PrettyPrint bool
+	}
+
+	// ListAssetGroupCommand is the command line data structure for the list action of asset-group
+	ListAssetGroupCommand struct {
+		// Group ID
+		GroupID string
+		// Team ID
+		TeamID      string
+		PrettyPrint bool
+	}
+
+	// CreateAssetsCommand is the command line data structure for the create action of assets
+	CreateAssetsCommand struct {
+		Payload     string
+		ContentType string
+		// Team ID
+		TeamID      string
+		PrettyPrint bool
+	}
+
+	// CreateMultiStatusAssetsCommand is the command line data structure for the createMultiStatus action of assets
+	CreateMultiStatusAssetsCommand struct {
+		Payload     string
+		ContentType string
+		// Team ID
+		TeamID      string
+		PrettyPrint bool
+	}
+
+	// DeleteAssetsCommand is the command line data structure for the delete action of assets
+	DeleteAssetsCommand struct {
+		// Asset ID
+		AssetID string
+		// Team ID
+		TeamID      string
+		PrettyPrint bool
+	}
+
+	// DiscoverAssetsCommand is the command line data structure for the discover action of assets
+	DiscoverAssetsCommand struct {
+		Payload     string
+		ContentType string
+		// Team ID
+		TeamID      string
+		PrettyPrint bool
+	}
+
+	// ListAssetsCommand is the command line data structure for the list action of assets
+	ListAssetsCommand struct {
+		// Team ID
+		TeamID string
+		// Identifier
+		Identifier  string
+		PrettyPrint bool
+	}
+
+	// ShowAssetsCommand is the command line data structure for the show action of assets
+	ShowAssetsCommand struct {
+		// Asset ID
+		AssetID string
+		// Team ID
+		TeamID      string
+		PrettyPrint bool
+	}
+
+	// UpdateAssetsCommand is the command line data structure for the update action of assets
+	UpdateAssetsCommand struct {
+		Payload     string
+		ContentType string
+		// Asset ID
+		AssetID string
+		// Team ID
+		TeamID      string
+		PrettyPrint bool
+	}
+
 	// CreateAssetAnnotationsCommand is the command line data structure for the create action of asset-annotations
 	CreateAssetAnnotationsCommand struct {
 		Payload     string
@@ -85,34 +181,209 @@ type (
 		PrettyPrint bool
 	}
 
-	// CreateAssetGroupCommand is the command line data structure for the create action of asset-group
-	CreateAssetGroupCommand struct {
+	// FindFindingFindingsCommand is the command line data structure for the Find finding action of findings
+	FindFindingFindingsCommand struct {
+		// Finding ID
+		FindingID string
+		// Team ID
+		TeamID      string
+		PrettyPrint bool
+	}
+
+	// FindFindingsFromAIssueFindingsCommand is the command line data structure for the Find findings from a Issue action of findings
+	FindFindingsFromAIssueFindingsCommand struct {
+		// Issue ID
+		IssueID string
+		// Team ID
+		TeamID string
+		// Allows to get findings list at a specific date (incompatible and preferential to min and max date params)
+		AtDate string
+		// A comma separated list of identifiers
+		Identifiers string
+		// A comma separated list of associated labels
+		Labels string
+		// Allows to get findings list until a specific date
+		MaxDate string
+		// Findings maximum score
+		MaxScore string
+		// Allows to get findings list from a specific date
+		MinDate string
+		// Findings minimum score
+		MinScore string
+		// Requested page
+		Page string
+		// Requested page size
+		Size string
+		// Sorting criteria. Supported fields: score, -score (for descending order)
+		SortBy string
+		// Findings Status
+		Status      string
+		PrettyPrint bool
+	}
+
+	// FindFindingsFromATargetFindingsCommand is the command line data structure for the Find findings from a Target action of findings
+	FindFindingsFromATargetFindingsCommand struct {
+		// Target ID
+		TargetID string
+		// Team ID
+		TeamID string
+		// Allows to get findings list at a specific date (incompatible and preferential to min and max date params)
+		AtDate string
+		// A comma separated list of identifiers
+		Identifiers string
+		// A comma separated list of associated labels
+		Labels string
+		// Allows to get findings list until a specific date
+		MaxDate string
+		// Findings maximum score
+		MaxScore string
+		// Allows to get findings list from a specific date
+		MinDate string
+		// Findings minimum score
+		MinScore string
+		// Requested page
+		Page string
+		// Requested page size
+		Size string
+		// Sorting criteria. Supported fields: score, -score (for descending order)
+		SortBy string
+		// Findings Status
+		Status      string
+		PrettyPrint bool
+	}
+
+	// ListFindingOverwritesFindingsCommand is the command line data structure for the List Finding Overwrites action of findings
+	ListFindingOverwritesFindingsCommand struct {
+		FindingID string
+		// Team ID
+		TeamID      string
+		PrettyPrint bool
+	}
+
+	// ListFindingsLabelsFindingsCommand is the command line data structure for the List findings labels action of findings
+	ListFindingsLabelsFindingsCommand struct {
+		// Team ID
+		TeamID string
+		// Allows to get findings list at a specific date (incompatible and preferential to min and max date params)
+		AtDate string
+		// A comma separated list of identifiers
+		Identifiers string
+		// Allows to get findings list until a specific date
+		MaxDate string
+		// Allows to get findings list from a specific date
+		MinDate string
+		// Findings status
+		Status      string
+		PrettyPrint bool
+	}
+
+	// SubmitAFindingOverwriteFindingsCommand is the command line data structure for the Submit a Finding Overwrite action of findings
+	SubmitAFindingOverwriteFindingsCommand struct {
 		Payload     string
 		ContentType string
-		// Group ID
-		GroupID string
+		FindingID   string
 		// Team ID
 		TeamID      string
 		PrettyPrint bool
 	}
 
-	// DeleteAssetGroupCommand is the command line data structure for the delete action of asset-group
-	DeleteAssetGroupCommand struct {
-		// Asset ID
-		AssetID string
-		// Group ID
-		GroupID string
+	// SubmitAFindingTicketCreationFindingsCommand is the command line data structure for the Submit a Finding Ticket Creation action of findings
+	SubmitAFindingTicketCreationFindingsCommand struct {
+		Payload     string
+		ContentType string
+		// Finding ID
+		FindingID string
 		// Team ID
 		TeamID      string
 		PrettyPrint bool
 	}
 
-	// ListAssetGroupCommand is the command line data structure for the list action of asset-group
-	ListAssetGroupCommand struct {
-		// Group ID
-		GroupID string
+	// ListFindingsFindingsCommand is the command line data structure for the list findings action of findings
+	ListFindingsFindingsCommand struct {
 		// Team ID
-		TeamID      string
+		TeamID string
+		// Allows to get findings list at a specific date (incompatible and preferential to min and max date params)
+		AtDate string
+		// Allows to get findings list for a specific asset identifier
+		Identifier string
+		// A comma separated list of identifiers
+		Identifiers string
+		// Issue ID (Vulnerability DB)
+		IssueID string
+		// A comma separated list of associated labels
+		Labels string
+		// Allows to get findings list until a specific date
+		MaxDate string
+		// Findings maximum score
+		MaxScore string
+		// Allows to get findings list from a specific date
+		MinDate string
+		// Findings minimum score
+		MinScore string
+		// Requested page
+		Page string
+		// Requested page size
+		Size string
+		// Sorting criteria. Supported fields: score, -score (for descending order)
+		SortBy string
+		// Findings Status
+		Status string
+		// Target ID (Vulnerability DB)
+		TargetID    string
+		PrettyPrint bool
+	}
+
+	// ListFindingsIssuesFindingsCommand is the command line data structure for the list findings issues action of findings
+	ListFindingsIssuesFindingsCommand struct {
+		// Team ID
+		TeamID string
+		// Allows to get issues list at a specific date
+		AtDate string
+		// A comma separated list of identifiers
+		Identifiers string
+		// A comma separated list of associated labels
+		Labels string
+		// Allows to get findings list until a specific date
+		MaxDate string
+		// Allows to get findings list from a specific date
+		MinDate string
+		// Requested page
+		Page string
+		// Requested page size
+		Size string
+		// Sorting criteria. Supported fields: max_score, targets_count (use - for descending order. E.g.: -max_score)
+		SortBy string
+		// Findings Status
+		Status string
+		// Target ID (Vulnerability DB)
+		TargetID    string
+		PrettyPrint bool
+	}
+
+	// ListFindingsTargetsFindingsCommand is the command line data structure for the list findings targets action of findings
+	ListFindingsTargetsFindingsCommand struct {
+		// Team ID
+		TeamID string
+		// Allows to get targets list at a specific date
+		AtDate string
+		// A comma separated list of identifiers
+		Identifiers string
+		// Issue ID (Vulnerability DB)
+		IssueID string
+		// A comma separated list of associated labels
+		Labels string
+		// Allows to get findings list until a specific date
+		MaxDate string
+		// Allows to get findings list from a specific date
+		MinDate string
+		// Requested page
+		Page string
+		// Requested page size
+		Size string
+		// Sorting criteria. Supported fields: max_score, findings_count (use - for descending order. E.g.: -max_score)
+		SortBy string
+		// Findings Status
+		Status      string
 		PrettyPrint bool
 	}
 
@@ -247,303 +518,6 @@ type (
 
 	// ShowHealthcheckCommand is the command line data structure for the show action of healthcheck
 	ShowHealthcheckCommand struct {
-		PrettyPrint bool
-	}
-
-	// CreateTeamsCommand is the command line data structure for the create action of teams
-	CreateTeamsCommand struct {
-		Payload     string
-		ContentType string
-		PrettyPrint bool
-	}
-
-	// DeleteTeamsCommand is the command line data structure for the delete action of teams
-	DeleteTeamsCommand struct {
-		// Team ID
-		TeamID      string
-		PrettyPrint bool
-	}
-
-	// ListTeamsCommand is the command line data structure for the list action of teams
-	ListTeamsCommand struct {
-		// Team tag
-		Tag         string
-		PrettyPrint bool
-	}
-
-	// ShowTeamsCommand is the command line data structure for the show action of teams
-	ShowTeamsCommand struct {
-		// Team ID
-		TeamID      string
-		PrettyPrint bool
-	}
-
-	// UpdateTeamsCommand is the command line data structure for the update action of teams
-	UpdateTeamsCommand struct {
-		Payload     string
-		ContentType string
-		// team ID
-		TeamID      string
-		PrettyPrint bool
-	}
-
-	// CreateAssetsCommand is the command line data structure for the create action of assets
-	CreateAssetsCommand struct {
-		Payload     string
-		ContentType string
-		// Team ID
-		TeamID      string
-		PrettyPrint bool
-	}
-
-	// CreateMultiStatusAssetsCommand is the command line data structure for the createMultiStatus action of assets
-	CreateMultiStatusAssetsCommand struct {
-		Payload     string
-		ContentType string
-		// Team ID
-		TeamID      string
-		PrettyPrint bool
-	}
-
-	// DeleteAssetsCommand is the command line data structure for the delete action of assets
-	DeleteAssetsCommand struct {
-		// Asset ID
-		AssetID string
-		// Team ID
-		TeamID      string
-		PrettyPrint bool
-	}
-
-	// DiscoverAssetsCommand is the command line data structure for the discover action of assets
-	DiscoverAssetsCommand struct {
-		Payload     string
-		ContentType string
-		// Team ID
-		TeamID      string
-		PrettyPrint bool
-	}
-
-	// ListAssetsCommand is the command line data structure for the list action of assets
-	ListAssetsCommand struct {
-		// Team ID
-		TeamID string
-		// Identifier
-		Identifier  string
-		PrettyPrint bool
-	}
-
-	// ShowAssetsCommand is the command line data structure for the show action of assets
-	ShowAssetsCommand struct {
-		// Asset ID
-		AssetID string
-		// Team ID
-		TeamID      string
-		PrettyPrint bool
-	}
-
-	// UpdateAssetsCommand is the command line data structure for the update action of assets
-	UpdateAssetsCommand struct {
-		Payload     string
-		ContentType string
-		// Asset ID
-		AssetID string
-		// Team ID
-		TeamID      string
-		PrettyPrint bool
-	}
-
-	// FindFindingFindingsCommand is the command line data structure for the Find finding action of findings
-	FindFindingFindingsCommand struct {
-		// Finding ID
-		FindingID string
-		// Team ID
-		TeamID      string
-		PrettyPrint bool
-	}
-
-	// FindFindingsFromAIssueFindingsCommand is the command line data structure for the Find findings from a Issue action of findings
-	FindFindingsFromAIssueFindingsCommand struct {
-		// Issue ID
-		IssueID string
-		// Team ID
-		TeamID string
-		// Allows to get findings list at a specific date (incompatible and preferential to min and max date params)
-		AtDate string
-		// A comma separated list of identifiers
-		Identifiers string
-		// A comma separated list of associated labels
-		Labels string
-		// Allows to get findings list until a specific date
-		MaxDate string
-		// Findings maximum score
-		MaxScore string
-		// Allows to get findings list from a specific date
-		MinDate string
-		// Findings minimum score
-		MinScore string
-		// Requested page
-		Page string
-		// Requested page size
-		Size string
-		// Sorting criteria. Supported fields: score, -score (for descending order)
-		SortBy string
-		// Findings Status
-		Status      string
-		PrettyPrint bool
-	}
-
-	// FindFindingsFromATargetFindingsCommand is the command line data structure for the Find findings from a Target action of findings
-	FindFindingsFromATargetFindingsCommand struct {
-		// Target ID
-		TargetID string
-		// Team ID
-		TeamID string
-		// Allows to get findings list at a specific date (incompatible and preferential to min and max date params)
-		AtDate string
-		// A comma separated list of identifiers
-		Identifiers string
-		// A comma separated list of associated labels
-		Labels string
-		// Allows to get findings list until a specific date
-		MaxDate string
-		// Findings maximum score
-		MaxScore string
-		// Allows to get findings list from a specific date
-		MinDate string
-		// Findings minimum score
-		MinScore string
-		// Requested page
-		Page string
-		// Requested page size
-		Size string
-		// Sorting criteria. Supported fields: score, -score (for descending order)
-		SortBy string
-		// Findings Status
-		Status      string
-		PrettyPrint bool
-	}
-
-	// ListFindingOverwritesFindingsCommand is the command line data structure for the List Finding Overwrites action of findings
-	ListFindingOverwritesFindingsCommand struct {
-		FindingID string
-		// Team ID
-		TeamID      string
-		PrettyPrint bool
-	}
-
-	// ListFindingsLabelsFindingsCommand is the command line data structure for the List findings labels action of findings
-	ListFindingsLabelsFindingsCommand struct {
-		// Team ID
-		TeamID string
-		// Allows to get findings list at a specific date (incompatible and preferential to min and max date params)
-		AtDate string
-		// A comma separated list of identifiers
-		Identifiers string
-		// Allows to get findings list until a specific date
-		MaxDate string
-		// Allows to get findings list from a specific date
-		MinDate string
-		// Findings status
-		Status      string
-		PrettyPrint bool
-	}
-
-	// SubmitAFindingOverwriteFindingsCommand is the command line data structure for the Submit a Finding Overwrite action of findings
-	SubmitAFindingOverwriteFindingsCommand struct {
-		Payload     string
-		ContentType string
-		FindingID   string
-		// Team ID
-		TeamID      string
-		PrettyPrint bool
-	}
-
-	// ListFindingsFindingsCommand is the command line data structure for the list findings action of findings
-	ListFindingsFindingsCommand struct {
-		// Team ID
-		TeamID string
-		// Allows to get findings list at a specific date (incompatible and preferential to min and max date params)
-		AtDate string
-		// Allows to get findings list for a specific asset identifier
-		Identifier string
-		// A comma separated list of identifiers
-		Identifiers string
-		// Issue ID (Vulnerability DB)
-		IssueID string
-		// A comma separated list of associated labels
-		Labels string
-		// Allows to get findings list until a specific date
-		MaxDate string
-		// Findings maximum score
-		MaxScore string
-		// Allows to get findings list from a specific date
-		MinDate string
-		// Findings minimum score
-		MinScore string
-		// Requested page
-		Page string
-		// Requested page size
-		Size string
-		// Sorting criteria. Supported fields: score, -score (for descending order)
-		SortBy string
-		// Findings Status
-		Status string
-		// Target ID (Vulnerability DB)
-		TargetID    string
-		PrettyPrint bool
-	}
-
-	// ListFindingsIssuesFindingsCommand is the command line data structure for the list findings issues action of findings
-	ListFindingsIssuesFindingsCommand struct {
-		// Team ID
-		TeamID string
-		// Allows to get issues list at a specific date
-		AtDate string
-		// A comma separated list of identifiers
-		Identifiers string
-		// A comma separated list of associated labels
-		Labels string
-		// Allows to get findings list until a specific date
-		MaxDate string
-		// Allows to get findings list from a specific date
-		MinDate string
-		// Requested page
-		Page string
-		// Requested page size
-		Size string
-		// Sorting criteria. Supported fields: max_score, targets_count (use - for descending order. E.g.: -max_score)
-		SortBy string
-		// Findings Status
-		Status string
-		// Target ID (Vulnerability DB)
-		TargetID    string
-		PrettyPrint bool
-	}
-
-	// ListFindingsTargetsFindingsCommand is the command line data structure for the list findings targets action of findings
-	ListFindingsTargetsFindingsCommand struct {
-		// Team ID
-		TeamID string
-		// Allows to get targets list at a specific date
-		AtDate string
-		// A comma separated list of identifiers
-		Identifiers string
-		// Issue ID (Vulnerability DB)
-		IssueID string
-		// A comma separated list of associated labels
-		Labels string
-		// Allows to get findings list until a specific date
-		MaxDate string
-		// Allows to get findings list from a specific date
-		MinDate string
-		// Requested page
-		Page string
-		// Requested page size
-		Size string
-		// Sorting criteria. Supported fields: max_score, findings_count (use - for descending order. E.g.: -max_score)
-		SortBy string
-		// Findings Status
-		Status      string
 		PrettyPrint bool
 	}
 
@@ -720,6 +694,43 @@ type (
 		Payload     string
 		ContentType string
 		// Team ID
+		TeamID      string
+		PrettyPrint bool
+	}
+
+	// CreateTeamsCommand is the command line data structure for the create action of teams
+	CreateTeamsCommand struct {
+		Payload     string
+		ContentType string
+		PrettyPrint bool
+	}
+
+	// DeleteTeamsCommand is the command line data structure for the delete action of teams
+	DeleteTeamsCommand struct {
+		// Team ID
+		TeamID      string
+		PrettyPrint bool
+	}
+
+	// ListTeamsCommand is the command line data structure for the list action of teams
+	ListTeamsCommand struct {
+		// Team tag
+		Tag         string
+		PrettyPrint bool
+	}
+
+	// ShowTeamsCommand is the command line data structure for the show action of teams
+	ShowTeamsCommand struct {
+		// Team ID
+		TeamID      string
+		PrettyPrint bool
+	}
+
+	// UpdateTeamsCommand is the command line data structure for the update action of teams
+	UpdateTeamsCommand struct {
+		Payload     string
+		ContentType string
+		// team ID
 		TeamID      string
 		PrettyPrint bool
 	}
@@ -2146,10 +2157,32 @@ Payload example:
 	command.AddCommand(sub)
 	app.AddCommand(command)
 	command = &cobra.Command{
+		Use:   "submita-finding-ticket-creation",
+		Short: `Create a ticket associated with the finding in a ticket tracker tool.`,
+	}
+	tmp79 := new(SubmitAFindingTicketCreationFindingsCommand)
+	sub = &cobra.Command{
+		Use:   `findings ["/api/v1/teams/TEAM_ID/findings/FINDING_ID/ticket"]`,
+		Short: ``,
+		Long: `
+
+Payload example:
+
+{
+   "description": "A text with a custom description about the finding.",
+   "summary": "Dockerfile Security Check - Image user should not be 'root'"
+}`,
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp79.Run(c, args) },
+	}
+	tmp79.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp79.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	app.AddCommand(command)
+	command = &cobra.Command{
 		Use:   "update",
 		Short: `update action`,
 	}
-	tmp79 := new(UpdateTeamsCommand)
+	tmp80 := new(UpdateTeamsCommand)
 	sub = &cobra.Command{
 		Use:   `teams ["/api/v1/teams/TEAM_ID"]`,
 		Short: ``,
@@ -2162,12 +2195,12 @@ Payload example:
    "name": "Security",
    "tag": "team:security"
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp79.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp80.Run(c, args) },
 	}
-	tmp79.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp79.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp80.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp80.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp80 := new(UpdateAssetsCommand)
+	tmp81 := new(UpdateAssetsCommand)
 	sub = &cobra.Command{
 		Use:   `assets ["/api/v1/teams/TEAM_ID/assets/ASSET_ID"]`,
 		Short: ``,
@@ -2184,12 +2217,12 @@ Payload example:
    "scannable": true,
    "type": "Hostname"
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp80.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp81.Run(c, args) },
 	}
-	tmp80.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp80.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp81.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp81.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp81 := new(UpdateAssetAnnotationsCommand)
+	tmp82 := new(UpdateAssetAnnotationsCommand)
 	sub = &cobra.Command{
 		Use:   `asset-annotations ["/api/v1/teams/TEAM_ID/assets/ASSET_ID/annotations"]`,
 		Short: ``,
@@ -2203,12 +2236,12 @@ Payload example:
       "annotation/2": "value/2"
    }
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp81.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp82.Run(c, args) },
 	}
-	tmp81.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp81.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp82.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp82.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp82 := new(UpdateGroupCommand)
+	tmp83 := new(UpdateGroupCommand)
 	sub = &cobra.Command{
 		Use:   `group ["/api/v1/teams/TEAM_ID/groups/GROUP_ID"]`,
 		Short: ``,
@@ -2220,12 +2253,12 @@ Payload example:
    "name": "Default group",
    "options": "{\"timeout\":60}"
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp82.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp83.Run(c, args) },
 	}
-	tmp82.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp82.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp83.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp83.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp83 := new(UpdatePoliciesCommand)
+	tmp84 := new(UpdatePoliciesCommand)
 	sub = &cobra.Command{
 		Use:   `policies ["/api/v1/teams/TEAM_ID/policies/POLICY_ID"]`,
 		Short: ``,
@@ -2236,12 +2269,12 @@ Payload example:
 {
    "name": "Sample Policy"
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp83.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp84.Run(c, args) },
 	}
-	tmp83.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp83.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp84.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp84.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp84 := new(UpdatePolicySettingsCommand)
+	tmp85 := new(UpdatePolicySettingsCommand)
 	sub = &cobra.Command{
 		Use:   `policy-settings ["/api/v1/teams/TEAM_ID/policies/POLICY_ID/settings/SETTINGS_ID"]`,
 		Short: ``,
@@ -2253,12 +2286,12 @@ Payload example:
    "checktype_name": "vulcan-tls",
    "options": "{\"timeout\":60}"
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp84.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp85.Run(c, args) },
 	}
-	tmp84.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp84.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp85.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp85.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp85 := new(UpdateProgramsCommand)
+	tmp86 := new(UpdateProgramsCommand)
 	sub = &cobra.Command{
 		Use:   `programs ["/api/v1/teams/TEAM_ID/programs/PROGRAM_ID"]`,
 		Short: ``,
@@ -2277,12 +2310,12 @@ Payload example:
       }
    ]
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp85.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp86.Run(c, args) },
 	}
-	tmp85.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp85.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp86.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp86.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp86 := new(UpdateRecipientsCommand)
+	tmp87 := new(UpdateRecipientsCommand)
 	sub = &cobra.Command{
 		Use:   `recipients ["/api/v1/teams/TEAM_ID/recipients"]`,
 		Short: ``,
@@ -2296,12 +2329,12 @@ Payload example:
       "jane.doe@vulcan.example.com"
    ]
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp86.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp87.Run(c, args) },
 	}
-	tmp86.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp86.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp87.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp87.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp87 := new(UpdateScheduleCommand)
+	tmp88 := new(UpdateScheduleCommand)
 	sub = &cobra.Command{
 		Use:   `schedule ["/api/v1/teams/TEAM_ID/programs/PROGRAM_ID/schedule"]`,
 		Short: ``,
@@ -2312,12 +2345,12 @@ Payload example:
 {
    "cron": "0 7 1 * *"
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp87.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp88.Run(c, args) },
 	}
-	tmp87.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp87.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp88.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp88.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp88 := new(UpdateTeamMembersCommand)
+	tmp89 := new(UpdateTeamMembersCommand)
 	sub = &cobra.Command{
 		Use:   `team-members ["/api/v1/teams/TEAM_ID/members/USER_ID"]`,
 		Short: ``,
@@ -2328,12 +2361,12 @@ Payload example:
 {
    "role": "owner"
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp88.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp89.Run(c, args) },
 	}
-	tmp88.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp88.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp89.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp89.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp89 := new(UpdateUserCommand)
+	tmp90 := new(UpdateUserCommand)
 	sub = &cobra.Command{
 		Use:   `user ["/api/v1/users/USER_ID"]`,
 		Short: ``,
@@ -2347,10 +2380,10 @@ Payload example:
    "firstname": "John",
    "lastname": "Doe"
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp89.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp90.Run(c, args) },
 	}
-	tmp89.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp89.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp90.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp90.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
 	app.AddCommand(command)
 }
@@ -2532,6 +2565,152 @@ func (cmd *CreateAPITokenCommand) Run(c *client.Client, args []string) error {
 func (cmd *CreateAPITokenCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	var userID string
 	cc.Flags().StringVar(&cmd.UserID, "user_id", userID, `User ID`)
+}
+
+// Run makes the HTTP request corresponding to the CreateTeamsCommand command.
+func (cmd *CreateTeamsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = "/api/v1/teams"
+	}
+	var payload client.TeamPayload
+	if cmd.Payload != "" {
+		err := json.Unmarshal([]byte(cmd.Payload), &payload)
+		if err != nil {
+			return fmt.Errorf("failed to deserialize payload: %s", err)
+		}
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.CreateTeams(ctx, path, &payload)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *CreateTeamsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request body encoded in JSON")
+	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
+}
+
+// Run makes the HTTP request corresponding to the DeleteTeamsCommand command.
+func (cmd *DeleteTeamsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/api/v1/teams/%v", url.QueryEscape(cmd.TeamID))
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.DeleteTeams(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *DeleteTeamsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var teamID string
+	cc.Flags().StringVar(&cmd.TeamID, "team_id", teamID, `Team ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListTeamsCommand command.
+func (cmd *ListTeamsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = "/api/v1/teams"
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListTeams(ctx, path, stringFlagVal("tag", cmd.Tag))
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListTeamsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var tag string
+	cc.Flags().StringVar(&cmd.Tag, "tag", tag, `Team tag`)
+}
+
+// Run makes the HTTP request corresponding to the ShowTeamsCommand command.
+func (cmd *ShowTeamsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/api/v1/teams/%v", url.QueryEscape(cmd.TeamID))
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ShowTeams(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ShowTeamsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var teamID string
+	cc.Flags().StringVar(&cmd.TeamID, "team_id", teamID, `Team ID`)
+}
+
+// Run makes the HTTP request corresponding to the UpdateTeamsCommand command.
+func (cmd *UpdateTeamsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/api/v1/teams/%v", url.QueryEscape(cmd.TeamID))
+	}
+	var payload client.TeamUpdatePayload
+	if cmd.Payload != "" {
+		err := json.Unmarshal([]byte(cmd.Payload), &payload)
+		if err != nil {
+			return fmt.Errorf("failed to deserialize payload: %s", err)
+		}
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.UpdateTeams(ctx, path, &payload)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *UpdateTeamsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request body encoded in JSON")
+	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
+	var teamID string
+	cc.Flags().StringVar(&cmd.TeamID, "team_id", teamID, `team ID`)
 }
 
 // Run makes the HTTP request corresponding to the CreateAssetAnnotationsCommand command.
@@ -3069,43 +3248,43 @@ func (cmd *FindFindingsFromAIssueFindingsCommand) Run(c *client.Client, args []s
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
-	var tmp90 *float64
+	var tmp91 *float64
 	if cmd.MaxScore != "" {
 		var err error
-		tmp90, err = float64Val(cmd.MaxScore)
+		tmp91, err = float64Val(cmd.MaxScore)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--maxScore", "err", err)
 			return err
 		}
 	}
-	var tmp91 *float64
+	var tmp92 *float64
 	if cmd.MinScore != "" {
 		var err error
-		tmp91, err = float64Val(cmd.MinScore)
+		tmp92, err = float64Val(cmd.MinScore)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--minScore", "err", err)
 			return err
 		}
 	}
-	var tmp92 *float64
+	var tmp93 *float64
 	if cmd.Page != "" {
 		var err error
-		tmp92, err = float64Val(cmd.Page)
+		tmp93, err = float64Val(cmd.Page)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--page", "err", err)
 			return err
 		}
 	}
-	var tmp93 *float64
+	var tmp94 *float64
 	if cmd.Size != "" {
 		var err error
-		tmp93, err = float64Val(cmd.Size)
+		tmp94, err = float64Val(cmd.Size)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--size", "err", err)
 			return err
 		}
 	}
-	resp, err := c.FindFindingsFromAIssueFindings(ctx, path, stringFlagVal("atDate", cmd.AtDate), stringFlagVal("identifiers", cmd.Identifiers), stringFlagVal("labels", cmd.Labels), stringFlagVal("maxDate", cmd.MaxDate), tmp90, stringFlagVal("minDate", cmd.MinDate), tmp91, tmp92, tmp93, stringFlagVal("sortBy", cmd.SortBy), stringFlagVal("status", cmd.Status))
+	resp, err := c.FindFindingsFromAIssueFindings(ctx, path, stringFlagVal("atDate", cmd.AtDate), stringFlagVal("identifiers", cmd.Identifiers), stringFlagVal("labels", cmd.Labels), stringFlagVal("maxDate", cmd.MaxDate), tmp91, stringFlagVal("minDate", cmd.MinDate), tmp92, tmp93, tmp94, stringFlagVal("sortBy", cmd.SortBy), stringFlagVal("status", cmd.Status))
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
 		return err
@@ -3155,43 +3334,43 @@ func (cmd *FindFindingsFromATargetFindingsCommand) Run(c *client.Client, args []
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
-	var tmp94 *float64
+	var tmp95 *float64
 	if cmd.MaxScore != "" {
 		var err error
-		tmp94, err = float64Val(cmd.MaxScore)
+		tmp95, err = float64Val(cmd.MaxScore)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--maxScore", "err", err)
 			return err
 		}
 	}
-	var tmp95 *float64
+	var tmp96 *float64
 	if cmd.MinScore != "" {
 		var err error
-		tmp95, err = float64Val(cmd.MinScore)
+		tmp96, err = float64Val(cmd.MinScore)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--minScore", "err", err)
 			return err
 		}
 	}
-	var tmp96 *float64
+	var tmp97 *float64
 	if cmd.Page != "" {
 		var err error
-		tmp96, err = float64Val(cmd.Page)
+		tmp97, err = float64Val(cmd.Page)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--page", "err", err)
 			return err
 		}
 	}
-	var tmp97 *float64
+	var tmp98 *float64
 	if cmd.Size != "" {
 		var err error
-		tmp97, err = float64Val(cmd.Size)
+		tmp98, err = float64Val(cmd.Size)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--size", "err", err)
 			return err
 		}
 	}
-	resp, err := c.FindFindingsFromATargetFindings(ctx, path, stringFlagVal("atDate", cmd.AtDate), stringFlagVal("identifiers", cmd.Identifiers), stringFlagVal("labels", cmd.Labels), stringFlagVal("maxDate", cmd.MaxDate), tmp94, stringFlagVal("minDate", cmd.MinDate), tmp95, tmp96, tmp97, stringFlagVal("sortBy", cmd.SortBy), stringFlagVal("status", cmd.Status))
+	resp, err := c.FindFindingsFromATargetFindings(ctx, path, stringFlagVal("atDate", cmd.AtDate), stringFlagVal("identifiers", cmd.Identifiers), stringFlagVal("labels", cmd.Labels), stringFlagVal("maxDate", cmd.MaxDate), tmp95, stringFlagVal("minDate", cmd.MinDate), tmp96, tmp97, tmp98, stringFlagVal("sortBy", cmd.SortBy), stringFlagVal("status", cmd.Status))
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
 		return err
@@ -3332,6 +3511,43 @@ func (cmd *SubmitAFindingOverwriteFindingsCommand) RegisterFlags(cc *cobra.Comma
 	cc.Flags().StringVar(&cmd.TeamID, "team_id", teamID, `Team ID`)
 }
 
+// Run makes the HTTP request corresponding to the SubmitAFindingTicketCreationFindingsCommand command.
+func (cmd *SubmitAFindingTicketCreationFindingsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/api/v1/teams/%v/findings/%v/ticket", url.QueryEscape(cmd.TeamID), url.QueryEscape(cmd.FindingID))
+	}
+	var payload client.FindingTicketPayload
+	if cmd.Payload != "" {
+		err := json.Unmarshal([]byte(cmd.Payload), &payload)
+		if err != nil {
+			return fmt.Errorf("failed to deserialize payload: %s", err)
+		}
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.SubmitAFindingTicketCreationFindings(ctx, path, &payload)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *SubmitAFindingTicketCreationFindingsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request body encoded in JSON")
+	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
+	var findingID string
+	cc.Flags().StringVar(&cmd.FindingID, "finding_id", findingID, `Finding ID`)
+	var teamID string
+	cc.Flags().StringVar(&cmd.TeamID, "team_id", teamID, `Team ID`)
+}
+
 // Run makes the HTTP request corresponding to the ListFindingsFindingsCommand command.
 func (cmd *ListFindingsFindingsCommand) Run(c *client.Client, args []string) error {
 	var path string
@@ -3342,43 +3558,43 @@ func (cmd *ListFindingsFindingsCommand) Run(c *client.Client, args []string) err
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
-	var tmp98 *float64
+	var tmp99 *float64
 	if cmd.MaxScore != "" {
 		var err error
-		tmp98, err = float64Val(cmd.MaxScore)
+		tmp99, err = float64Val(cmd.MaxScore)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--maxScore", "err", err)
 			return err
 		}
 	}
-	var tmp99 *float64
+	var tmp100 *float64
 	if cmd.MinScore != "" {
 		var err error
-		tmp99, err = float64Val(cmd.MinScore)
+		tmp100, err = float64Val(cmd.MinScore)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--minScore", "err", err)
 			return err
 		}
 	}
-	var tmp100 *float64
+	var tmp101 *float64
 	if cmd.Page != "" {
 		var err error
-		tmp100, err = float64Val(cmd.Page)
+		tmp101, err = float64Val(cmd.Page)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--page", "err", err)
 			return err
 		}
 	}
-	var tmp101 *float64
+	var tmp102 *float64
 	if cmd.Size != "" {
 		var err error
-		tmp101, err = float64Val(cmd.Size)
+		tmp102, err = float64Val(cmd.Size)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--size", "err", err)
 			return err
 		}
 	}
-	resp, err := c.ListFindingsFindings(ctx, path, stringFlagVal("atDate", cmd.AtDate), stringFlagVal("identifier", cmd.Identifier), stringFlagVal("identifiers", cmd.Identifiers), stringFlagVal("issueID", cmd.IssueID), stringFlagVal("labels", cmd.Labels), stringFlagVal("maxDate", cmd.MaxDate), tmp98, stringFlagVal("minDate", cmd.MinDate), tmp99, tmp100, tmp101, stringFlagVal("sortBy", cmd.SortBy), stringFlagVal("status", cmd.Status), stringFlagVal("targetID", cmd.TargetID))
+	resp, err := c.ListFindingsFindings(ctx, path, stringFlagVal("atDate", cmd.AtDate), stringFlagVal("identifier", cmd.Identifier), stringFlagVal("identifiers", cmd.Identifiers), stringFlagVal("issueID", cmd.IssueID), stringFlagVal("labels", cmd.Labels), stringFlagVal("maxDate", cmd.MaxDate), tmp99, stringFlagVal("minDate", cmd.MinDate), tmp100, tmp101, tmp102, stringFlagVal("sortBy", cmd.SortBy), stringFlagVal("status", cmd.Status), stringFlagVal("targetID", cmd.TargetID))
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
 		return err
@@ -3432,25 +3648,25 @@ func (cmd *ListFindingsIssuesFindingsCommand) Run(c *client.Client, args []strin
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
-	var tmp102 *float64
+	var tmp103 *float64
 	if cmd.Page != "" {
 		var err error
-		tmp102, err = float64Val(cmd.Page)
+		tmp103, err = float64Val(cmd.Page)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--page", "err", err)
 			return err
 		}
 	}
-	var tmp103 *float64
+	var tmp104 *float64
 	if cmd.Size != "" {
 		var err error
-		tmp103, err = float64Val(cmd.Size)
+		tmp104, err = float64Val(cmd.Size)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--size", "err", err)
 			return err
 		}
 	}
-	resp, err := c.ListFindingsIssuesFindings(ctx, path, stringFlagVal("atDate", cmd.AtDate), stringFlagVal("identifiers", cmd.Identifiers), stringFlagVal("labels", cmd.Labels), stringFlagVal("maxDate", cmd.MaxDate), stringFlagVal("minDate", cmd.MinDate), tmp102, tmp103, stringFlagVal("sortBy", cmd.SortBy), stringFlagVal("status", cmd.Status), stringFlagVal("targetID", cmd.TargetID))
+	resp, err := c.ListFindingsIssuesFindings(ctx, path, stringFlagVal("atDate", cmd.AtDate), stringFlagVal("identifiers", cmd.Identifiers), stringFlagVal("labels", cmd.Labels), stringFlagVal("maxDate", cmd.MaxDate), stringFlagVal("minDate", cmd.MinDate), tmp103, tmp104, stringFlagVal("sortBy", cmd.SortBy), stringFlagVal("status", cmd.Status), stringFlagVal("targetID", cmd.TargetID))
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
 		return err
@@ -3496,25 +3712,25 @@ func (cmd *ListFindingsTargetsFindingsCommand) Run(c *client.Client, args []stri
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
-	var tmp104 *float64
+	var tmp105 *float64
 	if cmd.Page != "" {
 		var err error
-		tmp104, err = float64Val(cmd.Page)
+		tmp105, err = float64Val(cmd.Page)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--page", "err", err)
 			return err
 		}
 	}
-	var tmp105 *float64
+	var tmp106 *float64
 	if cmd.Size != "" {
 		var err error
-		tmp105, err = float64Val(cmd.Size)
+		tmp106, err = float64Val(cmd.Size)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--size", "err", err)
 			return err
 		}
 	}
-	resp, err := c.ListFindingsTargetsFindings(ctx, path, stringFlagVal("atDate", cmd.AtDate), stringFlagVal("identifiers", cmd.Identifiers), stringFlagVal("issueID", cmd.IssueID), stringFlagVal("labels", cmd.Labels), stringFlagVal("maxDate", cmd.MaxDate), stringFlagVal("minDate", cmd.MinDate), tmp104, tmp105, stringFlagVal("sortBy", cmd.SortBy), stringFlagVal("status", cmd.Status))
+	resp, err := c.ListFindingsTargetsFindings(ctx, path, stringFlagVal("atDate", cmd.AtDate), stringFlagVal("identifiers", cmd.Identifiers), stringFlagVal("issueID", cmd.IssueID), stringFlagVal("labels", cmd.Labels), stringFlagVal("maxDate", cmd.MaxDate), stringFlagVal("minDate", cmd.MinDate), tmp105, tmp106, stringFlagVal("sortBy", cmd.SortBy), stringFlagVal("status", cmd.Status))
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
 		return err
@@ -3590,25 +3806,25 @@ func (cmd *CurrentExposureGlobalStatsCommand) Run(c *client.Client, args []strin
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
-	var tmp106 *float64
+	var tmp107 *float64
 	if cmd.MaxScore != "" {
 		var err error
-		tmp106, err = float64Val(cmd.MaxScore)
+		tmp107, err = float64Val(cmd.MaxScore)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--maxScore", "err", err)
 			return err
 		}
 	}
-	var tmp107 *float64
+	var tmp108 *float64
 	if cmd.MinScore != "" {
 		var err error
-		tmp107, err = float64Val(cmd.MinScore)
+		tmp108, err = float64Val(cmd.MinScore)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--minScore", "err", err)
 			return err
 		}
 	}
-	resp, err := c.CurrentExposureGlobalStats(ctx, path, stringFlagVal("labels", cmd.Labels), tmp106, tmp107, stringFlagVal("tags", cmd.Tags))
+	resp, err := c.CurrentExposureGlobalStats(ctx, path, stringFlagVal("labels", cmd.Labels), tmp107, tmp108, stringFlagVal("tags", cmd.Tags))
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
 		return err
@@ -3640,25 +3856,25 @@ func (cmd *ExposureGlobalStatsCommand) Run(c *client.Client, args []string) erro
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
-	var tmp108 *float64
+	var tmp109 *float64
 	if cmd.MaxScore != "" {
 		var err error
-		tmp108, err = float64Val(cmd.MaxScore)
+		tmp109, err = float64Val(cmd.MaxScore)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--maxScore", "err", err)
 			return err
 		}
 	}
-	var tmp109 *float64
+	var tmp110 *float64
 	if cmd.MinScore != "" {
 		var err error
-		tmp109, err = float64Val(cmd.MinScore)
+		tmp110, err = float64Val(cmd.MinScore)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--minScore", "err", err)
 			return err
 		}
 	}
-	resp, err := c.ExposureGlobalStats(ctx, path, stringFlagVal("atDate", cmd.AtDate), tmp108, tmp109, stringFlagVal("tags", cmd.Tags))
+	resp, err := c.ExposureGlobalStats(ctx, path, stringFlagVal("atDate", cmd.AtDate), tmp109, tmp110, stringFlagVal("tags", cmd.Tags))
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
 		return err
@@ -4549,152 +4765,6 @@ func (cmd *UpdateRecipientsCommand) RegisterFlags(cc *cobra.Command, c *client.C
 	cc.Flags().StringVar(&cmd.TeamID, "team_id", teamID, `Team ID`)
 }
 
-// Run makes the HTTP request corresponding to the CreateTeamsCommand command.
-func (cmd *CreateTeamsCommand) Run(c *client.Client, args []string) error {
-	var path string
-	if len(args) > 0 {
-		path = args[0]
-	} else {
-		path = "/api/v1/teams"
-	}
-	var payload client.TeamPayload
-	if cmd.Payload != "" {
-		err := json.Unmarshal([]byte(cmd.Payload), &payload)
-		if err != nil {
-			return fmt.Errorf("failed to deserialize payload: %s", err)
-		}
-	}
-	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.CreateTeams(ctx, path, &payload)
-	if err != nil {
-		goa.LogError(ctx, "failed", "err", err)
-		return err
-	}
-
-	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
-	return nil
-}
-
-// RegisterFlags registers the command flags with the command line.
-func (cmd *CreateTeamsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
-	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request body encoded in JSON")
-	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
-}
-
-// Run makes the HTTP request corresponding to the DeleteTeamsCommand command.
-func (cmd *DeleteTeamsCommand) Run(c *client.Client, args []string) error {
-	var path string
-	if len(args) > 0 {
-		path = args[0]
-	} else {
-		path = fmt.Sprintf("/api/v1/teams/%v", url.QueryEscape(cmd.TeamID))
-	}
-	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.DeleteTeams(ctx, path)
-	if err != nil {
-		goa.LogError(ctx, "failed", "err", err)
-		return err
-	}
-
-	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
-	return nil
-}
-
-// RegisterFlags registers the command flags with the command line.
-func (cmd *DeleteTeamsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
-	var teamID string
-	cc.Flags().StringVar(&cmd.TeamID, "team_id", teamID, `Team ID`)
-}
-
-// Run makes the HTTP request corresponding to the ListTeamsCommand command.
-func (cmd *ListTeamsCommand) Run(c *client.Client, args []string) error {
-	var path string
-	if len(args) > 0 {
-		path = args[0]
-	} else {
-		path = "/api/v1/teams"
-	}
-	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.ListTeams(ctx, path, stringFlagVal("tag", cmd.Tag))
-	if err != nil {
-		goa.LogError(ctx, "failed", "err", err)
-		return err
-	}
-
-	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
-	return nil
-}
-
-// RegisterFlags registers the command flags with the command line.
-func (cmd *ListTeamsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
-	var tag string
-	cc.Flags().StringVar(&cmd.Tag, "tag", tag, `Team tag`)
-}
-
-// Run makes the HTTP request corresponding to the ShowTeamsCommand command.
-func (cmd *ShowTeamsCommand) Run(c *client.Client, args []string) error {
-	var path string
-	if len(args) > 0 {
-		path = args[0]
-	} else {
-		path = fmt.Sprintf("/api/v1/teams/%v", url.QueryEscape(cmd.TeamID))
-	}
-	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.ShowTeams(ctx, path)
-	if err != nil {
-		goa.LogError(ctx, "failed", "err", err)
-		return err
-	}
-
-	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
-	return nil
-}
-
-// RegisterFlags registers the command flags with the command line.
-func (cmd *ShowTeamsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
-	var teamID string
-	cc.Flags().StringVar(&cmd.TeamID, "team_id", teamID, `Team ID`)
-}
-
-// Run makes the HTTP request corresponding to the UpdateTeamsCommand command.
-func (cmd *UpdateTeamsCommand) Run(c *client.Client, args []string) error {
-	var path string
-	if len(args) > 0 {
-		path = args[0]
-	} else {
-		path = fmt.Sprintf("/api/v1/teams/%v", url.QueryEscape(cmd.TeamID))
-	}
-	var payload client.TeamUpdatePayload
-	if cmd.Payload != "" {
-		err := json.Unmarshal([]byte(cmd.Payload), &payload)
-		if err != nil {
-			return fmt.Errorf("failed to deserialize payload: %s", err)
-		}
-	}
-	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.UpdateTeams(ctx, path, &payload)
-	if err != nil {
-		goa.LogError(ctx, "failed", "err", err)
-		return err
-	}
-
-	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
-	return nil
-}
-
-// RegisterFlags registers the command flags with the command line.
-func (cmd *UpdateTeamsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
-	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request body encoded in JSON")
-	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
-	var teamID string
-	cc.Flags().StringVar(&cmd.TeamID, "team_id", teamID, `team ID`)
-}
-
 // Run makes the HTTP request corresponding to the SendDigestReportCommand command.
 func (cmd *SendDigestReportCommand) Run(c *client.Client, args []string) error {
 	var path string
@@ -5043,25 +5113,25 @@ func (cmd *CurrentExposureStatsCommand) Run(c *client.Client, args []string) err
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
-	var tmp110 *float64
+	var tmp111 *float64
 	if cmd.MaxScore != "" {
 		var err error
-		tmp110, err = float64Val(cmd.MaxScore)
+		tmp111, err = float64Val(cmd.MaxScore)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--maxScore", "err", err)
 			return err
 		}
 	}
-	var tmp111 *float64
+	var tmp112 *float64
 	if cmd.MinScore != "" {
 		var err error
-		tmp111, err = float64Val(cmd.MinScore)
+		tmp112, err = float64Val(cmd.MinScore)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--minScore", "err", err)
 			return err
 		}
 	}
-	resp, err := c.CurrentExposureStats(ctx, path, tmp110, tmp111)
+	resp, err := c.CurrentExposureStats(ctx, path, tmp111, tmp112)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
 		return err
@@ -5091,25 +5161,25 @@ func (cmd *ExposureStatsCommand) Run(c *client.Client, args []string) error {
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
-	var tmp112 *float64
+	var tmp113 *float64
 	if cmd.MaxScore != "" {
 		var err error
-		tmp112, err = float64Val(cmd.MaxScore)
+		tmp113, err = float64Val(cmd.MaxScore)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--maxScore", "err", err)
 			return err
 		}
 	}
-	var tmp113 *float64
+	var tmp114 *float64
 	if cmd.MinScore != "" {
 		var err error
-		tmp113, err = float64Val(cmd.MinScore)
+		tmp114, err = float64Val(cmd.MinScore)
 		if err != nil {
 			goa.LogError(ctx, "failed to parse flag into *float64 value", "flag", "--minScore", "err", err)
 			return err
 		}
 	}
-	resp, err := c.ExposureStats(ctx, path, stringFlagVal("atDate", cmd.AtDate), tmp112, tmp113)
+	resp, err := c.ExposureStats(ctx, path, stringFlagVal("atDate", cmd.AtDate), tmp113, tmp114)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
 		return err

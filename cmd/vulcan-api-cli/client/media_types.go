@@ -328,6 +328,8 @@ type Finding struct {
 	Target *Target `form:"target,omitempty" json:"target,omitempty" yaml:"target,omitempty" xml:"target,omitempty"`
 	// Total exposure (hours)
 	TotalExposure *float64 `form:"total_exposure,omitempty" json:"total_exposure,omitempty" yaml:"total_exposure,omitempty" xml:"total_exposure,omitempty"`
+	// Link to the ticket
+	URLTracker *string `form:"url_tracker,omitempty" json:"url_tracker,omitempty" yaml:"url_tracker,omitempty" xml:"url_tracker,omitempty"`
 }
 
 // DecodeFinding decodes the Finding instance encoded in resp body.
@@ -388,6 +390,21 @@ func (c *Client) DecodeFindingOverwriteCollection(resp *http.Response) (FindingO
 	var decoded FindingOverwriteCollection
 	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
 	return decoded, err
+}
+
+// Finding Ticket (default view)
+//
+// Identifier: finding_ticket; view=default
+type FindingTicket struct {
+	// Link to the ticket
+	URLTracker *string `form:"url_tracker,omitempty" json:"url_tracker,omitempty" yaml:"url_tracker,omitempty" xml:"url_tracker,omitempty"`
+}
+
+// DecodeFindingTicket decodes the FindingTicket instance encoded in resp body.
+func (c *Client) DecodeFindingTicket(resp *http.Response) (*FindingTicket, error) {
+	var decoded FindingTicket
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return &decoded, err
 }
 
 // Findings by Issue (default view)
@@ -1269,6 +1286,8 @@ type Team struct {
 	Name *string `form:"name,omitempty" json:"name,omitempty" yaml:"name,omitempty" xml:"name,omitempty"`
 	// tag
 	Tag *string `form:"tag,omitempty" json:"tag,omitempty" yaml:"tag,omitempty" xml:"tag,omitempty"`
+	// If the team is Onboarded in Vulcan Tracker
+	UsingTracker *bool `form:"using_tracker,omitempty" json:"using_tracker,omitempty" yaml:"using_tracker,omitempty" xml:"using_tracker,omitempty"`
 }
 
 // DecodeTeam decodes the Team instance encoded in resp body.

@@ -135,6 +135,8 @@ var FindingMedia = MediaType("finding", func() {
 		Attribute("total_exposure", Number, "Total exposure (hours)", func() { Example(4631) })
 		Attribute("resources", ArrayOf(ResourceMedia), "Resources")
 		Attribute("attachments", ArrayOf(AttachmentMedia), "Attachments")
+		Attribute("url_tracker", String, "Link to the ticket", func() { Example("https://jiraserver.example.com/browse/TEST-123") })
+
 	})
 	View("default", func() {
 		Attribute("id")
@@ -150,6 +152,7 @@ var FindingMedia = MediaType("finding", func() {
 		Attribute("total_exposure")
 		Attribute("resources")
 		Attribute("attachments")
+		Attribute("url_tracker")
 	})
 })
 
@@ -392,6 +395,18 @@ var _ = Resource("findings", func() {
 		Security("Bearer")
 		Response(OK, CollectionOf(FindingOverwriteMedia))
 	})
+
+	Action("Submit a Finding Ticket Creation", func() {
+		Description("Create a ticket associated with the finding in a ticket tracker tool.")
+		Routing(POST("/:finding_id/ticket"))
+		Params(func() {
+			Param("team_id", String, "Team ID")
+			Param("finding_id", String, "Finding ID")
+		})
+		Payload(FindingTicketPayload)
+		Security("Bearer")
+		Response(OK, FindingTicketMedia)
+	})
 })
 
 var FindingOverwritePayload = Type("FindingOverwritePayload", func() {
@@ -424,4 +439,21 @@ var FindingOverwriteMedia = MediaType("finding_overwrite", func() {
 		Attribute("team_id")
 		Attribute("created_at")
 	})
+})
+
+var FindingTicketMedia = MediaType("finding_ticket", func() {
+	Description("Finding Ticket")
+	Attributes(func() {
+		Attribute("url_tracker", String, "Link to the ticket", func() { Example("https://jiraserver.example.com/browse/TEST-123") })
+	})
+	View("default", func() {
+		Attribute("url_tracker")
+	})
+})
+
+// FindingTicketPayload
+var FindingTicketPayload = Type("FindingTicketPayload", func() {
+	Attribute("summary", String, "Summary", func() { Example("Dockerfile Security Check - Image user should not be 'root'") })
+	Attribute("description", String, "Description", func() { Example("A text with a custom description about the finding.") })
+	Required("summary")
 })

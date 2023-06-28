@@ -8,6 +8,9 @@ exposed by Vulcan, the corresponding specifications are here:
 
 ## Requirements
 
+If you are a macOS user you will need to have the `realpath` command installed before executing the following instructions.
+You can install the command as part of the `coreutils` homebrew formula or using MacPorts.
+
 ```sh
 go install github.com/filewalkwithme/impl@latest
 go generate ./...
@@ -30,7 +33,7 @@ Run the commands bellow to launch the Docker containers we need:
 - PgAdmin
 
 ```sh
-# navigate to the contri/dev folder
+# navigate to the contrib/dev folder
 cd contrib/dev
 
 # launch dependencies
@@ -88,6 +91,7 @@ Those are the variables you have to setup:
 |REPORTS_API_URL||http://localhost:8084|
 |PERSISTENCE_HOST||persistence.vulcan.example.com|
 |VULNERABILITYDB_URL||http://localhost:8083|
+|VULCANTRACKER_URL|Leave the url empty if you don't want to configure the vulcan-tracker component|http://localhost:8085|
 |SCAN_REDIRECT_URL|Redirecting URL for reports, OPTIONAL|https://insights-redirect.vulcan.s3-xxx.amazonaws.com/index.html?reportUrl=|
 |VULCAN_UI_URL|Vulcan UI base URL for Digest report link|http://localhost:1234|
 |GPC_${i}_NAME|Specify the name of the global policy that the ${i} ALLOW/BLOCK list will apply. Rquired if any ALLOW/BLOCK list is specified.|web-scanning-global|
@@ -99,7 +103,7 @@ Those are the variables you have to setup:
 |KAFKA_USER||user|
 |KAFKA_PASS||supersecret|
 |KAFKA_BROKER|if set to empty the Async API will be disabled|kafka.example.com:9094|
-|KAFKA_TOPICS|Contains a map, using toml format, mapping entities in the Vulcan async API to the kafka topics they wil be pushed to, by now the only available entity is ``assets`` |[assets = "assets-topic"]| 
+|KAFKA_TOPICS|Contains a map, using toml format, mapping entities in the Vulcan async API to the kafka topics they wil be pushed to, by now the only available entity is ``assets`` |[assets = "assets-topic"]|
 First we have to build the `vulcan-api` because the build only copies the file.
 
 We need to provide `linux` compiled binary to the docker build command. This won't be necessary when this component has been open sourced.

@@ -51,6 +51,13 @@ host = "persistence.vulcan.example.com"
 url = "http://localhost:8083"
 insecure_tls = true
 
+[vulcantracker]
+# leave the url empty if you don't want to configure the vulcan-tracker component.
+url = "http://localhost:8085"
+insecure_tls = true
+# comma separated list of teams ids
+onboarded_teams ="ba2f2a9b-1ea8-4a28-9519-eab4ed290866,49ec37f7-ae5a-4033-ad9a-932e463ae346"
+
 [awscatalogue]
 kind = "None"
 url = "https://catalogue.example.com"

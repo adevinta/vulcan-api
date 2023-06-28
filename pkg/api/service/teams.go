@@ -39,7 +39,12 @@ func (s vulcanitoService) FindTeam(ctx context.Context, id string) (*api.Team, e
 	if id == "" {
 		return nil, errors.Validation(`ID is empty`)
 	}
-	return s.db.FindTeam(id)
+	team, err := s.db.FindTeam(id)
+	if err != nil {
+		return team, err
+	}
+	team.UsingTracker = s.IsATeamOnboardedInVulcanTracker(ctx, id, s.allowedTrackerTeams)
+	return team, nil
 }
 
 func (s vulcanitoService) FindTeamByName(ctx context.Context, name string) (*api.Team, error) {
@@ -53,7 +58,12 @@ func (s vulcanitoService) FindTeamByTag(ctx context.Context, tag string) (*api.T
 	if tag == "" {
 		return nil, errors.Validation(`Tag is empty`)
 	}
-	return s.db.FindTeamByTag(tag)
+	team, err := s.db.FindTeamByTag(tag)
+	if err != nil {
+		return team, err
+	}
+	team.UsingTracker = s.IsATeamOnboardedInVulcanTracker(ctx, team.ID, s.allowedTrackerTeams)
+	return team, nil
 }
 
 func (s vulcanitoService) FindTeamsByTags(ctx context.Context, tags []string) ([]*api.Team, error) {
@@ -78,5 +88,12 @@ func (s vulcanitoService) DeleteTeam(ctx context.Context, id string) error {
 }
 
 func (s vulcanitoService) ListTeams(ctx context.Context) ([]*api.Team, error) {
-	return s.db.ListTeams()
+	teams, err := s.db.ListTeams()
+	if err != nil {
+		return teams, err
+	}
+	for _, team := range teams {
+		team.UsingTracker = s.IsATeamOnboardedInVulcanTracker(ctx, team.ID, s.allowedTrackerTeams)
+	}
+	return teams, nil
 }
