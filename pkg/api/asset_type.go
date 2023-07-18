@@ -26,7 +26,7 @@ type AssetTypeResponse struct {
 
 // ValidAssetType indicates if the asset type name exists in Vulcan.
 func ValidAssetType(assetTypeName string) bool {
-	valid := []string{"AWSAccount", "IP", "IPRange", "DomainName", "Hostname", "DockerImage", "WebAddress", "GitRepository"}
+	valid := []string{"AWSAccount", "IP", "IPRange", "DomainName", "Hostname", "DockerImage", "WebAddress", "GitRepository", "GCPProject"}
 	for _, a := range valid {
 		if strings.EqualFold(a, assetTypeName) {
 			return true

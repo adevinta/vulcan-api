@@ -255,6 +255,7 @@ var _ = Resource("assets", func() {
 			- DockerImage
 			- WebAddress
 			- GitRepository
+			- GCPProject
 			---
 			If the asset type is informed, then Vulcan will use that value to create the new asset.
 			Otherwise, Vulcan will try to automatically discover the asset type.

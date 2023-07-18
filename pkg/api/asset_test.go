@@ -88,6 +88,36 @@ func TestAssetValidate(t *testing.T) {
 			},
 			wantErr: errors.New("Identifier is not a valid AWSAccount"),
 		},
+		{
+			name: "Correct GCP Project ID",
+			asset: Asset{
+				TeamID:      "TeamID",
+				AssetTypeID: "AssetTypeID",
+				AssetType:   &AssetType{Name: "GCPProject"},
+				Identifier:  "bagase-crucible-bubble-gorilla",
+			},
+			wantErr: nil,
+		},
+		{
+			name: "Malformed GCP Project ID ending with hyphen",
+			asset: Asset{
+				TeamID:      "TeamID",
+				AssetTypeID: "AssetTypeID",
+				AssetType:   &AssetType{Name: "GCPProject"},
+				Identifier:  "inherent-derris-",
+			},
+			wantErr: errors.New("Identifier is not a valid GCPProject"),
+		},
+		{
+			name: "Malformed GCP Project ID starting with numbers",
+			asset: Asset{
+				TeamID:      "TeamID",
+				AssetTypeID: "AssetTypeID",
+				AssetType:   &AssetType{Name: "GCPProject"},
+				Identifier:  "007bond",
+			},
+			wantErr: errors.New("Identifier is not a valid GCPProject"),
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

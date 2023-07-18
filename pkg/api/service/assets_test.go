@@ -84,6 +84,7 @@ func TestGetTypesFromIdentifier(t *testing.T) {
 		{"finntech/docker-elasticsearch-kubernetes", nil, nil},
 		{"https://www.example.com", []string{"Hostname", "WebAddress"}, []string{"www.example.com", "https://www.example.com"}},
 		{"registry-1.docker.io/artifact", []string{"DockerImage"}, []string{"registry-1.docker.io/artifact"}},
+		{"bagase234", []string{"GCPProject"}, []string{"bagase234"}},
 	}
 
 	for _, tt := range tests {

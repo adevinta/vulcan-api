@@ -92,6 +92,7 @@ components:
         - DockerImage
         - WebAddress
         - GitRepository
+        - GCPProject
 
     annotation:
       type: object

@@ -36,6 +36,7 @@ const (
 	AssetTypeDockerImage             = "DockerImage"
 	AssetTypeWebAddress              = "WebAddress"
 	AssetTypeGitRepository           = "GitRepository"
+	AssetTypeGcpProject              = "GCPProject"
 )
 
 // Annotation represents a Annotation model.
