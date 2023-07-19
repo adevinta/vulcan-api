@@ -75,7 +75,7 @@ func (a Asset) Validate() error {
 			return errors.Validation("Identifier is not a valid AWSAccount")
 		}
 	case "GCPProject":
-		if !types.IsGCPProjectId(a.Identifier) {
+		if !types.IsGCPProjectID(a.Identifier) {
 			return errors.Validation("Identifier is not a valid GCPProject")
 		}
 	case "DockerImage":

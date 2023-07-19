@@ -682,7 +682,7 @@ func getTypesFromIdentifier(identifier string) ([]asset, error) {
 		identifier: identifier,
 	}
 
-	if types.IsGCPProjectId(identifier) {
+	if types.IsGCPProjectID(identifier) {
 		a.assetType = "GCPProject"
 		return []asset{a}, nil
 	}
