@@ -6,7 +6,6 @@ package global
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
@@ -15,7 +14,6 @@ import (
 	"github.com/adevinta/vulcan-api/pkg/api"
 	"github.com/adevinta/vulcan-api/pkg/scanengine"
 	metrics "github.com/adevinta/vulcan-metrics-client"
-	scanengineApi "github.com/adevinta/vulcan-scan-engine/pkg/api"
 	scanengineData "github.com/adevinta/vulcan-scan-engine/pkg/api/endpoint"
 )
 
@@ -99,62 +97,6 @@ func buildScanTag(team *api.Team, program *api.Program) string {
 	}
 
 	return fmt.Sprint("scan:", teamLabel, "-", programLabel)
-}
-
-// GenerateReport triggers the generation of a new report.
-func (e *globalEntities) GenerateReport(ctx context.Context, teamID, teamName, scanID string, autosend bool) error {
-	scan, err := e.findScan(ctx, scanID, teamID)
-	if err != nil {
-		return err
-	}
-	// If scan is nil that means it does not belong to a global program so let
-	// the VulcanitoService deal with the request. For this we will perform a
-	// second request to the scan engine to fetch again the data of the scan.
-	// Given that by now majority of the times the report will be generated for
-	// a scan that belongs to a global program it is acceptable. Improving this
-	// in future is a matter to add a parameter to the GenerateReport func that
-	// can be nil, but if not, it will already contain the data about a scan.
-	if scan == nil {
-		return e.VulcanitoService.GenerateReport(ctx, teamID, teamName, scanID, autosend)
-	}
-	programName := scan.Program.Name
-	return e.VulcanitoService.RunGenerateReport(ctx, autosend, scanID, programName, teamID, teamName)
-}
-
-// ProcessScanCheckNotification looks if the message is regarding a scan
-// triggered from a global program.
-func (e *globalEntities) ProcessScanCheckNotification(ctx context.Context, msg []byte) error {
-	var m scanengineApi.ScanNotification
-	err := json.Unmarshal(msg, &m)
-	if err != nil {
-		return errors.Default(err)
-	}
-	teamID, programID := decodeGlobalProgramRequest(m.ProgramID)
-	_, ok := e.store.Programs()[programID]
-	if !ok {
-		return e.VulcanitoService.ProcessScanCheckNotification(ctx, msg)
-	}
-	program, err := e.FindProgram(ctx, programID, teamID)
-	if err != nil {
-		return err
-	}
-	if m.Status == "FINISHED" {
-		team, err := e.VulcanitoService.FindTeam(ctx, teamID)
-		if err != nil {
-			return errors.NotFound(err)
-		}
-
-		var autosend bool
-		if program.Autosend != nil {
-			autosend = *program.Autosend
-		}
-		err = e.GenerateReport(ctx, team.ID, team.Name, m.ScanID, autosend)
-		if err != nil {
-			_ = e.logger.Log("ErrGenerateSecurityOverview", err)
-			return errors.Default(err)
-		}
-	}
-	return nil
 }
 
 // ListScans is completely handled by the middleware because the scans of a team

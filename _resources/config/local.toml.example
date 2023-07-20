@@ -30,14 +30,6 @@ url = "http://localhost:8082/"
 # Minimum period time in minutes that a program can be scheduled to run
 minimum_interval = 0.1
 
-[sqs]
-enabled = true
-log_messages = true
-polling_interval = 10
-wait_time = 20
-timeout = 30
-queue_arn = "arn:aws:sqs:xxx:123456789012:yyy"
-
 [reports]
 sns_arn = "arn:aws:sns:xxx:123456789012:yyy"
 api_base_url = "http://localhost:8084"

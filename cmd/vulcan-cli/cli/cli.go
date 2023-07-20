@@ -919,53 +919,6 @@ func (cli *CLI) RefreshScan(s *Scan) (*Scan, error) {
 	return s, nil
 }
 
-func (cli *CLI) ReportEmail(teamName string, scanID string) (string, error) {
-	ctx := cli.ctx
-	c := cli.c
-
-	t, err := cli.TeamByName(teamName)
-	if err != nil {
-		return "", err
-	}
-
-	resp, err := c.EmailScanReport(ctx, client.EmailScanReportPath(t.ID, scanID))
-	if err != nil {
-		return "", err
-	}
-
-	if resp.StatusCode != http.StatusOK {
-		return "", fmt.Errorf("wrong status when retrieving report for scan '%s' in team '%s' (%s)", scanID, teamName, resp.Status)
-	}
-
-	email, err := c.DecodeReportemail(resp)
-	if err != nil {
-		return "", err
-	}
-
-	return DereferenceString(email.EmailBody), nil
-}
-
-func (cli *CLI) SendReport(teamName string, scanID string) error {
-	ctx := cli.ctx
-	c := cli.c
-
-	t, err := cli.TeamByName(teamName)
-	if err != nil {
-		return err
-	}
-
-	resp, err := c.SendScanReport(ctx, client.SendScanReportPath(t.ID, scanID))
-	if err != nil {
-		return err
-	}
-
-	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("wrong status when sending report for scan '%s' in team '%s' (%s)", scanID, teamName, resp.Status)
-	}
-
-	return nil
-}
-
 func (cli *CLI) Findings(teamID string, minScore float64, status *string) ([]*Finding, error) {
 	ctx := cli.ctx
 	c := cli.c

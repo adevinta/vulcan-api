@@ -73,7 +73,7 @@ definitions:
         - annotation/1
         - annotation/2
         items:
-          example: Perferendis cumque enim totam ut.
+          example: Est illo et corrupti rerum deleniti aut.
           type: string
         type: array
     title: AssetAnnotationDeleteRequest
@@ -491,7 +491,7 @@ definitions:
         - a14c7c65-66ab-4676-bcf6-0dea9719f5c6
         - 9f7a0c78-b752-4126-aa6d-0f286ada7b8f
         items:
-          example: Sequi et sed.
+          example: Ducimus sit odio tenetur consequatur.
           type: string
         type: array
     required:
@@ -862,14 +862,6 @@ definitions:
       status_previous: OPEN
       team_id: a9d33628-ddb0-467c-b482-474887097820
       user: user@adevinta.com
-    - created_at: "2021-03-27T00:26:43.211506Z"
-      finding_id: 3c7d7003-c53d-4ccc-80e7-f21da241b2d4
-      id: b0720503-0a84-43fd-9cf4-5bb6c500226f
-      notes: This finding is a false positive because...
-      status: FALSE_POSITIVE
-      status_previous: OPEN
-      team_id: a9d33628-ddb0-467c-b482-474887097820
-      user: user@adevinta.com
     items:
       $ref: '#/definitions/Finding_overwrite'
     title: 'Mediatype identifier: finding_overwrite; type=collection; view=default'
@@ -1029,6 +1021,16 @@ definitions:
       resources_count: 28
       summary: Site Without HTTPS
       targets_count: 14
+    - issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      max_score: 6.9
+      resources_count: 28
+      summary: Site Without HTTPS
+      targets_count: 14
+    - issue_id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      max_score: 6.9
+      resources_count: 28
+      summary: Site Without HTTPS
+      targets_count: 14
     items:
       $ref: '#/definitions/Findings_issue'
     title: 'Mediatype identifier: findings_issue; type=collection; view=default'
@@ -1067,7 +1069,7 @@ definitions:
         - Web
         - HTTP
         items:
-          example: Eos illum ipsum.
+          example: Nihil velit magni id et vero in.
           type: string
         type: array
     title: 'Mediatype identifier: findings_labels; view=default'
@@ -1076,6 +1078,64 @@ definitions:
     description: Findings list (default view)
     example:
       findings:
+      - affected_resource: ""
+        attachments:
+        - content_type: application/json
+          data: e30=
+          name: JSON string
+        - content_type: application/json
+          data: e30=
+          name: JSON string
+        - content_type: application/json
+          data: e30=
+          name: JSON string
+        current_exposure: 4631
+        details: ""
+        id: a8720503-0284-45fd-9cf4-5bb6c500966f
+        impact_details: ""
+        issue:
+          cwe_id: 358
+          description: This domain has at least one MX record
+          id: b0720503-0a84-43fd-9cf4-5bb6c500226f
+          labels:
+          - Web
+          - HTTP
+          recommendations:
+          - It is recommended to run DMARC
+          reference_links: []
+          summary: MX presence
+        resources:
+        - attributes:
+          - Hostname
+          - Port
+          name: Network Resources
+          resources:
+          - Hostname: test.example.com
+            Port: "443"
+        - attributes:
+          - Hostname
+          - Port
+          name: Network Resources
+          resources:
+          - Hostname: test.example.com
+            Port: "443"
+        score: 6.9
+        source:
+          component: vulcan-tls
+          id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
+          instance: b3320f03-1284-42fd-9cf4-5bb6c500966f
+          name: vulcan
+          options: '{"timeout":60}'
+          time: "2019-06-08 11:16:40"
+        status: OPEN
+        target:
+          id: f8129c7f-7abf-41ba-ab1f-c97090bb3db4
+          identifier: www.test.com
+          teams:
+          - a9d33628-ddb0-467c-b482-474887097820
+          - 9cb0bb2b-ca36-4877-acad-9dde23880595
+        total_exposure: 4631
+        url_tracker: https://jiraserver.example.com/browse/TEST-123
       - affected_resource: ""
         attachments:
         - content_type: application/json
@@ -1207,16 +1267,6 @@ definitions:
         issues_count: 2
         max_score: 6.9
         target_id: a8720503-0284-45fd-9cf4-5bb6c500966f
-      - findings_count: 5
-        identifier: vulcan.example.com
-        issues_count: 2
-        max_score: 6.9
-        target_id: a8720503-0284-45fd-9cf4-5bb6c500966f
-      - findings_count: 5
-        identifier: vulcan.example.com
-        issues_count: 2
-        max_score: 6.9
-        target_id: a8720503-0284-45fd-9cf4-5bb6c500966f
     properties:
       pagination:
         $ref: '#/definitions/Pagination'
@@ -1329,6 +1379,10 @@ definitions:
       id: f6360346-77a5-4f97-b919-331363b3af26
       name: Default group
       options: '{"timeout":60}'
+    - description: All newly created assets are added to the Default group
+      id: f6360346-77a5-4f97-b919-331363b3af26
+      name: Default group
+      options: '{"timeout":60}'
     items:
       $ref: '#/definitions/GroupWithoutAssetsCount'
     title: 'Mediatype identifier: group; type=collection; view=default'
@@ -1377,7 +1431,7 @@ definitions:
         - Web
         - HTTP
         items:
-          example: Velit quis.
+          example: Maxime natus esse neque aliquid.
           type: string
         type: array
       recommendations:
@@ -1385,14 +1439,14 @@ definitions:
         example:
         - It is recommended to run DMARC
         items:
-          example: Omnis perferendis.
+          example: Velit quis.
           type: string
         type: array
       reference_links:
         description: Documentation reference for the issue
         example: []
         items:
-          example: Natus esse neque aliquid.
+          example: Quas voluptatum sit eos illum ipsum tempora.
           type: string
         type: array
       summary:
@@ -1528,6 +1582,33 @@ definitions:
     description: ListassetentryCollection is the media type for an array of Listassetentry
       (default view)
     example:
+    - alias: AnAlias
+      annotations:
+        annotation/1: value/1
+        annotation/2: value/2
+      classified_at: "2020-09-03T15:00:42.112975Z"
+      environmental_cvss: AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H
+      groups:
+      - description: All newly created assets are added to the Default group
+        id: f6360346-77a5-4f97-b919-331363b3af26
+        name: Default group
+        options: '{"timeout":60}'
+      - description: All newly created assets are added to the Default group
+        id: f6360346-77a5-4f97-b919-331363b3af26
+        name: Default group
+        options: '{"timeout":60}'
+      - description: All newly created assets are added to the Default group
+        id: f6360346-77a5-4f97-b919-331363b3af26
+        name: Default group
+        options: '{"timeout":60}'
+      id: a8720503-0284-45fd-9cf4-5bb6c500966f
+      identifier: vulcan.example.com
+      options: '{"timeout":60}'
+      rolfp: R:1/O:1/L:0/F:0/P:0+S:1
+      scannable: true
+      type:
+        id: 29f83d16-09c4-4be5-8cae-e232d41f388a
+        name: Hostname
     - alias: AnAlias
       annotations:
         annotation/1: value/1
@@ -1742,6 +1823,9 @@ definitions:
     description: PolicysettingCollection is the media type for an array of Policysetting
       (default view)
     example:
+    - checktype_name: vulcan-tls
+      id: 5e51174d-3755-48b2-98bf-37e37cb07f6e
+      options: '{"timeout":60}'
     - checktype_name: vulcan-tls
       id: 5e51174d-3755-48b2-98bf-37e37cb07f6e
       options: '{"timeout":60}'
@@ -2037,7 +2121,6 @@ definitions:
     example:
     - email: john.doe@vulcan.example.com
     - email: john.doe@vulcan.example.com
-    - email: john.doe@vulcan.example.com
     items:
       $ref: '#/definitions/Recipient'
     title: 'Mediatype identifier: recipient; type=collection; view=default'
@@ -2054,59 +2137,12 @@ definitions:
         - john.doe@vulcan.example.com
         - jane.doe@vulcan.example.com
         items:
-          example: Vero in architecto sapiente voluptatum deserunt at.
+          example: Ratione corrupti soluta.
           type: string
         type: array
     required:
     - emails
     title: RecipientsPayload
-    type: object
-  Report:
-    description: Report (default view)
-    example:
-      delivered_to: john.doe@vulcan.example.com, jane.doe@vulcan.example.com
-      id: a7f3a072-67bb-41ad-941e-25afcafc0ed5
-      report: https://insights.vulcan.example.com/2b3123c0b0083ab6d87b7bb743652b9a58125079258b8b4650511bd47bc1a552/2018-07-10/360f1c3a-f0e9-4c10-b557-ebf3015a61a9-full-report.html
-      report_json: https://insights.vulcan.example.com/2b3123c0b0083ab6d87b7bb743652b9a58125079258b8b4650511bd47bc1a552/2018-07-10/360f1c3a-f0e9-4c10-b557-ebf3015a61a9-full-report.json
-      scan_id: 360f1c3a-f0e9-4c10-b557-ebf3015a61a9
-      status: FINISHED
-    properties:
-      delivered_to:
-        description: Delivered To
-        example: john.doe@vulcan.example.com, jane.doe@vulcan.example.com
-        type: string
-      id:
-        description: Report ID
-        example: a7f3a072-67bb-41ad-941e-25afcafc0ed5
-        type: string
-      report:
-        description: Report URL
-        example: https://insights.vulcan.example.com/2b3123c0b0083ab6d87b7bb743652b9a58125079258b8b4650511bd47bc1a552/2018-07-10/360f1c3a-f0e9-4c10-b557-ebf3015a61a9-full-report.html
-        type: string
-      report_json:
-        description: Report JSON URL
-        example: https://insights.vulcan.example.com/2b3123c0b0083ab6d87b7bb743652b9a58125079258b8b4650511bd47bc1a552/2018-07-10/360f1c3a-f0e9-4c10-b557-ebf3015a61a9-full-report.json
-        type: string
-      scan_id:
-        description: Scan ID
-        example: 360f1c3a-f0e9-4c10-b557-ebf3015a61a9
-        type: string
-      status:
-        description: Status
-        example: FINISHED
-        type: string
-    title: 'Mediatype identifier: report; view=default'
-    type: object
-  Reportemail:
-    description: Report Email Body (default view)
-    example:
-      email_body: <html><body><title>...</title></body></html>
-    properties:
-      email_body:
-        description: Email Body
-        example: <html><body><title>...</title></body></html>
-        type: string
-    title: 'Mediatype identifier: reportemail; view=default'
     type: object
   Resource:
     description: resource (default view)
@@ -2125,7 +2161,7 @@ definitions:
         - Hostname
         - Port
         items:
-          example: Voluptate est.
+          example: Sequi et sed.
           type: string
         type: array
       name:
@@ -2140,7 +2176,7 @@ definitions:
         items:
           additionalProperties: true
           example:
-            Et corrupti rerum.: Aut sed illo porro.
+            Sed qui sint ratione perferendis cumque.: Totam ut perspiciatis.
           type: object
         type: array
     title: 'Mediatype identifier: resource; view=default'
@@ -2230,6 +2266,80 @@ definitions:
   ScanCollection:
     description: ScanCollection is the media type for an array of Scan (default view)
     example:
+    - checks_count: 20
+      end_time: "2018-09-07T10:40:52Z"
+      id: 23e7034f-8180-4895-8e7f-73f2f7d90631
+      program:
+        autosend: false
+        disabled: false
+        global: true
+        id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
+        name: Every midnight
+        policy_groups:
+        - group:
+            assets_count: 1
+            description: All newly created assets are added to the Default group
+            id: f6360346-77a5-4f97-b919-331363b3af26
+            name: Default group
+            options: '{"timeout":60}'
+          policy:
+            id: af36818a-0f30-412c-9692-d37716075861
+            name: Sample Policy
+            settings_count: 12
+        - group:
+            assets_count: 1
+            description: All newly created assets are added to the Default group
+            id: f6360346-77a5-4f97-b919-331363b3af26
+            name: Default group
+            options: '{"timeout":60}'
+          policy:
+            id: af36818a-0f30-412c-9692-d37716075861
+            name: Sample Policy
+            settings_count: 12
+        schedule:
+          cron: 0 7 1 * *
+      progress: 1
+      requested_by: john.doe@vulcan.example.com
+      scheduled_time: "2018-09-07T10:40:52Z"
+      start_time: "2018-09-07T10:40:52Z"
+      status: FINISHED
+    - checks_count: 20
+      end_time: "2018-09-07T10:40:52Z"
+      id: 23e7034f-8180-4895-8e7f-73f2f7d90631
+      program:
+        autosend: false
+        disabled: false
+        global: true
+        id: 9a100645-e51a-4e71-8a4f-1e462ce9a40d
+        name: Every midnight
+        policy_groups:
+        - group:
+            assets_count: 1
+            description: All newly created assets are added to the Default group
+            id: f6360346-77a5-4f97-b919-331363b3af26
+            name: Default group
+            options: '{"timeout":60}'
+          policy:
+            id: af36818a-0f30-412c-9692-d37716075861
+            name: Sample Policy
+            settings_count: 12
+        - group:
+            assets_count: 1
+            description: All newly created assets are added to the Default group
+            id: f6360346-77a5-4f97-b919-331363b3af26
+            name: Default group
+            options: '{"timeout":60}'
+          policy:
+            id: af36818a-0f30-412c-9692-d37716075861
+            name: Sample Policy
+            settings_count: 12
+        schedule:
+          cron: 0 7 1 * *
+      progress: 1
+      requested_by: john.doe@vulcan.example.com
+      scheduled_time: "2018-09-07T10:40:52Z"
+      start_time: "2018-09-07T10:40:52Z"
+      status: FINISHED
     - checks_count: 20
       end_time: "2018-09-07T10:40:52Z"
       id: 23e7034f-8180-4895-8e7f-73f2f7d90631
@@ -2556,7 +2666,7 @@ definitions:
         - a9d33628-ddb0-467c-b482-474887097820
         - 9cb0bb2b-ca36-4877-acad-9dde23880595
         items:
-          example: Ipsam ducimus sit odio tenetur consequatur quibusdam.
+          example: Illo porro placeat omnis.
           type: string
         type: array
     title: 'Mediatype identifier: target; view=default'
@@ -2595,11 +2705,6 @@ definitions:
   TeamCollection:
     description: TeamCollection is the media type for an array of Team (default view)
     example:
-    - description: Security Team
-      id: ff74a33c-e683-4612-a62f-a9cf385f6522
-      name: Security
-      tag: team:security
-      using_tracker: true
     - description: Security Team
       id: ff74a33c-e683-4612-a62f-a9cf385f6522
       name: Security
@@ -2808,6 +2913,14 @@ definitions:
   UserCollection:
     description: UserCollection is the media type for an array of User (default view)
     example:
+    - active: true
+      admin: true
+      email: john.doe@vulcan.example.com
+      firstname: John
+      id: 967d9966-b561-4233-bd6f-cac603fd8320
+      last_login: "2018-09-07T10:40:52Z"
+      lastname: Doe
+      observer: true
     - active: true
       admin: true
       email: john.doe@vulcan.example.com
@@ -5382,116 +5495,6 @@ paths:
       summary: show scan
       tags:
       - scan
-  /teams/{team_id}/scans/{scan_id}/report:
-    get:
-      description: Show information about a scan report
-      operationId: scan report#show
-      parameters:
-      - description: Scan ID
-        in: path
-        name: scan_id
-        required: true
-        type: string
-      - description: Team ID
-        in: path
-        name: team_id
-        required: true
-        type: string
-      produces:
-      - report
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/Report'
-      schemes:
-      - https
-      security:
-      - Bearer: []
-      summary: show scan report
-      tags:
-      - scan report
-    post:
-      description: Triggers report generation. The report will be generated asynchronously
-        on Vulcan Backend.
-      operationId: scan report#generate
-      parameters:
-      - description: Scan ID
-        in: path
-        name: scan_id
-        required: true
-        type: string
-      - description: Team ID
-        in: path
-        name: team_id
-        required: true
-        type: string
-      responses:
-        "202":
-          description: Accepted
-      schemes:
-      - https
-      security:
-      - Bearer: []
-      summary: generate scan report
-      tags:
-      - scan report
-  /teams/{team_id}/scans/{scan_id}/report/email:
-    get:
-      description: Retrieve the report in html format to be sent by email.
-      operationId: scan report#email
-      parameters:
-      - description: Scan ID
-        in: path
-        name: scan_id
-        required: true
-        type: string
-      - description: Team ID
-        in: path
-        name: team_id
-        required: true
-        type: string
-      produces:
-      - reportemail
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/Reportemail'
-      schemes:
-      - https
-      security:
-      - Bearer: []
-      summary: email scan report
-      tags:
-      - scan report
-  /teams/{team_id}/scans/{scan_id}/report/send:
-    post:
-      description: Send the generated report by email to the team recipients.
-      operationId: scan report#send
-      parameters:
-      - description: Scan ID
-        in: path
-        name: scan_id
-        required: true
-        type: string
-      - description: Team ID
-        in: path
-        name: team_id
-        required: true
-        type: string
-      produces:
-      - NoContent
-      responses:
-        "200":
-          description: OK
-      schemes:
-      - https
-      security:
-      - Bearer: []
-      summary: send scan report
-      tags:
-      - scan report
   /teams/{team_id}/stats/coverage:
     get:
       description: Get asset coverage for a team.
@@ -5892,8 +5895,6 @@ produces:
 - application/gob
 - application/x-gob
 responses:
-  Accepted:
-    description: Accepted
   OK:
     description: OK
 schemes:

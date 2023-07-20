@@ -212,11 +212,6 @@ func MakeEndpoints(s api.VulcanitoService, isJiraIntEnabled bool, logger log.Log
 	endpoints[FindScan] = makeFindScanEndpoint(s, logger)
 	endpoints[AbortScan] = makeAbortScanEndpoint(s, logger)
 
-	endpoints[FindReport] = makeFindReportEndpoint(s, logger)
-	endpoints[CreateReport] = makeCreateReportEndpoint(s, logger)
-	endpoints[SendReport] = makeSendReportEndpoint(s, logger)
-	endpoints[FindReportEmail] = makeFindReportEmailEndpoint(s, logger)
-
 	endpoints[SendDigestReport] = makeSendDigestReportEndpoint(s, logger)
 
 	endpoints[StatsCoverage] = makeStatsCoverageEndpoint(s, logger)

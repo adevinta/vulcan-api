@@ -5,10 +5,8 @@ Copyright 2021 Adevinta
 package main
 
 import (
-	"context"
 	"fmt"
 	"net/http"
-	"net/url"
 	"os"
 	"os/signal"
 	"os/user"
@@ -36,7 +34,6 @@ import (
 	awscatalogueclient "github.com/adevinta/vulcan-api/pkg/awscatalogue/client"
 	"github.com/adevinta/vulcan-api/pkg/checktypes"
 	"github.com/adevinta/vulcan-api/pkg/jwt"
-	"github.com/adevinta/vulcan-api/pkg/queue"
 	"github.com/adevinta/vulcan-api/pkg/reports"
 	saml "github.com/adevinta/vulcan-api/pkg/saml"
 	"github.com/adevinta/vulcan-api/pkg/scanengine"
@@ -157,7 +154,6 @@ type config struct {
 	Defaults           store.DefaultEntities
 	ScanEngine         scanengine.Config
 	Scheduler          schedule.Config
-	SQS                queue.Config
 	Reports            reports.Config
 	VulcanCore         vulcanCoreConfig
 	VulnerabilityDB    vulnerabilityDBConfig
@@ -361,77 +357,7 @@ func startServer() error {
 		}
 	})
 
-	// Handler intended to track user access to Vulcan reports. It's protected with OKTA and will redirect users to the unprotected vulcan insights URL stored in the API.
-	mux.HandleFunc("/api/v1/report", func(w http.ResponseWriter, r *http.Request) {
-		cookie, err := r.Cookie(cfg.Server.CookieName)
-		if err != nil {
-			http.Redirect(w, r, fmt.Sprintf("/api/v1/login?redirect_to=%s", url.QueryEscape(r.URL.String())), http.StatusFound)
-			return
-		}
-
-		v := r.URL.Query()
-
-		teamID := v.Get("team_id")
-		scanID := v.Get("scan_id")
-
-		if teamID == "" || scanID == "" {
-			http.Error(w, "'team_id' and 'scan_id' query values are required", http.StatusBadRequest)
-			return
-		}
-
-		_, _ = w.Write([]byte(`<html><body>`))
-		_, _ = w.Write([]byte(fmt.Sprintf(`
-			<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
-			<script>
-			function redirectToInsights() {
-				$.ajax({
-					url: "/api/v1/teams/%v/scans/%v/report",
-					type: 'get',
-					headers: {
-						"Authorization": "Bearer %v"
-					},
-					dataType: 'json',
-					success: function(report) {
-						var r = report.report.concat("?team_id=%v&scan_id=%v");
-						var redirectUrl = "%v";
-						window.location.replace( redirectUrl=="" ? r : redirectUrl.concat(encodeURIComponent(r)) );
-					},
-					error: function(jqXHR, textStatus, errorThrown) {
-						if (jqXHR && jqXHR.status === 403) {
-							document.write('<h1>You are not a member of this team. Contact a team owner or Vulcan support to become a member.</h1>');
-							return;
-						}
-						document.write('<h1>' + textStatus + ': ' + jqXHR.status+ ' ' + errorThrown + '</h1>');
-					}
-				});
-			}
-
-			$(document).ready(function(){
-				redirectToInsights();
-			});
-</script>
-`, teamID, scanID, cookie.Value, teamID, scanID, cfg.Reports.ScanRedirectURL)))
-		_, _ = w.Write([]byte(`</body></html>`))
-	})
-
 	http.Handle("/", mux)
-
-	// Create checks update state processor.
-	sqsConsumer, err := queue.NewConsumer(
-		cfg.SQS,
-		logger,
-		vulcanitoService.ProcessScanCheckNotification)
-	if err != nil {
-		fmt.Printf("Error creating the check events processor: %v", err)
-		return err
-	}
-
-	// Start sqs consumer.
-	if cfg.SQS.Enabled {
-		go func() {
-			sqsConsumer.ProcessMessages(context.Background())
-		}()
-	}
 
 	errs := make(chan error)
 	go func() {

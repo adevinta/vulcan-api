@@ -87,12 +87,12 @@ func (c *Client) NewCurrentExposureGlobalStatsRequest(ctx context.Context, path 
 		values.Set("labels", *labels)
 	}
 	if maxScore != nil {
-		tmp131 := strconv.FormatFloat(*maxScore, 'f', -1, 64)
-		values.Set("maxScore", tmp131)
+		tmp111 := strconv.FormatFloat(*maxScore, 'f', -1, 64)
+		values.Set("maxScore", tmp111)
 	}
 	if minScore != nil {
-		tmp132 := strconv.FormatFloat(*minScore, 'f', -1, 64)
-		values.Set("minScore", tmp132)
+		tmp112 := strconv.FormatFloat(*minScore, 'f', -1, 64)
+		values.Set("minScore", tmp112)
 	}
 	if tags != nil {
 		values.Set("tags", *tags)
@@ -137,12 +137,12 @@ func (c *Client) NewExposureGlobalStatsRequest(ctx context.Context, path string,
 		values.Set("atDate", *atDate)
 	}
 	if maxScore != nil {
-		tmp133 := strconv.FormatFloat(*maxScore, 'f', -1, 64)
-		values.Set("maxScore", tmp133)
+		tmp113 := strconv.FormatFloat(*maxScore, 'f', -1, 64)
+		values.Set("maxScore", tmp113)
 	}
 	if minScore != nil {
-		tmp134 := strconv.FormatFloat(*minScore, 'f', -1, 64)
-		values.Set("minScore", tmp134)
+		tmp114 := strconv.FormatFloat(*minScore, 'f', -1, 64)
+		values.Set("minScore", tmp114)
 	}
 	if tags != nil {
 		values.Set("tags", *tags)
