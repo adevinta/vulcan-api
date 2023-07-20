@@ -682,11 +682,6 @@ func getTypesFromIdentifier(identifier string) ([]asset, error) {
 		identifier: identifier,
 	}
 
-	if types.IsGCPProjectID(identifier) {
-		a.assetType = "GCPProject"
-		return []asset{a}, nil
-	}
-
 	if types.IsAWSARN(identifier) {
 		a.assetType = "AWSAccount"
 		return []asset{a}, nil
