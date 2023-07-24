@@ -10,9 +10,9 @@ require (
 	github.com/adevinta/vulcan-report v1.0.0
 	github.com/adevinta/vulcan-scan-engine v1.1.5
 	github.com/adevinta/vulcan-tracker v0.0.0-20230417150856-bd185601910a
-	github.com/adevinta/vulcan-types v1.0.0
+	github.com/adevinta/vulcan-types v1.1.1
 	github.com/adevinta/vulnerability-db-api v1.1.5
-	github.com/aws/aws-sdk-go v1.44.226
+	github.com/aws/aws-sdk-go v1.44.299
 	github.com/confluentinc/confluent-kafka-go v1.9.0
 	github.com/go-kit/kit v0.12.0
 	github.com/goadesign/goa v1.4.3
@@ -62,7 +62,7 @@ require (
 	github.com/magiconair/properties v1.8.6 // indirect
 	github.com/manveru/faker v0.0.0-20171103152722-9fbc68a78c4d // indirect
 	github.com/mattermost/xml-roundtrip-validator v0.1.0 // indirect
-	github.com/miekg/dns v1.1.49 // indirect
+	github.com/miekg/dns v1.1.55 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/pelletier/go-toml v1.9.5 // indirect
@@ -74,11 +74,11 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/subosito/gotenv v1.4.1 // indirect
 	github.com/zach-klippenstein/goregen v0.0.0-20160303162051-795b5e3961ea // indirect
-	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
-	golang.org/x/net v0.7.0 // indirect
-	golang.org/x/sys v0.7.0 // indirect
-	golang.org/x/text v0.7.0 // indirect
-	golang.org/x/tools v0.1.12 // indirect
+	golang.org/x/mod v0.8.0 // indirect
+	golang.org/x/net v0.12.0 // indirect
+	golang.org/x/sys v0.10.0 // indirect
+	golang.org/x/text v0.11.0 // indirect
+	golang.org/x/tools v0.6.0 // indirect
 	google.golang.org/genproto v0.0.0-20221024183307-1bc688fe9f3e // indirect
 	google.golang.org/grpc v1.50.1 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
