@@ -7,7 +7,6 @@ package kafka
 import (
 	"errors"
 	"fmt"
-	"time"
 
 	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 )
@@ -24,8 +23,6 @@ var (
 const (
 	kafkaSecurityProtocol = "sasl_ssl"
 	kafkaSaslMechanisms   = "SCRAM-SHA-256"
-
-	maxDeliveryWait = 30 * time.Second
 )
 
 // Client implements an EventStreamClient using Kafka as the event stream
