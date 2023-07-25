@@ -8,10 +8,8 @@ import (
 	"strings"
 	"time"
 
-	confluentKafka "github.com/confluentinc/confluent-kafka-go/kafka"
-
 	"github.com/adevinta/vulcan-api/pkg/asyncapi"
-	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 )
 
 // KafkaTestBroker contains the address of the local broker used for tests.
@@ -110,7 +108,7 @@ type AssetTopicData struct {
 
 func ReadAllAssetsTopic(topic string) ([]AssetTopicData, error) {
 	broker := KafkaTestBroker
-	config := confluentKafka.ConfigMap{
+	config := kafka.ConfigMap{
 		"go.events.channel.enable": true,
 		"bootstrap.servers":        broker,
 		"group.id":                 "test_" + topic,
@@ -118,7 +116,7 @@ func ReadAllAssetsTopic(topic string) ([]AssetTopicData, error) {
 		"auto.offset.reset":        "earliest",
 		"enable.auto.commit":       false,
 	}
-	c, err := confluentKafka.NewConsumer(&config)
+	c, err := kafka.NewConsumer(&config)
 	if err != nil {
 		return nil, err
 	}
@@ -131,7 +129,7 @@ func ReadAllAssetsTopic(topic string) ([]AssetTopicData, error) {
 Loop:
 	for ev := range c.Events() {
 		switch e := ev.(type) {
-		case *confluentKafka.Message:
+		case *kafka.Message:
 			data := e.Value
 			asset := asyncapi.AssetPayload{}
 			// The data will be empty in case the event is a tombstone.
@@ -150,7 +148,7 @@ Loop:
 				Headers: headers,
 			}
 			topicAssetsData = append(topicAssetsData, topicData)
-			_, err := c.CommitOffsets([]confluentKafka.TopicPartition{
+			_, err := c.CommitOffsets([]kafka.TopicPartition{
 				{
 					Topic:     e.TopicPartition.Topic,
 					Partition: e.TopicPartition.Partition,
@@ -160,9 +158,9 @@ Loop:
 			if err != nil {
 				return nil, err
 			}
-		case confluentKafka.Error:
+		case kafka.Error:
 			return nil, e
-		case confluentKafka.PartitionEOF:
+		case kafka.PartitionEOF:
 			break Loop
 		default:
 			return nil, fmt.Errorf("received unexpected message %v", e)

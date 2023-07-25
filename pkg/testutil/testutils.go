@@ -18,7 +18,7 @@ import (
 	// directly with the db so makes sense to import the driver here.
 	_ "github.com/lib/pq"
 
-	"github.com/go-kit/kit/log"
+	"github.com/go-kit/log"
 	testfixtures "gopkg.in/testfixtures.v2"
 
 	"github.com/adevinta/vulcan-api/pkg/api"
