@@ -69,7 +69,7 @@ func TestClient_Push(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			ignoreFields := cmpopts.IgnoreFields(kafka.Message{}, "TopicPartition", "Timestamp", "TimestampType", "Opaque")
+			ignoreFields := cmpopts.IgnoreFields(kafka.Message{}, "TopicPartition", "Timestamp", "TimestampType", "Opaque", "LeaderEpoch")
 			diff := cmp.Diff(tt.want, got, ignoreFields)
 			if diff != "" {
 				t.Fatalf("want!=got, diff: %s", diff)
