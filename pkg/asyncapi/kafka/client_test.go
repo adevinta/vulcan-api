@@ -7,6 +7,7 @@ package kafka
 import (
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 	"github.com/google/go-cmp/cmp"
@@ -97,13 +98,18 @@ func readAllTopic(topic string) ([]kafka.Message, error) {
 	}
 
 	var msgs []kafka.Message
-LOOP:
-	for ev := range c.Events() {
-		switch e := ev.(type) {
-		case *kafka.Message:
-
+	for {
+		e, err := c.ReadMessage(time.Second * 10)
+		if err != nil {
+			if err.(kafka.Error).IsTimeout() {
+				return msgs, nil
+			} else {
+				return msgs, err
+			}
+		}
+		if e != nil {
 			msgs = append(msgs, *e)
-			_, err := c.CommitOffsets([]kafka.TopicPartition{
+			_, err = c.CommitOffsets([]kafka.TopicPartition{
 				{
 					Topic:     e.TopicPartition.Topic,
 					Partition: e.TopicPartition.Partition,
@@ -111,13 +117,10 @@ LOOP:
 				},
 			})
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("commiting offsets %v", e)
 			}
-		case kafka.PartitionEOF:
-			break LOOP
-		default:
+		} else {
 			return nil, fmt.Errorf("received unexpected message %v", e)
 		}
 	}
-	return msgs, nil
 }
