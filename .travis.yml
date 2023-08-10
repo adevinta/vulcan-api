@@ -4,6 +4,8 @@ env:
   global:
     - FLYWAY_VERSION=9.19.3
     - INPUT_BUILDARGS=FLYWAY_VERSION=$FLYWAY_VERSION
+    # Removed linux/arm64 because it takes too long to build
+    - INPUT_PLATFORM=linux/amd64  # ,linux/arm64
 go:
   - 1.21.x
 services:
@@ -16,4 +18,4 @@ script:
   - source _script/setup-e2e-tests
   - _script/run-e2e-tests
 after_success:
-  - bash -c 'source <(curl -s https://raw.githubusercontent.com/adevinta/vulcan-cicd/master/docker.sh)'
+  - bash -c 'source <(curl -s https://raw.githubusercontent.com/adevinta/vulcan-cicd/master/buildx.sh)'

@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1.4
 # Copyright 2021 Adevinta
 
 FROM golang:1.21-alpine3.18 as builder
@@ -7,16 +8,16 @@ RUN apk add gcc libc-dev
 
 WORKDIR /app
 
-WORKDIR /app
-
-COPY go.mod .
-COPY go.sum .
+COPY go.mod go.sum ./
 
 RUN go mod download
 
 COPY . .
 
-RUN cd cmd/vulcan-api && GOOS=linux GOARCH=amd64 go build -tags musl . && cd -
+ARG TARGETOS TARGETARCH
+
+WORKDIR /app/cmd/vulcan-api
+RUN go build -tags musl .
 
 FROM alpine:3.18
 
@@ -26,7 +27,7 @@ RUN apk add --no-cache --update openjdk8-jre-base bash gettext libc6-compat
 
 ARG FLYWAY_VERSION=9.19.3
 
-RUN wget https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/${FLYWAY_VERSION}/flyway-commandline-${FLYWAY_VERSION}.tar.gz \
+RUN wget -q https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/${FLYWAY_VERSION}/flyway-commandline-${FLYWAY_VERSION}.tar.gz \
     && tar -xzf flyway-commandline-${FLYWAY_VERSION}.tar.gz --strip 1 \
     && rm flyway-commandline-${FLYWAY_VERSION}.tar.gz \
     && find ./drivers/ -type f -not -name 'postgres*' -delete \
@@ -45,9 +46,7 @@ COPY db/sql /app/sql/
 
 RUN mkdir -p /app/output
 
-COPY --from=builder /app/cmd/vulcan-api/vulcan-api .
-
-COPY config.toml .
-COPY run.sh .
+COPY --link config.toml run.sh .
+COPY --from=builder --link /app/cmd/vulcan-api/vulcan-api .
 
 CMD [ "./run.sh" ]
