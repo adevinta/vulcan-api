@@ -9,8 +9,9 @@ import (
 	"os"
 	"slices"
 
-	"github.com/adevinta/vulcan-api/cmd/vulcan-cli/cli"
 	"github.com/spf13/cobra"
+
+	"github.com/adevinta/vulcan-api/cmd/vulcan-cli/cli"
 )
 
 var users = &cobra.Command{
@@ -28,15 +29,18 @@ func init() {
 }
 
 func runUsers(outputFile string, apiCLI *cli.CLI) error {
-	// Check for the existence of the file before performing the calls to
-	// the vulcan api to avoid the user to wait just to see the command fail.
-	exists, err := fileExists(outputFile)
-	if err != nil {
-		return err
+	if !force {
+		// Check for the existence of the file before performing the calls to
+		// the vulcan api to avoid the user to wait just to see the command fail.
+		exists, err := fileExists(outputFile)
+		if err != nil {
+			return err
+		}
+		if exists {
+			return ErrOutputAlreadyExists
+		}
 	}
-	if exists && !force {
-		return ErrOutputAlreadyExists
-	}
+
 	emails := map[string]struct{}{}
 	teams, err := apiCLI.Teams()
 	if err != nil {
@@ -67,14 +71,14 @@ func runUsers(outputFile string, apiCLI *cli.CLI) error {
 	slices.Sort(list)
 	// We accept that if the output file was created after we checked for
 	// its existence above and now the file will be overwritten.
-	fs, err := os.OpenFile(outputFile, os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.ModePerm)
+	fs, err := os.Create(outputFile)
 	if err != nil {
 		return err
 	}
 	defer fs.Close()
 	for _, email := range list {
 		if _, err := fmt.Fprintln(fs, email); err != nil {
-			return fmt.Errorf("error writing to stdout %w", err)
+			return fmt.Errorf("error writing to file %w", err)
 		}
 	}
 	return nil
