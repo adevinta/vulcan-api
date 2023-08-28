@@ -1,0 +1,46 @@
+name: Auto tag
+on:
+  schedule:             # Group PRs in the same tag
+    - cron:  '30 5,17 * * 1,2'  # Try some times to allow deps to propagate.
+  workflow_dispatch:    # Manual in case needed
+jobs:
+  dependabot-auto-tag:
+    # Validate that workflow_dispatch was on the default_branch.
+    if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write   # Needed to elevate secret.GITHUB_TOKEN permissions.
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: '0'  # Requires the full history to calculate the tag
+    - name: Get commit history info since last tag
+      id: history
+      run: |
+        LAST_TAG=$(git describe --tags --abbrev=0 || true)
+        if [ -z "$LAST_TAG" ]; then
+            echo "No tags found, skipping"
+            exit 0
+        fi
+        AUTHORS=$(git log $LAST_TAG..HEAD --pretty=format:"%an" | sort | uniq)
+        if [ "$AUTHORS" == "" ]; then
+            echo "No commits since last tag"
+            exit 0
+        fi
+        # this should be improved or delegated to anothrNick/github-tag-action or similar.
+        RE='^v\([0-9]*\)[.]\([0-9]*\)[.]\([0-9]*\)$'
+        MAJOR=$(echo $LAST_TAG | sed -e "s#$RE#\1#")
+        MINOR=$(echo $LAST_TAG | sed -e "s#$RE#\2#")
+        PATCH=$(echo $LAST_TAG | sed -e "s#$RE#\3#")
+        NEXT="v$MAJOR.$MINOR.$((PATCH+1))"
+        {
+          echo 'authors<<EOF' && echo "$AUTHORS" && echo EOF
+          echo "last=$LAST_TAG"
+          echo "next=$NEXT"
+        } >> "$GITHUB_OUTPUT"
+    - name: Create tag and release
+      if: ${{steps.history.outputs.authors=='dependabot[bot]' && steps.history.outputs.next!=''}}
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        gh release create "${{steps.history.outputs.next}}" --generate-notes

@@ -1,0 +1,23 @@
+name: dependabot-merge
+
+on: pull_request
+
+jobs:
+  dependabot-merge:
+    name: Dependabot
+    runs-on: ubuntu-latest
+    if: ${{ github.actor == 'dependabot[bot]'}}
+    env:
+      PR_URL: ${{github.event.pull_request.html_url}}
+      GITHUB_TOKEN: ${{secrets.DEPENDABOT_AUTOMERGE_TOKEN}}
+    steps:
+      - name: Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v1
+      - name: approve and merge
+        if: ${{contains(steps.metadata.outputs.dependency-names, 'adevinta') || steps.metadata.outputs.update-type == 'version-update:semver-patch'}} || steps.metadata.outputs.update-type == 'version-update:semver-minor'}}
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+        run: |
+          gh pr review --approve "$PR_URL"
+          gh pr merge --auto --squash --delete-branch "$PR_URL"
