@@ -4,6 +4,19 @@ updates:
   directory: "/"
   schedule:
     interval: daily
+  groups:
+    third-party:
+      update-types:
+      - "minor"
+      - "patch"
+      include-patterns:
+      - "*"
+      exclude-patterns:
+      - "*adevinta*"
+    adevinta:
+      include-patterns:
+      - "*adevinta*"
+
   labels:
     - "dependencies"
   commit-message:
