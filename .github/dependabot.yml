@@ -6,17 +6,16 @@ updates:
     interval: daily
   groups:
     third-party:
-      update-types:
-      - "minor"
-      - "patch"
-      include-patterns:
-      - "*"
+      patterns:
+        - "*"
       exclude-patterns:
-      - "*adevinta*"
+        - "*adevinta*"
+      update-types:
+        - "minor"
+        - "patch"
     adevinta:
-      include-patterns:
-      - "*adevinta*"
-
+      patterns:
+        - "*adevinta*"
   labels:
     - "dependencies"
   commit-message:
