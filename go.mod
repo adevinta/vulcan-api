@@ -5,13 +5,13 @@ go 1.21.0
 require (
 	github.com/adevinta/errors v1.0.0
 	github.com/adevinta/vulcan-core-cli v1.0.2
-	github.com/adevinta/vulcan-groupie v1.0.0
+	github.com/adevinta/vulcan-groupie v1.0.1
 	github.com/adevinta/vulcan-metrics-client v1.0.1
 	github.com/adevinta/vulcan-report v1.0.0
 	github.com/adevinta/vulcan-scan-engine v1.1.12
-	github.com/adevinta/vulcan-tracker v0.0.0-20230417150856-bd185601910a
+	github.com/adevinta/vulcan-tracker v0.1.0
 	github.com/adevinta/vulcan-types v1.1.1
-	github.com/adevinta/vulnerability-db-api v1.1.5
+	github.com/adevinta/vulnerability-db-api v1.1.7
 	github.com/aws/aws-sdk-go v1.44.333
 	github.com/confluentinc/confluent-kafka-go v1.9.2
 	github.com/go-kit/kit v0.13.0
