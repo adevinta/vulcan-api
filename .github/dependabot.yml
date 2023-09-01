@@ -3,7 +3,10 @@ updates:
 - package-ecosystem: gomod
   directory: "/"
   schedule:
-    interval: daily
+    interval: "weekly"
+  ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
   groups:
     third-party:
       patterns:
@@ -18,15 +21,11 @@ updates:
         - "*adevinta*"
   labels:
     - "dependencies"
-  commit-message:
-    prefix: "feat"
-    include: "scope"
+
 - package-ecosystem: "docker"
   directory: "/"
   schedule:
     interval: "weekly"
   labels:
     - "dependencies"
-  commit-message:
-    prefix: "feat"
-    include: "scope"
+
