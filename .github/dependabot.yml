@@ -18,3 +18,8 @@ updates:
   commit-message:
     prefix: "feat"
     include: "scope"
+
+- package-ecosystem: npm
+  directory: /pkg/asyncapi/_gen
+  schedule:
+    interval: daily
