@@ -1,9 +1,9 @@
 version: 2
 updates:
-- package-ecosystem: gomod
+- package-ecosystem: "gomod"
   directory: "/"
   schedule:
-    interval: daily
+    interval: "daily"
   ignore:
   - dependency-name: "github.com/aws/aws-sdk-go"
     update-types: ["version-update:semver-patch"]
@@ -11,10 +11,10 @@ updates:
     update-types: ["version-update:semver-minor", "version-update:semver-major"]
   labels:
     - "dependencies"
-- package-ecosystem: npm
+- package-ecosystem: "npm"
   directory: "/pkg/asyncapi/_gen/"
   schedule:
-    interval: daily
+    interval: "daily"
   labels:
     - "dependencies"
 - package-ecosystem: "docker"
