@@ -15,4 +15,4 @@ on:
 
 jobs:
   release:
-    uses: adevinta/vulcan-cicd/.github/workflows/release-dependabot-updates.yml@v1
+    uses: adevinta/vulcan-cicd/.github/workflows/reusable-release-dependabot-updates.yml@v1

@@ -4,6 +4,6 @@ on: pull_request
 
 jobs:
   approve:
-    uses: adevinta/vulcan-cicd/.github/workflows/approve-dependabot-pr.yml@v1
+    uses: adevinta/vulcan-cicd/.github/workflows/reusable-approve-dependabot-pr.yml@v1
     secrets:
       PAT: ${{ secrets.DEPENDABOT_AUTOMERGE_TOKEN }}
