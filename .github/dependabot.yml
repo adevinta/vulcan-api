@@ -1,20 +1,31 @@
 version: 2
 updates:
-- package-ecosystem: gomod
+- package-ecosystem: "gomod"
   directory: "/"
   schedule:
-    interval: daily
+    interval: "daily"
+  ignore:
+  - dependency-name: "github.com/aws/aws-sdk-go"
+    update-types: ["version-update:semver-patch"]
+  - dependency-name: "github.com/goadesign/goa"
+    update-types: ["version-update:semver-minor", "version-update:semver-major"]
   labels:
     - "dependencies"
-  commit-message:
-    prefix: "feat"
-    include: "scope"
+- package-ecosystem: "npm"
+  directory: "/pkg/asyncapi/_gen/"
+  schedule:
+    interval: "daily"
+  labels:
+    - "dependencies"
 - package-ecosystem: "docker"
   directory: "/"
   schedule:
     interval: "weekly"
   labels:
     - "dependencies"
-  commit-message:
-    prefix: "feat"
-    include: "scope"
+- package-ecosystem: "github-actions"
+  directory: "/"
+  schedule:
+    interval: "weekly"
+  labels:
+    - "dependencies"
