@@ -19,7 +19,7 @@ require (
 	github.com/golang-jwt/jwt/v4 v4.4.2
 	github.com/google/go-cmp v0.5.9
 	github.com/gorilla/mux v1.8.0
-	github.com/jinzhu/gorm v1.9.12
+	github.com/jinzhu/gorm v1.9.16
 	github.com/lestrrat-go/backoff v1.0.0
 	github.com/lib/pq v1.10.6
 	github.com/robfig/cron v1.2.0
