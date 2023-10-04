@@ -7,6 +7,7 @@ package service
 import (
 	"context"
 	"fmt"
+	"slices"
 
 	"github.com/adevinta/errors"
 	"github.com/adevinta/vulcan-api/pkg/api"
@@ -51,14 +52,7 @@ func (s vulcanitoService) CreateFindingOverwrite(ctx context.Context, findingOve
 		return errors.Validation(fmt.Sprintf("Invalid status: '%s'", findingOverwrite.Status))
 	}
 
-	// Valid transitions:
-	//
-	// OPEN           -> OPEN
-	// FALSE_POSITIVE -> OPEN
-	// OPEN           -> FALSE_POSITIVE
-	// FALSE_POSITIVE -> FALSE_POSITIVE
-	if (findingOverwrite.StatusPrevious != "OPEN" && findingOverwrite.StatusPrevious != "FALSE_POSITIVE") ||
-		(findingOverwrite.Status != "OPEN" && findingOverwrite.Status != "FALSE_POSITIVE") {
+	if !isValidFindingTransition(findingOverwrite.Status, findingOverwrite.StatusPrevious) {
 		return errors.Validation(fmt.Sprintf("Status transition not allowed: from '%s' to '%s'", findingOverwrite.StatusPrevious, findingOverwrite.Status))
 	}
 
@@ -72,12 +66,32 @@ func (s vulcanitoService) ListFindingOverwrites(ctx context.Context, findingID s
 func isValidFindingStatus(status string) bool {
 	// Set of valid status type
 	validStatus := map[string]struct{}{
-		"OPEN":           struct{}{},
-		"FIXED":          struct{}{},
-		"EXPIRED":        struct{}{},
-		"FALSE_POSITIVE": struct{}{},
+		"OPEN":           {},
+		"FIXED":          {},
+		"EXPIRED":        {},
+		"FALSE_POSITIVE": {},
 	}
 
 	_, existsInSet := validStatus[status]
 	return existsInSet
+}
+
+func isValidFindingTransition(status, statusPrevious string) bool {
+	// Valid transitions:
+	//
+	// OPEN           -> OPEN
+	// OPEN           -> FALSE_POSITIVE
+	// FALSE_POSITIVE -> OPEN
+	// FALSE_POSITIVE -> FALSE_POSITIVE
+	// FIXED          -> FALSE_POSITIVE
+	if status == statusPrevious {
+		return true
+	}
+
+	validTransitions := map[string][]string{
+		"OPEN":           []string{"FALSE_POSITIVE"},
+		"FALSE_POSITIVE": []string{"OPEN"},
+		"FIXED":          []string{"FALSE_POSITIVE"},
+	}
+	return slices.Contains(validTransitions[statusPrevious], status)
 }
