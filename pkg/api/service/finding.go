@@ -89,9 +89,9 @@ func isValidFindingTransition(status, statusPrevious string) bool {
 	}
 
 	validTransitions := map[string][]string{
-		"OPEN":           []string{"FALSE_POSITIVE"},
-		"FALSE_POSITIVE": []string{"OPEN"},
-		"FIXED":          []string{"FALSE_POSITIVE"},
+		"OPEN":           {"FALSE_POSITIVE"},
+		"FALSE_POSITIVE": {"OPEN"},
+		"FIXED":          {"FALSE_POSITIVE"},
 	}
 	return slices.Contains(validTransitions[statusPrevious], status)
 }
