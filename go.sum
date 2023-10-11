@@ -660,8 +660,8 @@ github.com/adevinta/vulcan-scan-engine v1.1.14 h1:pACXuRoSJuQfACi+qyX5NUZkONLN+G
 github.com/adevinta/vulcan-scan-engine v1.1.14/go.mod h1:xSnwWm/qQeZ07A35H15wPVoeiG+XKiXtMZH/lP2ib6A=
 github.com/adevinta/vulcan-tracker v0.1.0 h1:4yxstht26cYFsM9YbwCkaYqSgJMNr2vnmLq5hJvF0TM=
 github.com/adevinta/vulcan-tracker v0.1.0/go.mod h1:TSu3Us37G1SHnA/tpwngZEA6/eQMeGMditW1ZY/zjQ8=
-github.com/adevinta/vulcan-types v1.2.1 h1:f+BEAiA75kX3unp4ylcFzR04lHOE9rl+CebSA8Z7IXc=
-github.com/adevinta/vulcan-types v1.2.1/go.mod h1:rsdoVKNjHp+hvQ+HcOf6pzWJ38P+G7L16xHOJe808I4=
+github.com/adevinta/vulcan-types v1.2.2 h1:6v3622kihl0qxMV4ZfoQ1xCdU9VD6F/FE8gTA7ASMkc=
+github.com/adevinta/vulcan-types v1.2.2/go.mod h1:aCgC5UXLUBSOW+ixdsAXe6r+k9v7EjwZgGl88VDt7gU=
 github.com/adevinta/vulnerability-db-api v1.1.11 h1:VD5p+zk6dUPhP+1a/Jx6wVoLO19IpCppfHsTK8uxKpE=
 github.com/adevinta/vulnerability-db-api v1.1.11/go.mod h1:ICPY2oJ5+LRCtDUAvfvcJuHWCBhXaJ8UZ4o0Z2EI6Yo=
 github.com/ajstarks/deck v0.0.0-20200831202436-30c9fc6549a9/go.mod h1:JynElWSGnm/4RlzPXRlREEwqTHAN3T56Bv2ITsFT3gY=
@@ -1173,8 +1173,9 @@ github.com/google/go-cmp v0.5.5/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/
 github.com/google/go-cmp v0.5.6/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/gNBxE=
 github.com/google/go-cmp v0.5.7/go.mod h1:n+brtR0CgQNWTVd5ZUFpTBC8YFBDLK/h/bpaJ8/DtOE=
 github.com/google/go-cmp v0.5.8/go.mod h1:17dUlkBOakJ0+DkrSSNjCkIjxS6bF9zb3elmeNGIjoY=
-github.com/google/go-cmp v0.5.9 h1:O2Tfq5qg4qc4AmwVlvv0oLiVAGB7enBSJ2x2DqQFi38=
 github.com/google/go-cmp v0.5.9/go.mod h1:17dUlkBOakJ0+DkrSSNjCkIjxS6bF9zb3elmeNGIjoY=
+github.com/google/go-cmp v0.6.0 h1:ofyhxvXcZhMsU5ulbFiLKl/XBFqE1GSq7atu8tAmTRI=
+github.com/google/go-cmp v0.6.0/go.mod h1:17dUlkBOakJ0+DkrSSNjCkIjxS6bF9zb3elmeNGIjoY=
 github.com/google/go-containerregistry v0.5.1/go.mod h1:Ct15B4yir3PLOP5jsy0GNeYVaIZs/MK/Jz5any1wFW0=
 github.com/google/gofuzz v1.0.0/go.mod h1:dBl0BpW6vV/+mYPU4Po3pmUjxk6FQPldtuIdl/M65Eg=
 github.com/google/gofuzz v1.1.0/go.mod h1:dBl0BpW6vV/+mYPU4Po3pmUjxk6FQPldtuIdl/M65Eg=

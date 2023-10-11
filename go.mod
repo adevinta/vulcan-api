@@ -10,14 +10,14 @@ require (
 	github.com/adevinta/vulcan-report v1.0.0
 	github.com/adevinta/vulcan-scan-engine v1.1.14
 	github.com/adevinta/vulcan-tracker v0.1.0
-	github.com/adevinta/vulcan-types v1.2.1
+	github.com/adevinta/vulcan-types v1.2.2
 	github.com/adevinta/vulnerability-db-api v1.1.11
 	github.com/aws/aws-sdk-go v1.45.11
 	github.com/confluentinc/confluent-kafka-go/v2 v2.2.0
 	github.com/go-kit/kit v0.13.0
 	github.com/goadesign/goa v1.4.3
 	github.com/golang-jwt/jwt/v4 v4.5.0
-	github.com/google/go-cmp v0.5.9
+	github.com/google/go-cmp v0.6.0
 	github.com/gorilla/mux v1.8.0
 	github.com/jinzhu/gorm v1.9.16
 	github.com/lestrrat-go/backoff v1.0.1
