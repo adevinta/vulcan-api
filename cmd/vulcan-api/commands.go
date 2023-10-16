@@ -522,8 +522,7 @@ func addWhitelistingMiddleware(endpoints endpoint.Endpoints, logger log.Logger) 
 		endpoint.GroupAsset:     true,
 		endpoint.UngroupAsset:   true,
 		endpoint.ListAssetGroup: true,
-		// Report access.
-		endpoint.FindReport: true,
+
 		// List scans.
 		endpoint.ListProgramScans: true,
 		// List programs.

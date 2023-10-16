@@ -95,11 +95,6 @@ const (
 	FindScan         = "FindScan"
 	AbortScan        = "AbortScan"
 
-	FindReport      = "FindReport"
-	CreateReport    = "CreateReport"
-	SendReport      = "SendReport"
-	FindReportEmail = "FindReportEmail"
-
 	SendDigestReport = "SendDigestReport"
 
 	StatsCoverage              = "StatsCoverage"
