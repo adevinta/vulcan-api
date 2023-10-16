@@ -32,7 +32,6 @@ minimum_interval = 0.1
 
 [reports]
 sns_arn = "arn:aws:sns:xxx:123456789012:yyy"
-api_base_url = "http://localhost:8084"
 vulcanui_url = "http://localhost:1234"
 
 [vulcancore]

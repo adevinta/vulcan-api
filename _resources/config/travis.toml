@@ -27,7 +27,6 @@ minimum_interval = 30
 
 [reports]
 sns_arn = "arn:aws:sns:eu-west-1:test:test"
-api_base_url = ""
 
 [awscatalogue]
 kind = "None"
