@@ -46,7 +46,6 @@ const (
 	entityPolicy    = "policiy"
 	entityCheck     = "check"
 	entityScan      = "scan"
-	entityReport    = "report"
 	entityFinding   = "finding"
 	entityStats     = "stats"
 	entityJob       = "job"
@@ -122,11 +121,6 @@ var (
 		endpoint.CreateScan:       entityScan,
 		endpoint.FindScan:         entityScan,
 		endpoint.AbortScan:        entityScan,
-		// Report
-		endpoint.FindReport:      entityReport,
-		endpoint.CreateReport:    entityReport,
-		endpoint.SendReport:      entityReport,
-		endpoint.FindReportEmail: entityReport,
 		// Finding
 		endpoint.ListFindings:           entityFinding,
 		endpoint.ListFindingsIssues:     entityFinding,

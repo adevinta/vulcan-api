@@ -30,20 +30,9 @@ url = "$SCHEDULER_URL"
 # Minimum period time in minutes that a program can be scheduled to run
 minimum_interval = 0.1
 
-[sqs]
-enabled = true
-log_messages = true
-polling_interval = $SQS_POLLING_INTERVAL
-wait_time = $SQS_WAIT_TIME
-timeout = $SQS_TIMEOUT
-queue_arn = "$SQS_QUEUE_ARN"
-endpoint = "$AWS_SQS_ENDPOINT"
-
 [reports]
 sns_arn = "$REPORTS_SNS_ARN"
 sns_endpoint = "$AWS_SNS_ENDPOINT"
-api_base_url = "$REPORTS_API_URL"
-scan_redirect_url= "$SCAN_REDIRECT_URL"
 vulcanui_url = "$VULCAN_UI_URL"
 
 [vulcancore]

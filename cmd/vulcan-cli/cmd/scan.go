@@ -9,11 +9,10 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"path/filepath"
 	"strings"
 
-	"github.com/spf13/cobra"
 	"github.com/adevinta/vulcan-api/cmd/vulcan-cli/cli"
+	"github.com/spf13/cobra"
 )
 
 const StatusFinished = "FINISHED"
@@ -38,24 +37,6 @@ var RefreshScans = &cobra.Command{
 	},
 }
 
-var DownloadReport = &cobra.Command{
-	Use:   `report`,
-	Short: `Downloads scan's report email to a temporary folder`,
-	Args:  cobra.NoArgs,
-	RunE: func(cmd *cobra.Command, args []string) error {
-		return runDownloadReport(args, apiClient)
-	},
-}
-
-var SendReport = &cobra.Command{
-	Use:   `send`,
-	Short: `Sends scan's report emails`,
-	Args:  cobra.NoArgs,
-	RunE: func(cmd *cobra.Command, args []string) error {
-		return runSendReport(args, apiClient)
-	},
-}
-
 var (
 	programID string
 	scanID    string
@@ -69,12 +50,6 @@ func init() {
 
 	ScanTeam.AddCommand(RefreshScans)
 
-	DownloadReport.PersistentFlags().StringVarP(&scanID, "scan", "", "", "Scan ID of the report to download")
-	DownloadReport.PersistentFlags().StringVarP(&team, "team", "", "", "Team's name of the report to download")
-	DownloadReport.PersistentFlags().StringVarP(&scansFile, "scan-file", "i", "", "Scans file with a list of reports to download")
-	ScanTeam.AddCommand(DownloadReport)
-
-	DownloadReport.AddCommand(SendReport)
 }
 
 func runScanTeam(args []string, apiClient *cli.CLI) error {
@@ -152,112 +127,6 @@ func runRefreshScans(args []string, apiClient *cli.CLI) error {
 	}
 
 	return ioutil.WriteFile(path, []byte(scans.String()), perm)
-}
-
-func runDownloadReport(args []string, apiClient *cli.CLI) error {
-	m := make(map[string]string)
-	switch {
-	case scanID != "" && scansFile != "":
-		fallthrough
-	case scanID == "" && scansFile == "":
-		return errors.New("only one of the flags allowed (scan or scan-file)")
-	case scanID != "" && team == "":
-		return errors.New("team name can not be empty when using scan flag")
-	case scansFile != "" && team != "":
-		return errors.New("team name can not be set when using scan-file flag")
-	case scanID != "":
-		email, err := apiClient.ReportEmail(team, scanID)
-		if err != nil {
-			return err
-		}
-		m[team] = email
-	case scansFile != "":
-		scans, err := cli.ParseScans(scansFile)
-		if err != nil {
-			return err
-		}
-
-		for _, scan := range scans {
-			scan := scan
-
-			if strings.Contains(scan.Status, StatusError) {
-				continue
-			}
-
-			if !isFinalState(scan.Status) {
-				scan, err = apiClient.RefreshScan(scan)
-				if err != nil {
-					return err
-				}
-			}
-			if scan.Status == StatusFinished {
-				email, err := apiClient.ReportEmail(scan.Team, scan.ID)
-				if err != nil {
-					return err
-				}
-				m[scan.Team] = email
-			}
-		}
-	}
-
-	dir, err := ioutil.TempDir("", "vulcan-reports-")
-	if err != nil {
-		return err
-	}
-
-	fmt.Printf("[*] Writing report emails to file '%s'\n", dir)
-
-	for k, v := range m {
-		tmpfn := filepath.Join(dir, fmt.Sprintf("%s.html", k))
-
-		if err := ioutil.WriteFile(tmpfn, []byte(v), 0666); err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
-func runSendReport(args []string, apiClient *cli.CLI) error {
-	switch {
-	case scanID != "" && scansFile != "":
-		fallthrough
-	case scanID == "" && scansFile == "":
-		return errors.New("only one of the flags allowed (scan or scan-file)")
-	case scanID != "" && team == "":
-		return errors.New("team name can not be empty when using scan flag")
-	case scansFile != "" && team != "":
-		return errors.New("team name can not be set when using scan-file flag")
-	case scanID != "":
-		return apiClient.SendReport(team, scanID)
-	case scansFile != "":
-		scans, err := cli.ParseScans(scansFile)
-		if err != nil {
-			return err
-		}
-
-		for _, scan := range scans {
-			scan := scan
-
-			if strings.Contains(scan.Status, StatusError) {
-				continue
-			}
-
-			if !isFinalState(scan.Status) {
-				scan, err = apiClient.RefreshScan(scan)
-				if err != nil {
-					return err
-				}
-			}
-			if scan.Status == StatusFinished {
-				if err := apiClient.SendReport(scan.Team, scan.ID); err != nil {
-					return err
-				}
-			}
-		}
-	}
-
-	return nil
 }
 
 func isFinalState(state string) bool {

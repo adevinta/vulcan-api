@@ -33,7 +33,7 @@ type vulcanitoService struct {
 	reportsConfig       reports.Config
 	vulndbClient        vulnerabilitydb.Client
 	vulcantrackerClient tickets.Client
-	reportsClient       reports.Client
+	reportsClient       *reports.Client
 	metricsClient       metrics.Client
 	awsAccounts         AWSAccounts
 	allowedTrackerTeams []string // feature flag.
@@ -45,7 +45,7 @@ type vulcanitoService struct {
 // New returns a basic Service with all of the expected middlewares wired in.
 func New(logger log.Logger, db api.VulcanitoStore, jwtConfig jwt.Config,
 	scanEngineConfig scanengine.Config, programScheduler schedule.ScanScheduler, reportsConfig reports.Config,
-	vulndbClient vulnerabilitydb.Client, vulcantrackerClient tickets.Client, reportsClient reports.Client,
+	vulndbClient vulnerabilitydb.Client, vulcantrackerClient tickets.Client, reportsClient *reports.Client,
 	metricsClient metrics.Client, awsAccounts AWSAccounts, allowedTrackerTeams []string) api.VulcanitoService {
 
 	var svc api.VulcanitoService

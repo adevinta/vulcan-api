@@ -6,7 +6,6 @@ package service
 
 import (
 	"context"
-	"encoding/json"
 	errs "errors"
 	"fmt"
 	"net/http"
@@ -17,7 +16,6 @@ import (
 	"github.com/adevinta/vulcan-api/pkg/api"
 	"github.com/adevinta/vulcan-api/pkg/scanengine"
 	metrics "github.com/adevinta/vulcan-metrics-client"
-	scanengineApi "github.com/adevinta/vulcan-scan-engine/pkg/api"
 	scanengineData "github.com/adevinta/vulcan-scan-engine/pkg/api/endpoint"
 )
 
@@ -201,49 +199,11 @@ func (s vulcanitoService) AbortScan(ctx context.Context, scanID string, teamID s
 	return scan, nil
 }
 
-//TODO: no endpoint exists for update/delete scan
+// TODO: no endpoint exists for update/delete scan
 func (s vulcanitoService) UpdateScan(ctx context.Context, scan api.Scan) (*api.Scan, error) {
 	return nil, errors.Default("not implemented")
 }
 
 func (s vulcanitoService) DeleteScan(ctx context.Context, scan api.Scan) error {
 	return errors.Default("not implemented")
-}
-
-// ProcessScanCheckNotification parses a buffer containing a finished scan
-// response generate by ScanEngine and triggers the report generation
-// assynchronously
-func (s vulcanitoService) ProcessScanCheckNotification(ctx context.Context, msg []byte) error {
-	var m scanengineApi.ScanNotification
-	err := json.Unmarshal(msg, &m)
-	if err != nil {
-		_ = s.logger.Log("ErrUnmarshal", err)
-		return errors.Default(err)
-	}
-
-	_ = s.logger.Log("scan", m.ScanID, "status", m.Status, "program", m.ProgramID)
-	if m.Status == "FINISHED" {
-		team, err := s.db.FindTeamByProgram(m.ProgramID)
-		if err != nil {
-			_ = s.logger.Log("ErrFindTeam", err)
-			return errors.NotFound(err)
-		}
-
-		program, err := s.db.FindProgram(m.ProgramID, team.ID)
-		if err != nil {
-			_ = s.logger.Log("ErrFindProgram", err)
-			return errors.NotFound(err)
-		}
-
-		var autosend bool
-		if program.Autosend != nil {
-			autosend = *program.Autosend
-		}
-		err = s.GenerateReport(ctx, team.ID, team.Name, m.ScanID, autosend)
-		if err != nil {
-			_ = s.logger.Log("ErrGenerateSecurityOverview", err)
-			return errors.Default(err)
-		}
-	}
-	return nil
 }

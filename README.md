@@ -80,19 +80,12 @@ Those are the variables you have to setup:
 |SAML_CALLBACK||http://localhost:8080/api/v1/login/callback|
 |SAML_TRUSTED_DOMAINS||["localhost"]|
 |SCANENGINE_URL||http://localhost:8081/v1/|
-|SCHEDULER_URL||http://localhost:8082/|
-|SQS_POLLING_INTERVAL||10|
-|SQS_WAIT_TIME||20|
-|SQS_TIMEOUT||3600|
-|SQS_QUEUE_ARN||arn:aws:sqs:xxx:123456789012:yyy|
-|AWS_SQS_ENDPOINT|Optional||
+|SCHEDULER_URL||http://localhost:8082/||
 |REPORTS_SNS_ARN||arn:aws:sns:xxx:123456789012:yyy|
 |AWS_SNS_ENDPOINT|Optional||
-|REPORTS_API_URL||http://localhost:8084|
 |PERSISTENCE_HOST||persistence.vulcan.example.com|
 |VULNERABILITYDB_URL||http://localhost:8083|
 |VULCANTRACKER_URL|Leave the url empty if you don't want to configure the vulcan-tracker component|http://localhost:8085|
-|SCAN_REDIRECT_URL|Redirecting URL for reports, OPTIONAL|https://insights-redirect.vulcan.s3-xxx.amazonaws.com/index.html?reportUrl=|
 |VULCAN_UI_URL|Vulcan UI base URL for Digest report link|http://localhost:1234|
 |GPC_${i}_NAME|Specify the name of the global policy that the ${i} ALLOW/BLOCK list will apply. Rquired if any ALLOW/BLOCK list is specified.|web-scanning-global|
 |GPC_${i}_ALLOWED_ASSETTYPES|Specify an array of allowed assettypes for the specified global policy. Optional.|[]|

@@ -950,46 +950,6 @@ func (c *Client) DecodeRecipientCollection(resp *http.Response) (RecipientCollec
 	return decoded, err
 }
 
-// Report (default view)
-//
-// Identifier: report; view=default
-type Report struct {
-	// Delivered To
-	DeliveredTo *string `form:"delivered_to,omitempty" json:"delivered_to,omitempty" yaml:"delivered_to,omitempty" xml:"delivered_to,omitempty"`
-	// Report ID
-	ID *string `form:"id,omitempty" json:"id,omitempty" yaml:"id,omitempty" xml:"id,omitempty"`
-	// Report URL
-	Report *string `form:"report,omitempty" json:"report,omitempty" yaml:"report,omitempty" xml:"report,omitempty"`
-	// Report JSON URL
-	ReportJSON *string `form:"report_json,omitempty" json:"report_json,omitempty" yaml:"report_json,omitempty" xml:"report_json,omitempty"`
-	// Scan ID
-	ScanID *string `form:"scan_id,omitempty" json:"scan_id,omitempty" yaml:"scan_id,omitempty" xml:"scan_id,omitempty"`
-	// Status
-	Status *string `form:"status,omitempty" json:"status,omitempty" yaml:"status,omitempty" xml:"status,omitempty"`
-}
-
-// DecodeReport decodes the Report instance encoded in resp body.
-func (c *Client) DecodeReport(resp *http.Response) (*Report, error) {
-	var decoded Report
-	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
-	return &decoded, err
-}
-
-// Report Email Body (default view)
-//
-// Identifier: reportemail; view=default
-type Reportemail struct {
-	// Email Body
-	EmailBody *string `form:"email_body,omitempty" json:"email_body,omitempty" yaml:"email_body,omitempty" xml:"email_body,omitempty"`
-}
-
-// DecodeReportemail decodes the Reportemail instance encoded in resp body.
-func (c *Client) DecodeReportemail(resp *http.Response) (*Reportemail, error) {
-	var decoded Reportemail
-	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
-	return &decoded, err
-}
-
 // resource (default view)
 //
 // Identifier: resource; view=default

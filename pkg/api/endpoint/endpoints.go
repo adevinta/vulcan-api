@@ -95,11 +95,6 @@ const (
 	FindScan         = "FindScan"
 	AbortScan        = "AbortScan"
 
-	FindReport      = "FindReport"
-	CreateReport    = "CreateReport"
-	SendReport      = "SendReport"
-	FindReportEmail = "FindReportEmail"
-
 	SendDigestReport = "SendDigestReport"
 
 	StatsCoverage              = "StatsCoverage"
@@ -211,11 +206,6 @@ func MakeEndpoints(s api.VulcanitoService, isJiraIntEnabled bool, logger log.Log
 	endpoints[CreateScan] = makeCreateScanEndpoint(s, logger)
 	endpoints[FindScan] = makeFindScanEndpoint(s, logger)
 	endpoints[AbortScan] = makeAbortScanEndpoint(s, logger)
-
-	endpoints[FindReport] = makeFindReportEndpoint(s, logger)
-	endpoints[CreateReport] = makeCreateReportEndpoint(s, logger)
-	endpoints[SendReport] = makeSendReportEndpoint(s, logger)
-	endpoints[FindReportEmail] = makeFindReportEmailEndpoint(s, logger)
 
 	endpoints[SendDigestReport] = makeSendDigestReportEndpoint(s, logger)
 

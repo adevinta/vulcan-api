@@ -122,12 +122,6 @@ func AttachRoutes(e endpoint.Endpoints, logger kitlog.Logger) http.Handler {
 	r.Methods("GET").Path("/api/v1/teams/{team_id}/scans/{scan_id}").Handler(newServer(e[endpoint.FindScan], endpoint.ScanRequest{}, logger, endpoint.FindScan))
 	r.Methods("PUT").Path("/api/v1/teams/{team_id}/scans/{scan_id}/abort").Handler(newServer(e[endpoint.AbortScan], endpoint.ScanRequest{}, logger, endpoint.AbortScan))
 
-	// Reports
-	r.Methods("GET").Path("/api/v1/teams/{team_id}/scans/{scan_id}/report").Handler(newServer(e[endpoint.FindReport], endpoint.ReportRequest{}, logger, endpoint.FindReport))
-	r.Methods("POST").Path("/api/v1/teams/{team_id}/scans/{scan_id}/report").Handler(newServer(e[endpoint.CreateReport], endpoint.ReportRequest{}, logger, endpoint.CreateReport))
-	r.Methods("POST").Path("/api/v1/teams/{team_id}/scans/{scan_id}/report/send").Handler(newServer(e[endpoint.SendReport], endpoint.ReportRequest{}, logger, endpoint.SendReport))
-	r.Methods("GET").Path("/api/v1/teams/{team_id}/scans/{scan_id}/report/email").Handler(newServer(e[endpoint.FindReportEmail], endpoint.ReportRequest{}, logger, endpoint.FindReportEmail))
-
 	// Send Digest Report
 	r.Methods("POST").Path("/api/v1/teams/{team_id}/report/digest").Handler(newServer(e[endpoint.SendDigestReport], endpoint.SendDigestReportRequest{}, logger, endpoint.SendDigestReport))
 

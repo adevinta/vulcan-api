@@ -4,34 +4,13 @@ Copyright 2021 Adevinta
 
 package reports
 
-import "time"
-
 // Config contains the configuration
 // parameters for report related actions.
 type Config struct {
-	SNSARN          string `mapstructure:"sns_arn"`
-	SNSEndpoint     string `mapstructure:"sns_endpoint"`
-	APIBaseURL      string `mapstructure:"api_base_url"`
-	InsecureTLS     bool   `mapstructure:"insecure_tls"`
-	ScanRedirectURL string `mapstructure:"scan_redirect_url"`
-	VulcanUIURL     string `mapstructure:"vulcanui_url"`
-}
-
-// ScanReport represents a scan report
-// data as returned by reports generator API.
-type ScanReport struct {
-	ID            string    `json:"id"`
-	ReportURL     string    `json:"report_url"`
-	ReportJSONURL string    `json:"report_json_url"`
-	ScanID        string    `json:"scan_id"`
-	ProgramName   string    `json:"program_name"`
-	Status        string    `json:"status"`
-	Risk          int       `json:"risk"`
-	EmailSubject  string    `json:"email_subject"`
-	EmailBody     string    `json:"email_body"`
-	DeliveredTo   string    `json:"delivered_to"`
-	CreatedAt     time.Time `json:"created_at"`
-	UpdatedAt     time.Time `json:"updated_at"`
+	SNSARN      string `mapstructure:"sns_arn"`
+	SNSEndpoint string `mapstructure:"sns_endpoint"`
+	InsecureTLS bool   `mapstructure:"insecure_tls"`
+	VulcanUIURL string `mapstructure:"vulcanui_url"`
 }
 
 // Notification represents
@@ -42,22 +21,10 @@ type Notification struct {
 	Format  string `json:"format"`
 }
 
-// genReportEvent represents the
-// payload for a report generation event.
-type genReportEvent struct {
-	Typ      string   `json:"type"`
-	TeamInfo teamInfo `json:"team_info"`
-	Data     scanData `json:"data"`
-	AutoSend bool     `json:"auto_send"`
-}
 type teamInfo struct {
 	ID         string   `json:"id"`
 	Name       string   `json:"name"`
 	Recipients []string `json:"recipients"`
-}
-type scanData struct {
-	ScanID      string `json:"scan_id"`
-	ProgramName string `json:"program_name"`
 }
 
 // genDigestReportEvent represents the

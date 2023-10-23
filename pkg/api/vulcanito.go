@@ -105,12 +105,6 @@ type VulcanitoService interface {
 	UpdateScan(ctx context.Context, scan Scan) (*Scan, error)
 	DeleteScan(ctx context.Context, scan Scan) error
 
-	FindReport(ctx context.Context, scanID string) (*Report, error)
-	SendReport(ctx context.Context, scanID, teamID string) error
-	GenerateReport(ctx context.Context, teamID, teamName, scanID string, autosend bool) error
-	RunGenerateReport(ctx context.Context, autosend bool, scanID, programName, teamID, teamName string) error
-	ProcessScanCheckNotification(ctx context.Context, msg []byte) error
-
 	SendDigestReport(ctx context.Context, teamID string, startDate string, endDate string) error
 
 	// Stats

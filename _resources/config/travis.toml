@@ -25,12 +25,8 @@ url = "http://localhost:8082/"
 # Minimum period time in minutes that a program can be scheduled to run
 minimum_interval = 30
 
-[sqs]
-enabled = false
-
 [reports]
 sns_arn = "arn:aws:sns:eu-west-1:test:test"
-api_base_url = ""
 
 [awscatalogue]
 kind = "None"
