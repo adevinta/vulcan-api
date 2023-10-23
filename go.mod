@@ -11,7 +11,7 @@ require (
 	github.com/adevinta/vulcan-report v1.0.0
 	github.com/adevinta/vulcan-scan-engine v1.1.16
 	github.com/adevinta/vulcan-tracker v0.1.0
-	github.com/adevinta/vulcan-types v1.2.3
+	github.com/adevinta/vulcan-types v1.2.4
 	github.com/adevinta/vulnerability-db-api v1.1.12
 	github.com/aws/aws-sdk-go v1.46.0
 	github.com/confluentinc/confluent-kafka-go/v2 v2.2.0
