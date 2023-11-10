@@ -1,0 +1,36 @@
+name: adevinta/vulcan-api
+on:
+  push:
+    branches:
+    - "**/*"
+concurrency:
+#   # This item has no matching transformer
+#   maximum_number_of_builds: 0
+  group: "${{ github.ref }}"
+  cancel-in-progress: true
+env:
+  DOCKER_USERNAME: purpleteam
+  DOCKER_PASSWORD: "${{ secrets.DOCKER_PASSWORD }}"
+  FLYWAY_VERSION: 9.19.3
+  INPUT_BUILDARGS: FLYWAY_VERSION=$FLYWAY_VERSION
+  INPUT_PLATFORM: linux/amd64
+jobs:
+  test:
+    runs-on: ubuntu-18.04
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - uses: actions/setup-go@v4.1.0
+      with:
+        go-version: 1.21.x
+    - run: go get -d ./...
+    - run: _script/start-pg
+    - run: _script/start-kafka
+    - run: _script/cibuild
+    - run: source _script/setup-e2e-tests
+    - run: _script/run-e2e-tests
+    - run: bash -c 'source <(curl -s https://raw.githubusercontent.com/adevinta/vulcan-cicd/master/buildx.sh)'
+      if: "${{ success() }}"
+    services:
+#       # This item has no matching transformer
+#       docker:
