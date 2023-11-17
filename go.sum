@@ -65,8 +65,8 @@ github.com/adevinta/vulcan-scan-engine v1.1.18 h1:ODHzR51leu+4mGU/25lbY/r2rHktT4
 github.com/adevinta/vulcan-scan-engine v1.1.18/go.mod h1:jYZnKqSDHFeSUkdy70q6a3rRo28vmsp0z5Ln+AyGwCs=
 github.com/adevinta/vulcan-tracker v0.1.0 h1:4yxstht26cYFsM9YbwCkaYqSgJMNr2vnmLq5hJvF0TM=
 github.com/adevinta/vulcan-tracker v0.1.0/go.mod h1:TSu3Us37G1SHnA/tpwngZEA6/eQMeGMditW1ZY/zjQ8=
-github.com/adevinta/vulcan-types v1.2.5 h1:gYJI1OsQ+MQAX1tXBH3vMrBuDNmwMlAlRGX0zdXph+A=
-github.com/adevinta/vulcan-types v1.2.5/go.mod h1:/QZcpEwdRahgwVMXVnP2Zi0z95JuOKApZcPSAi2vKoI=
+github.com/adevinta/vulcan-types v1.2.6 h1:YJjmrKT80dmEYBvHmPSlGwyEw2IYDEZBdGRJ4Acs43A=
+github.com/adevinta/vulcan-types v1.2.6/go.mod h1:4YDQINNW7pb6zkhgru28bFi+zci+xZntVxPiDHtRkxw=
 github.com/adevinta/vulnerability-db-api v1.1.13 h1:OeyaIOGgVkBT1LKCXi+kFhU2dHJjkFA1ossCrAMAlv8=
 github.com/adevinta/vulnerability-db-api v1.1.13/go.mod h1:NaZbTZciM7Shwke3q+v/kDiXPXU5Si5NT9k7P7qTMmw=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
@@ -384,8 +384,8 @@ github.com/mattn/go-sqlite3 v1.14.0/go.mod h1:JIl7NbARA7phWnGvh0LKTyg7S9BA+6gx71
 github.com/mattn/go-sqlite3 v2.0.2+incompatible h1:qzw9c2GNT8UFrgWNDhCTqRqYUSmu/Dav/9Z58LGpk7U=
 github.com/mattn/go-sqlite3 v2.0.2+incompatible/go.mod h1:FPy6KqzDD04eiIsT53CuJW3U88zkxoIYsOqkbpncsNc=
 github.com/matttproud/golang_protobuf_extensions v1.0.1/go.mod h1:D8He9yQNgCq6Z5Ld7szi9bcBfOoFv/3dc6xSMkL2PC0=
-github.com/miekg/dns v1.1.56 h1:5imZaSeoRNvpM9SzWNhEcP9QliKiz20/dA2QabIGVnE=
-github.com/miekg/dns v1.1.56/go.mod h1:cRm6Oo2C8TY9ZS/TqsSrseAcncm74lfK5G+ikN2SWWY=
+github.com/miekg/dns v1.1.57 h1:Jzi7ApEIzwEPLHWRcafCN9LZSBbqQpxjt/wpgvg7wcM=
+github.com/miekg/dns v1.1.57/go.mod h1:uqRjCRUuEAA6qsOiJvDd+CFo/vW+y5WR6SNmHE55hZk=
 github.com/mitchellh/mapstructure v1.3.3/go.mod h1:bFUtVrKA4DC2yAKiSyO/QUcy7e+RRV2QTWOzhPopBRo=
 github.com/mitchellh/mapstructure v1.4.1/go.mod h1:bFUtVrKA4DC2yAKiSyO/QUcy7e+RRV2QTWOzhPopBRo=
 github.com/mitchellh/mapstructure v1.5.0 h1:jeMsZIYE/09sWLaz43PL7Gy6RuMjD2eJVyuac5Z2hdY=
@@ -644,8 +644,8 @@ golang.org/x/sync v0.0.0-20200317015054-43a5402ce75a/go.mod h1:RxMgew5VJxzue5/jJ
 golang.org/x/sync v0.0.0-20200625203802-6e8e738ad208/go.mod h1:RxMgew5VJxzue5/jJTE5uejpjVlOe/izrB70Jof72aM=
 golang.org/x/sync v0.0.0-20201020160332-67f06af15bc9/go.mod h1:RxMgew5VJxzue5/jJTE5uejpjVlOe/izrB70Jof72aM=
 golang.org/x/sync v0.0.0-20201207232520-09787c993a3a/go.mod h1:RxMgew5VJxzue5/jJTE5uejpjVlOe/izrB70Jof72aM=
-golang.org/x/sync v0.3.0 h1:ftCYgMx6zT/asHUrPw8BLLscYtGznsLAnjq5RH9P66E=
-golang.org/x/sync v0.3.0/go.mod h1:FU7BRWz2tNW+3quACPkgCx/L+uEAv1htQ0V83Z9Rj+Y=
+golang.org/x/sync v0.4.0 h1:zxkM55ReGkDlKSM+Fu41A+zmbZuaPVbGMzvvdUPznYQ=
+golang.org/x/sync v0.4.0/go.mod h1:FU7BRWz2tNW+3quACPkgCx/L+uEAv1htQ0V83Z9Rj+Y=
 golang.org/x/sys v0.0.0-20180830151530-49385e6e1522/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
 golang.org/x/sys v0.0.0-20180905080454-ebe1bf3edb33/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
 golang.org/x/sys v0.0.0-20181116152217-5ac8a444bdc5/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
