@@ -65,8 +65,8 @@ github.com/adevinta/vulcan-scan-engine v1.1.18 h1:ODHzR51leu+4mGU/25lbY/r2rHktT4
 github.com/adevinta/vulcan-scan-engine v1.1.18/go.mod h1:jYZnKqSDHFeSUkdy70q6a3rRo28vmsp0z5Ln+AyGwCs=
 github.com/adevinta/vulcan-tracker v0.1.0 h1:4yxstht26cYFsM9YbwCkaYqSgJMNr2vnmLq5hJvF0TM=
 github.com/adevinta/vulcan-tracker v0.1.0/go.mod h1:TSu3Us37G1SHnA/tpwngZEA6/eQMeGMditW1ZY/zjQ8=
-github.com/adevinta/vulcan-types v1.2.6 h1:YJjmrKT80dmEYBvHmPSlGwyEw2IYDEZBdGRJ4Acs43A=
-github.com/adevinta/vulcan-types v1.2.6/go.mod h1:4YDQINNW7pb6zkhgru28bFi+zci+xZntVxPiDHtRkxw=
+github.com/adevinta/vulcan-types v1.2.7 h1:fWctG6zPtxb5/Y+JPJ3GuwyRtVClzVUB7C8Gp0Bz3nw=
+github.com/adevinta/vulcan-types v1.2.7/go.mod h1:uyadEXIS7SfnCgxMSEV2GgHchmtXGov+DqOQjbQ0xqk=
 github.com/adevinta/vulnerability-db-api v1.1.13 h1:OeyaIOGgVkBT1LKCXi+kFhU2dHJjkFA1ossCrAMAlv8=
 github.com/adevinta/vulnerability-db-api v1.1.13/go.mod h1:NaZbTZciM7Shwke3q+v/kDiXPXU5Si5NT9k7P7qTMmw=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
@@ -78,8 +78,8 @@ github.com/armon/go-metrics v0.4.1 h1:hR91U9KYmb6bLBYLQjyM+3j+rcd/UhE+G78SFnF8gJ
 github.com/armon/go-metrics v0.4.1/go.mod h1:E6amYzXo6aW1tqzoZGT755KkbgrJsSdpwZ+3JqfkOG4=
 github.com/asaskevich/govalidator v0.0.0-20200907205600-7a23bdc65eef h1:46PFijGLmAjMPwCCCo7Jf0W6f9slllCkkv7vyc1yOSg=
 github.com/asaskevich/govalidator v0.0.0-20200907205600-7a23bdc65eef/go.mod h1:WaHUgvxTVq04UNunO+XhnAqY/wQc+bxr74GqbsZ/Jqw=
-github.com/aws/aws-sdk-go v1.47.0 h1:/JUg9V1+xh+qBn8A6ec/l15ETPaMaBqxkjz+gg63dNk=
-github.com/aws/aws-sdk-go v1.47.0/go.mod h1:DlEaEbWKZmsITVbqlSVvekPARM1HzeV9PMYg15ymSDA=
+github.com/aws/aws-sdk-go v1.48.0 h1:1SeJ8agckRDQvnSCt1dGZYAwUaoD2Ixj6IaXB4LCv8Q=
+github.com/aws/aws-sdk-go v1.48.0/go.mod h1:LF8svs817+Nz+DmiMQKTO3ubZ/6IaTpq3TjupRn3Eqk=
 github.com/beevik/etree v1.1.0 h1:T0xke/WvNtMoCqgzPhkX2r4rjY3GDZFi+FjpRZY2Jbs=
 github.com/beevik/etree v1.1.0/go.mod h1:r8Aw8JqVegEf0w2fDnATrX9VpkMcyFeM0FhwO62wh+A=
 github.com/beorn7/perks v0.0.0-20180321164747-3a771d992973/go.mod h1:Dwedo/Wpr24TaqPxmxbtue+5NUziq4I4S80YR8gNf3Q=
