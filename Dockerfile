@@ -46,7 +46,7 @@ COPY db/sql /app/sql/
 
 RUN mkdir -p /app/output
 
-COPY --link config.toml run.sh .
-COPY --from=builder --link /app/cmd/vulcan-api/vulcan-api .
+COPY --link config.toml run.sh ./
+COPY --from=builder --link /app/cmd/vulcan-api/vulcan-api ./
 
 CMD [ "./run.sh" ]
