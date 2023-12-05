@@ -10,7 +10,7 @@ image=$(echo $IMAGE)
 
 if [ ! -z "$image" ]; then
   docker build . -t $IMAGE
-  if $PUSH_IMAGE
+  if [ ! -z "$PUSH_IMAGE" ]; then
   then
     docker push $image
   fi
