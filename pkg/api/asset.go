@@ -7,6 +7,7 @@ package api
 import (
 	"database/sql/driver"
 	"fmt"
+	"os"
 	"regexp"
 	"strings"
 	"time"
@@ -67,8 +68,14 @@ func (a Asset) Validate() error {
 
 	switch a.AssetType.Name {
 	case "Hostname":
-		if !types.IsHostname(a.Identifier) {
-			return errors.Validation("Identifier is not a valid Hostname")
+		if os.Getenv("VULCAN_HOSTNAME_VALIDATION_WITH_DNS") == "false" {
+			if !types.IsHostnameNoDnsResolution(a.Identifier) {
+				return errors.Validation("Identifier is not a valid Hostname")
+			}
+		} else {
+			if !types.IsHostname(a.Identifier) {
+				return errors.Validation("Identifier is not a valid Hostname")
+			}
 		}
 	case "AWSAccount":
 		if !validateAWSARN(a.Identifier) || !types.IsAWSARN(a.Identifier) {
