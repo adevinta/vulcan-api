@@ -6,12 +6,9 @@ go mod vendor
 go generate -v ./...
 cd cmd/vulcan-api && GOOS=linux GOARCH=amd64 go build -mod vendor && cd ../..
 
-image=$(echo $IMAGE)
-
-if [ ! -z "$image" ]; then
-  docker build . -t $IMAGE
-  if [ ! -z "$PUSH_IMAGE" ]; then
-  then
-    docker push $image
+if [ ! -n "$IMAGE" ]; then
+  docker build . -t "$IMAGE"
+  if [ ! -n "$PUSH_IMAGE" ]; then
+    docker push "$IMAGE"
   fi
 fi
