@@ -19,7 +19,7 @@ ARG TARGETOS TARGETARCH
 WORKDIR /app/cmd/vulcan-api
 RUN go build -tags musl .
 
-FROM alpine:3.18
+FROM alpine:3.19
 
 WORKDIR /flyway
 
