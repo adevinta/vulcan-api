@@ -71,3 +71,6 @@ topics = $KAFKA_TOPICS
 # Leave this entry at the end so run.sh can fill dynamically
 # global program policy configurations accordingly.
 [globalpolicy]
+
+[assets]
+dns_hostname_validaton = "$DNS_HOSTNAME_VALIDATION"
