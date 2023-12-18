@@ -146,22 +146,27 @@ type awsCatalogueConfig struct {
 	RetryInterval int    `mapstructure:"retry_interval"`
 }
 
+type dnsHostnameValidation struct {
+	DnsHostnameValidation string `mapstructure:"dns_hostname_validation"`
+}
+
 type config struct {
-	Server             serverConfig
-	DB                 dbConfig
-	Log                logConfig
-	SAML               samlConfig
-	Defaults           store.DefaultEntities
-	ScanEngine         scanengine.Config
-	Scheduler          schedule.Config
-	Reports            reports.Config
-	VulcanCore         vulcanCoreConfig
-	VulnerabilityDB    vulnerabilityDBConfig
-	VulcanTracker      vulcantrackerConfig
-	Metrics            metricsConfig
-	AWSCatalogue       awsCatalogueConfig
-	Kafka              kafkaConfig               `mapstructure:"kafka"`
-	GlobalPolicyConfig global.GlobalPolicyConfig `mapstructure:"globalpolicy"`
+	Server                serverConfig
+	DB                    dbConfig
+	Log                   logConfig
+	SAML                  samlConfig
+	Defaults              store.DefaultEntities
+	ScanEngine            scanengine.Config
+	Scheduler             schedule.Config
+	Reports               reports.Config
+	VulcanCore            vulcanCoreConfig
+	VulnerabilityDB       vulnerabilityDBConfig
+	VulcanTracker         vulcantrackerConfig
+	Metrics               metricsConfig
+	AWSCatalogue          awsCatalogueConfig
+	Kafka                 kafkaConfig               `mapstructure:"kafka"`
+	GlobalPolicyConfig    global.GlobalPolicyConfig `mapstructure:"globalpolicy"`
+	DnsHostnameValidation dnsHostnameValidation
 }
 
 func initConfig() {
@@ -277,7 +282,7 @@ func startServer() error {
 	// Add global middleware to the vulcanito service.
 	vulcanitoService = globalMiddleware(vulcanitoService)
 
-	endpoints := endpoint.MakeEndpoints(vulcanitoService, vulcantrackerClient != nil, logger)
+	endpoints := endpoint.MakeEndpoints(vulcanitoService, vulcantrackerClient != nil, logger, strings.EqualFold(cfg.DnsHostnameValidation.DnsHostnameValidation, "true"))
 
 	endpoints = addAuthorizationMiddleware(endpoints, db, logger)
 	endpoints = addWhitelistingMiddleware(endpoints, logger)

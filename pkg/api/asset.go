@@ -57,7 +57,7 @@ func validateAWSARN(arn string) bool {
 }
 
 // Validate checks if an asset is valid.
-func (a Asset) Validate() error {
+func (a Asset) Validate(dnsHostnameValidation bool) error {
 	err := validator.New().Struct(a)
 	if err != nil {
 		return errors.Validation(err)
@@ -68,14 +68,12 @@ func (a Asset) Validate() error {
 
 	switch a.AssetType.Name {
 	case "Hostname":
-		if os.Getenv("VULCAN_HOSTNAME_VALIDATION_WITH_DNS") == "false" {
-			if !types.IsHostnameNoDnsResolution(a.Identifier) {
-				return errors.Validation("Identifier is not a valid Hostname")
-			}
-		} else {
+		if dnsHostnameValidation {
 			if !types.IsHostname(a.Identifier) {
 				return errors.Validation("Identifier is not a valid Hostname")
 			}
+		} else if !types.IsHostnameNoDnsResolution(a.Identifier) {
+			return errors.Validation("Identifier is not a valid Hostname")
 		}
 	case "AWSAccount":
 		if !validateAWSARN(a.Identifier) || !types.IsAWSARN(a.Identifier) {
