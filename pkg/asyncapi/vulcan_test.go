@@ -17,7 +17,7 @@ var assetFixtures = map[string]AssetPayload{
 	"Asset1": {
 		Id:         "Asset1",
 		Identifier: "example.com",
-		AssetType:  (*AssetType)(strToPtr(AssetTypeDomainName)),
+		AssetType:  assettypeToPtr(AssetTypeDomainName),
 		Team: &Team{
 			Id:          "Team1",
 			Name:        "Team1",
@@ -117,6 +117,6 @@ func mustJSONMarshal(assset AssetPayload) []byte {
 	return content
 }
 
-func strToPtr(v string) *string {
+func assettypeToPtr(v AssetType) *AssetType {
 	return &v
 }
