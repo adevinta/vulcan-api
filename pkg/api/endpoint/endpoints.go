@@ -127,7 +127,7 @@ type Endpoints map[string]endpoint.Endpoint
 var endpoints = make(Endpoints)
 
 // MakeEndpoints initialize endpoints using the given service
-func MakeEndpoints(s api.VulcanitoService, isJiraIntEnabled bool, logger log.Logger, dnsHostnameValidation bool) Endpoints {
+func MakeEndpoints(s api.VulcanitoService, isJiraIntEnabled bool, logger log.Logger) Endpoints {
 	endpoints[Healthcheck] = makeHealthcheckEndpoint(s, logger)
 
 	endpoints[FindJob] = makeFindJobEndpoint(s, logger)
@@ -157,8 +157,8 @@ func MakeEndpoints(s api.VulcanitoService, isJiraIntEnabled bool, logger log.Log
 	endpoints[UpdateRecipients] = makeUpdateRecipientsEndpoint(s, logger)
 
 	endpoints[ListAssets] = makeListAssetsEndpoint(s, logger)
-	endpoints[CreateAsset] = makeCreateAssetEndpoint(s, logger, dnsHostnameValidation)
-	endpoints[CreateAssetMultiStatus] = makeCreateAssetMultiStatusEndpoint(s, logger, dnsHostnameValidation)
+	endpoints[CreateAsset] = makeCreateAssetEndpoint(s, logger)
+	endpoints[CreateAssetMultiStatus] = makeCreateAssetMultiStatusEndpoint(s, logger)
 	endpoints[MergeDiscoveredAssets] = makeMergeDiscoveredAssetsEndpoint(s, logger)
 	endpoints[FindAsset] = makeFindAssetEndpoint(s, logger)
 	endpoints[UpdateAsset] = makeUpdateAssetEndpoint(s, logger)

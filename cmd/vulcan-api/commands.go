@@ -147,7 +147,7 @@ type awsCatalogueConfig struct {
 }
 
 type dnsHostnameValidation struct {
-	DnsHostnameValidation string `mapstructure:"dns_hostname_validation"`
+	DNSHostnameValidation string `mapstructure:"dns_hostname_validation"`
 }
 
 type config struct {
@@ -266,7 +266,8 @@ func startServer() error {
 	// Build service layer.
 	onBoardedTeamsVT := strings.Split(cfg.VulcanTracker.OnboardedTeams, ",")
 	vulcanitoService := service.New(logger, db, jwtConfig, cfg.ScanEngine, schedulerClient, cfg.Reports,
-		vulnerabilityDBClient, vulcantrackerClient, reportsClient, metricsClient, awsAccounts, onBoardedTeamsVT)
+		vulnerabilityDBClient, vulcantrackerClient, reportsClient, metricsClient, awsAccounts, onBoardedTeamsVT,
+		strings.EqualFold(cfg.DnsHostnameValidation.DNSHostnameValidation, "true"))
 
 	// Second, inject the service layer to the CDC parser JobsRunner.
 	jobsRunner.Client = vulcanitoService
@@ -282,7 +283,7 @@ func startServer() error {
 	// Add global middleware to the vulcanito service.
 	vulcanitoService = globalMiddleware(vulcanitoService)
 
-	endpoints := endpoint.MakeEndpoints(vulcanitoService, vulcantrackerClient != nil, logger, strings.EqualFold(cfg.DnsHostnameValidation.DnsHostnameValidation, "true"))
+	endpoints := endpoint.MakeEndpoints(vulcanitoService, vulcantrackerClient != nil, logger)
 
 	endpoints = addAuthorizationMiddleware(endpoints, db, logger)
 	endpoints = addWhitelistingMiddleware(endpoints, logger)

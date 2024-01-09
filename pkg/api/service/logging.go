@@ -342,30 +342,30 @@ func (middleware loggingMiddleware) ListAssets(ctx context.Context, teamID strin
 	return middleware.next.ListAssets(ctx, teamID, asset)
 }
 
-func (middleware loggingMiddleware) CreateAssets(ctx context.Context, assets []api.Asset, groups []api.Group, annotations []*api.AssetAnnotation, dnsHostnameValidation bool) ([]api.Asset, error) {
+func (middleware loggingMiddleware) CreateAssets(ctx context.Context, assets []api.Asset, groups []api.Group, annotations []*api.AssetAnnotation) ([]api.Asset, error) {
 
 	defer func() {
 		XRequestID := ""
 		if ctx != nil {
 			XRequestID, _ = ctx.Value(kithttp.ContextKeyRequestXRequestID).(string)
 		}
-		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "CreateAssets", "assets", mySprintf(assets), "groups", mySprintf(groups), "annotations", mySprintf(annotations), "dnsHostnameValidation", mySprintf(dnsHostnameValidation))
+		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "CreateAssets", "assets", mySprintf(assets), "groups", mySprintf(groups), "annotations", mySprintf(annotations))
 	}()
 
-	return middleware.next.CreateAssets(ctx, assets, groups, annotations, dnsHostnameValidation)
+	return middleware.next.CreateAssets(ctx, assets, groups, annotations)
 }
 
-func (middleware loggingMiddleware) CreateAssetsMultiStatus(ctx context.Context, assets []api.Asset, groups []api.Group, annotations []*api.AssetAnnotation, dnsHostnameValidation bool) ([]api.AssetCreationResponse, error) {
+func (middleware loggingMiddleware) CreateAssetsMultiStatus(ctx context.Context, assets []api.Asset, groups []api.Group, annotations []*api.AssetAnnotation) ([]api.AssetCreationResponse, error) {
 
 	defer func() {
 		XRequestID := ""
 		if ctx != nil {
 			XRequestID, _ = ctx.Value(kithttp.ContextKeyRequestXRequestID).(string)
 		}
-		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "CreateAssetsMultiStatus", "assets", mySprintf(assets), "groups", mySprintf(groups), "annotations", mySprintf(annotations), "dnsHostnameValidation", mySprintf(dnsHostnameValidation))
+		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "CreateAssetsMultiStatus", "assets", mySprintf(assets), "groups", mySprintf(groups), "annotations", mySprintf(annotations))
 	}()
 
-	return middleware.next.CreateAssetsMultiStatus(ctx, assets, groups, annotations, dnsHostnameValidation)
+	return middleware.next.CreateAssetsMultiStatus(ctx, assets, groups, annotations)
 }
 
 func (middleware loggingMiddleware) MergeDiscoveredAssets(ctx context.Context, teamID string, assets []api.Asset, groupName string) error {
