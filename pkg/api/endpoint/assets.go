@@ -85,7 +85,7 @@ func makeListAssetsEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoi
 }
 
 // makeCreateAssetEndpoint returns an endpoint that creates new assets.
-func makeCreateAssetEndpoint(s api.VulcanitoService, logger kitlog.Logger, dnsHostnameValidation bool) endpoint.Endpoint {
+func makeCreateAssetEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		// We are expecting an assets list.
 		requestBody, ok := request.(*AssetsListRequest)
@@ -115,7 +115,7 @@ func makeCreateAssetEndpoint(s api.VulcanitoService, logger kitlog.Logger, dnsHo
 		annotations := requestBody.Annotations.ToModel()
 
 		// Ask for the service layer to create the assets.
-		createdAssets, err := s.CreateAssets(ctx, assets, groups, annotations, dnsHostnameValidation)
+		createdAssets, err := s.CreateAssets(ctx, assets, groups, annotations)
 		if err != nil {
 			return nil, err
 		}
@@ -132,7 +132,7 @@ func makeCreateAssetEndpoint(s api.VulcanitoService, logger kitlog.Logger, dnsHo
 }
 
 // makeCreateAssetMultiStatusEndpoint returns an endpoint that creates new assets.
-func makeCreateAssetMultiStatusEndpoint(s api.VulcanitoService, logger kitlog.Logger, dnsHostnameValidation bool) endpoint.Endpoint {
+func makeCreateAssetMultiStatusEndpoint(s api.VulcanitoService, logger kitlog.Logger) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		// We are expecting an assets list.
 		requestBody, ok := request.(*AssetsListRequest)
@@ -162,7 +162,7 @@ func makeCreateAssetMultiStatusEndpoint(s api.VulcanitoService, logger kitlog.Lo
 		annotations := requestBody.Annotations.ToModel()
 
 		// Ask for the service layer to create the assets.
-		responses, err := s.CreateAssetsMultiStatus(ctx, assets, groups, annotations, dnsHostnameValidation)
+		responses, err := s.CreateAssetsMultiStatus(ctx, assets, groups, annotations)
 		if err != nil {
 			return nil, err
 		}

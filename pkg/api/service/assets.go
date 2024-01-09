@@ -46,7 +46,7 @@ func (s vulcanitoService) ListAssets(ctx context.Context, teamID string, asset a
 }
 
 // CreateAssets receives an array of assets and creates them on store layer.
-func (s vulcanitoService) CreateAssets(ctx context.Context, assets []api.Asset, groups []api.Group, annotations []*api.AssetAnnotation, dnsHostnameValidation bool) ([]api.Asset, error) {
+func (s vulcanitoService) CreateAssets(ctx context.Context, assets []api.Asset, groups []api.Group, annotations []*api.AssetAnnotation) ([]api.Asset, error) {
 	assetsToCreate := []api.Asset{}
 
 	// If no group is specified, add Default group data to groups list.
@@ -86,14 +86,14 @@ func (s vulcanitoService) CreateAssets(ctx context.Context, assets []api.Asset, 
 			asset.AssetTypeID = assetTypeObj.ID
 			asset.AssetType = &api.AssetType{Name: assetTypeObj.Name}
 
-			if err := asset.Validate(dnsHostnameValidation); err != nil {
+			if err := asset.Validate(s.DNSHostnameValidation); err != nil {
 				return nil, err
 			}
 			assetsToCreate = append(assetsToCreate, asset)
 		} else {
 			// Asset type NOT provided by the user in the request. Try to infere
 			// asset type based on the identifier
-			assetsDetected, err := s.detectAssets(ctx, asset, dnsHostnameValidation)
+			assetsDetected, err := s.detectAssets(ctx, asset, s.DNSHostnameValidation)
 			if err != nil {
 				return nil, errors.Validation(err, "asset", asset.Identifier, asset.AssetType.Name)
 			}
@@ -135,7 +135,7 @@ func (s vulcanitoService) getAccountName(identifier string) string {
 // CreateAssetsMultiStatus receives an array of assets and request their creation to the store layer.
 // Also, this method will associate the assets with the specified groups.
 // It returns an array containing one response per request, in the same order as in the original request.
-func (s vulcanitoService) CreateAssetsMultiStatus(ctx context.Context, assets []api.Asset, groups []api.Group, annotations []*api.AssetAnnotation, dnsHostnameValidation bool) ([]api.AssetCreationResponse, error) {
+func (s vulcanitoService) CreateAssetsMultiStatus(ctx context.Context, assets []api.Asset, groups []api.Group, annotations []*api.AssetAnnotation) ([]api.AssetCreationResponse, error) {
 	responses := []api.AssetCreationResponse{}
 
 	// If no group is specified, add Default group data to groups list.
@@ -198,7 +198,7 @@ func (s vulcanitoService) CreateAssetsMultiStatus(ctx context.Context, assets []
 			asset.AssetType = &api.AssetType{Name: assetTypeObj.Name}
 
 			// If the asset is invalid, abort the asset creation.
-			if err := asset.Validate(dnsHostnameValidation); err != nil {
+			if err := asset.Validate(s.DNSHostnameValidation); err != nil {
 				response.Status = err
 				responses = append(responses, response)
 				continue
@@ -208,7 +208,7 @@ func (s vulcanitoService) CreateAssetsMultiStatus(ctx context.Context, assets []
 
 		} else {
 			// If user did not specify the asset type, auto detect it.
-			assetsDetected, err := s.detectAssets(ctx, asset, dnsHostnameValidation)
+			assetsDetected, err := s.detectAssets(ctx, asset, s.DNSHostnameValidation)
 			if err != nil {
 				response.Status = errors.Validation(err, "asset", asset.Identifier, asset.AssetType.Name)
 				responses = append(responses, response)
