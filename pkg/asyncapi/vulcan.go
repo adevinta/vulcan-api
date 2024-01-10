@@ -106,7 +106,7 @@ func (v *Vulcan) DeleteAsset(asset AssetPayload) error {
 
 // NullVulcan implements an Async Vulcan API interface that does not send the
 // events to any [EventStreamClient]. It's intended to be used when the async
-// API is disabled but other components still need to fullfill a dependency
+// API is disabled but other components still need to fullfil a dependency
 // with the Vulcan Async Server.
 type NullVulcan struct {
 }
@@ -124,10 +124,11 @@ func (v *NullVulcan) PushAsset(asset AssetPayload) error {
 }
 
 func metadata(asset AssetPayload) map[string][]byte {
-	// The asset type can't be nil.
+	// The asset type can't be nil and its value is a string.
+	at := asset.AssetType.Value().(string)
 	return map[string][]byte{
 		"identifier": []byte(asset.Identifier),
-		"type":       []byte(*asset.AssetType),
+		"type":       []byte(at),
 		"version":    []byte(Version),
 	}
 }

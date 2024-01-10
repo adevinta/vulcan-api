@@ -1,6 +1,7 @@
 module github.com/adevinta/vulcan-api
 
-go 1.21.0
+go 1.21.2
+
 toolchain go1.21.5
 
 require (

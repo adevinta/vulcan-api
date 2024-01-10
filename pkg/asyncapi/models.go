@@ -13,7 +13,7 @@ type AssetPayload struct {
 	Scannable   bool
 	AssetType   *AssetType
 	Identifier  string
-	Annotations []*Annotation
+	Annotations []interface{}
 }
 
 // Team represents a Team model.
@@ -24,20 +24,41 @@ type Team struct {
 	Tag         string
 }
 
-// AssetType represents an enum of string.
-type AssetType string
+// AssetType represents an enum of AssetType.
+type AssetType uint
 
 const (
-	AssetTypeIp            AssetType = "IP"
-	AssetTypeDomainName              = "DomainName"
-	AssetTypeHostname                = "Hostname"
-	AssetTypeAwsAccount              = "AWSAccount"
-	AssetTypeIpRange                 = "IPRange"
-	AssetTypeDockerImage             = "DockerImage"
-	AssetTypeWebAddress              = "WebAddress"
-	AssetTypeGitRepository           = "GitRepository"
-	AssetTypeGcpProject              = "GCPProject"
+	AssetTypeIp AssetType = iota
+	AssetTypeDomainName
+	AssetTypeHostname
+	AssetTypeAwsAccount
+	AssetTypeIpRange
+	AssetTypeDockerImage
+	AssetTypeWebAddress
+	AssetTypeGitRepository
+	AssetTypeGcpProject
 )
+
+// Value returns the value of the enum.
+func (op AssetType) Value() any {
+	if op >= AssetType(len(AssetTypeValues)) {
+		return nil
+	}
+	return AssetTypeValues[op]
+}
+
+var AssetTypeValues = []any{"IP", "DomainName", "Hostname", "AWSAccount", "IPRange", "DockerImage", "WebAddress", "GitRepository", "GCPProject"}
+var ValuesToAssetType = map[any]AssetType{
+	AssetTypeValues[AssetTypeIp]:            AssetTypeIp,
+	AssetTypeValues[AssetTypeDomainName]:    AssetTypeDomainName,
+	AssetTypeValues[AssetTypeHostname]:      AssetTypeHostname,
+	AssetTypeValues[AssetTypeAwsAccount]:    AssetTypeAwsAccount,
+	AssetTypeValues[AssetTypeIpRange]:       AssetTypeIpRange,
+	AssetTypeValues[AssetTypeDockerImage]:   AssetTypeDockerImage,
+	AssetTypeValues[AssetTypeWebAddress]:    AssetTypeWebAddress,
+	AssetTypeValues[AssetTypeGitRepository]: AssetTypeGitRepository,
+	AssetTypeValues[AssetTypeGcpProject]:    AssetTypeGcpProject,
+}
 
 // Annotation represents a Annotation model.
 type Annotation struct {
