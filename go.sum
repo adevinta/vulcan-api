@@ -26,8 +26,8 @@ github.com/adevinta/vulcan-scan-engine v1.1.21 h1:/QWbYn5OgUaYxWJJpsBp4KA2j200qi
 github.com/adevinta/vulcan-scan-engine v1.1.21/go.mod h1:bezp5+pzaSzTXtVtRU6PvAu3QuVtgP/+mNJzx/EJkFg=
 github.com/adevinta/vulcan-tracker v0.1.0 h1:4yxstht26cYFsM9YbwCkaYqSgJMNr2vnmLq5hJvF0TM=
 github.com/adevinta/vulcan-tracker v0.1.0/go.mod h1:TSu3Us37G1SHnA/tpwngZEA6/eQMeGMditW1ZY/zjQ8=
-github.com/adevinta/vulcan-types v1.2.8 h1:h0wxrUeCkvXmyrWF8A4WEbolRRg/Q38IjskvMV+EEPg=
-github.com/adevinta/vulcan-types v1.2.8/go.mod h1:xL1UcDUUnF6eTTEqA37az2EmA6zyOcjEERS9XGaPMcc=
+github.com/adevinta/vulcan-types v1.2.9 h1:W62ugYZ9KDV/MWlXfQmGUYpIgrukQzmuAiMcPug4MQc=
+github.com/adevinta/vulcan-types v1.2.9/go.mod h1:0xivhSxBhdsqwcUCTXQNxFDrMCLdrUA2Fd/Z+BKvRTU=
 github.com/adevinta/vulnerability-db-api v1.1.16 h1:vAnZK6uf0tbam6Ew8gIERX9mX7+uDkGqjgqwHJ8pJRU=
 github.com/adevinta/vulnerability-db-api v1.1.16/go.mod h1:5Ma2FlAm42yDNGuZnHAQOBMcDjG/vsETELCLqCuIzAg=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
@@ -272,8 +272,8 @@ github.com/mattn/go-sqlite3 v1.14.0/go.mod h1:JIl7NbARA7phWnGvh0LKTyg7S9BA+6gx71
 github.com/mattn/go-sqlite3 v2.0.2+incompatible h1:qzw9c2GNT8UFrgWNDhCTqRqYUSmu/Dav/9Z58LGpk7U=
 github.com/mattn/go-sqlite3 v2.0.2+incompatible/go.mod h1:FPy6KqzDD04eiIsT53CuJW3U88zkxoIYsOqkbpncsNc=
 github.com/matttproud/golang_protobuf_extensions v1.0.1/go.mod h1:D8He9yQNgCq6Z5Ld7szi9bcBfOoFv/3dc6xSMkL2PC0=
-github.com/miekg/dns v1.1.57 h1:Jzi7ApEIzwEPLHWRcafCN9LZSBbqQpxjt/wpgvg7wcM=
-github.com/miekg/dns v1.1.57/go.mod h1:uqRjCRUuEAA6qsOiJvDd+CFo/vW+y5WR6SNmHE55hZk=
+github.com/miekg/dns v1.1.58 h1:ca2Hdkz+cDg/7eNF6V56jjzuZ4aCAE+DbVkILdQWG/4=
+github.com/miekg/dns v1.1.58/go.mod h1:Ypv+3b/KadlvW9vJfXOTf300O4UqaHFzFCuHz+rPkBY=
 github.com/mitchellh/mapstructure v1.3.3/go.mod h1:bFUtVrKA4DC2yAKiSyO/QUcy7e+RRV2QTWOzhPopBRo=
 github.com/mitchellh/mapstructure v1.4.1/go.mod h1:bFUtVrKA4DC2yAKiSyO/QUcy7e+RRV2QTWOzhPopBRo=
 github.com/mitchellh/mapstructure v1.5.0 h1:jeMsZIYE/09sWLaz43PL7Gy6RuMjD2eJVyuac5Z2hdY=
