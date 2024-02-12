@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.4
 # Copyright 2021 Adevinta
 
-FROM golang:1.21-alpine3.18 as builder
+FROM golang:1.22-alpine3.18 as builder
 # Required because the dependency
 # https://github.com/confluentinc/confluent-kafka-go requires the gcc compiler.
 RUN apk add gcc libc-dev
