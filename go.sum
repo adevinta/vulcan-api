@@ -28,8 +28,8 @@ github.com/adevinta/vulcan-tracker v0.1.0 h1:4yxstht26cYFsM9YbwCkaYqSgJMNr2vnmLq
 github.com/adevinta/vulcan-tracker v0.1.0/go.mod h1:TSu3Us37G1SHnA/tpwngZEA6/eQMeGMditW1ZY/zjQ8=
 github.com/adevinta/vulcan-types v1.2.10 h1:kO7tQrBHW4iRFE7ydf3kJ+C0xi17PCVFsuYeFJl2/u8=
 github.com/adevinta/vulcan-types v1.2.10/go.mod h1:yvak8keAmVPGEifizUnQdl6LCSEU34QpieqoezRAjYg=
-github.com/adevinta/vulnerability-db-api v1.1.16 h1:vAnZK6uf0tbam6Ew8gIERX9mX7+uDkGqjgqwHJ8pJRU=
-github.com/adevinta/vulnerability-db-api v1.1.16/go.mod h1:5Ma2FlAm42yDNGuZnHAQOBMcDjG/vsETELCLqCuIzAg=
+github.com/adevinta/vulnerability-db-api v1.1.17 h1:QWRZrUdfd6fK2n6Z9bQfNllu7FCaTRCtk3MyBDDkjkE=
+github.com/adevinta/vulnerability-db-api v1.1.17/go.mod h1:5Ma2FlAm42yDNGuZnHAQOBMcDjG/vsETELCLqCuIzAg=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
 github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
 github.com/alecthomas/units v0.0.0-20151022065526-2efee857e7cf/go.mod h1:ybxpYRFXyAe+OPACYpWeL0wqObRcbAqCMya13uyzqw0=
