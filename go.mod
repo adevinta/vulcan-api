@@ -9,7 +9,7 @@ require (
 	github.com/adevinta/vulcan-groupie v1.0.1
 	github.com/adevinta/vulcan-metrics-client v1.0.1
 	github.com/adevinta/vulcan-report v1.0.0
-	github.com/adevinta/vulcan-scan-engine v1.1.23
+	github.com/adevinta/vulcan-scan-engine v1.1.25
 	github.com/adevinta/vulcan-tracker v0.1.0
 	github.com/adevinta/vulcan-types v1.2.10
 	github.com/adevinta/vulnerability-db-api v1.1.17
