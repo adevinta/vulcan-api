@@ -22,8 +22,8 @@ github.com/adevinta/vulcan-metrics-client v1.0.1 h1:BAugnnRWvkA3vnuCX77W04PWhneZ
 github.com/adevinta/vulcan-metrics-client v1.0.1/go.mod h1:we8vxfPMYQqZtOy42PJxsWwv2DwruSaT/wwNMxkum8I=
 github.com/adevinta/vulcan-report v1.0.0 h1:44aICPZ+4svucgCSA5KmjlT3ZGzrvZXiSnkbnj6AC2k=
 github.com/adevinta/vulcan-report v1.0.0/go.mod h1:k34KaeoXc3H77WNMwI9F4F1G28hBjB95PeMUp9oHbEE=
-github.com/adevinta/vulcan-scan-engine v1.1.23 h1:UBnJqmdBQcGweFMMabJXjor7c0UY5A22q+MjChgCwhA=
-github.com/adevinta/vulcan-scan-engine v1.1.23/go.mod h1:q/5sSJZxCq0AJ9akKQZaaYzWYMiGOV3Q21+4qa1RnRM=
+github.com/adevinta/vulcan-scan-engine v1.1.25 h1:IAHCXdRPoX50HkU7PgfzQCA5XOCIPdREtAf4zJAggBM=
+github.com/adevinta/vulcan-scan-engine v1.1.25/go.mod h1:596vCmMfO7PPxfdbclbtqPUUaPHp+omtpt58rs1YnXw=
 github.com/adevinta/vulcan-tracker v0.1.0 h1:4yxstht26cYFsM9YbwCkaYqSgJMNr2vnmLq5hJvF0TM=
 github.com/adevinta/vulcan-tracker v0.1.0/go.mod h1:TSu3Us37G1SHnA/tpwngZEA6/eQMeGMditW1ZY/zjQ8=
 github.com/adevinta/vulcan-types v1.2.10 h1:kO7tQrBHW4iRFE7ydf3kJ+C0xi17PCVFsuYeFJl2/u8=
