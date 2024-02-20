@@ -205,7 +205,8 @@ func makeMergeDiscoveredAssetsEndpoint(s api.VulcanitoService, logger kitlog.Log
 			if ar.Identifier == "" || ar.Type == "" {
 				return nil, errors.Validation("Asset identifier and type are required for all the assets")
 			}
-			if !api.ValidAssetType(ar.Type) {
+
+			if _, err := s.GetAssetType(ctx, ar.Type); err != nil {
 				return nil, errors.Validation(fmt.Errorf("Invalid asset type (%s) for asset (%v)", ar.Type, ar.Identifier))
 			}
 
