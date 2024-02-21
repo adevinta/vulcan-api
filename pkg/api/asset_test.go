@@ -121,7 +121,7 @@ func TestAssetValidate(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := tt.asset.Validate()
+			err := tt.asset.Validate(false)
 			if errToStr(err) != errToStr(tt.wantErr) {
 				t.Fatal(err)
 			}

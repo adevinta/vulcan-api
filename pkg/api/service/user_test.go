@@ -423,7 +423,7 @@ func TestServiceGenerateAPIToken(t *testing.T) {
 			testServiceToken := New(loggerUser, testStore, jwt.NewJWTConfig(tt.signKey),
 				scanengine.Config{Url: ""}, schedulerMock{}, reports.Config{},
 				vulnerabilitydb.NewClient(nil, "", true), nil, nil, nil, cgCatalogueMock{},
-				[]string{})
+				[]string{}, false)
 			ctx := context.WithValue(context.Background(), tt.claim, api.User{Email: tt.authenticatedUser, Admin: tt.adminUser, Observer: tt.Observer, Active: tt.activeUser})
 			got, err := testServiceToken.GenerateAPIToken(ctx, tt.userID)
 			diff := cmp.Diff(errToStr(tt.wantErr), errToStr(err))
