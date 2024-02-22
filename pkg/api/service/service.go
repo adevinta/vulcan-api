@@ -25,18 +25,19 @@ type AWSAccounts interface {
 
 // vulcanitoService implements VulcanitoService
 type vulcanitoService struct {
-	jwtConfig           jwt.Config
-	db                  api.VulcanitoStore
-	logger              log.Logger
-	programScheduler    schedule.ScanScheduler
-	scanEngineConfig    scanengine.Config
-	reportsConfig       reports.Config
-	vulndbClient        vulnerabilitydb.Client
-	vulcantrackerClient tickets.Client
-	reportsClient       *reports.Client
-	metricsClient       metrics.Client
-	awsAccounts         AWSAccounts
-	allowedTrackerTeams []string // feature flag.
+	jwtConfig             jwt.Config
+	db                    api.VulcanitoStore
+	logger                log.Logger
+	programScheduler      schedule.ScanScheduler
+	scanEngineConfig      scanengine.Config
+	reportsConfig         reports.Config
+	vulndbClient          vulnerabilitydb.Client
+	vulcantrackerClient   tickets.Client
+	reportsClient         *reports.Client
+	metricsClient         metrics.Client
+	awsAccounts           AWSAccounts
+	allowedTrackerTeams   []string // feature flag.
+	DNSHostnameValidation bool
 }
 
 //go:generate impl -output logging.go -stub templates/logging/impl.tmpl -header templates/logging/header.tmpl "middleware loggingMiddleware" api.VulcanitoService
@@ -46,22 +47,23 @@ type vulcanitoService struct {
 func New(logger log.Logger, db api.VulcanitoStore, jwtConfig jwt.Config,
 	scanEngineConfig scanengine.Config, programScheduler schedule.ScanScheduler, reportsConfig reports.Config,
 	vulndbClient vulnerabilitydb.Client, vulcantrackerClient tickets.Client, reportsClient *reports.Client,
-	metricsClient metrics.Client, awsAccounts AWSAccounts, allowedTrackerTeams []string) api.VulcanitoService {
+	metricsClient metrics.Client, awsAccounts AWSAccounts, allowedTrackerTeams []string, DNSHostnameValidation bool) api.VulcanitoService {
 
 	var svc api.VulcanitoService
 	{
 		svc = vulcanitoService{db: db,
-			jwtConfig:           jwtConfig,
-			logger:              logger,
-			scanEngineConfig:    scanEngineConfig,
-			programScheduler:    programScheduler,
-			reportsConfig:       reportsConfig,
-			vulndbClient:        vulndbClient,
-			vulcantrackerClient: vulcantrackerClient,
-			reportsClient:       reportsClient,
-			metricsClient:       metricsClient,
-			awsAccounts:         awsAccounts,
-			allowedTrackerTeams: allowedTrackerTeams,
+			jwtConfig:             jwtConfig,
+			logger:                logger,
+			scanEngineConfig:      scanEngineConfig,
+			programScheduler:      programScheduler,
+			reportsConfig:         reportsConfig,
+			vulndbClient:          vulndbClient,
+			vulcantrackerClient:   vulcantrackerClient,
+			reportsClient:         reportsClient,
+			metricsClient:         metricsClient,
+			awsAccounts:           awsAccounts,
+			allowedTrackerTeams:   allowedTrackerTeams,
+			DNSHostnameValidation: DNSHostnameValidation,
 		}
 	}
 	return LoggingMiddleware(logger)(svc)

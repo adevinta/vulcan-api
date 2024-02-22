@@ -63,7 +63,8 @@ func buildTestService(testStore api.VulcanitoStore) api.VulcanitoService {
 	}
 	return service.New(svcLogger, testStore, jwt.Config{}, scanengine.Config{Url: ""},
 		s, reports.Config{}, vulnerabilitydb.NewClient(nil, "", true),
-		nil, nil, nil, awscatalogue.NewAWSAccounts(nil, nil), []string{})
+		nil, nil, nil, awscatalogue.NewAWSAccounts(nil, nil), []string{},
+		false)
 }
 
 func errToStr(err error) string {

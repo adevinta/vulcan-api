@@ -86,14 +86,14 @@ func (s vulcanitoService) CreateAssets(ctx context.Context, assets []api.Asset, 
 			asset.AssetTypeID = assetTypeObj.ID
 			asset.AssetType = &api.AssetType{Name: assetTypeObj.Name}
 
-			if err := asset.Validate(); err != nil {
+			if err := asset.Validate(s.DNSHostnameValidation); err != nil {
 				return nil, err
 			}
 			assetsToCreate = append(assetsToCreate, asset)
 		} else {
 			// Asset type NOT provided by the user in the request. Try to infere
 			// asset type based on the identifier
-			assetsDetected, err := s.detectAssets(ctx, asset)
+			assetsDetected, err := s.detectAssets(ctx, asset, s.DNSHostnameValidation)
 			if err != nil {
 				return nil, errors.Validation(err, "asset", asset.Identifier, asset.AssetType.Name)
 			}
@@ -198,7 +198,7 @@ func (s vulcanitoService) CreateAssetsMultiStatus(ctx context.Context, assets []
 			asset.AssetType = &api.AssetType{Name: assetTypeObj.Name}
 
 			// If the asset is invalid, abort the asset creation.
-			if err := asset.Validate(); err != nil {
+			if err := asset.Validate(s.DNSHostnameValidation); err != nil {
 				response.Status = err
 				responses = append(responses, response)
 				continue
@@ -208,7 +208,7 @@ func (s vulcanitoService) CreateAssetsMultiStatus(ctx context.Context, assets []
 
 		} else {
 			// If user did not specify the asset type, auto detect it.
-			assetsDetected, err := s.detectAssets(ctx, asset)
+			assetsDetected, err := s.detectAssets(ctx, asset, s.DNSHostnameValidation)
 			if err != nil {
 				response.Status = errors.Validation(err, "asset", asset.Identifier, asset.AssetType.Name)
 				responses = append(responses, response)
@@ -527,7 +527,7 @@ func (s vulcanitoService) MergeDiscoveredAssetsAsync(ctx context.Context, teamID
 	return s.db.MergeAssetsAsync(teamID, assets, groupName)
 }
 
-func (s vulcanitoService) detectAssets(ctx context.Context, asset api.Asset) ([]api.Asset, error) {
+func (s vulcanitoService) detectAssets(ctx context.Context, asset api.Asset, dnsHostnameValidation bool) ([]api.Asset, error) {
 	assets, err := getTypesFromIdentifier(asset.Identifier)
 	if err != nil {
 		return nil, err
@@ -565,7 +565,7 @@ func (s vulcanitoService) detectAssets(ctx context.Context, asset api.Asset) ([]
 		}
 
 		// Validate asset model before appending it to the results
-		if err = asset.Validate(); err != nil {
+		if err = asset.Validate(dnsHostnameValidation); err != nil {
 			return nil, err
 		}
 
