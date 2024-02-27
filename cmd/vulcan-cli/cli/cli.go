@@ -156,6 +156,14 @@ func (cli *CLI) CreateTeam(t *Team) (string, error) {
 	return DereferenceString(apiTeam.ID), nil
 }
 
+func (cli *CLI) DeleteTeam(ID string) error {
+	ctx := cli.ctx
+	c := cli.c
+
+	_, err := c.DeleteTeams(ctx, client.DeleteTeamsPath(ID))
+	return err
+}
+
 func (cli *CLI) UpdateTeamInfo(t *Team) error {
 	ctx := cli.ctx
 	c := cli.c
