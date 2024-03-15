@@ -22,8 +22,8 @@ github.com/adevinta/vulcan-metrics-client v1.0.1 h1:BAugnnRWvkA3vnuCX77W04PWhneZ
 github.com/adevinta/vulcan-metrics-client v1.0.1/go.mod h1:we8vxfPMYQqZtOy42PJxsWwv2DwruSaT/wwNMxkum8I=
 github.com/adevinta/vulcan-report v1.0.0 h1:44aICPZ+4svucgCSA5KmjlT3ZGzrvZXiSnkbnj6AC2k=
 github.com/adevinta/vulcan-report v1.0.0/go.mod h1:k34KaeoXc3H77WNMwI9F4F1G28hBjB95PeMUp9oHbEE=
-github.com/adevinta/vulcan-scan-engine v1.1.25 h1:IAHCXdRPoX50HkU7PgfzQCA5XOCIPdREtAf4zJAggBM=
-github.com/adevinta/vulcan-scan-engine v1.1.25/go.mod h1:596vCmMfO7PPxfdbclbtqPUUaPHp+omtpt58rs1YnXw=
+github.com/adevinta/vulcan-scan-engine v1.1.26 h1:MUrjKdEwjg+XtXy03vdYRyBCB5iQCZhTPUm9eM6laZ0=
+github.com/adevinta/vulcan-scan-engine v1.1.26/go.mod h1:WCYc9tA4e7ueGGgM8QWpXawBquH5I5dH5gDDCi0imwA=
 github.com/adevinta/vulcan-tracker v0.1.0 h1:4yxstht26cYFsM9YbwCkaYqSgJMNr2vnmLq5hJvF0TM=
 github.com/adevinta/vulcan-tracker v0.1.0/go.mod h1:TSu3Us37G1SHnA/tpwngZEA6/eQMeGMditW1ZY/zjQ8=
 github.com/adevinta/vulcan-types v1.2.10 h1:kO7tQrBHW4iRFE7ydf3kJ+C0xi17PCVFsuYeFJl2/u8=
@@ -39,8 +39,8 @@ github.com/armon/go-metrics v0.4.1 h1:hR91U9KYmb6bLBYLQjyM+3j+rcd/UhE+G78SFnF8gJ
 github.com/armon/go-metrics v0.4.1/go.mod h1:E6amYzXo6aW1tqzoZGT755KkbgrJsSdpwZ+3JqfkOG4=
 github.com/asaskevich/govalidator v0.0.0-20200907205600-7a23bdc65eef h1:46PFijGLmAjMPwCCCo7Jf0W6f9slllCkkv7vyc1yOSg=
 github.com/asaskevich/govalidator v0.0.0-20200907205600-7a23bdc65eef/go.mod h1:WaHUgvxTVq04UNunO+XhnAqY/wQc+bxr74GqbsZ/Jqw=
-github.com/aws/aws-sdk-go v1.50.0 h1:HBtrLeO+QyDKnc3t1+5DR1RxodOHCGr8ZcrHudpv7jI=
-github.com/aws/aws-sdk-go v1.50.0/go.mod h1:LF8svs817+Nz+DmiMQKTO3ubZ/6IaTpq3TjupRn3Eqk=
+github.com/aws/aws-sdk-go v1.51.0 h1:EA6GlEYMT3ouCO+v+oTWzKB/vcoHD2T9H9qulRx3lPg=
+github.com/aws/aws-sdk-go v1.51.0/go.mod h1:LF8svs817+Nz+DmiMQKTO3ubZ/6IaTpq3TjupRn3Eqk=
 github.com/beevik/etree v1.1.0 h1:T0xke/WvNtMoCqgzPhkX2r4rjY3GDZFi+FjpRZY2Jbs=
 github.com/beevik/etree v1.1.0/go.mod h1:r8Aw8JqVegEf0w2fDnATrX9VpkMcyFeM0FhwO62wh+A=
 github.com/beorn7/perks v0.0.0-20180321164747-3a771d992973/go.mod h1:Dwedo/Wpr24TaqPxmxbtue+5NUziq4I4S80YR8gNf3Q=
