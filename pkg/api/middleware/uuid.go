@@ -39,23 +39,23 @@ const (
 // We are using the "reflect" package to inspect the request struct, looking
 // for fields that have `urlvar` tags with suffix `_id`, for example:
 //
-//   type UpdateTeamJSONRequest struct {
-//	     ID          string `urlvar:"team_id"`
-//	     Name        string `json:"name"`
-//	     Description string `json:"description"`
-//   }
+//	  type UpdateTeamJSONRequest struct {
+//		     ID          string `urlvar:"team_id"`
+//		     Name        string `json:"name"`
+//		     Description string `json:"description"`
+//	  }
 //
 // There are some special cases to UUID validation.
-//	  - global entities:
-//		Global entities are special values that can be specified by the client
-//		and are expanded into other values before the service layer processes
-//		the request (e.g.: periodic-full-scan).
-//    - team_id urlvar values can be set with the team name:
-//	    This middleware will inspect for that option and replace the team name
-//	    for its UUID in the original request path.
-//    - user_id urlvar values can be set with the user email:
-//		This middleware will inspect for that option and replace the user email
-//		for its UUID in the original request path.
+//   - global entities:
+//     Global entities are special values that can be specified by the client
+//     and are expanded into other values before the service layer processes
+//     the request (e.g.: periodic-full-scan).
+//   - team_id urlvar values can be set with the team name:
+//     This middleware will inspect for that option and replace the team name
+//     for its UUID in the original request path.
+//   - user_id urlvar values can be set with the user email:
+//     This middleware will inspect for that option and replace the user email
+//     for its UUID in the original request path.
 func ValidateUUIDs(repo api.VulcanitoStore, globalEntities *global.Entities, logger log.Logger) endpoint.Middleware {
 	return func(next endpoint.Endpoint) endpoint.Endpoint {
 		return func(ctx context.Context, request interface{}) (interface{}, error) {

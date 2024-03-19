@@ -6,8 +6,8 @@ package store
 
 import (
 	"github.com/adevinta/errors"
-	"github.com/jinzhu/gorm"
 	"github.com/adevinta/vulcan-api/pkg/api"
+	"github.com/jinzhu/gorm"
 )
 
 func (db vulcanitoStore) ListPrograms(teamID string) ([]*api.Program, error) {

@@ -95,4 +95,3 @@ func isValidFindingTransition(status, statusPrevious string) bool {
 	}
 	return slices.Contains(validTransitions[statusPrevious], status)
 }
-

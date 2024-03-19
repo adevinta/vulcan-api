@@ -9,13 +9,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strings"
 	"testing"
 
-	"github.com/google/go-cmp/cmp"
 	"github.com/adevinta/vulcan-api/pkg/awscatalogue"
+	"github.com/google/go-cmp/cmp"
 )
 
 type MemCGCAPI struct {
@@ -55,7 +55,7 @@ func (m *MemCGCAPI) GetAccounts() (*http.Response, error) {
 
 	resp := &http.Response{
 		StatusCode: 200,
-		Body:       ioutil.NopCloser(strings.NewReader(buff.String())),
+		Body:       io.NopCloser(strings.NewReader(buff.String())),
 	}
 	return resp, nil
 }
@@ -77,7 +77,7 @@ func (m *MemCGCAPI) GetProviderAccounts(provider string) (*http.Response, error)
 	}
 	resp := &http.Response{
 		StatusCode: 200,
-		Body:       ioutil.NopCloser(buff),
+		Body:       io.NopCloser(buff),
 	}
 	resp.ContentLength = int64(len(buff.Bytes()))
 	return resp, nil

@@ -13,10 +13,10 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/adevinta/vulcan-api/cmd/vulcan-cli/cli"
 	"github.com/adevinta/vulcan-groupie/pkg/groupie"
 	vulcanreport "github.com/adevinta/vulcan-report"
 	"github.com/spf13/cobra"
-	"github.com/adevinta/vulcan-api/cmd/vulcan-cli/cli"
 )
 
 var (

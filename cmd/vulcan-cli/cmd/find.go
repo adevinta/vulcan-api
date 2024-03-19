@@ -8,8 +8,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/spf13/cobra"
 	"github.com/adevinta/vulcan-api/cmd/vulcan-cli/cli"
+	"github.com/spf13/cobra"
 )
 
 var FindTeam = &cobra.Command{

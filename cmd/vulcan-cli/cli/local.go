@@ -6,7 +6,6 @@ package cli
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -25,7 +24,7 @@ func (t *Team) WriteLocal(teamDirectory string) error {
 	}
 
 	content := fmt.Sprintf("%s\n", t.String())
-	if err := ioutil.WriteFile(filepath.Join(teamDirectory, "team.txt"), []byte(content), os.ModePerm); err != nil {
+	if err := os.WriteFile(filepath.Join(teamDirectory, "team.txt"), []byte(content), os.ModePerm); err != nil {
 		return err
 	}
 
@@ -73,7 +72,7 @@ func (t *Team) WriteLocal(teamDirectory string) error {
 }
 
 func ReadLocalTeams(localTeamsRootDir string) ([]*Team, error) {
-	items, err := ioutil.ReadDir(localTeamsRootDir)
+	items, err := os.ReadDir(localTeamsRootDir)
 	if err != nil {
 		return nil, err
 	}
@@ -191,7 +190,7 @@ func readTeamInfo(teamDirectory string) (*Team, error) {
 
 func (r Recipients) WriteLocal(teamDirectory string) error {
 	content := r.String()
-	return ioutil.WriteFile(filepath.Join(teamDirectory, "emails.txt"), []byte(content), os.ModePerm)
+	return os.WriteFile(filepath.Join(teamDirectory, "emails.txt"), []byte(content), os.ModePerm)
 }
 
 func ReadLocalRecipients(teamDirectory string) (Recipients, error) {
@@ -213,17 +212,17 @@ func ReadLocalRecipients(teamDirectory string) (Recipients, error) {
 
 func (u Users) WriteLocal(teamsDirectory string) error {
 	content := u.String()
-	return ioutil.WriteFile(filepath.Join(teamsDirectory, "users.txt"), []byte(content), os.ModePerm)
+	return os.WriteFile(filepath.Join(teamsDirectory, "users.txt"), []byte(content), os.ModePerm)
 }
 
 func (u Unassigned) WriteLocal(teamsDirectory string) error {
 	content := u.String()
-	return ioutil.WriteFile(filepath.Join(teamsDirectory, "unassigned.txt"), []byte(content), os.ModePerm)
+	return os.WriteFile(filepath.Join(teamsDirectory, "unassigned.txt"), []byte(content), os.ModePerm)
 }
 
 func (m Members) WriteLocal(teamDirectory string) error {
 	content := m.String()
-	return ioutil.WriteFile(filepath.Join(teamDirectory, "members.txt"), []byte(content), os.ModePerm)
+	return os.WriteFile(filepath.Join(teamDirectory, "members.txt"), []byte(content), os.ModePerm)
 }
 
 func ReadLocalMembers(teamDirectory string) (Members, error) {
@@ -247,7 +246,7 @@ func ReadLocalMembers(teamDirectory string) (Members, error) {
 
 func (a Assets) WriteLocal(teamDirectory string) error {
 	content := a.String()
-	return ioutil.WriteFile(filepath.Join(teamDirectory, "assets.txt"), []byte(content), os.ModePerm)
+	return os.WriteFile(filepath.Join(teamDirectory, "assets.txt"), []byte(content), os.ModePerm)
 }
 
 func ReadLocalAssets(teamDirectory string) (Assets, error) {
@@ -271,7 +270,7 @@ func ReadLocalAssets(teamDirectory string) (Assets, error) {
 
 func (o OrphanAssets) WriteLocal(teamDirectory string) error {
 	content := o.String()
-	return ioutil.WriteFile(filepath.Join(teamDirectory, "orphan.txt"), []byte(content), os.ModePerm)
+	return os.WriteFile(filepath.Join(teamDirectory, "orphan.txt"), []byte(content), os.ModePerm)
 }
 
 func ReadLocalOrphanAssets(teamDirectory string) (OrphanAssets, error) {
@@ -295,7 +294,7 @@ func ReadLocalOrphanAssets(teamDirectory string) (OrphanAssets, error) {
 
 func (o ForeignAssets) WriteLocal(teamDirectory string) error {
 	content := o.String()
-	return ioutil.WriteFile(filepath.Join(teamDirectory, "foreign.txt"), []byte(content), os.ModePerm)
+	return os.WriteFile(filepath.Join(teamDirectory, "foreign.txt"), []byte(content), os.ModePerm)
 }
 
 func ReadLocalForeignAssets(teamDirectory string) (ForeignAssets, error) {
@@ -319,7 +318,7 @@ func ReadLocalForeignAssets(teamDirectory string) (ForeignAssets, error) {
 
 func (d DuppedAssets) WriteLocal(teamDirectory string) error {
 	content := d.String()
-	return ioutil.WriteFile(filepath.Join(teamDirectory, "dupped.txt"), []byte(content), os.ModePerm)
+	return os.WriteFile(filepath.Join(teamDirectory, "dupped.txt"), []byte(content), os.ModePerm)
 }
 
 func ReadLocalDuppedAssets(teamDirectory string) (DuppedAssets, error) {
@@ -343,7 +342,7 @@ func ReadLocalDuppedAssets(teamDirectory string) (DuppedAssets, error) {
 
 func (g *Group) WriteLocal(groupsDirectory string) error {
 	content := g.Assets.String()
-	return ioutil.WriteFile(filepath.Join(groupsDirectory, fmt.Sprintf("%s;%s", g.Name, g.ID)), []byte(content), os.ModePerm)
+	return os.WriteFile(filepath.Join(groupsDirectory, fmt.Sprintf("%s;%s", g.Name, g.ID)), []byte(content), os.ModePerm)
 }
 
 func (g Groups) WriteLocal(groupsDirectory string) error {
@@ -356,7 +355,7 @@ func (g Groups) WriteLocal(groupsDirectory string) error {
 }
 
 func ReadLocalGroups(groupsDirectory string) (Groups, error) {
-	files, err := ioutil.ReadDir(groupsDirectory)
+	files, err := os.ReadDir(groupsDirectory)
 	if err != nil {
 		return Groups{}, err
 	}
@@ -518,7 +517,7 @@ func (p Policies) WriteLocal(policiesDirectory string) error {
 }
 
 func ReadLocalPolicies(policiesDirectory string) (Policies, error) {
-	files, err := ioutil.ReadDir(policiesDirectory)
+	files, err := os.ReadDir(policiesDirectory)
 	if err != nil {
 		return Policies{}, err
 	}
@@ -596,7 +595,7 @@ func ReadLocalPolicy(path string) (*Policy, error) {
 }
 
 func ReadLocalSettingsCollection(settingsDirectory string) (SettingsCollection, error) {
-	files, err := ioutil.ReadDir(settingsDirectory)
+	files, err := os.ReadDir(settingsDirectory)
 	if err != nil {
 		return SettingsCollection{}, err
 	}
@@ -633,7 +632,7 @@ func ReadLocalSettings(path string) (*Settings, error) {
 		return nil, fmt.Errorf("invalid settings name: %s", name)
 	}
 
-	b, err := ioutil.ReadFile(path) //nolint
+	b, err := os.ReadFile(path) //nolint
 	if err != nil {
 		return nil, err
 	}
@@ -649,7 +648,7 @@ func (s *Settings) WriteLocal(settingsDirectory string) error {
 		content += "\n"
 	}
 
-	return ioutil.WriteFile(file, []byte(content), os.ModePerm)
+	return os.WriteFile(file, []byte(content), os.ModePerm)
 }
 
 func (s SettingsCollection) WriteLocal(settingsDirectory string) error {
@@ -666,10 +665,10 @@ func (s SettingsCollection) WriteLocal(settingsDirectory string) error {
 
 func (p Programs) WriteLocal(directory string) error {
 	content := p.String()
-	return ioutil.WriteFile(filepath.Join(directory, "programs.txt"), []byte(content), os.ModePerm)
+	return os.WriteFile(filepath.Join(directory, "programs.txt"), []byte(content), os.ModePerm)
 }
 
 func (c Coverage) WriteLocal(directory string) error {
 	content := fmt.Sprintf("%s\n", c.String())
-	return ioutil.WriteFile(filepath.Join(directory, "coverage.txt"), []byte(content), os.ModePerm)
+	return os.WriteFile(filepath.Join(directory, "coverage.txt"), []byte(content), os.ModePerm)
 }

@@ -10,8 +10,8 @@ import (
 
 	"gopkg.in/go-playground/validator.v9"
 
-	"github.com/adevinta/vulcan-api/pkg/api"
 	"github.com/adevinta/errors"
+	"github.com/adevinta/vulcan-api/pkg/api"
 )
 
 func (s vulcanitoService) FindTeamMember(ctx context.Context, teamID string, userID string) (*api.UserTeam, error) {

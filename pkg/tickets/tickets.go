@@ -9,11 +9,12 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
-	"github.com/adevinta/errors"
 	"io"
 	"net/http"
 	"net/url"
 	"strings"
+
+	"github.com/adevinta/errors"
 
 	"github.com/adevinta/vulcan-api/pkg/api"
 )

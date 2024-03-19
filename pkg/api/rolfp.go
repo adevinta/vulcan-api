@@ -43,8 +43,10 @@ func (r ROLFP) MarshalJSON() ([]byte, error) {
 // Level 0: Accounts meeting none of the ROLFP criteria.
 // Level 1: Accounts meeting 1 or 2 of the ROLFP criteria.
 // Level 2: Accounts either:
-//   Meeting 3 or more of the ROLFP criteria.
-//   With unknown scope, that is scope 2
+//
+//	Meeting 3 or more of the ROLFP criteria.
+//	With unknown scope, that is scope 2
+//
 // If the rolfp is empty the level will be 2.
 func (r ROLFP) Level() byte {
 	if r.IsEmpty || r.Scope == 2 {

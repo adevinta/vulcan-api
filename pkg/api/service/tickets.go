@@ -6,6 +6,7 @@ package service
 
 import (
 	"context"
+
 	"github.com/adevinta/vulcan-api/pkg/api"
 )
 

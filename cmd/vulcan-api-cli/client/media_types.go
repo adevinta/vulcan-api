@@ -8,9 +8,10 @@
 package client
 
 import (
-	"github.com/goadesign/goa"
 	"net/http"
 	"time"
+
+	"github.com/goadesign/goa"
 )
 
 // Asset (default view)

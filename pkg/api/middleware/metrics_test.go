@@ -11,8 +11,8 @@ import (
 	"testing"
 
 	"github.com/adevinta/errors"
-	metrics "github.com/adevinta/vulcan-metrics-client"
 	"github.com/adevinta/vulcan-api/pkg/api/endpoint"
+	metrics "github.com/adevinta/vulcan-metrics-client"
 )
 
 type mockMetricsClient struct {

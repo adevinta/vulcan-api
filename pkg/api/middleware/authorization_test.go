@@ -7,7 +7,7 @@ package middleware
 import (
 	"context"
 	"errors"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -165,7 +165,7 @@ func TestAuthorizationMiddleware(t *testing.T) {
 			}
 			w := httptest.NewRecorder()
 			mux.ServeHTTP(w, req)
-			resp, _ := ioutil.ReadAll(w.Body)
+			resp, _ := io.ReadAll(w.Body)
 			got := string(resp)
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("got %v, want %v", got, tt.want)

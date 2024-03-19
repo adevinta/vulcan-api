@@ -30,11 +30,11 @@ type DB interface {
 }
 
 // Event represents an event retrieved from CDC log.
-//	- ID returns the event identifier.
-//	- Action returns the action related with a CBC event.
-//	- Version returns the schema version for data.
-//	- Data returns the data associated with the event.
-//	- ReadCount returns the number of times event has been read.
+//   - ID returns the event identifier.
+//   - Action returns the action related with a CBC event.
+//   - Version returns the schema version for data.
+//   - Data returns the data associated with the event.
+//   - ReadCount returns the number of times event has been read.
 type Event interface {
 	ID() string
 	Action() string

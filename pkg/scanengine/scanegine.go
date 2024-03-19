@@ -10,7 +10,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"time"
@@ -173,13 +173,13 @@ func (c *Client) Create(request scanengine.ScanRequest) (*scanengine.ScanRespons
 		return nil, err
 	}
 	defer response.Body.Close() // nolint
-	responseBytes, err := ioutil.ReadAll(response.Body)
+	responseBytes, err := io.ReadAll(response.Body)
 	if err != nil {
 		return nil, err
 	}
 	if response.StatusCode != http.StatusCreated {
 		// Try to read the response for a possible error message
-		b, errR := ioutil.ReadAll(response.Body)
+		b, errR := io.ReadAll(response.Body)
 		if errR != nil {
 			return nil, errR
 		}
@@ -223,14 +223,14 @@ func (c *Client) Get(scanID string) (*scanengine.GetScanResponse, error) {
 		return nil, err
 	}
 	defer response.Body.Close() // nolint
-	responseBytes, err := ioutil.ReadAll(response.Body)
+	responseBytes, err := io.ReadAll(response.Body)
 	if err != nil {
 		return nil, err
 	}
 
 	if response.StatusCode != http.StatusOK {
 		// Try to read the response for a possible error message
-		b, errR := ioutil.ReadAll(response.Body)
+		b, errR := io.ReadAll(response.Body)
 		if errR != nil {
 			return nil, errR
 		}
@@ -269,13 +269,13 @@ func (c *Client) GetScans(externalID string) (*scanengine.GetScansResponse, erro
 		return nil, err
 	}
 	defer response.Body.Close() // nolint
-	responseBytes, err := ioutil.ReadAll(response.Body)
+	responseBytes, err := io.ReadAll(response.Body)
 	if err != nil {
 		return nil, err
 	}
 	if response.StatusCode != http.StatusOK {
 		// Try to read the response for a possible error message
-		b, errR := ioutil.ReadAll(response.Body)
+		b, errR := io.ReadAll(response.Body)
 		if errR != nil {
 			return nil, errR
 		}
@@ -305,13 +305,13 @@ func (c *Client) Abort(scanID string) (*scanengine.GetScanResponse, error) {
 		return nil, err
 	}
 	defer response.Body.Close() // nolint
-	responseBytes, err := ioutil.ReadAll(response.Body)
+	responseBytes, err := io.ReadAll(response.Body)
 	if err != nil {
 		return nil, err
 	}
 	if response.StatusCode != http.StatusAccepted {
 		// Try to read the response for a possible error message
-		b, errR := ioutil.ReadAll(response.Body)
+		b, errR := io.ReadAll(response.Body)
 		if errR != nil {
 			return nil, errR
 		}

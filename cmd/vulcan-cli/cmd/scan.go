@@ -7,7 +7,6 @@ package cmd
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"strings"
 
@@ -75,7 +74,7 @@ func runScanTeam(args []string, apiClient *cli.CLI) error {
 		scans = append(scans, scan)
 	}
 
-	tmpfile, err := ioutil.TempFile("", "vulcan-scan-*.txt")
+	tmpfile, err := os.CreateTemp("", "vulcan-scan-*.txt")
 	if err != nil {
 		return err
 	}
@@ -126,7 +125,7 @@ func runRefreshScans(args []string, apiClient *cli.CLI) error {
 		return errors.New("can not close file before writing")
 	}
 
-	return ioutil.WriteFile(path, []byte(scans.String()), perm)
+	return os.WriteFile(path, []byte(scans.String()), perm)
 }
 
 func isFinalState(state string) bool {

@@ -9,7 +9,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"time"
@@ -325,7 +325,7 @@ func (cli *CLI) UpdateAsset(teamID, ID, rolfp string, alias string) error {
 	}
 	// Here err is nil and status code is not OK.
 	var verr ErrorVulcanAPI
-	content, err := ioutil.ReadAll(resp.Body)
+	content, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return fmt.Errorf("error updating the asset %s of the team %s, %w", ID, teamID, err)
 	}

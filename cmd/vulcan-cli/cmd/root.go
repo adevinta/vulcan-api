@@ -7,7 +7,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"os/user"
@@ -77,7 +76,7 @@ func readDefaultKey() (string, error) {
 
 	path := filepath.Join(usr.HomeDir, defaultKeyFile)
 
-	k, err := ioutil.ReadFile(path)
+	k, err := os.ReadFile(path)
 	if err != nil {
 		return "", err
 	}

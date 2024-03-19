@@ -72,7 +72,7 @@ func (db vulcanitoStore) pushToOutbox(tx *gorm.DB, op string, data ...interface{
 
 // buildDeleteTeamDTO builds a DeleteTeam action DTO for outbox.
 // Expected input:
-//	- api.Team
+//   - api.Team
 func (db vulcanitoStore) buildDeleteTeamDTO(tx *gorm.DB, data ...interface{}) (interface{}, error) {
 	if len(data) != 1 {
 		return nil, errInvalidParams
@@ -92,7 +92,7 @@ func (db vulcanitoStore) buildDeleteTeamDTO(tx *gorm.DB, data ...interface{}) (i
 
 // buildCreateAssetDTO builds a CreateAsset action DTO for outbox.
 // Expected input:
-//	- api.Asset
+//   - api.Asset
 func (db vulcanitoStore) buildCreateAssetDTO(tx *gorm.DB, data ...interface{}) (interface{}, error) {
 	if len(data) != 1 {
 		return nil, errInvalidParams
@@ -110,7 +110,7 @@ func (db vulcanitoStore) buildCreateAssetDTO(tx *gorm.DB, data ...interface{}) (
 
 // buildDeleteAssetDTO builds a DeleteAsset action DTO for outbox.
 // Expected input:
-//	- api.Asset
+//   - api.Asset
 func (db vulcanitoStore) buildDeleteAssetDTO(tx *gorm.DB, data ...interface{}) (interface{}, error) {
 	if len(data) != 1 && len(data) != 2 {
 		return nil, errInvalidParams
@@ -149,8 +149,8 @@ func (db vulcanitoStore) buildDeleteAssetDTO(tx *gorm.DB, data ...interface{}) (
 
 // buildUpdateAssetDTO builds a UpdateAsset action DTO for outbox.
 // Expected input:
-//	- api.Asset (Old Asset)
-//  - api.Asset (New Asset)
+//   - api.Asset (Old Asset)
+//   - api.Asset (New Asset)
 func (db vulcanitoStore) buildUpdateAssetDTO(tx *gorm.DB, data ...interface{}) (interface{}, error) {
 	if len(data) != 2 {
 		return nil, errInvalidParams
@@ -175,7 +175,7 @@ func (db vulcanitoStore) buildUpdateAssetDTO(tx *gorm.DB, data ...interface{}) (
 
 // buildDeleteAllAssetsDTO builds a DeleteAllAssets action DTO for outbox.
 // Expected input:
-//	- teamID string
+//   - teamID string
 func (db vulcanitoStore) buildDeleteAllAssetsDTO(tx *gorm.DB, data ...interface{}) (interface{}, error) {
 	if len(data) != 1 {
 		return nil, errInvalidParams
@@ -194,7 +194,7 @@ func (db vulcanitoStore) buildDeleteAllAssetsDTO(tx *gorm.DB, data ...interface{
 
 // buildFindingOverwriteDTO builds a FindingOverwrite action DTO for outbox.
 // Expected input:
-//	- api.FindingOverwrite
+//   - api.FindingOverwrite
 func (db vulcanitoStore) buildFindingOverwriteDTO(tx *gorm.DB, data ...interface{}) (interface{}, error) {
 	if len(data) != 1 {
 		return nil, errInvalidParams
@@ -209,10 +209,10 @@ func (db vulcanitoStore) buildFindingOverwriteDTO(tx *gorm.DB, data ...interface
 
 // buildMergeDiscoveredAssetsDTO builds a MergeDiscoveredAssets action DTO for
 // outbox.  Expected input:
-//  - teamID
-//  - []api.Asset
-//  - groupName
-//  - jobID
+//   - teamID
+//   - []api.Asset
+//   - groupName
+//   - jobID
 func (db vulcanitoStore) buildMergeDiscoveredAssetsDTO(tx *gorm.DB, data ...interface{}) (interface{}, error) {
 	if len(data) != 4 {
 		return nil, errInvalidParams

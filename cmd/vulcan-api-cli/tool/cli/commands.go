@@ -11,17 +11,18 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/adevinta/vulcan-api/cmd/vulcan-api-cli/client"
-	"github.com/goadesign/goa"
-	goaclient "github.com/goadesign/goa/client"
-	uuid "github.com/goadesign/goa/uuid"
-	"github.com/spf13/cobra"
 	"log"
 	"net/url"
 	"os"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/adevinta/vulcan-api/cmd/vulcan-api-cli/client"
+	"github.com/goadesign/goa"
+	goaclient "github.com/goadesign/goa/client"
+	uuid "github.com/goadesign/goa/uuid"
+	"github.com/spf13/cobra"
 )
 
 type (

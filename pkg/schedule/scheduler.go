@@ -9,7 +9,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"path"
 	"time"
@@ -311,7 +311,7 @@ func (c *Client) performRequest(httpMethod, path string, payload interface{}) (i
 	}
 	defer resp.Body.Close() //nolint
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return status, nil, err
 	}

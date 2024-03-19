@@ -8,8 +8,9 @@
 package client
 
 import (
-	"github.com/goadesign/goa"
 	"time"
+
+	"github.com/goadesign/goa"
 )
 
 // assetAnnotationDeleteRequest user type.

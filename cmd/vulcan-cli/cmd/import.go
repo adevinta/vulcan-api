@@ -5,8 +5,8 @@ Copyright 2021 Adevinta
 package cmd
 
 import (
-	"github.com/spf13/cobra"
 	"github.com/adevinta/vulcan-api/cmd/vulcan-cli/cli"
+	"github.com/spf13/cobra"
 )
 
 var ImportCmd = &cobra.Command{

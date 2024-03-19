@@ -8,7 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strings"
 
@@ -119,7 +119,7 @@ func (c *Client) Accounts() ([]awscatalogue.Account, error) {
 		return nil, &operationError{errAccounts, uerr}
 	}
 	accs := []account{}
-	content, err := ioutil.ReadAll(resp.Body)
+	content, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, &operationError{errAccounts, err}
 	}

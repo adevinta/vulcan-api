@@ -9,8 +9,8 @@ import (
 	"errors"
 	"time"
 
-	"github.com/lestrrat-go/backoff"
 	"github.com/adevinta/vulcan-api/pkg/awscatalogue"
+	"github.com/lestrrat-go/backoff"
 )
 
 // JitterFactor defines the jitter factor used by the backoff client.

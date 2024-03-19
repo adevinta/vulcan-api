@@ -5,8 +5,8 @@ Copyright 2021 Adevinta
 package store
 
 import (
-	"github.com/adevinta/vulcan-api/pkg/api"
 	"github.com/adevinta/errors"
+	"github.com/adevinta/vulcan-api/pkg/api"
 )
 
 // UpdateRecipients ...

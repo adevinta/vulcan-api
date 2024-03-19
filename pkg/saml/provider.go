@@ -10,7 +10,7 @@ import (
 	"encoding/xml"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	saml2 "github.com/russellhaering/gosaml2"
@@ -110,7 +110,7 @@ func getMetadata(metadataURL string) (*types.EntityDescriptor, error) {
 	if err != nil {
 		return nil, err
 	}
-	rawMetadata, err := ioutil.ReadAll(res.Body)
+	rawMetadata, err := io.ReadAll(res.Body)
 	if err != nil {
 		return nil, err
 	}

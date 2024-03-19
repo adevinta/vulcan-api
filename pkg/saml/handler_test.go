@@ -6,7 +6,7 @@ package saml
 
 import (
 	"errors"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -84,7 +84,7 @@ func TestLoginHandler(t *testing.T) {
 				t.Fatalf("error expected status to be %d but got %d",
 					tc.wantHTTPStatus, rrecorder.Result().StatusCode)
 			}
-			respBody, err := ioutil.ReadAll(rrecorder.Body)
+			respBody, err := io.ReadAll(rrecorder.Body)
 			if err != nil {
 				t.Fatalf("error reading response body: %v", err)
 			}
@@ -265,7 +265,7 @@ func TestLoginCallbackHandler(t *testing.T) {
 				t.Fatalf("error expected status to be %d but got %d",
 					tc.wantHTTPStatus, rrecorder.Result().StatusCode)
 			}
-			respBody, err := ioutil.ReadAll(rrecorder.Body)
+			respBody, err := io.ReadAll(rrecorder.Body)
 			if err != nil {
 				t.Fatalf("error reading response body: %v", err)
 			}
