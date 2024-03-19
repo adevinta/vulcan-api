@@ -137,7 +137,9 @@ func (cli *CLI) CreateTeam(t *Team) (string, error) {
 	c := cli.c
 
 	p := &client.TeamPayload{
-		Name: t.Name,
+		Name:        t.Name,
+		Description: PtrString(t.Info.Description),
+		Tag:         t.Info.Tag,
 	}
 	if err := p.Validate(); err != nil {
 		return "", err
