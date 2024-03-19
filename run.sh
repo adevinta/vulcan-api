@@ -2,6 +2,8 @@
 
 # Copyright 2021 Adevinta
 
+set -e
+
 # export default values for required vars if not set
 export PATH_STYLE=${PATH_STYLE:-false}
 export COOKIE_NAME=${COOKIE_NAME:-devcon-token}
