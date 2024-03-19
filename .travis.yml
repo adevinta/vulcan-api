@@ -2,7 +2,7 @@ language: go
 dist: bionic
 env:
   global:
-    - FLYWAY_VERSION=9.19.3
+    - FLYWAY_VERSION=null
     - INPUT_BUILDARGS=FLYWAY_VERSION=$FLYWAY_VERSION
     # Removed linux/arm64 because it takes too long to build
     - INPUT_PLATFORM=linux/amd64  # ,linux/arm64
