@@ -2,6 +2,8 @@
 
 # Copyright 2021 Adevinta
 
+set -e
+
 # export default values for required vars if not set
 export PATH_STYLE=${PATH_STYLE:-false}
 export COOKIE_NAME=${COOKIE_NAME:-devcon-token}
@@ -45,6 +47,6 @@ fi
 
 flyway -user="$PG_USER" -password="$PG_PASSWORD" \
   -url="jdbc:postgresql://$PG_HOST:$PG_PORT/$PG_NAME?sslmode=$PG_SSLMODE" \
-  -community -baselineOnMigrate=true -locations=filesystem:/app/sql migrate
+  -baselineOnMigrate=true -locations=filesystem:/app/sql migrate
 
 exec ./vulcan-api -c run.toml
