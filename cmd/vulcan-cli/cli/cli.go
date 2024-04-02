@@ -84,6 +84,31 @@ func newBearerSigner(key, format string) goaclient.Signer {
 	}
 }
 
+func (cli *CLI) Profile() (*User, error) {
+	ctx := cli.ctx
+	c := cli.c
+
+	resp, err := c.ProfileUser(ctx, client.ProfileUserPath())
+	if err != nil {
+		return nil, err
+	}
+
+	apiUser, err := c.DecodeUser(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return &User{
+		ID:        DereferenceString(apiUser.ID),
+		Firstname: DereferenceString(apiUser.Firstname),
+		Lastname:  DereferenceString(apiUser.Lastname),
+		Email:     DereferenceString(apiUser.Email),
+		Admin:     DereferenceBool(apiUser.Admin),
+		Observer:  DereferenceBool(apiUser.Observer),
+		Active:    DereferenceBool(apiUser.Active),
+	}, nil
+}
+
 func (cli *CLI) Teams() ([]*Team, error) {
 	ctx := cli.ctx
 	c := cli.c
