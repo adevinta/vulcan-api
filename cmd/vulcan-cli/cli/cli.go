@@ -490,6 +490,23 @@ func (cli *CLI) DeleteAsset(teamID, assetID string) error {
 	return err
 }
 
+func (cli *CLI) AssetAnnotations(teamID, assetID string) (map[string]string, error) {
+	ctx := cli.ctx
+	c := cli.c
+
+	resp, err := c.ListAssetAnnotations(ctx, client.ListAssetAnnotationsPath(teamID, assetID))
+	if err != nil {
+		return nil, fmt.Errorf("error getting asset annotations: %v", err)
+	}
+
+	apiAnnotations, err := c.DecodeAssetannotationsResponse(resp)
+	if err != nil {
+		return nil, fmt.Errorf("error decoding asset annotations: %v", err)
+	}
+
+	return apiAnnotations.Annotations, nil
+}
+
 func (cli *CLI) OrphanAssets(assets Assets, groups Groups) (OrphanAssets, error) {
 	var orphans OrphanAssets
 loop:
