@@ -6,6 +6,7 @@ package service
 
 import (
 	"context"
+
 	"github.com/adevinta/vulcan-api/pkg/api"
 )
 
@@ -29,7 +30,7 @@ func (s vulcanitoService) IsATeamOnboardedInVulcanTracker(ctx context.Context, t
 		return false
 	}
 	for _, team := range onboardedTeams {
-		if team == teamID {
+		if team == teamID || team == "*" {
 			return true
 		}
 	}

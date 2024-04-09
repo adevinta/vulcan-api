@@ -86,6 +86,7 @@ Those are the variables you have to setup:
 |PERSISTENCE_HOST||persistence.vulcan.example.com|
 |VULNERABILITYDB_URL||http://localhost:8083|
 |VULCANTRACKER_URL|Leave the url empty if you don't want to configure the vulcan-tracker component|http://localhost:8085|
+|VULCANTRACKER_TEAMS|comma separated list of team ids that has tracker integration,`*` for all|ba2f2a9b-1ea8-4a28-9519-eab4ed290866|
 |VULCAN_UI_URL|Vulcan UI base URL for Digest report link|http://localhost:1234|
 |GPC_${i}_NAME|Specify the name of the global policy that the ${i} ALLOW/BLOCK list will apply. Rquired if any ALLOW/BLOCK list is specified.|web-scanning-global|
 |GPC_${i}_ALLOWED_ASSETTYPES|Specify an array of allowed assettypes for the specified global policy. Optional.|[]|
