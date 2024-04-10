@@ -12,6 +12,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"reflect"
 	"time"
 
 	"github.com/adevinta/vulcan-api/cmd/vulcan-api-cli/client"
@@ -505,6 +506,30 @@ func (cli *CLI) AssetAnnotations(teamID, assetID string) (map[string]string, err
 	}
 
 	return apiAnnotations.Annotations, nil
+}
+
+func (cli *CLI) CreateAssetAnnotations(teamID, assetID string, annotations map[string]string) error {
+	ctx := cli.ctx
+	c := cli.c
+
+	p := &client.AssetAnnotationRequest{
+		Annotations: annotations,
+	}
+	resp, err := c.PutAssetAnnotations(ctx, client.PutAssetAnnotationsPath(teamID, assetID), p)
+	if err != nil {
+		return fmt.Errorf("error creating asset annotations: %w", err)
+	}
+
+	apiAnnotations, err := c.DecodeAssetannotationsResponse(resp)
+	if err != nil {
+		return fmt.Errorf("error decoding asset annotations: %w", err)
+	}
+	// Compare returned annotations with the ones we sent
+	if !reflect.DeepEqual(apiAnnotations.Annotations, annotations) {
+		return fmt.Errorf("annotations sent and received are different")
+	}
+
+	return nil
 }
 
 func (cli *CLI) OrphanAssets(assets Assets, groups Groups) (OrphanAssets, error) {
