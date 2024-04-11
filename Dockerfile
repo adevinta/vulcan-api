@@ -1,10 +1,10 @@
 # syntax=docker/dockerfile:1.4
 # Copyright 2021 Adevinta
 
-FROM golang:1.22-alpine3.18 as builder
+FROM --platform=linux/$TARGETARCH golang:1.22-alpine3.19 as builder
 # Required because the dependency
 # https://github.com/confluentinc/confluent-kafka-go requires the gcc compiler.
-RUN apk add gcc libc-dev
+RUN apk add --no-cache gcc musl-dev cyrus-sasl-dev mold
 
 WORKDIR /app
 
@@ -15,15 +15,19 @@ RUN go mod download
 COPY . .
 
 ARG TARGETOS TARGETARCH
+RUN echo $TARGETARCH
 
 WORKDIR /app/cmd/vulcan-api
-RUN go build -tags musl .
+RUN CGO_ENABLED=1 GOOS=linux GOARCH=$TARGETARCH \
+    # explicitly link to libsasl2 installed as part of cyrus-sasl-dev
+    CGO_LDFLAGS="-fuse-ld=mold -lsasl2" \
+    go build -tags musl -ldflags "-w -s" .
 
 FROM alpine:3.19
 
 WORKDIR /flyway
 
-RUN apk add --no-cache --update openjdk17-jre bash gettext libc6-compat
+RUN apk add --no-cache --update openjdk17-jre-headless bash gettext cyrus-sasl
 
 ARG FLYWAY_VERSION=10.10.0
 
