@@ -532,6 +532,8 @@ func (ut *FindingOverwritePayload) Validate() (err error) {
 type findingTicketPayload struct {
 	// Description
 	Description *string `form:"description,omitempty" json:"description,omitempty" yaml:"description,omitempty" xml:"description,omitempty"`
+	// Jira issue labels
+	Labels []string `form:"labels,omitempty" json:"labels,omitempty" yaml:"labels,omitempty" xml:"labels,omitempty"`
 	// Summary
 	Summary *string `form:"summary,omitempty" json:"summary,omitempty" yaml:"summary,omitempty" xml:"summary,omitempty"`
 }
@@ -550,6 +552,9 @@ func (ut *findingTicketPayload) Publicize() *FindingTicketPayload {
 	if ut.Description != nil {
 		pub.Description = ut.Description
 	}
+	if ut.Labels != nil {
+		pub.Labels = ut.Labels
+	}
 	if ut.Summary != nil {
 		pub.Summary = *ut.Summary
 	}
@@ -560,6 +565,8 @@ func (ut *findingTicketPayload) Publicize() *FindingTicketPayload {
 type FindingTicketPayload struct {
 	// Description
 	Description *string `form:"description,omitempty" json:"description,omitempty" yaml:"description,omitempty" xml:"description,omitempty"`
+	// Jira issue labels
+	Labels []string `form:"labels,omitempty" json:"labels,omitempty" yaml:"labels,omitempty" xml:"labels,omitempty"`
 	// Summary
 	Summary string `form:"summary" json:"summary" yaml:"summary" xml:"summary"`
 }
