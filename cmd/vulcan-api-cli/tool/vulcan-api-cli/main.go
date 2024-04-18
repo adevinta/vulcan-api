@@ -39,7 +39,7 @@ func main() {
 
 	// Initialize API client
 	c.SetBearerSigner(bearerSigner)
-	c.UserAgent = "Vulcan-API-cli/1.1.2"
+	c.UserAgent = "Vulcan-API-cli/1.1.3"
 
 	// Register API commands
 	cli.RegisterCommands(app, c)

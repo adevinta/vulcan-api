@@ -455,5 +455,6 @@ var FindingTicketMedia = MediaType("finding_ticket", func() {
 var FindingTicketPayload = Type("FindingTicketPayload", func() {
 	Attribute("summary", String, "Summary", func() { Example("Dockerfile Security Check - Image user should not be 'root'") })
 	Attribute("description", String, "Description", func() { Example("A text with a custom description about the finding.") })
+	Attribute("labels", ArrayOf(String), "Jira issue labels", func() { Example([]string{"potential"}) })
 	Required("summary")
 })

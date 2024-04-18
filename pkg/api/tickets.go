@@ -10,11 +10,12 @@ import (
 
 // FindingTicketCreate represents the data needed to create a ticket.
 type FindingTicketCreate struct {
-	FindingID   string `json:"finding_id" validate:"required"`
-	TeamID      string `json:"team_id" validate:"required"`
-	Summary     string `json:"summary" validate:"required"`
-	Description string `json:"description"`
-	URLTracker  string `json:"url_tracker"`
+	FindingID   string   `json:"finding_id" validate:"required"`
+	TeamID      string   `json:"team_id" validate:"required"`
+	Summary     string   `json:"summary" validate:"required"`
+	Description string   `json:"description"`
+	URLTracker  string   `json:"url_tracker"`
+	Labels      []string `json:"labels"`
 }
 
 // FindingTicketCreateResponse represents a response when request a ticket

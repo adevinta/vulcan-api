@@ -17,10 +17,11 @@ import (
 // FindingCreateTicketRequest represents a request to Vulcan Tracker that create
 // a relationship between findings and tickets.
 type FindingCreateTicketRequest struct {
-	FindingID   string `json:"finding_id" urlvar:"finding_id"`
-	TeamID      string `json:"team_id" urlvar:"team_id"`
-	Summary     string `json:"summary"`
-	Description string `json:"description"`
+	FindingID   string   `json:"finding_id" urlvar:"finding_id"`
+	TeamID      string   `json:"team_id" urlvar:"team_id"`
+	Summary     string   `json:"summary"`
+	Description string   `json:"description"`
+	Labels      []string `json:"labels"`
 }
 
 func makeCreateFindingTicketEndpoint(s api.VulcanitoService,
@@ -42,6 +43,7 @@ func makeCreateFindingTicketEndpoint(s api.VulcanitoService,
 			TeamID:      r.TeamID,
 			Summary:     r.Summary,
 			Description: r.Description,
+			Labels:      r.Labels,
 		}
 
 		if authorizedFindFindingRequest(finding.Finding.Target.Teams, r.TeamID) {
