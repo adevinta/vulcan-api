@@ -12,7 +12,7 @@ require (
 	github.com/adevinta/vulcan-report v1.0.0
 	github.com/adevinta/vulcan-scan-engine v1.1.26
 	github.com/adevinta/vulcan-tracker v0.1.2
-	github.com/adevinta/vulcan-types v1.2.12
+	github.com/adevinta/vulcan-types v1.2.13
 	github.com/adevinta/vulnerability-db-api v1.1.21
 	github.com/aws/aws-sdk-go v1.51.5
 	github.com/confluentinc/confluent-kafka-go/v2 v2.3.0
@@ -62,7 +62,7 @@ require (
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/manveru/faker v0.0.0-20171103152722-9fbc68a78c4d // indirect
 	github.com/mattermost/xml-roundtrip-validator v0.1.0 // indirect
-	github.com/miekg/dns v1.1.58 // indirect
+	github.com/miekg/dns v1.1.59 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/onsi/ginkgo v1.16.5 // indirect
 	github.com/onsi/gomega v1.32.0 // indirect
