@@ -146,22 +146,27 @@ type awsCatalogueConfig struct {
 	RetryInterval int    `mapstructure:"retry_interval"`
 }
 
+type assetsConfig struct {
+	DNSHostnameValidation bool `mapstructure:"dns_hostname_validation"`
+}
+
 type config struct {
-	Server             serverConfig
-	DB                 dbConfig
-	Log                logConfig
-	SAML               samlConfig
-	Defaults           store.DefaultEntities
-	ScanEngine         scanengine.Config
-	Scheduler          schedule.Config
-	Reports            reports.Config
-	VulcanCore         vulcanCoreConfig
-	VulnerabilityDB    vulnerabilityDBConfig
-	VulcanTracker      vulcantrackerConfig
-	Metrics            metricsConfig
-	AWSCatalogue       awsCatalogueConfig
-	Kafka              kafkaConfig               `mapstructure:"kafka"`
-	GlobalPolicyConfig global.GlobalPolicyConfig `mapstructure:"globalpolicy"`
+	Server                serverConfig
+	DB                    dbConfig
+	Log                   logConfig
+	SAML                  samlConfig
+	Defaults              store.DefaultEntities
+	ScanEngine            scanengine.Config
+	Scheduler             schedule.Config
+	Reports               reports.Config
+	VulcanCore            vulcanCoreConfig
+	VulnerabilityDB       vulnerabilityDBConfig
+	VulcanTracker         vulcantrackerConfig
+	Metrics               metricsConfig
+	AWSCatalogue          awsCatalogueConfig
+	Kafka                 kafkaConfig               `mapstructure:"kafka"`
+	GlobalPolicyConfig    global.GlobalPolicyConfig `mapstructure:"globalpolicy"`
+	DNSHostnameValidation assetsConfig              `mapstructure:"assets"`
 }
 
 func initConfig() {
@@ -261,7 +266,8 @@ func startServer() error {
 	// Build service layer.
 	onBoardedTeamsVT := strings.Split(cfg.VulcanTracker.OnboardedTeams, ",")
 	vulcanitoService := service.New(logger, db, jwtConfig, cfg.ScanEngine, schedulerClient, cfg.Reports,
-		vulnerabilityDBClient, vulcantrackerClient, reportsClient, metricsClient, awsAccounts, onBoardedTeamsVT)
+		vulnerabilityDBClient, vulcantrackerClient, reportsClient, metricsClient, awsAccounts, onBoardedTeamsVT,
+		cfg.DNSHostnameValidation.DNSHostnameValidation)
 
 	// Second, inject the service layer to the CDC parser JobsRunner.
 	jobsRunner.Client = vulcanitoService

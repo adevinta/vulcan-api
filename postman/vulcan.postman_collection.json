@@ -4115,7 +4115,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"assets\": [\n\t\t{\n\t\t\t\"type\": \"IP\",\n\t\t\t\"identifier\": \"127.0.0.1\",\n\t\t\t\"scannable\": true\n\t\t},\n\t\t{\n\t\t\t\"identifier\": \"127.0.0.2\"\n\t\t},\n\t\t{\n\t\t\t\"identifier\": \"localhost\"\n\t\t},\n\t\t{\n\t\t\t\"identifier\": \"example.com\"\n\t\t}\n\t]\n}"
+					"raw": "{\n\t\"assets\": [\n\t\t{\n\t\t\t\"type\": \"IP\",\n\t\t\t\"identifier\": \"127.0.0.1\",\n\t\t\t\"scannable\": true\n\t\t},\n\t\t{\n\t\t\t\"identifier\": \"127.0.0.2\"\n\t\t},\n\t\t{\n\t\t\t\"identifier\": \"www.example.com\"\n\t\t},\n\t\t{\n\t\t\t\"identifier\": \"example.com\"\n\t\t}\n\t]\n}"
 				},
 				"url": {
 					"raw": "{{host}}/api/v1/teams/{{team_id}}/assets",

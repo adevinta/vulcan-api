@@ -57,6 +57,7 @@ func TestAssetValidate(t *testing.T) {
 	tests := []struct {
 		name    string
 		asset   Asset
+		dns     bool
 		wantErr error
 	}{
 		{
@@ -67,7 +68,6 @@ func TestAssetValidate(t *testing.T) {
 				AssetType:   &AssetType{Name: "AWSAccount"},
 				Identifier:  "arn:aws:iam::012345678900:root",
 			},
-			wantErr: nil,
 		},
 		{
 			name: "Correct Complete AWS ARN",
@@ -96,7 +96,6 @@ func TestAssetValidate(t *testing.T) {
 				AssetType:   &AssetType{Name: "GCPProject"},
 				Identifier:  "bagase-crucible-bubble-gorilla",
 			},
-			wantErr: nil,
 		},
 		{
 			name: "Malformed GCP Project ID ending with hyphen",
@@ -118,10 +117,31 @@ func TestAssetValidate(t *testing.T) {
 			},
 			wantErr: errors.New("Identifier is not a valid GCPProject"),
 		},
+		{
+			name: "Invalid dns hostname",
+			asset: Asset{
+				TeamID:      "TeamID",
+				AssetTypeID: "AssetTypeID",
+				AssetType:   &AssetType{Name: "Hostname"},
+				Identifier:  "www.thisshouldntbeanexistingdomain.com",
+			},
+			dns:     true,
+			wantErr: errors.New("Identifier is not a valid Hostname"),
+		},
+		{
+			name: "Invalid hostname without dns resolution",
+			asset: Asset{
+				TeamID:      "TeamID",
+				AssetTypeID: "AssetTypeID",
+				AssetType:   &AssetType{Name: "Hostname"},
+				Identifier:  "www.thisshouldntbeanexistingdomain.com",
+			},
+			dns: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := tt.asset.Validate()
+			err := tt.asset.Validate(tt.dns)
 			if errToStr(err) != errToStr(tt.wantErr) {
 				t.Fatal(err)
 			}

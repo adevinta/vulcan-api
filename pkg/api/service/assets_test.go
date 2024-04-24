@@ -391,7 +391,7 @@ func TestVulcanitoService_CreateAssets(t *testing.T) {
 				},
 				api.Asset{
 					TeamID:     "3c7c2963-6a03-4a25-a822-ebeb237db065",
-					Identifier: "localhost",
+					Identifier: "www.example.com",
 					AssetType:  &api.AssetType{},
 					Options:    common.String(""),
 					Scannable:  common.Bool(true),
@@ -440,7 +440,7 @@ func TestVulcanitoService_CreateAssets(t *testing.T) {
 				},
 				api.Asset{
 					TeamID:           "3c7c2963-6a03-4a25-a822-ebeb237db065",
-					Identifier:       "localhost",
+					Identifier:       "www.example.com",
 					AssetTypeID:      "1937b564-bbc4-47f6-9722-b4a8c8ac0595",
 					AssetType:        &api.AssetType{ID: "1937b564-bbc4-47f6-9722-b4a8c8ac0595", Name: "Hostname"},
 					Options:          common.String(""),

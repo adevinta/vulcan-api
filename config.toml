@@ -67,6 +67,8 @@ pass = "$KAFKA_PASS"
 broker = "$KAFKA_BROKER"
 topics = $KAFKA_TOPICS
 
+[assets]
+dns_hostname_validation = $DNS_HOSTNAME_VALIDATION
 
 # Leave this entry at the end so run.sh can fill dynamically
 # global program policy configurations accordingly.
