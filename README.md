@@ -94,6 +94,7 @@ Those are the variables you have to setup:
 |GPC_${i}_ALLOWED_CHECKS|Specify an array of allowed checks for the specified global policy. Optional.|["vulcan-zap","vulcan-burp"]|
 |GPC_${i}_BLOCKED_CHECKS|Specify an array of blocked checks for the specified global policy. Optional.|["vulcan-masscan"]|
 |GPC_${i}_EXCLUDING_SUFFIXES|Specify an array of suffixes for checks to be excluded. Optional.|["experimental"]|
+|DNS_HOSTNAME_VALIDATION|Indicates if api should validate DNS existence of a host asset|true|
 |KAFKA_USER||user|
 |KAFKA_PASS||supersecret|
 |KAFKA_BROKER|if set to empty the Async API will be disabled|kafka.example.com:9094|
