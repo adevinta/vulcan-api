@@ -7,7 +7,6 @@ package api
 import (
 	"database/sql/driver"
 	"fmt"
-	"os"
 	"regexp"
 	"strings"
 	"time"
@@ -72,7 +71,7 @@ func (a Asset) Validate(dnsHostnameValidation bool) error {
 			if !types.IsHostname(a.Identifier) {
 				return errors.Validation("Identifier is not a valid Hostname")
 			}
-		} else if !types.IsHostnameNoDnsResolution(a.Identifier) {
+		} else if !types.IsHostnameNoDNSResolution(a.Identifier) {
 			return errors.Validation("Identifier is not a valid Hostname")
 		}
 	case "AWSAccount":
