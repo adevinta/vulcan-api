@@ -67,11 +67,10 @@ func (a Asset) Validate(dnsHostnameValidation bool) error {
 
 	switch a.AssetType.Name {
 	case "Hostname":
-		if dnsHostnameValidation {
-			if !types.IsHostname(a.Identifier) {
-				return errors.Validation("Identifier is not a valid Hostname")
-			}
-		} else if !types.IsHostnameNoDNSResolution(a.Identifier) {
+		if dnsHostnameValidation && !types.IsHostname(a.Identifier) {
+			return errors.Validation("Identifier is not a valid Hostname")
+		}
+		if !dnsHostnameValidation && !types.IsHostnameNoDNSResolution(a.Identifier) {
 			return errors.Validation("Identifier is not a valid Hostname")
 		}
 	case "AWSAccount":

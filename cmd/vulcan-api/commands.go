@@ -146,8 +146,8 @@ type awsCatalogueConfig struct {
 	RetryInterval int    `mapstructure:"retry_interval"`
 }
 
-type dnsHostnameValidation struct {
-	DNSHostnameValidation string `mapstructure:"dns_hostname_validation"`
+type assetsConfig struct {
+	DNSHostnameValidation bool `mapstructure:"dns_hostname_validation"`
 }
 
 type config struct {
@@ -166,7 +166,7 @@ type config struct {
 	AWSCatalogue          awsCatalogueConfig
 	Kafka                 kafkaConfig               `mapstructure:"kafka"`
 	GlobalPolicyConfig    global.GlobalPolicyConfig `mapstructure:"globalpolicy"`
-	DnsHostnameValidation dnsHostnameValidation
+	DNSHostnameValidation assetsConfig              `mapstructure:"assets"`
 }
 
 func initConfig() {
@@ -267,7 +267,7 @@ func startServer() error {
 	onBoardedTeamsVT := strings.Split(cfg.VulcanTracker.OnboardedTeams, ",")
 	vulcanitoService := service.New(logger, db, jwtConfig, cfg.ScanEngine, schedulerClient, cfg.Reports,
 		vulnerabilityDBClient, vulcantrackerClient, reportsClient, metricsClient, awsAccounts, onBoardedTeamsVT,
-		strings.EqualFold(cfg.DnsHostnameValidation.DNSHostnameValidation, "true"))
+		cfg.DNSHostnameValidation.DNSHostnameValidation)
 
 	// Second, inject the service layer to the CDC parser JobsRunner.
 	jobsRunner.Client = vulcanitoService
