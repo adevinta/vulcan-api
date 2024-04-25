@@ -151,22 +151,22 @@ type assetsConfig struct {
 }
 
 type config struct {
-	Server                serverConfig
-	DB                    dbConfig
-	Log                   logConfig
-	SAML                  samlConfig
-	Defaults              store.DefaultEntities
-	ScanEngine            scanengine.Config
-	Scheduler             schedule.Config
-	Reports               reports.Config
-	VulcanCore            vulcanCoreConfig
-	VulnerabilityDB       vulnerabilityDBConfig
-	VulcanTracker         vulcantrackerConfig
-	Metrics               metricsConfig
-	AWSCatalogue          awsCatalogueConfig
-	Kafka                 kafkaConfig               `mapstructure:"kafka"`
-	GlobalPolicyConfig    global.GlobalPolicyConfig `mapstructure:"globalpolicy"`
-	DNSHostnameValidation assetsConfig              `mapstructure:"assets"`
+	Server             serverConfig
+	DB                 dbConfig
+	Log                logConfig
+	SAML               samlConfig
+	Defaults           store.DefaultEntities
+	ScanEngine         scanengine.Config
+	Scheduler          schedule.Config
+	Reports            reports.Config
+	VulcanCore         vulcanCoreConfig
+	VulnerabilityDB    vulnerabilityDBConfig
+	VulcanTracker      vulcantrackerConfig
+	Metrics            metricsConfig
+	AWSCatalogue       awsCatalogueConfig
+	Kafka              kafkaConfig               `mapstructure:"kafka"`
+	GlobalPolicyConfig global.GlobalPolicyConfig `mapstructure:"globalpolicy"`
+	AssetsConfig       assetsConfig              `mapstructure:"assets"`
 }
 
 func initConfig() {
@@ -267,7 +267,7 @@ func startServer() error {
 	onBoardedTeamsVT := strings.Split(cfg.VulcanTracker.OnboardedTeams, ",")
 	vulcanitoService := service.New(logger, db, jwtConfig, cfg.ScanEngine, schedulerClient, cfg.Reports,
 		vulnerabilityDBClient, vulcantrackerClient, reportsClient, metricsClient, awsAccounts, onBoardedTeamsVT,
-		cfg.DNSHostnameValidation.DNSHostnameValidation)
+		cfg.AssetsConfig.DNSHostnameValidation)
 
 	// Second, inject the service layer to the CDC parser JobsRunner.
 	jobsRunner.Client = vulcanitoService
