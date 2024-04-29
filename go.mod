@@ -12,9 +12,9 @@ require (
 	github.com/adevinta/vulcan-report v1.0.0
 	github.com/adevinta/vulcan-scan-engine v1.1.27
 	github.com/adevinta/vulcan-tracker v0.1.2
-	github.com/adevinta/vulcan-types v1.2.14
+	github.com/adevinta/vulcan-types v1.2.15
 	github.com/adevinta/vulnerability-db-api v1.1.22
-	github.com/aws/aws-sdk-go v1.51.5
+	github.com/aws/aws-sdk-go v1.51.30
 	github.com/confluentinc/confluent-kafka-go/v2 v2.3.0
 	github.com/go-kit/kit v0.13.0
 	github.com/goadesign/goa v1.4.3
@@ -41,7 +41,7 @@ require (
 	github.com/beevik/etree v1.1.0 // indirect
 	github.com/dimfeld/httppath v0.0.0-20170720192232-ee938bf73598 // indirect
 	github.com/dimfeld/httptreemux v5.0.1+incompatible // indirect
-	github.com/distribution/reference v0.5.0 // indirect
+	github.com/distribution/reference v0.6.0 // indirect
 	github.com/docker/distribution v2.8.3+incompatible // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/go-kit/log v0.2.1 // indirect
