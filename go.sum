@@ -31,8 +31,8 @@ github.com/adevinta/vulcan-scan-engine v1.1.28 h1:iJA7QnyDguuPe0d8pnc1s5mu4WRGdH
 github.com/adevinta/vulcan-scan-engine v1.1.28/go.mod h1:0Q8opGyAaQy2ZwCGc4nPvGK0txMGQkTYsNkeIqEP1gQ=
 github.com/adevinta/vulcan-tracker v0.1.2 h1:vtiLDrsnmEPxTEti9Pb9kK+ED7oJuhWs3iByy9ml4+Q=
 github.com/adevinta/vulcan-tracker v0.1.2/go.mod h1:XuUHfYwQUh8XPJpgawX+b+PyeQbBWNkWaYUL4HvWv+w=
-github.com/adevinta/vulcan-types v1.2.16 h1:WlRFg6E3exGBAZHfSJ8wkFr+wzldUj04LonSPXMA4FQ=
-github.com/adevinta/vulcan-types v1.2.16/go.mod h1:X/AZn+3rAQ91bFCDrQN+J0F7LV41g/fDwRByALi2Fpg=
+github.com/adevinta/vulcan-types v1.2.17 h1:w3Qe3HsRDnC2hnsZG9mNeUtEiujQ1l+ix9n5phI3ufk=
+github.com/adevinta/vulcan-types v1.2.17/go.mod h1:NtPsgj3x7XT3Ciif9HZ+V4jSTm7vOLFyVmx1pbcA+oE=
 github.com/adevinta/vulnerability-db-api v1.1.22 h1:skjHcZp0bCpKNy7Tf+JYdg1d+SuJTld8OiRR2mEXfR8=
 github.com/adevinta/vulnerability-db-api v1.1.22/go.mod h1:xkLzzjmBUmtrlirPeMEeOuHVddrUCkRabknn0VWUAN8=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
@@ -44,8 +44,8 @@ github.com/armon/go-metrics v0.4.1 h1:hR91U9KYmb6bLBYLQjyM+3j+rcd/UhE+G78SFnF8gJ
 github.com/armon/go-metrics v0.4.1/go.mod h1:E6amYzXo6aW1tqzoZGT755KkbgrJsSdpwZ+3JqfkOG4=
 github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 h1:DklsrG3dyBCFEj5IhUbnKptjxatkF07cF2ak3yi77so=
 github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2/go.mod h1:WaHUgvxTVq04UNunO+XhnAqY/wQc+bxr74GqbsZ/Jqw=
-github.com/aws/aws-sdk-go v1.52.0 h1:ptgek/4B2v/ljsjYSEvLQ8LTD+SQyrqhOOWvHc/VGPI=
-github.com/aws/aws-sdk-go v1.52.0/go.mod h1:LF8svs817+Nz+DmiMQKTO3ubZ/6IaTpq3TjupRn3Eqk=
+github.com/aws/aws-sdk-go v1.53.0 h1:MMo1x1ggPPxDfHMXJnQudTbGXYlD4UigUAud1DJxPVo=
+github.com/aws/aws-sdk-go v1.53.0/go.mod h1:LF8svs817+Nz+DmiMQKTO3ubZ/6IaTpq3TjupRn3Eqk=
 github.com/aws/aws-sdk-go-v2 v1.17.6 h1:Y773UK7OBqhzi5VDXMi1zVGsoj+CVHs2eaC2bDsLwi0=
 github.com/aws/aws-sdk-go-v2 v1.17.6/go.mod h1:uzbQtefpm44goOPmdKyAlXSNcwlRgF3ePWVW6EtJvvw=
 github.com/aws/aws-sdk-go-v2/config v1.18.16 h1:4r7gsCu8Ekwl5iJGE/GmspA2UifqySCCkyyyPFeWs3w=
