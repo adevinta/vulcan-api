@@ -13,7 +13,7 @@ require (
 	github.com/adevinta/vulcan-scan-engine v1.1.29
 	github.com/adevinta/vulcan-tracker v0.1.2
 	github.com/adevinta/vulcan-types v1.2.17
-	github.com/adevinta/vulnerability-db-api v1.1.22
+	github.com/adevinta/vulnerability-db-api v1.1.23
 	github.com/aws/aws-sdk-go v1.53.0
 	github.com/confluentinc/confluent-kafka-go/v2 v2.4.0
 	github.com/go-kit/kit v0.13.0
@@ -82,11 +82,11 @@ require (
 	go.uber.org/multierr v1.9.0 // indirect
 	golang.org/x/exp v0.0.0-20230905200255-921286631fa9 // indirect
 	golang.org/x/mod v0.17.0 // indirect
-	golang.org/x/net v0.24.0 // indirect
+	golang.org/x/net v0.25.0 // indirect
 	golang.org/x/sync v0.7.0 // indirect
-	golang.org/x/sys v0.19.0 // indirect
-	golang.org/x/text v0.14.0 // indirect
-	golang.org/x/tools v0.20.0 // indirect
+	golang.org/x/sys v0.20.0 // indirect
+	golang.org/x/text v0.15.0 // indirect
+	golang.org/x/tools v0.21.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240318140521-94a12d6c2237 // indirect
 	google.golang.org/grpc v1.62.1 // indirect
 	google.golang.org/protobuf v1.33.0 // indirect
