@@ -23,7 +23,7 @@ RUN CGO_ENABLED=1 GOOS=linux GOARCH=$TARGETARCH \
     CGO_LDFLAGS="-fuse-ld=mold -lsasl2" \
     go build -tags musl -ldflags "-w -s" .
 
-FROM alpine:3.19
+FROM alpine:3.20
 
 WORKDIR /flyway
 
