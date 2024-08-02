@@ -13,6 +13,8 @@ type VulcanitoStore interface {
 
 	Healthcheck() error
 
+	ListIssues() ([]*Issue, error)
+
 	FindJob(jobID string) (*Job, error)
 	UpdateJob(job Job) (*Job, error)
 

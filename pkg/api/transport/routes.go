@@ -24,6 +24,9 @@ func AttachRoutes(e endpoint.Endpoints, logger kitlog.Logger) http.Handler {
 	// Healthcheck
 	r.Methods("GET").Path("/api/v1/healthcheck").Handler(newServer(e[endpoint.Healthcheck], endpoint.HealthcheckJSONRequest{}, logger, endpoint.Healthcheck))
 
+	// Issues
+	r.Methods("GET").Path("/api/v1/issues").Handler(newServer(e[endpoint.ListIssues], endpoint.EmptyRequest{}, logger, endpoint.ListIssues))
+
 	// Jobs
 	r.Methods("GET").Path("/api/v1/jobs/{job_id}").Handler(newServer(e[endpoint.FindJob], endpoint.JobRequest{}, logger, endpoint.FindJob))
 

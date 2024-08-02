@@ -183,6 +183,10 @@ func (b *BrokerProxy) Healthcheck() error {
 	return b.store.Healthcheck()
 }
 
+func (b *BrokerProxy) ListIssues() ([]*api.Issue, error) {
+	return b.store.ListIssues()
+}
+
 func (b *BrokerProxy) FindJob(jobID string) (*api.Job, error) {
 	return b.store.FindJob(jobID)
 }

@@ -18,6 +18,8 @@ const (
 	// Endpoints
 	Healthcheck = "Healthcheck"
 
+	ListIssues = "ListIssues"
+
 	FindJob = "FindJob"
 
 	ListUsers        = "ListUsers"
@@ -129,6 +131,8 @@ var endpoints = make(Endpoints)
 // MakeEndpoints initialize endpoints using the given service
 func MakeEndpoints(s api.VulcanitoService, isJiraIntEnabled bool, logger log.Logger) Endpoints {
 	endpoints[Healthcheck] = makeHealthcheckEndpoint(s, logger)
+
+	endpoints[ListIssues] = makeListIssuesEndpoint(s, logger)
 
 	endpoints[FindJob] = makeFindJobEndpoint(s, logger)
 

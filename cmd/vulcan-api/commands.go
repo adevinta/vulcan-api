@@ -447,6 +447,7 @@ func addAuthorizationMiddleware(endpoints endpoint.Endpoints, db api.VulcanitoSt
 
 	exceptions := map[string]bool{
 		endpoint.Healthcheck:                true,
+		endpoint.ListIssues:                 true,
 		endpoint.FindJob:                    true,
 		endpoint.CreateUser:                 true,
 		endpoint.UpdateUser:                 true,
@@ -479,6 +480,8 @@ func addAuthorizationMiddleware(endpoints endpoint.Endpoints, db api.VulcanitoSt
 func addWhitelistingMiddleware(endpoints endpoint.Endpoints, logger log.Logger) endpoint.Endpoints {
 	whitelisted := map[string]bool{
 		endpoint.Healthcheck: true,
+		// Issues.
+		endpoint.ListIssues: true,
 		// Jobs status.
 		endpoint.FindJob: true,
 		// User management.
