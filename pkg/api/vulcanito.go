@@ -111,6 +111,7 @@ type VulcanitoService interface {
 	StatsCoverage(ctx context.Context, teamID string) (*StatsCoverage, error)
 
 	// VulnerabilityDB Stats
+	ListIssues(ctx context.Context, pagination Pagination) (*IssuesList, error)
 	ListFindings(ctx context.Context, params FindingsParams, pagination Pagination) (*FindingsList, error)
 	ListFindingsIssues(ctx context.Context, params FindingsParams, pagination Pagination) (*FindingsIssuesList, error)
 	ListFindingsByIssue(ctx context.Context, params FindingsParams, pagination Pagination) (*FindingsList, error)

@@ -8,6 +8,13 @@ import (
 	vulndb "github.com/adevinta/vulnerability-db-api/pkg/model"
 )
 
+// IssuesList representes the response data returned
+// from the vulnerability DB for an issues requests.
+type IssuesList struct {
+	Issues     []vulndb.Issue `json:"issues"`
+	Pagination PaginationInfo `json:"pagination"`
+}
+
 // FindingsParams represents the group of parameters
 // that can be used to customize the call to retrieve
 // the list of findings.
