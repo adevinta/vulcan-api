@@ -129,6 +129,7 @@ func AttachRoutes(e endpoint.Endpoints, logger kitlog.Logger) http.Handler {
 	r.Methods("GET").Path("/api/v1/teams/{team_id}/stats/coverage").Handler(newServer(e[endpoint.StatsCoverage], endpoint.StatsCoverageRequest{}, logger, endpoint.StatsCoverage))
 
 	// Vulnerability DB
+	r.Methods("GET").Path("/api/v1/issues").Handler(newServer(e[endpoint.ListIssues], endpoint.IssuesRequest{}, logger, endpoint.ListIssues))
 	r.Methods("GET").Path("/api/v1/teams/{team_id}/findings").Handler(newServer(e[endpoint.ListFindings], endpoint.FindingsRequest{}, logger, endpoint.ListFindings))
 	r.Methods("GET").Path("/api/v1/teams/{team_id}/findings/issues").Handler(newServer(e[endpoint.ListFindingsIssues], endpoint.FindingsRequest{}, logger, endpoint.ListFindingsIssues))
 	r.Methods("GET").Path("/api/v1/teams/{team_id}/findings/issues/{issue_id}").Handler(newServer(e[endpoint.ListFindingsByIssue], endpoint.FindingsByIssueRequest{}, logger, endpoint.ListFindingsByIssue))

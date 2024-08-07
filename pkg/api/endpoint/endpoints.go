@@ -98,6 +98,7 @@ const (
 	SendDigestReport = "SendDigestReport"
 
 	StatsCoverage              = "StatsCoverage"
+	ListIssues                 = "ListIssues"
 	ListFindings               = "ListFindings"
 	ListFindingsIssues         = "ListFindingsIssues"
 	ListFindingsByIssue        = "ListFindingsByIssue"
@@ -210,6 +211,7 @@ func MakeEndpoints(s api.VulcanitoService, isJiraIntEnabled bool, logger log.Log
 	endpoints[SendDigestReport] = makeSendDigestReportEndpoint(s, logger)
 
 	endpoints[StatsCoverage] = makeStatsCoverageEndpoint(s, logger)
+	endpoints[ListIssues] = makeListIssuesEndpoint(s, logger)
 	endpoints[ListFindings] = makeListFindingsEndpoint(s, logger)
 	endpoints[ListFindingsIssues] = makeListFindingsIssuesEndpoint(s, logger)
 	endpoints[ListFindingsByIssue] = makeListFindingsByIssueEndpoint(s, logger)
