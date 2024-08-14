@@ -31,8 +31,8 @@ github.com/adevinta/vulcan-scan-engine v1.1.34 h1:MQPBg0zwlSteZ40x9y0kAIwwNN5oki
 github.com/adevinta/vulcan-scan-engine v1.1.34/go.mod h1:EK3jwv9dqVnGoDW2i/Bdmoot9qpzsiEYxUZrSumfdSY=
 github.com/adevinta/vulcan-tracker v0.1.2 h1:vtiLDrsnmEPxTEti9Pb9kK+ED7oJuhWs3iByy9ml4+Q=
 github.com/adevinta/vulcan-tracker v0.1.2/go.mod h1:XuUHfYwQUh8XPJpgawX+b+PyeQbBWNkWaYUL4HvWv+w=
-github.com/adevinta/vulcan-types v1.2.20 h1:YGt7EP0vWURxyuA6+Z9L0J4mQkOAZqJNg2qpGjQBAe8=
-github.com/adevinta/vulcan-types v1.2.20/go.mod h1:kMvaOlqVLiz/CHXAqKxjNVYaWNR7xUhALZkJEd5Eojk=
+github.com/adevinta/vulcan-types v1.2.21 h1:mgRUHo0kVQ8ZJ0oFaPOxrns1YqdWSIaJ/2dKnBT0x4c=
+github.com/adevinta/vulcan-types v1.2.21/go.mod h1:YOtF3BmOQFRrUiFl5DOgjJhzZRh2acdbC80jMDQaZIo=
 github.com/adevinta/vulnerability-db-api v1.1.31 h1:yz1eod3DbyI1k9OZdnT8UmQpphImRBd51JbZtftL8B8=
 github.com/adevinta/vulnerability-db-api v1.1.31/go.mod h1:urs3IHWPDpRZMTobqURjf7IweBu8O/l/Vt1MUa304zI=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
@@ -353,8 +353,8 @@ github.com/matttproud/golang_protobuf_extensions v1.0.4 h1:mmDVorXM7PCGKw94cs5zk
 github.com/matttproud/golang_protobuf_extensions v1.0.4/go.mod h1:BSXmuO+STAnVfrANrmjBb36TMTDstsz7MSK+HVaYKv4=
 github.com/mgutz/ansi v0.0.0-20170206155736-9520e82c474b h1:j7+1HpAFS1zy5+Q4qx1fWh90gTKwiN4QCGoY9TWyyO4=
 github.com/mgutz/ansi v0.0.0-20170206155736-9520e82c474b/go.mod h1:01TrycV0kFyexm33Z7vhZRXopbI8J3TDReVlkTgMUxE=
-github.com/miekg/dns v1.1.61 h1:nLxbwF3XxhwVSm8g9Dghm9MHPaUZuqhPiGL+675ZmEs=
-github.com/miekg/dns v1.1.61/go.mod h1:mnAarhS3nWaW+NVP2wTkYVIZyHNJ098SJZUki3eykwQ=
+github.com/miekg/dns v1.1.62 h1:cN8OuEF1/x5Rq6Np+h1epln8OiyPWV+lROx9LxcGgIQ=
+github.com/miekg/dns v1.1.62/go.mod h1:mvDlcItzm+br7MToIKqkglaGhlFMHJ9DTNNWONWXbNQ=
 github.com/miekg/pkcs11 v1.1.1 h1:Ugu9pdy6vAYku5DEpVWVFPYnzV+bxB+iRdbuFSu7TvU=
 github.com/miekg/pkcs11 v1.1.1/go.mod h1:XsNlhZGX73bx86s2hdc/FuaLm2CPZJemRLMA+WTFxgs=
 github.com/mitchellh/copystructure v1.2.0 h1:vpKXTN4ewci03Vljg/q9QvCGUDttBOGBIa15WveJJGw=
