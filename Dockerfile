@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.4
 # Copyright 2021 Adevinta
 
-FROM --platform=linux/$TARGETARCH golang:1.22-alpine3.19 as builder
+FROM --platform=linux/$TARGETARCH golang:1.23-alpine3.19 as builder
 # Required because the dependency
 # https://github.com/confluentinc/confluent-kafka-go requires the gcc compiler.
 RUN apk add --no-cache gcc musl-dev cyrus-sasl-dev mold
