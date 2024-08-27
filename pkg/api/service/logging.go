@@ -966,6 +966,19 @@ func (middleware loggingMiddleware) StatsCoverage(ctx context.Context, teamID st
 	return middleware.next.StatsCoverage(ctx, teamID)
 }
 
+func (middleware loggingMiddleware) ListIssues(ctx context.Context, pagination api.Pagination) (*api.IssuesList, error) {
+
+	defer func() {
+		XRequestID := ""
+		if ctx != nil {
+			XRequestID, _ = ctx.Value(kithttp.ContextKeyRequestXRequestID).(string)
+		}
+		_ = level.Debug(middleware.logger).Log("X-Request-ID", XRequestID, "service", "ListIssues", "pagination", mySprintf(pagination))
+	}()
+
+	return middleware.next.ListIssues(ctx, pagination)
+}
+
 func (middleware loggingMiddleware) ListFindings(ctx context.Context, params api.FindingsParams, pagination api.Pagination) (*api.FindingsList, error) {
 
 	defer func() {
