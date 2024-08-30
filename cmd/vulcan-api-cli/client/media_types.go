@@ -653,6 +653,35 @@ func (c *Client) DecodeIssue(resp *http.Response) (*Issue, error) {
 	return &decoded, err
 }
 
+// IssueCollection is the media type for an array of Issue (default view)
+//
+// Identifier: issue; type=collection; view=default
+type IssueCollection []*Issue
+
+// DecodeIssueCollection decodes the IssueCollection instance encoded in resp body.
+func (c *Client) DecodeIssueCollection(resp *http.Response) (IssueCollection, error) {
+	var decoded IssueCollection
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return decoded, err
+}
+
+// Issue list (default view)
+//
+// Identifier: issues_list; view=default
+type IssuesList struct {
+	// List of issues
+	Issues IssueCollection `form:"issues,omitempty" json:"issues,omitempty" yaml:"issues,omitempty" xml:"issues,omitempty"`
+	// Pagination info
+	Pagination *Pagination `form:"pagination,omitempty" json:"pagination,omitempty" yaml:"pagination,omitempty" xml:"pagination,omitempty"`
+}
+
+// DecodeIssuesList decodes the IssuesList instance encoded in resp body.
+func (c *Client) DecodeIssuesList(resp *http.Response) (*IssuesList, error) {
+	var decoded IssuesList
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return &decoded, err
+}
+
 // Job (default view)
 //
 // Identifier: job; view=default
