@@ -18,7 +18,7 @@ SOURCE_FILE="/source/${SOURCE_FILE}"
 
 GO_PACKAGE_NAME="asyncapi"
 
-docker run \
+docker run -q \
 	--rm \
 	-v "${TOOL_DIR}:/work" \
 	-v "${SOURCE_DIR}:/source" \

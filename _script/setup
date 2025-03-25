@@ -5,14 +5,14 @@
 set -e
 
 # install binaries
-go install -v $(go list ./... | grep -v /vendor/)
+go install $(go list ./... | grep -v /vendor/)
 
 # create test database and apply migrations
 psql -c "CREATE DATABASE vulcanito_test;" -h localhost -U postgres
 psql -c "CREATE USER vulcanito_test WITH PASSWORD 'vulcanito_test';" -h localhost -U postgres
 psql -c "ALTER USER vulcanito_test WITH SUPERUSER;" -h localhost -U postgres
 
-docker run --net=host -v "$PWD"/db:/scripts flyway/flyway:"${FLYWAY_VERSION:-10}-alpine" \
+docker run -q --net=host -v "$PWD"/db:/scripts flyway/flyway:"${FLYWAY_VERSION:-10}-alpine" \
     -user=vulcanito_test -password=vulcanito_test -url=jdbc:postgresql://localhost:5432/vulcanito_test \
     -locations=filesystem:/scripts/sql,filesystem:/scripts/test-sql -baselineOnMigrate=true migrate
 

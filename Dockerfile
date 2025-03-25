@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.4
 # Copyright 2021 Adevinta
 
-FROM --platform=linux/$TARGETARCH golang:1.23-alpine3.19 as builder
+FROM --platform=linux/$TARGETARCH golang:1.23-alpine3.19 AS builder
 # Required because the dependency
 # https://github.com/confluentinc/confluent-kafka-go requires the gcc compiler.
 RUN apk add --no-cache gcc musl-dev cyrus-sasl-dev mold
@@ -37,12 +37,6 @@ RUN wget -q https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/${FLY
     && find ./drivers/ -type f | grep -Ev '(postgres|jackson)' | xargs rm \
     && chown -R root:root . \
     && ln -s /flyway/flyway /bin/flyway
-
-ARG BUILD_RFC3339="1970-01-01T00:00:00Z"
-ARG COMMIT="local"
-
-ENV BUILD_RFC3339 "$BUILD_RFC3339"
-ENV COMMIT "$COMMIT"
 
 WORKDIR /app
 
