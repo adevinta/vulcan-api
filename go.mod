@@ -1,7 +1,7 @@
 module github.com/adevinta/vulcan-api
 
 go 1.21.2
-toolchain go1.22.5
+toolchain go1.24.1
 
 require (
 	github.com/adevinta/errors v1.0.0
@@ -17,7 +17,7 @@ require (
 	github.com/confluentinc/confluent-kafka-go/v2 v2.4.0
 	github.com/go-kit/kit v0.13.0
 	github.com/goadesign/goa v1.4.3
-	github.com/golang-jwt/jwt/v4 v4.5.1
+	github.com/golang-jwt/jwt/v4 v4.5.2
 	github.com/google/go-cmp v0.6.0
 	github.com/gorilla/mux v1.8.1
 	github.com/jinzhu/gorm v1.9.16
