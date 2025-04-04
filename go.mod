@@ -25,8 +25,8 @@ require (
 	github.com/lestrrat-go/backoff v1.0.1
 	github.com/lib/pq v1.10.9
 	github.com/robfig/cron v1.2.0
-	github.com/russellhaering/gosaml2 v0.9.1
-	github.com/russellhaering/goxmldsig v1.4.0
+	github.com/russellhaering/gosaml2 v0.10.0
+	github.com/russellhaering/goxmldsig v1.5.0
 	github.com/satori/go.uuid v1.2.1-0.20181028125025-b2ce2384e17b
 	github.com/spf13/cobra v1.9.1
 	github.com/spf13/viper v1.20.1
@@ -38,7 +38,7 @@ require (
 	github.com/DataDog/datadog-go v4.8.3+incompatible // indirect
 	github.com/Microsoft/go-winio v0.6.1 // indirect
 	github.com/armon/go-metrics v0.4.1 // indirect
-	github.com/beevik/etree v1.1.0 // indirect
+	github.com/beevik/etree v1.5.0 // indirect
 	github.com/dimfeld/httppath v0.0.0-20170720192232-ee938bf73598 // indirect
 	github.com/dimfeld/httptreemux v5.0.1+incompatible // indirect
 	github.com/distribution/reference v0.6.0 // indirect
@@ -55,7 +55,7 @@ require (
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
-	github.com/jonboulle/clockwork v0.4.0 // indirect
+	github.com/jonboulle/clockwork v0.5.0 // indirect
 	github.com/leodido/go-urn v1.2.0 // indirect
 	github.com/manveru/faker v0.0.0-20171103152722-9fbc68a78c4d // indirect
 	github.com/mattermost/xml-roundtrip-validator v0.1.0 // indirect
