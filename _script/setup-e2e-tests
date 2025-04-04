@@ -5,7 +5,7 @@
 set -e
 
 # run test SAML IdP container
-docker run --name=testsamlidp_idp \
+docker run -q --name=testsamlidp_idp \
 -p 8083:8080 \
 -e SIMPLESAMLPHP_SP_ENTITY_ID=http://app.example.com \
 -e SIMPLESAMLPHP_SP_ASSERTION_CONSUMER_SERVICE=http://localhost/simplesaml/module.php/saml/sp/saml2-acs.php/test-sp \
@@ -13,12 +13,7 @@ docker run --name=testsamlidp_idp \
 -d kristophjunge/test-saml-idp
 
 # clean database and apply migrations
-docker run --net=host --rm -v "$PWD"/db:/scripts flyway/flyway:"${FLYWAY_VERSION:-10}-alpine" -user=vulcanito_test -password=vulcanito_test \
+docker run -q --net=host --rm -v "$PWD"/db:/scripts flyway/flyway:"${FLYWAY_VERSION:-10}-alpine" -user=vulcanito_test -password=vulcanito_test \
     -url=jdbc:postgresql://localhost:5432/vulcanito_test -locations=filesystem:/scripts/sql,filesystem:/scripts/test-sql -baselineOnMigrate=true -cleanDisabled=false clean
-docker run --net=host --rm -v "$PWD"/db:/scripts flyway/flyway:"${FLYWAY_VERSION:-10}-alpine" -user=vulcanito_test -password=vulcanito_test \
+docker run -q --net=host --rm -v "$PWD"/db:/scripts flyway/flyway:"${FLYWAY_VERSION:-10}-alpine" -user=vulcanito_test -password=vulcanito_test \
     -url=jdbc:postgresql://localhost:5432/vulcanito_test -locations=filesystem:/scripts/sql,filesystem:/scripts/test-sql -baselineOnMigrate=true migrate
-
-# install postman CLI for e2e tests
-nvm install 8 || nvm use --delete-prefix v8.12.0
-npm install newman@4.1.0
-node_modules/.bin/newman --version
