@@ -19,8 +19,8 @@ github.com/Microsoft/hcsshim v0.11.4/go.mod h1:smjE4dvqPX9Zldna+t5FG3rnoHhaB7QYx
 github.com/PuerkitoBio/goquery v1.5.1/go.mod h1:GsLWisAFVj4WgDibEWF4pvYnkVQBpKBKeU+7zCJoLcc=
 github.com/adevinta/errors v1.0.0 h1:AWSk4/FPscfTUWSV7tw5Gj5+9pjvDLF/+rhv97dSRPU=
 github.com/adevinta/errors v1.0.0/go.mod h1:wzlA5WqVWJnAbHve26Io48+aAvmKLWDPBprJPWeuZNI=
-github.com/adevinta/vulcan-core-cli v1.0.2 h1:HrwMZTGddiJ4difC+RdRv0J6escwkx3bk88y48/TOtQ=
-github.com/adevinta/vulcan-core-cli v1.0.2/go.mod h1:DBiZc/kZ4dKAjWQV5RZ5QVtkKRce81sKwy6XbFj/s7U=
+github.com/adevinta/vulcan-core-cli v1.0.3 h1:GSydLWv94xUTi0Y0oJXP8GtKyGWAnlR0vEtvb55/z8c=
+github.com/adevinta/vulcan-core-cli v1.0.3/go.mod h1:QgGAWJkyVXSzDAN+3G3tB9JyaocRKbm2gxpKmg1wa8k=
 github.com/adevinta/vulcan-groupie v1.0.1 h1:kTQdEszYOWDD4Cvy4FrjVL4QwLfGV8/sF/dK+3D6iKc=
 github.com/adevinta/vulcan-groupie v1.0.1/go.mod h1:COiLhmDFK3zOJXlXovU2T85dVrN60z2HvpVFFkcmdeQ=
 github.com/adevinta/vulcan-metrics-client v1.0.1 h1:BAugnnRWvkA3vnuCX77W04PWhneZyenkrXtf9YgtZQk=
