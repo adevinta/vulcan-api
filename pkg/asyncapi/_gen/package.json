@@ -6,7 +6,7 @@
     "author": "",
     "type": "module",
     "dependencies": {
-        "@asyncapi/modelina": "^0.59.2",
+        "@asyncapi/modelina": "^5.2.0",
         "@asyncapi/parser": "^1.15.1"
     }
 }
