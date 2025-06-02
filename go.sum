@@ -21,8 +21,6 @@ github.com/acarl005/stripansi v0.0.0-20180116102854-5a71ef0e047d h1:licZJFw2RwpH
 github.com/acarl005/stripansi v0.0.0-20180116102854-5a71ef0e047d/go.mod h1:asat636LX7Bqt5lYEZ27JNDcqxfjdBQuJ/MM4CN/Lzo=
 github.com/adevinta/errors v1.0.0 h1:AWSk4/FPscfTUWSV7tw5Gj5+9pjvDLF/+rhv97dSRPU=
 github.com/adevinta/errors v1.0.0/go.mod h1:wzlA5WqVWJnAbHve26Io48+aAvmKLWDPBprJPWeuZNI=
-github.com/adevinta/vulcan-core-cli v1.0.3 h1:GSydLWv94xUTi0Y0oJXP8GtKyGWAnlR0vEtvb55/z8c=
-github.com/adevinta/vulcan-core-cli v1.0.3/go.mod h1:QgGAWJkyVXSzDAN+3G3tB9JyaocRKbm2gxpKmg1wa8k=
 github.com/adevinta/vulcan-groupie v1.0.1 h1:kTQdEszYOWDD4Cvy4FrjVL4QwLfGV8/sF/dK+3D6iKc=
 github.com/adevinta/vulcan-groupie v1.0.1/go.mod h1:COiLhmDFK3zOJXlXovU2T85dVrN60z2HvpVFFkcmdeQ=
 github.com/adevinta/vulcan-metrics-client v1.0.1 h1:BAugnnRWvkA3vnuCX77W04PWhneZyenkrXtf9YgtZQk=

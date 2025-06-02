@@ -36,8 +36,7 @@ sns_endpoint = "$AWS_SNS_ENDPOINT"
 vulcanui_url = "$VULCAN_UI_URL"
 
 [vulcancore]
-schema = "http"
-host = "$PERSISTENCE_HOST"
+URL = "$CHECKTYPES_URL"
 
 [vulnerabilitydb]
 url = "$VULNERABILITYDB_URL"

@@ -6,7 +6,6 @@ toolchain go1.24.1
 
 require (
 	github.com/adevinta/errors v1.0.0
-	github.com/adevinta/vulcan-core-cli v1.0.3
 	github.com/adevinta/vulcan-groupie v1.0.1
 	github.com/adevinta/vulcan-metrics-client v1.0.1
 	github.com/adevinta/vulcan-report v1.0.0
@@ -20,6 +19,7 @@ require (
 	github.com/goadesign/goa v1.4.3
 	github.com/golang-jwt/jwt/v4 v4.5.2
 	github.com/google/go-cmp v0.7.0
+	github.com/google/uuid v1.6.0
 	github.com/gorilla/mux v1.8.1
 	github.com/jinzhu/gorm v1.9.16
 	github.com/lestrrat-go/backoff v1.0.1
@@ -49,7 +49,9 @@ require (
 	github.com/go-playground/locales v0.12.1 // indirect
 	github.com/go-playground/universal-translator v0.16.0 // indirect
 	github.com/go-viper/mapstructure/v2 v2.2.1 // indirect
+	github.com/goadesign/goa-cellar v0.0.0-20180105000033-88979d5a1ca5 // indirect
 	github.com/gofrs/uuid v4.4.0+incompatible // indirect
+	github.com/google/gxui v0.0.0-20151028112939-f85e0a97b3a4 // indirect
 	github.com/hashicorp/go-immutable-radix v1.3.1 // indirect
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
@@ -58,6 +60,7 @@ require (
 	github.com/jonboulle/clockwork v0.5.0 // indirect
 	github.com/leodido/go-urn v1.2.0 // indirect
 	github.com/manveru/faker v0.0.0-20171103152722-9fbc68a78c4d // indirect
+	github.com/manveru/gobdd v0.0.0-20131210092515-f1a17fdd710b // indirect
 	github.com/mattermost/xml-roundtrip-validator v0.1.0 // indirect
 	github.com/miekg/dns v1.1.62 // indirect
 	github.com/onsi/ginkgo v1.16.5 // indirect

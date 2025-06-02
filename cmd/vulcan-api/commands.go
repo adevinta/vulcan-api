@@ -15,7 +15,6 @@ import (
 
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
-	goaclient "github.com/goadesign/goa/client"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
@@ -40,7 +39,6 @@ import (
 	"github.com/adevinta/vulcan-api/pkg/schedule"
 	"github.com/adevinta/vulcan-api/pkg/tickets"
 	"github.com/adevinta/vulcan-api/pkg/vulnerabilitydb"
-	vulcancore "github.com/adevinta/vulcan-core-cli/vulcan-core/client"
 	metrics "github.com/adevinta/vulcan-metrics-client"
 )
 
@@ -115,8 +113,7 @@ type samlConfig struct {
 }
 
 type vulcanCoreConfig struct {
-	Schema string
-	Host   string
+	URL string
 }
 
 type vulnerabilityDBConfig struct {
@@ -273,8 +270,7 @@ func startServer() error {
 	jobsRunner.Client = vulcanitoService
 
 	// Create the global entities service middleware dependencies.
-	coreclient := newVulcanCoreAPIClient(cfg.VulcanCore)
-	globalEntities, err := global.NewEntities(db, checktypes.New(coreclient))
+	globalEntities, err := global.NewEntities(db, checktypes.New(cfg.VulcanCore.URL))
 	if err != nil {
 		fmt.Printf("error creating checktypesinformer: %v", err)
 		return err
@@ -600,18 +596,6 @@ func createVulcanitoDeps(cfg config, l log.Logger, vulnDBClient vulnerabilitydb.
 	cdcProxy := cdc.NewBrokerProxy(l, cdcDB, db, cdc.NewAsyncTxParser(vulnDBClient, jobsRunner, asyncAPI, l))
 	s := schedule.NewClient(cfg.Scheduler)
 	return cdcProxy, s, nil
-}
-
-func newVulcanCoreAPIClient(config vulcanCoreConfig) *vulcancore.Client {
-	httpClient := newHTTPClient()
-	c := vulcancore.New(goaclient.HTTPClientDoer(httpClient))
-	c.Client.Scheme = config.Schema
-	c.Client.Host = config.Host
-	return c
-}
-
-func newHTTPClient() *http.Client {
-	return http.DefaultClient
 }
 
 func parseLogLevel(cfg config) level.Option {
