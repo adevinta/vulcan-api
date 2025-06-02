@@ -20,7 +20,7 @@ RUN CGO_ENABLED=1 GOOS=linux GOARCH=$TARGETARCH \
     CGO_LDFLAGS="-fuse-ld=mold -lsasl2" \
     go build -tags musl -ldflags "-w -s" ./cmd/vulcan-api
 
-FROM alpine:3.21
+FROM alpine:3.22
 
 WORKDIR /flyway
 
