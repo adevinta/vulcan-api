@@ -1,6 +1,6 @@
 # Copyright 2021 Adevinta
 
-FROM --platform=linux/$TARGETARCH golang:1.24-alpine AS builder
+FROM --platform=linux/$TARGETARCH golang:1.25-alpine AS builder
 # Required because the dependency
 # https://github.com/confluentinc/confluent-kafka-go requires the gcc compiler.
 RUN apk add --no-cache gcc musl-dev cyrus-sasl-dev mold
