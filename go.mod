@@ -11,7 +11,7 @@ require (
 	github.com/adevinta/vulcan-metrics-client v1.0.1
 	github.com/adevinta/vulcan-report v1.0.0
 	github.com/adevinta/vulcan-scan-engine v1.1.36
-	github.com/adevinta/vulcan-tracker v0.1.11
+	github.com/adevinta/vulcan-tracker v0.1.12
 	github.com/adevinta/vulcan-types v1.2.21
 	github.com/adevinta/vulnerability-db-api v1.1.34
 	github.com/aws/aws-sdk-go v1.55.0
