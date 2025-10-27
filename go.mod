@@ -1,6 +1,6 @@
 module github.com/adevinta/vulcan-api
 
-go 1.23.0
+go 1.24.0
 
 toolchain go1.24.1
 
@@ -11,7 +11,7 @@ require (
 	github.com/adevinta/vulcan-metrics-client v1.0.1
 	github.com/adevinta/vulcan-report v1.0.0
 	github.com/adevinta/vulcan-scan-engine v1.1.36
-	github.com/adevinta/vulcan-tracker v0.1.14
+	github.com/adevinta/vulcan-tracker v0.1.15
 	github.com/adevinta/vulcan-types v1.2.21
 	github.com/adevinta/vulnerability-db-api v1.1.34
 	github.com/aws/aws-sdk-go v1.55.0
@@ -76,7 +76,7 @@ require (
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
 	golang.org/x/mod v0.26.0 // indirect
 	golang.org/x/net v0.42.0 // indirect
-	golang.org/x/sync v0.16.0 // indirect
+	golang.org/x/sync v0.17.0 // indirect
 	golang.org/x/sys v0.34.0 // indirect
 	golang.org/x/text v0.28.0 // indirect
 	golang.org/x/tools v0.35.0 // indirect
